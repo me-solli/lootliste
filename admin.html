@@ -1,139 +1,178 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Lootliste – Admin</title>
+<meta charset="UTF-8">
+<title>Lootliste Admin 2.0</title>
 
-  <style>
-    body {
-      background: #0b0b0b;
-      color: #f0d77b;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 40px;
-    }
+<style>
+body {
+  background:#0b0b0b;
+  color:#f0d77b;
+  font-family:Arial, sans-serif;
+  padding:40px;
+}
 
-    h1 {
-      text-align: center;
-    }
+h1 { text-align:center; }
 
-    .box {
-      max-width: 600px;
-      margin: 30px auto;
-      background: #111;
-      padding: 20px;
-      border-radius: 10px;
-    }
+.box {
+  max-width:900px;
+  margin:20px auto;
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+}
 
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
+label {
+  display:block;
+  margin-top:10px;
+  font-weight:bold;
+}
 
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      background: #1c1c1c;
-      color: #f0d77b;
-      border: 1px solid #333;
-      border-radius: 5px;
-    }
+input, select {
+  width:100%;
+  padding:8px;
+  background:#1c1c1c;
+  color:#f0d77b;
+  border:1px solid #333;
+  border-radius:5px;
+}
 
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 10px;
-      background: #2a2208;
-      color: #f0d77b;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
+button {
+  margin-top:15px;
+  padding:10px 15px;
+  background:#2a2208;
+  color:#f0d77b;
+  border:none;
+  cursor:pointer;
+  border-radius:5px;
+}
 
-    button:hover {
-      background: #3a2f0c;
-    }
+button:hover { background:#3a2f0c; }
 
-    textarea {
-      width: 100%;
-      height: 120px;
-      margin-top: 20px;
-      background: #000;
-      color: #0f0;
-      font-family: monospace;
-      padding: 10px;
-    }
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
 
-    .hint {
-      font-size: 13px;
-      opacity: 0.8;
-      margin-top: 10px;
-    }
-  </style>
+th, td {
+  padding:8px;
+  border-bottom:1px solid #333;
+}
+
+th { background:#1a1406; }
+
+.small { font-size:13px; opacity:0.8; }
+</style>
 </head>
 
 <body>
 
-<h1>🎁 Lootliste – Admin</h1>
+<h1>🎁 Lootliste – Admin 2.0</h1>
 
 <div class="box">
-  <label>Item-Name</label>
-  <input id="itemName">
+  <label>Item</label>
+  <input id="name">
 
   <label>Kategorie</label>
-  <input id="itemCategory">
+  <input id="category">
 
-  <label>Sterne-Bewertung</label>
-  <select id="itemStars">
-    <option value="★★★★★">★★★★★</option>
-    <option value="★★★★☆">★★★★☆</option>
-    <option value="★★★☆☆">★★★☆☆</option>
-    <option value="★★☆☆☆">★★☆☆☆</option>
-    <option value="★☆☆☆☆">★☆☆☆☆</option>
+  <label>Sterne</label>
+  <select id="stars">
+    <option>★★★★★</option>
+    <option>★★★★☆</option>
+    <option>★★★☆☆</option>
+    <option>★★☆☆☆</option>
+    <option>★☆☆☆☆</option>
   </select>
 
   <label>Roll / Qualität</label>
-  <input id="itemRoll">
+  <input id="roll">
 
   <label>Kontakt</label>
-  <input id="itemContact" placeholder="z. B. !loot im Chat">
+  <input id="contact" value="!loot">
 
   <label>Status</label>
-  <input id="itemStatus" value="frei">
+  <input id="status" value="frei">
 
-  <button onclick="generate()">Item-Code erzeugen</button>
+  <button onclick="addItem()">➕ Item hinzufügen</button>
+</div>
 
-  <div class="hint">
-    ⬇️ Den generierten Code unten kopieren und in <b>items.js</b> einfügen.
-  </div>
+<div class="box">
+  <h2>Aktuelle Items</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Sterne</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+</div>
 
-  <textarea id="output" readonly></textarea>
+<div class="box">
+  <button onclick="download()">⬇ items.js herunterladen</button>
+  <p class="small">
+    Ersetze danach <b>items.js</b> im GitHub-Repo und committe.
+  </p>
 </div>
 
 <script>
-function generate() {
-  const item = {
-    name: document.getElementById("itemName").value,
-    category: document.getElementById("itemCategory").value,
-    stars: document.getElementById("itemStars").value,
-    roll: document.getElementById("itemRoll").value,
-    contact: document.getElementById("itemContact").value,
-    status: document.getElementById("itemStatus").value
-  };
+let items = [];
 
-  const code = `{
-  name: "${item.name}",
-  category: "${item.category}",
-  stars: "${item.stars}",
-  roll: "${item.roll}",
-  contact: "${item.contact}",
-  status: "${item.status}"
-},`;
+function addItem() {
+  items.push({
+    name: name.value,
+    category: category.value,
+    stars: stars.value,
+    roll: roll.value,
+    contact: contact.value,
+    status: status.value
+  });
+  render();
+}
 
-  document.getElementById("output").value = code;
+function removeItem(i) {
+  items.splice(i, 1);
+  render();
+}
+
+function render() {
+  list.innerHTML = "";
+  items.forEach((it, i) => {
+    list.innerHTML += `
+      <tr>
+        <td>${it.name}</td>
+        <td>${it.stars}</td>
+        <td>${it.status}</td>
+        <td><button onclick="removeItem(${i})">🗑</button></td>
+      </tr>
+    `;
+  });
+}
+
+function download() {
+  let text = "const items = [\n";
+  items.forEach(it => {
+    text += `  {
+    name: "${it.name}",
+    category: "${it.category}",
+    stars: "${it.stars}",
+    roll: "${it.roll}",
+    contact: "${it.contact}",
+    status: "${it.status}"
+  },\n`;
+  });
+  text += "];";
+
+  const blob = new Blob([text], {type: "text/javascript"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "items.js";
+  a.click();
 }
 </script>
 
