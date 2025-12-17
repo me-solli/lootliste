@@ -2,149 +2,103 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Community Lootliste</title>
+<title>Community Lootliste – D2R Non-Ladder</title>
 
 <style>
-/* ===== BASIS ===== */
 body {
     margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: transparent;
+    padding: 20px;
+    background: #0e0e0e;
     color: #e6e6e6;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-/* ===== CONTAINER ===== */
-.loot-container {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    background: rgba(10, 10, 10, 0.85);
-    border: 1px solid #3a2a18;
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffb347;
+    letter-spacing: 1px;
 }
 
-/* ===== TABELLE ===== */
 table {
     width: 100%;
     border-collapse: collapse;
+    background: #141414;
     font-size: 14px;
 }
 
-thead {
-    background: linear-gradient(90deg, #5a1c0a, #0a1c3a);
-}
-
 th {
+    background: #1f1f1f;
     padding: 10px;
     text-align: left;
-    color: #ffd27d;
-    border-bottom: 1px solid #3a2a18;
-    font-weight: 600;
+    border-bottom: 2px solid #333;
 }
 
 td {
     padding: 8px 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid #222;
 }
 
-/* ===== ZEILEN ===== */
-tbody tr:nth-child(even) {
-    background: rgba(255,255,255,0.02);
+tr:nth-child(even) {
+    background: #181818;
 }
 
-tbody tr:hover {
-    background: rgba(255,210,125,0.05);
+.status-available {
+    color: #6cff6c;
+    font-weight: bold;
 }
 
-/* ===== SPALTEN ===== */
-.col-item {
-    font-weight: 600;
-    color: #ffd27d;
+.status-gone {
+    color: #ff6c6c;
 }
 
-.col-kategorie {
-    color: #9ecbff;
-}
-
-.col-status {
-    color: #9cff9c;
-    font-weight: 600;
-}
-
-/* ===== STERNE ===== */
-.stars {
-    color: #ffcc33;
+.rating {
+    color: gold;
     white-space: nowrap;
-}
-
-/* ===== FOOTER ===== */
-.footer {
-    padding: 6px 10px;
-    font-size: 12px;
-    text-align: right;
-    color: #aaa;
 }
 </style>
 </head>
 
 <body>
 
-<div class="loot-container">
+<h1>🎁 Community Loot – Free Items (Non-Ladder)</h1>
+
 <table>
-<thead>
-<tr>
-    <th>Item</th>
-    <th>Kategorie</th>
-    <th>Qualität / Roll</th>
-    <th>Bewertung</th>
-    <th>Kontakt</th>
-    <th>Status</th>
-</tr>
-</thead>
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Kategorie</th>
+            <th>Bewertung</th>
+            <th>Roll / Info</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Trang-Ouls Schuppen</td>
+            <td>Set</td>
+            <td class="rating">⭐⭐⭐⭐☆ (4/5)</td>
+            <td>FCR / Defense</td>
+            <td class="status-available">Verfügbar</td>
+        </tr>
 
-<tbody>
-<tr>
-    <td class="col-item">Trang-Ouls Schuppen</td>
-    <td class="col-kategorie">Set</td>
-    <td>—</td>
-    <td class="stars">⭐⭐⭐⭐☆ (4/5)</td>
-    <td>me_solli</td>
-    <td class="col-status">Verfügbar</td>
-</tr>
+        <tr>
+            <td>Ali Baba</td>
+            <td>Unique</td>
+            <td class="rating">⭐⭐⭐☆☆ (3/5)</td>
+            <td>MF Waffe</td>
+            <td class="status-available">Verfügbar</td>
+        </tr>
 
-<tr>
-    <td class="col-item">Der Erlöser</td>
-    <td class="col-kategorie">Unique</td>
-    <td>281% ED / 75 DMG</td>
-    <td class="stars">⭐⭐⭐☆☆ (3/5)</td>
-    <td>me_solli</td>
-    <td class="col-status">Verfügbar</td>
-</tr>
-
-<tr>
-    <td class="col-item">Ali Baba</td>
-    <td class="col-kategorie">Unique</td>
-    <td>95% GF / 7 Dex</td>
-    <td class="stars">⭐⭐⭐☆☆ (3/5)</td>
-    <td>me_solli</td>
-    <td class="col-status">Verfügbar</td>
-</tr>
-
-<tr>
-    <td class="col-item">Natalyas Mal</td>
-    <td class="col-kategorie">Set</td>
-    <td>—</td>
-    <td class="stars">⭐⭐⭐☆☆ (3/5)</td>
-    <td>me_solli</td>
-    <td class="col-status">Verfügbar</td>
-</tr>
-</tbody>
+        <tr>
+            <td>Der Erlöser</td>
+            <td>Unique</td>
+            <td class="rating">⭐⭐☆☆☆ (2/5)</td>
+            <td>Nischenitem</td>
+            <td class="status-gone">Vergeben</td>
+        </tr>
+    </tbody>
 </table>
-
-<div class="footer">
-🎁 Free Community Loot – D2R Non-Ladder
-</div>
-</div>
 
 </body>
 </html>
