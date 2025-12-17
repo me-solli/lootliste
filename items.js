@@ -2,17 +2,15 @@ const items = [
   {
     name: "Trang-Ouls Schuppen",
     category: "Set",
-    ratingStars: "⭐⭐⭐⭐☆",
-    ratingValue: "4/5",
+    rating: 4,
     roll: "—",
     contact: "me_solli",
     status: "Verfügbar"
   },
   {
-    name: "Der Eröser",
+    name: "Der Erlöser",
     category: "Unique",
-    ratingStars: "⭐⭐⭐☆☆",
-    ratingValue: "3/5",
+    rating: 3,
     roll: "281% ED / 75 DMG",
     contact: "me_solli",
     status: "Verfügbar"
@@ -20,8 +18,7 @@ const items = [
   {
     name: "Ali Baba",
     category: "Unique",
-    ratingStars: "⭐⭐⭐☆☆",
-    ratingValue: "3/5",
+    rating: 3,
     roll: "108% / 11 Dex",
     contact: "me_solli",
     status: "Verfügbar"
