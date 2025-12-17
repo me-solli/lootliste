@@ -2,108 +2,213 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>🎁 Free Community Lootliste</title>
+  <title>🎁 Community Lootliste</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
+    :root {
+      --bg: #0b0b0b;
+      --panel: #1a1a1a;
+      --row: #2a2a2a;
+      --row-alt: #242424;
+      --gold: #d4af37;
+      --text: #eaeaea;
+      --muted: #aaaaaa;
+      --green: #4caf50;
+      --red: #e53935;
+    }
+
     body {
       margin: 0;
-      background: transparent;
+      padding: 20px;
+      background: var(--bg);
+      color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
-      color: #e6e6e6;
+    }
+
+    h1 {
+      margin: 0 0 12px 0;
+      font-size: 22px;
+      color: var(--gold);
     }
 
     .container {
-      max-width: 1100px;
-      margin: 20px auto;
-      padding: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
+    /* ================= TABLE ================= */
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #1a1a1a;
-      font-size: 16px;
+      background: var(--panel);
+      font-size: 14px;
     }
 
     thead {
-      background: linear-gradient(to bottom, #2a230f, #14110a);
-      color: #d6b25e;
+      background: linear-gradient(#2a230f, #15120a);
     }
 
-    th, td {
-      padding: 10px 12px;
+    th {
+      padding: 10px;
       text-align: left;
-      white-space: nowrap;
-    }
-
-    tbody tr {
-      background: #3e3e3e;
-      border-bottom: 1px solid #2a2a2a;
-    }
-
-    tbody tr:nth-child(even) {
-      background: #4a4a4a;
-    }
-
-    .stars {
-      color: #f5c542;
-      letter-spacing: 2px;
-      font-size: 18px;
-    }
-
-    .status-available {
-      color: #6dff6d;
+      color: var(--gold);
       font-weight: bold;
+      border-bottom: 1px solid #3a3a3a;
     }
+
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #333;
+    }
+
+    tbody tr:nth-child(even) { background: var(--row-alt); }
+    tbody tr:nth-child(odd) { background: var(--row); }
+
+    .status-ok { color: var(--green); font-weight: bold; }
+    .status-no { color: var(--red); font-weight: bold; }
+
+    /* ================= ADMIN ================= */
+    .admin {
+      margin-top: 30px;
+      padding: 16px;
+      background: #121212;
+      border: 1px solid #333;
+      border-radius: 6px;
+    }
+
+    .admin h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: var(--gold);
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .admin input, .admin select {
+      padding: 7px;
+      background: #1e1e1e;
+      color: var(--text);
+      border: 1px solid #444;
+      border-radius: 4px;
+    }
+
+    .admin button {
+      margin-top: 10px;
+      padding: 9px 14px;
+      background: var(--gold);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .admin button:hover { opacity: 0.9; }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* OBS helper */
+    .obs-only h1, .obs-only .admin { display: none; }
   </style>
 </head>
-
 <body>
-  <div class="container">
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Kategorie</th>
-          <th>Bewertung</th>
-          <th>Qualität / Roll</th>
-          <th>Kontakt</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="lootTable"></tbody>
-    </table>
+<div class="container">
+
+  <h1>🎁 Free Community Lootliste (D2R Non-Ladder)</h1>
+
+  <table id="lootTable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Kategorie</th>
+        <th>Qualität / Roll</th>
+        <th>Kontakt</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- ================= ADMIN BEREICH ================= -->
+  <div class="admin">
+    <h2>🔧 Admin – Item hinzufügen</h2>
+
+    <div class="admin-grid">
+      <input id="a_item" placeholder="Itemname" />
+      <select id="a_cat">
+        <option>Unique</option>
+        <option>Set</option>
+        <option>Rune</option>
+        <option>Charm</option>
+        <option>Other</option>
+      </select>
+      <input id="a_roll" placeholder="Qualität / Roll" />
+      <input id="a_contact" placeholder="Kontakt (z. B. me_solli)" />
+      <select id="a_status">
+        <option value="Verfügbar">Verfügbar</option>
+        <option value="Vergeben">Vergeben</option>
+      </select>
+    </div>
+
+    <button onclick="addItem()">Item hinzufügen</button>
+    <div class="hint">⚠️ Items werden im Browser gespeichert (localStorage). Für OBS ideal.</div>
   </div>
+</div>
 
-  <!-- Items -->
-  <script src="items.js"></script>
+<script>
+  const tableBody = document.querySelector('#lootTable tbody');
 
-  <!-- Rendering -->
-  <script>
-    function renderStars(rating) {
-      let stars = "";
-      for (let i = 1; i <= 5; i++) {
-        stars += i <= rating ? "★" : "☆";
-      }
-      return stars;
-    }
+  let items = JSON.parse(localStorage.getItem('lootItems')) || [
+    { item: 'Trang-Ouls Schuppen', cat: 'Set', roll: '—', contact: 'me_solli', status: 'Verfügbar' },
+    { item: 'Der Erlöser', cat: 'Unique', roll: '281% ED / 75 DMG', contact: 'me_solli', status: 'Verfügbar' },
+    { item: 'Ali Baba', cat: 'Unique', roll: '108% / 11 Dex', contact: 'me_solli', status: 'Verfügbar' }
+  ];
 
-    const table = document.getElementById("lootTable");
-
-    items.forEach(item => {
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${item.name}</td>
-        <td>${item.category}</td>
-        <td class="stars">${renderStars(item.rating)}</td>
-        <td>${item.roll || "—"}</td>
-        <td>${item.contact}</td>
-        <td class="status-available">${item.status}</td>
+  function render() {
+    tableBody.innerHTML = '';
+    items.forEach(i => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i.item}</td>
+        <td>${i.cat}</td>
+        <td>${i.roll}</td>
+        <td>${i.contact}</td>
+        <td class="${i.status === 'Verfügbar' ? 'status-ok' : 'status-no'}">${i.status}</td>
       `;
-
-      table.appendChild(row);
+      tableBody.appendChild(tr);
     });
-  </script>
+    localStorage.setItem('lootItems', JSON.stringify(items));
+  }
+
+  function addItem() {
+    const item = document.getElementById('a_item').value.trim();
+    if (!item) return alert('Itemname fehlt');
+
+    items.unshift({
+      item,
+      cat: document.getElementById('a_cat').value,
+      roll: document.getElementById('a_roll').value || '—',
+      contact: document.getElementById('a_contact').value || 'me_solli',
+      status: document.getElementById('a_status').value
+    });
+
+    document.querySelectorAll('.admin input').forEach(i => i.value = '');
+    render();
+  }
+
+  render();
+
+  // OBS Mode via ?obs
+  if (location.search.includes('obs')) document.body.classList.add('obs-only');
+</script>
 </body>
 </html>
