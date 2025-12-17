@@ -1,108 +1,109 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Community Lootliste</title>
+  <meta charset="UTF-8" />
+  <title>🎁 Free Community Lootliste</title>
 
-<style>
-  body {
-    margin: 0;
-    background: transparent;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #f0e6c8;
-  }
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #e6e6e6;
+    }
 
-  .container {
-    width: 1200px;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.65);
-  }
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 10px;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      font-size: 16px;
+    }
 
-  th {
-    text-align: left;
-    padding: 8px;
-    background: rgba(20, 15, 5, 0.9);
-    color: #c7a44a;
-    border-bottom: 2px solid #6b4e1e;
-  }
+    thead {
+      background: linear-gradient(to bottom, #2a230f, #14110a);
+      color: #d6b25e;
+    }
 
-  td {
-    padding: 6px 8px;
-    border-bottom: 1px solid rgba(255, 215, 140, 0.15);
-  }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      white-space: nowrap;
+    }
 
-  tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.04);
-  }
+    tbody tr {
+      background: #3e3e3e;
+      border-bottom: 1px solid #2a2a2a;
+    }
 
-  .rating {
-    white-space: nowrap;
-    color: #ffd966;
-    font-weight: bold;
-  }
+    tbody tr:nth-child(even) {
+      background: #4a4a4a;
+    }
 
-  .status {
-    color: #8cff8c;
-    font-weight: bold;
-  }
-</style>
+    .stars {
+      color: #f5c542;
+      letter-spacing: 2px;
+      font-size: 18px;
+    }
+
+    .status-available {
+      color: #6dff6d;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Kategorie</th>
+          <th>Bewertung</th>
+          <th>Qualität / Roll</th>
+          <th>Kontakt</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="lootTable"></tbody>
+    </table>
+  </div>
 
-<div class="container">
-  <table id="lootTable">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Kategorie</th>
-        <th>Bewertung</th>
-        <th>Qualität / Roll</th>
-        <th>Kontakt</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Items kommen aus items.js -->
-    </tbody>
-  </table>
-</div>
+  <!-- Items -->
+  <script src="items.js"></script>
 
-<script src="items.js"></script>
-<script>
-  function renderStars(rating) {
-    let stars = "";
-    for (let i = 1; i <= 5; i++) {
-      stars += i <= rating ? "⭐" : "☆";
+  <!-- Rendering -->
+  <script>
+    function renderStars(rating) {
+      let stars = "";
+      for (let i = 1; i <= 5; i++) {
+        stars += i <= rating ? "★" : "☆";
+      }
+      return stars;
     }
-    return stars + " " + rating + "/5";
-  }
 
-  const tbody = document.querySelector("#lootTable tbody");
+    const table = document.getElementById("lootTable");
 
-  items.forEach(item => {
-    const row = document.createElement("tr");
+    items.forEach(item => {
+      const row = document.createElement("tr");
 
-    row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.category}</td>
-      <td class="rating">${renderStars(item.rating)}</td>
-      <td>${item.roll}</td>
-      <td>${item.contact}</td>
-      <td class="status">${item.status}</td>
-    `;
+      row.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.category}</td>
+        <td class="stars">${renderStars(item.rating)}</td>
+        <td>${item.roll || "—"}</td>
+        <td>${item.contact}</td>
+        <td class="status-available">${item.status}</td>
+      `;
 
-    tbody.appendChild(row);
-  });
-</script>
-
+      table.appendChild(row);
+    });
+  </script>
 </body>
 </html>
