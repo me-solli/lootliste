@@ -99,7 +99,7 @@ th { background:#1a1406; }
 </div>
 
 <div class="box">
-  <h2>Aktuelle Items</h2>
+  <h2>Aktuelle Items (live aus items.js)</h2>
   <table>
     <thead>
       <tr>
@@ -116,12 +116,21 @@ th { background:#1a1406; }
 <div class="box">
   <button onclick="download()">⬇ items.js herunterladen</button>
   <p class="small">
-    Ersetze danach <b>items.js</b> im GitHub-Repo und committe.
+    Danach Datei im GitHub-Repo ersetzen & committen.
   </p>
 </div>
 
+<!-- 👉 HOLT DIE LIVE-DATEN -->
+<script src="items.js"></script>
+
 <script>
-let items = [];
+/*
+  items kommt jetzt aus items.js
+  Falls die Datei leer ist, fallback
+*/
+if (typeof items === "undefined") {
+  items = [];
+}
 
 function addItem() {
   items.push({
@@ -153,6 +162,9 @@ function render() {
     `;
   });
 }
+
+/* INITIAL */
+render();
 
 function download() {
   let text = "const items = [\n";
