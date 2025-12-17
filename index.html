@@ -1,200 +1,94 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>🎁 Free Community Lootliste (D2R Non-Ladder)</title>
+  <meta charset="UTF-8">
+  <title>Free Community Lootliste – D2R Non-Ladder</title>
 
-    <style>
-        body {
-            margin: 0;
-            background: transparent;
-            color: #e6e6e6;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #f0d77b;
+      font-family: Arial, sans-serif;
+    }
 
-        h1 {
-            color: #f1c40f;
-            margin: 12px;
-            font-size: 24px;
-        }
+    /* ZENTRIERTER CONTAINER */
+    .page {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 16px;
-        }
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
 
-        thead {
-            background: linear-gradient(to bottom, #2a220d, #15110a);
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1c1c1c;
+    }
 
-        th {
-            padding: 10px;
-            text-align: left;
-            color: #f1c40f;
-            font-weight: bold;
-        }
+    th {
+      background: linear-gradient(#2a2208, #151005);
+      color: #f0d77b;
+      padding: 10px;
+      text-align: left;
+      font-weight: bold;
+    }
 
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #333;
-        }
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+    }
 
-        tbody tr {
-            background-color: rgba(40, 40, 40, 0.85);
-        }
+    tr:hover {
+      background: #242424;
+    }
 
-        tbody tr:nth-child(even) {
-            background-color: rgba(55, 55, 55, 0.85);
-        }
+    /* ADMIN BEREICH */
+    .admin {
+      margin-top: 30px;
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+    }
 
-        .stars {
-            color: #f1c40f;
-            letter-spacing: 2px;
-            font-size: 18px;
-        }
-
-        .status-ok {
-            color: #4cd964;
-            font-weight: bold;
-        }
-
-        /* Admin-Bereich */
-        .admin {
-            margin: 16px;
-            padding: 12px;
-            background: rgba(20, 20, 20, 0.9);
-            border-radius: 6px;
-        }
-
-        .admin h2 {
-            margin-top: 0;
-            color: #f1c40f;
-            font-size: 18px;
-        }
-
-        .admin input,
-        .admin select,
-        .admin button {
-            margin: 4px;
-            padding: 6px;
-            background: #222;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 4px;
-        }
-
-        .admin button {
-            background: #f1c40f;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .admin small {
-            display: block;
-            margin-top: 6px;
-            color: #aaa;
-        }
-    </style>
+    .admin h2 {
+      margin-top: 0;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>🎁 Free Community Lootliste (D2R Non-Ladder)</h1>
+  <div class="page">
+    <h1>🎁 Free Community Lootliste – D2R Non-Ladder</h1>
 
-<table>
-    <thead>
+    <table id="lootTable">
+      <thead>
         <tr>
-            <th>Item</th>
-            <th>Kategorie</th>
-            <th>Bewertung</th>
-            <th>Qualität / Roll</th>
-            <th>Kontakt</th>
-            <th>Status</th>
+          <th>Item</th>
+          <th>Kategorie</th>
+          <th>Bewertung</th>
+          <th>Qualität / Roll</th>
+          <th>Kontakt</th>
+          <th>Status</th>
         </tr>
-    </thead>
-    <tbody id="lootTable"></tbody>
-</table>
+      </thead>
+      <tbody>
+        <!-- Items kommen aus items.js -->
+      </tbody>
+    </table>
 
-<div class="admin">
-    <h2>🔧 Admin – Item hinzufügen</h2>
+    <!-- ADMIN (vorerst sichtbar) -->
+    <div class="admin">
+      <h2>Admin – Items hinzufügen</h2>
+      <p>(kommt im nächsten Schritt)</p>
+    </div>
+  </div>
 
-    <input id="name" placeholder="Itemname">
-    <select id="category">
-        <option>Unique</option>
-        <option>Set</option>
-        <option>Rune</option>
-        <option>Charm</option>
-    </select>
-
-    <select id="stars">
-        <option value="5">★★★★★</option>
-        <option value="4">★★★★☆</option>
-        <option value="3">★★★☆☆</option>
-        <option value="2">★★☆☆☆</option>
-        <option value="1">★☆☆☆☆</option>
-    </select>
-
-    <input id="roll" placeholder="Qualität / Roll">
-    <input id="contact" placeholder="Kontakt (z.B. me_solli)">
-    <select id="status">
-        <option>Verfügbar</option>
-        <option>Reserviert</option>
-        <option>Weg</option>
-    </select>
-
-    <button onclick="addItem()">Item hinzufügen</button>
-
-    <small>⚠ Items werden lokal im Browser gespeichert (localStorage). Perfekt für OBS.</small>
-</div>
-
-<script src="items.js"></script>
-
-<script>
-    const table = document.getElementById("lootTable");
-
-    function renderStars(count) {
-        let result = "";
-        for (let i = 1; i <= 5; i++) {
-            result += i <= count ? "⭐" : "☆";
-        }
-        return `<span class="stars">${result}</span>`;
-    }
-
-    function renderTable() {
-        table.innerHTML = "";
-        items.forEach(item => {
-            table.innerHTML += `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.category}</td>
-                    <td>${renderStars(item.stars)}</td>
-                    <td>${item.roll || "—"}</td>
-                    <td>${item.contact}</td>
-                    <td class="status-ok">${item.status}</td>
-                </tr>
-            `;
-        });
-
-        localStorage.setItem("lootItems", JSON.stringify(items));
-    }
-
-    function addItem() {
-        items.push({
-            name: name.value,
-            category: category.value,
-            stars: Number(stars.value),
-            roll: roll.value,
-            contact: contact.value,
-            status: status.value
-        });
-
-        renderTable();
-    }
-
-    renderTable();
-</script>
-
+  <script src="items.js"></script>
 </body>
 </html>
