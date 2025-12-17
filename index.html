@@ -1,70 +1,74 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Free Community Lootliste – D2R Non-Ladder</title>
+  <meta charset="UTF-8" />
+  <title>🎁 Free Community Lootliste (D2R Non-Ladder)</title>
 
   <style>
     body {
       margin: 0;
-      background: #0b0b0b;
-      color: #f0d77b;
+      background: transparent;
       font-family: Arial, sans-serif;
+      color: #eee;
     }
 
-    /* ZENTRIERTER CONTAINER */
-    .page {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
+    .wrapper {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 10px;
     }
 
     h1 {
-      margin-bottom: 20px;
-      text-align: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: #f5c542;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #1c1c1c;
+      background: rgba(20, 20, 20, 0.85);
+    }
+
+    thead {
+      background: linear-gradient(#2a220e, #141006);
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 14px;
     }
 
     th {
-      background: linear-gradient(#2a2208, #151005);
-      color: #f0d77b;
-      padding: 10px;
-      text-align: left;
+      color: #f5c542;
       font-weight: bold;
     }
 
-    td {
-      padding: 10px;
-      border-bottom: 1px solid #333;
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.04);
     }
 
-    tr:hover {
-      background: #242424;
+    .stars {
+      white-space: nowrap;
+      font-size: 15px;
     }
 
-    /* ADMIN BEREICH */
-    .admin {
-      margin-top: 30px;
-      background: #111;
-      padding: 15px;
-      border-radius: 8px;
+    .status.ok {
+      color: #4caf50;
+      font-weight: bold;
     }
 
-    .admin h2 {
-      margin-top: 0;
+    .status.gone {
+      color: #ff5555;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
-
-  <div class="page">
-    <h1>🎁 Free Community Lootliste – D2R Non-Ladder</h1>
+  <div class="wrapper">
+    <h1>🎁 Free Community Lootliste (D2R Non-Ladder)</h1>
 
     <table id="lootTable">
       <thead>
@@ -78,15 +82,9 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Items kommen aus items.js -->
+        <!-- items.js fügt hier automatisch Zeilen ein -->
       </tbody>
     </table>
-
-    <!-- ADMIN (vorerst sichtbar) -->
-    <div class="admin">
-      <h2>Admin – Items hinzufügen</h2>
-      <p>(kommt im nächsten Schritt)</p>
-    </div>
   </div>
 
   <script src="items.js"></script>
