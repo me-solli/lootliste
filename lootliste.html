@@ -1,52 +1,59 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Community Lootliste</title>
+<meta charset="UTF-8">
+<title>Community Lootliste</title>
 
-  <style>
-    body {
-      margin: 0;
-      background: transparent;
-      font-family: Arial, sans-serif;
-      color: #eee;
-    }
+<style>
+  body {
+    margin: 0;
+    background: transparent;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #f0e6c8;
+  }
 
-    .container {
-      width: 1200px;
-      margin: 0 auto;
-      padding: 10px;
-      background: rgba(0,0,0,0.6);
-    }
+  .container {
+    width: 1200px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.65);
+  }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
 
-    th {
-      text-align: left;
-      padding: 8px;
-      background: #1b1407;
-      color: #d6b25e;
-      border-bottom: 2px solid #3a2a10;
-    }
+  th {
+    text-align: left;
+    padding: 8px;
+    background: rgba(20, 15, 5, 0.9);
+    color: #c7a44a;
+    border-bottom: 2px solid #6b4e1e;
+  }
 
-    td {
-      padding: 8px;
-      border-bottom: 1px solid #333;
-    }
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255, 215, 140, 0.15);
+  }
 
-    tr:nth-child(even) {
-      background: rgba(255,255,255,0.04);
-    }
+  tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.04);
+  }
 
-    .status {
-      color: #4cff4c;
-      font-weight: bold;
-    }
-  </style>
+  .rating {
+    white-space: nowrap;
+    color: #ffd966;
+    font-weight: bold;
+  }
+
+  .status {
+    color: #8cff8c;
+    font-weight: bold;
+  }
+</style>
 </head>
 
 <body>
@@ -71,6 +78,14 @@
 
 <script src="items.js"></script>
 <script>
+  function renderStars(rating) {
+    let stars = "";
+    for (let i = 1; i <= 5; i++) {
+      stars += i <= rating ? "⭐" : "☆";
+    }
+    return stars + " " + rating + "/5";
+  }
+
   const tbody = document.querySelector("#lootTable tbody");
 
   items.forEach(item => {
@@ -79,7 +94,7 @@
     row.innerHTML = `
       <td>${item.name}</td>
       <td>${item.category}</td>
-      <td>${item.ratingText}</td>
+      <td class="rating">${renderStars(item.rating)}</td>
       <td>${item.roll}</td>
       <td>${item.contact}</td>
       <td class="status">${item.status}</td>
