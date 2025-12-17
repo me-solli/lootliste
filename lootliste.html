@@ -1,72 +1,77 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Community Lootliste</title>
+  <meta charset="UTF-8">
+  <title>Community Lootliste</title>
 
-<style>
-  body {
-    margin: 0;
-    background: rgba(0, 0, 0, 0.65);
-    font-family: Arial, Helvetica, sans-serif;
-    color: #f0e6c8;
-  }
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      font-family: Arial, sans-serif;
+      color: #eee;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
+    .container {
+      width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+      background: rgba(0,0,0,0.6);
+    }
 
-  th {
-    text-align: left;
-    padding: 8px;
-    background: rgba(20, 15, 5, 0.9);
-    color: #c7a44a;
-    border-bottom: 2px solid #6b4e1e;
-  }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
 
-  td {
-    padding: 6px 8px;
-    border-bottom: 1px solid rgba(255, 215, 140, 0.15);
-  }
+    th {
+      text-align: left;
+      padding: 8px;
+      background: #1b1407;
+      color: #d6b25e;
+      border-bottom: 2px solid #3a2a10;
+    }
 
-  tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.03);
-  }
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #333;
+    }
 
-  .rating {
-    white-space: nowrap;
-    color: #ffd966;
-    font-weight: bold;
-  }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.04);
+    }
 
-  .status {
-    color: #8cff8c;
-    font-weight: bold;
-  }
-</style>
+    .status {
+      color: #4cff4c;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
 
-<table>
-  <thead>
-    <tr>
-      <th>Item</th>
-      <th>Kategorie</th>
-      <th>Bewertung</th>
-      <th>Qualität / Roll</th>
-      <th>Kontakt</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody id="lootTable"></tbody>
-</table>
+<div class="container">
+  <table id="lootTable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Kategorie</th>
+        <th>Bewertung</th>
+        <th>Qualität / Roll</th>
+        <th>Kontakt</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Items kommen aus items.js -->
+    </tbody>
+  </table>
+</div>
 
 <script src="items.js"></script>
 <script>
-  const table = document.getElementById("lootTable");
+  const tbody = document.querySelector("#lootTable tbody");
 
   items.forEach(item => {
     const row = document.createElement("tr");
@@ -74,13 +79,13 @@
     row.innerHTML = `
       <td>${item.name}</td>
       <td>${item.category}</td>
-      <td class="rating">${item.ratingStars} ${item.ratingValue}</td>
+      <td>${item.ratingText}</td>
       <td>${item.roll}</td>
       <td>${item.contact}</td>
       <td class="status">${item.status}</td>
     `;
 
-    table.appendChild(row);
+    tbody.appendChild(row);
   });
 </script>
 
