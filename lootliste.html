@@ -2,103 +2,87 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Community Lootliste – D2R Non-Ladder</title>
+<title>Community Lootliste</title>
 
 <style>
-body {
+  body {
     margin: 0;
-    padding: 20px;
-    background: #0e0e0e;
-    color: #e6e6e6;
+    background: rgba(0, 0, 0, 0.65);
     font-family: Arial, Helvetica, sans-serif;
-}
+    color: #f0e6c8;
+  }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #ffb347;
-    letter-spacing: 1px;
-}
-
-table {
+  table {
     width: 100%;
     border-collapse: collapse;
-    background: #141414;
     font-size: 14px;
-}
+  }
 
-th {
-    background: #1f1f1f;
-    padding: 10px;
+  th {
     text-align: left;
-    border-bottom: 2px solid #333;
-}
+    padding: 8px;
+    background: rgba(20, 15, 5, 0.9);
+    color: #c7a44a;
+    border-bottom: 2px solid #6b4e1e;
+  }
 
-td {
-    padding: 8px 10px;
-    border-bottom: 1px solid #222;
-}
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255, 215, 140, 0.15);
+  }
 
-tr:nth-child(even) {
-    background: #181818;
-}
+  tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.03);
+  }
 
-.status-available {
-    color: #6cff6c;
-    font-weight: bold;
-}
-
-.status-gone {
-    color: #ff6c6c;
-}
-
-.rating {
-    color: gold;
+  .rating {
     white-space: nowrap;
-}
+    color: #ffd966;
+    font-weight: bold;
+  }
+
+  .status {
+    color: #8cff8c;
+    font-weight: bold;
+  }
 </style>
 </head>
 
 <body>
 
-<h1>🎁 Community Loot – Free Items (Non-Ladder)</h1>
-
 <table>
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th>Kategorie</th>
-            <th>Bewertung</th>
-            <th>Roll / Info</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Trang-Ouls Schuppen</td>
-            <td>Set</td>
-            <td class="rating">⭐⭐⭐⭐☆ (4/5)</td>
-            <td>FCR / Defense</td>
-            <td class="status-available">Verfügbar</td>
-        </tr>
-
-        <tr>
-            <td>Ali Baba</td>
-            <td>Unique</td>
-            <td class="rating">⭐⭐⭐☆☆ (3/5)</td>
-            <td>MF Waffe</td>
-            <td class="status-available">Verfügbar</td>
-        </tr>
-
-        <tr>
-            <td>Der Erlöser</td>
-            <td>Unique</td>
-            <td class="rating">⭐⭐☆☆☆ (2/5)</td>
-            <td>Nischenitem</td>
-            <td class="status-gone">Vergeben</td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Kategorie</th>
+      <th>Bewertung</th>
+      <th>Qualität / Roll</th>
+      <th>Kontakt</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="lootTable"></tbody>
 </table>
+
+<script src="items.js"></script>
+<script>
+  const table = document.getElementById("lootTable");
+
+  items.forEach(item => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>${item.category}</td>
+      <td class="rating">${item.ratingStars} ${item.ratingValue}</td>
+      <td>${item.roll}</td>
+      <td>${item.contact}</td>
+      <td class="status">${item.status}</td>
+    `;
+
+    table.appendChild(row);
+  });
+</script>
 
 </body>
 </html>
