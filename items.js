@@ -1,6 +1,6 @@
 const items = [
   {
-    name: "Unbekannt",
+    name: "Lidlose Wand",
     category: "Unique – Schild",
     stars: "★★★★☆",
     roll: "+80% def",
@@ -8,7 +8,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Magierfaust",
     category: "Unique – Handschuhe",
     stars: "★★★☆☆",
     roll: "+25% def",
@@ -16,7 +16,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Buriza-Do Kyanon",
     category: "Unique – Armbrust",
     stars: "★★★☆☆",
     roll: "+195% ed",
@@ -24,7 +24,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Lidlose Wand",
     category: "Unique – Schild",
     stars: "★★★★☆",
     roll: "+121% def",
@@ -32,7 +32,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Haut des Vipernmagiers",
     category: "Unique – Rüstung",
     stars: "★★★★★",
     roll: "+24 all res | +120% def | mdr 9",
@@ -40,7 +40,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Jalals Mähne",
     category: "Unique – Helm",
     stars: "★★★★☆",
     roll: "+163% def | +30 all res | +5 maek",
@@ -48,7 +48,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Jalals Mähne",
     category: "Unique – Helm",
     stars: "★★★★☆",
     roll: "+162% def | +30 all res | +5 maek",
@@ -56,7 +56,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Trang-Ouls Schuppen",
     category: "Set – Rüstung",
     stars: "★★★☆☆",
     roll: "—",
@@ -64,7 +64,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Titans Rache",
     category: "Unique – Wurfspeer",
     stars: "★★★★☆",
     roll: "+200% ed | 6% ll",
@@ -72,7 +72,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Titans Rache",
     category: "Unique – Wurfspeer",
     stars: "★★★★☆",
     roll: "+196% ed | 7% ll",
@@ -80,7 +80,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Donnergotts Gedeihen",
     category: "Unique – Gürtel",
     stars: "★★★☆☆",
     roll: "+172% def",
@@ -88,7 +88,7 @@ const items = [
     status: "Verfügbar"
   },
   {
-    name: "Unbekannt",
+    name: "Der Großvater",
     category: "Unique – Zweihandschwert",
     stars: "★★★☆☆",
     roll: "+155% ed",
