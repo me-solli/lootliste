@@ -1,4 +1,5 @@
 const items = [
+  // ===== Alte Items =====
   {
     name: "Lidlose Wand",
     category: "Unique – Schild",
@@ -92,6 +93,88 @@ const items = [
     category: "Unique – Zweihandschwert",
     stars: "★★★☆☆",
     roll: "+155% ed",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+
+  // ===== Neue Items =====
+  {
+    name: "Klinge des Ali Baba",
+    category: "Unique – Schwert",
+    stars: "★★★★★",
+    roll: "mf +86% | extragold +215% | 2os",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Klinge des Ali Baba",
+    category: "Unique – Schwert",
+    stars: "★★★★★",
+    roll: "mf +86% | extragold +215% | 2os",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Klinge des Ali Baba",
+    category: "Unique – Schwert",
+    stars: "★★★★★",
+    roll: "mf +86% | extragold +215% | 2os",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Eingebrannter Riesenzauber",
+    category: "Charme – Riesenzauber",
+    stars: "★★★★☆",
+    roll: "+1 kampffertigkeiten (paladin)",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Der Erlöser",
+    category: "Unique – Szepter",
+    stars: "★★★★☆",
+    roll: "+2 paladin skills | -33% target def",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Schnitters Tribut",
+    category: "Unique – Stangenwaffe",
+    stars: "★★★★★",
+    roll: "33% ctc decrepify | +199% ed | 11% ll",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Adlerhorn",
+    category: "Unique – Bogen",
+    stars: "★★★★☆",
+    roll: "+1 amazon skills | +200% ed | ignores target def",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Die Fäulniskluft",
+    category: "Charme – Riesenzauber",
+    stars: "★★★★★",
+    roll: "bricht giftimmunität | -72% gegner-giftres",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Donnerschlag",
+    category: "Unique – Wurfspeer",
+    stars: "★★★★★",
+    roll: "+4 jav skills | -15% enemy light res | 20% ctc lightning",
+    contact: "me_solli",
+    status: "Verfügbar"
+  },
+  {
+    name: "Tal Rashas Horadrimwaffen",
+    category: "Set – Helm",
+    stars: "★★★★★",
+    roll: "10% ll | 10% ml | +15 all res",
     contact: "me_solli",
     status: "Verfügbar"
   }
