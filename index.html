@@ -15,71 +15,87 @@
       --muted:#bdbdbd;
       --green:#4cff4c;
       --red:#ff5c5c;
+      --purple:#9146FF;
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
       font-family:Arial,Helvetica,sans-serif;
       background:var(--bg);
       color:var(--text);
     }
+
     .wrapper{
       max-width:1200px;
       margin:0 auto;
       padding:0 16px 40px;
     }
 
-    /* ===== HERO ===== */
+    /* ===== HERO / BANNER ===== */
     .hero{
       margin-top:24px;
       border-radius:18px;
       overflow:hidden;
     }
+
     .hero-inner{
       position:relative;
       min-height:220px;
       background:url("./img/banner-diablo.jpg") center/cover no-repeat;
     }
+
     .hero-overlay{
       position:absolute;
       inset:0;
-      background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.9));
+      background:linear-gradient(
+        180deg,
+        rgba(0,0,0,.55) 0%,
+        rgba(0,0,0,.85) 70%,
+        rgba(0,0,0,.95) 100%
+      );
     }
+
     .hero-content{
       position:relative;
       z-index:2;
-      padding:28px;
-      display:flex;
-      gap:20px;
-      align-items:center;
+      padding:28px 32px;
     }
-    .hero-content img{
-      width:64px;height:64px;
-    }
+
     .hero h1{
       margin:0;
       font-size:28px;
       color:#fff;
     }
+
     .hero p{
-      margin:6px 0 0;
+      margin:6px 0 10px;
       color:var(--muted);
       font-size:14px;
     }
-    .stream-status{
-      margin-top:8px;
-      font-size:13px;
-      color:var(--green);
+
+    .hero-links a{
+      display:inline-block;
+      margin-top:6px;
+      color:var(--purple);
+      text-decoration:none;
       font-weight:bold;
+      font-size:14px;
+    }
+
+    .hero-links a:hover{
+      text-decoration:underline;
     }
 
     /* ===== CONTROLS ===== */
     .controls{
-      margin-top:20px;
+      margin-top:22px;
       display:flex;
       gap:12px;
       flex-wrap:wrap;
     }
+
     input,select{
       background:var(--soft);
       border:1px solid var(--border);
@@ -99,23 +115,51 @@
       border-radius:14px;
       overflow:hidden;
     }
+
     thead th{
       padding:12px;
       text-align:left;
       font-size:13px;
       color:var(--gold);
       border-bottom:1px solid var(--border);
+      white-space:nowrap;
     }
+
     tbody td{
       padding:10px 12px;
       border-bottom:1px solid #1e1e1e;
       font-size:14px;
+      vertical-align:middle;
     }
-    tbody tr:hover{background:#191919}
-    .item-name{font-weight:bold;color:#fff}
-    .stars{color:var(--gold)}
-    .status.verfuegbar{color:var(--green);font-weight:bold}
-    .status.vergeben{color:var(--red);font-weight:bold}
+
+    tbody tr:hover{
+      background:#191919;
+    }
+
+    .item-name{
+      font-weight:bold;
+      color:#fff;
+      min-width:220px;
+    }
+
+    .stars{
+      color:var(--gold);
+    }
+
+    .roll{
+      font-size:13px;
+      color:#cfcfcf;
+    }
+
+    .status.verfuegbar{
+      color:var(--green);
+      font-weight:bold;
+    }
+
+    .status.vergeben{
+      color:var(--red);
+      font-weight:bold;
+    }
 
     /* ===== FOOTER ===== */
     footer{
@@ -124,18 +168,29 @@
       border-top:1px solid var(--border);
       font-size:13px;
     }
+
     footer a{
       color:var(--gold);
       margin-right:16px;
       text-decoration:none;
     }
-    footer a:hover{text-decoration:underline}
 
-    /* ===== EDIT MODE ===== */
-    .edit-hint{
-      margin-top:10px;
-      font-size:12px;
-      color:#777;
+    footer a:hover{
+      text-decoration:underline;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width:700px){
+      thead{display:none}
+      table,tbody,tr,td{display:block;width:100%}
+      tbody tr{
+        padding:10px 0;
+        border-bottom:1px solid var(--border);
+      }
+      tbody td{
+        border:none;
+        padding:6px 12px;
+      }
     }
   </style>
 </head>
@@ -143,20 +198,23 @@
 <body>
 <div class="wrapper">
 
+  <!-- BANNER -->
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <img src="./img/logo-rune.png" alt="Logo">
-        <div>
-          <h1>🎁 Free Lootliste – Community Items</h1>
-          <p>Diablo II: Resurrected · Non-Ladder · kostenlos für die Community</p>
-          <div class="stream-status">🟢 Stream: Offline</div>
+        <h1>🎁 Free Lootliste – Community Items</h1>
+        <p>Diablo II: Resurrected · Non-Ladder · kostenlos für die Community</p>
+        <div class="hero-links">
+          <a href="https://www.twitch.tv/me_solli" target="_blank" rel="noopener">
+            ▶ twitch.tv/me_solli
+          </a>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- FILTER -->
   <div class="controls">
     <input id="search" placeholder="Item suchen …">
     <select id="statusFilter">
@@ -171,6 +229,7 @@
     </select>
   </div>
 
+  <!-- TABLE -->
   <table>
     <thead>
       <tr>
@@ -185,10 +244,7 @@
     <tbody id="loot-table"></tbody>
   </table>
 
-  <div class="edit-hint">
-    Edit-Modus: <strong>STRG + ALT + E</strong>
-  </div>
-
+  <!-- FOOTER -->
   <footer>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
@@ -197,57 +253,59 @@
 </div>
 
 <script type="module">
-import items from "./items.js";
+  import items from "./items.js";
 
-let editMode=false;
-const tbody=document.getElementById("loot-table");
-const search=document.getElementById("search");
-const statusFilter=document.getElementById("statusFilter");
-const sortStars=document.getElementById("sortStars");
+  const tbody = document.getElementById("loot-table");
+  const search = document.getElementById("search");
+  const statusFilter = document.getElementById("statusFilter");
+  const sortStars = document.getElementById("sortStars");
 
-function starCount(s){return (s.match(/★/g)||[]).length}
+  function starCount(s){
+    return (s.match(/★/g) || []).length;
+  }
 
-function render(){
-  tbody.innerHTML="";
-  let list=[...items];
+  function render(){
+    tbody.innerHTML = "";
+    let list = [...items];
 
-  if(search.value)
-    list=list.filter(i=>i.name.toLowerCase().includes(search.value.toLowerCase()));
+    if(search.value){
+      list = list.filter(i =>
+        i.name.toLowerCase().includes(search.value.toLowerCase())
+      );
+    }
 
-  if(statusFilter.value!=="all")
-    list=list.filter(i=>i.status===statusFilter.value);
+    if(statusFilter.value !== "all"){
+      list = list.filter(i => i.status === statusFilter.value);
+    }
 
-  if(sortStars.value!=="none"){
-    list.sort((a,b)=>{
-      const d=starCount(b.stars)-starCount(a.stars);
-      return sortStars.value==="desc"?d:-d;
+    if(sortStars.value !== "none"){
+      list.sort((a,b)=>{
+        const diff = starCount(b.stars) - starCount(a.stars);
+        return sortStars.value === "desc" ? diff : -diff;
+      });
+    }
+
+    list.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="item-name">${item.name}</td>
+        <td>${item.category}</td>
+        <td class="stars">${item.stars}</td>
+        <td class="roll">${item.roll}</td>
+        <td>${item.contact}</td>
+        <td class="status ${item.status === "Verfügbar" ? "verfuegbar" : "vergeben"}">
+          ${item.status}
+        </td>
+      `;
+      tbody.appendChild(tr);
     });
   }
 
-  list.forEach(i=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td class="item-name">${i.name}</td>
-      <td>${i.category}</td>
-      <td class="stars">${i.stars}</td>
-      <td>${i.roll}</td>
-      <td>${i.contact}</td>
-      <td class="status ${i.status==="Verfügbar"?"verfuegbar":"vergeben"}">${i.status}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-render();
-search.oninput=render;
-statusFilter.onchange=render;
-sortStars.onchange=render;
-
-document.addEventListener("keydown",e=>{
-  if(e.ctrlKey&&e.altKey&&e.key==="e"){
-    alert("Edit-Modus aktiviert.\nÄnderungen bitte in items.js vornehmen.");
-  }
-});
+  render();
+  search.oninput = render;
+  statusFilter.onchange = render;
+  sortStars.onchange = render;
 </script>
+
 </body>
 </html>
