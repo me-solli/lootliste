@@ -2,130 +2,133 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Free Community Lootliste – D2R Non-Ladder</title>
+<title>Community Lootliste – me_solli</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --gold:#d4af37;
-  --fire:#e25822;
-  --ice:#4da6ff;
-  --bg:#0b0b0b;
-  --panel:#141414;
-}
-
-*{box-sizing:border-box}
-
 body{
   margin:0;
-  background:radial-gradient(circle at top,#111,#000 70%);
+  background:#0b0b0b;
   color:#e6e6e6;
-  font-family:Segoe UI,Roboto,Arial,sans-serif;
+  font-family:Segoe UI,Arial,sans-serif;
 }
 
 .container{
   max-width:1100px;
-  margin:auto;
-  padding:18px;
+  margin:0 auto;
+  padding:20px;
 }
 
-/* ===== Banner ===== */
+/* ---------- Banner ---------- */
+@keyframes bannerGlow {
+  0% {
+    box-shadow:0 0 20px rgba(212,175,55,.25),
+               inset 0 0 40px rgba(226,88,34,.15);
+  }
+  50% {
+    box-shadow:0 0 35px rgba(212,175,55,.45),
+               inset 0 0 60px rgba(77,166,255,.18);
+  }
+  100% {
+    box-shadow:0 0 20px rgba(212,175,55,.25),
+               inset 0 0 40px rgba(226,88,34,.15);
+  }
+}
+
+@keyframes runeFloat {
+  0%   { transform:translateY(-50%) translateX(0); }
+  50%  { transform:translateY(-54%) translateX(-3px); }
+  100% { transform:translateY(-50%) translateX(0); }
+}
+
 .banner{
-  padding:26px 24px;
-  margin-bottom:20px;
+  position:relative;
+  padding:30px 26px;
   border-radius:14px;
-  background:linear-gradient(90deg,rgba(226,88,34,.25),rgba(212,175,55,.35),rgba(77,166,255,.25));
-  box-shadow:0 0 35px rgba(212,175,55,.35);
+  margin-bottom:24px;
+  background:linear-gradient(90deg,
+    rgba(226,88,34,.25),
+    rgba(212,175,55,.35),
+    rgba(77,166,255,.25));
+  animation:bannerGlow 6s ease-in-out infinite;
+  overflow:hidden;
+}
+
+.banner::after{
+  content:"ᚱ";
+  position:absolute;
+  right:26px;
+  top:50%;
+  font-size:64px;
+  opacity:.18;
+  animation:runeFloat 5s ease-in-out infinite;
 }
 
 .banner h1{
   margin:0;
-  color:var(--gold);
   font-size:26px;
+  color:#f5f5f5;
 }
+
 .banner p{
-  margin:6px 0 0;
+  margin-top:6px;
   opacity:.85;
 }
 
-/* ===== Lootliste ===== */
-.table-wrap{
-  background:var(--panel);
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 0 25px rgba(0,0,0,.6);
-}
-
+/* ---------- Lootliste ---------- */
 table{
   width:100%;
   border-collapse:collapse;
-}
-
-thead{
-  background:#0e0c07;
+  margin-top:10px;
 }
 
 th,td{
-  padding:12px 14px;
-  text-align:left;
-  font-size:14px;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 th{
-  color:var(--gold);
+  text-align:left;
+  color:#d4af37;
 }
 
-tbody tr:nth-child(even){background:#181818}
-tbody tr:hover{background:#202020}
+.status-free{color:#6cff6c}
+.status-reserved{color:#ffd966}
+.status-given{color:#aaa}
 
-.status-ok{color:#66ff88;font-weight:600}
-.stars{color:var(--gold);letter-spacing:1px}
-
-/* ===== Info Boxen ===== */
+/* ---------- Info Boxen ---------- */
 .info-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:14px;
-  margin-top:22px;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+  margin-top:28px;
 }
 
-.info{
+.info-box{
   background:#141414;
   border-radius:12px;
-  padding:14px 16px;
-  box-shadow:0 0 18px rgba(0,0,0,.5);
+  padding:16px;
+  box-shadow:0 0 12px rgba(0,0,0,.6);
 }
 
-.info h3{
-  margin:0 0 6px;
-  color:var(--gold);
-  font-size:16px;
+.info-box h2{
+  margin-top:0;
+  color:#d4af37;
+  font-size:18px;
 }
 
-.info p{
-  margin:0;
-  font-size:13px;
-  opacity:.85;
-}
-
-/* ===== Legal ===== */
-details{
-  margin-top:14px;
-  background:#0f0f0f;
-  border-radius:10px;
-  padding:12px 14px;
-}
-
-summary{
-  cursor:pointer;
-  color:var(--gold);
-  font-weight:600;
-}
-
-details p{
+/* ---------- Footer ---------- */
+footer{
+  margin-top:30px;
+  text-align:center;
   font-size:12px;
-  opacity:.8;
-  margin-top:8px;
+  opacity:.75;
+}
+
+footer a{
+  color:#d4af37;
+  text-decoration:none;
+  margin:0 10px;
 }
 </style>
 </head>
@@ -135,92 +138,70 @@ details p{
 
   <!-- Banner -->
   <div class="banner">
-    <h1>🎁 Free Community Lootliste</h1>
-    <p>Diablo II Resurrected – Non-Ladder</p>
+    <h1>🎁 Community Lootliste – Free Items</h1>
+    <p>Diablo II Resurrected • Non-Ladder • Feuer & Eis</p>
   </div>
 
   <!-- Lootliste -->
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Kategorie</th>
-          <th>Bewertung</th>
-          <th>Qualität / Roll</th>
-          <th>Kontakt</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="lootTable"></tbody>
-    </table>
-  </div>
+  <table id="lootTable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Typ</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <!-- Info Boxen -->
   <div class="info-grid">
-    <div class="info">
-      <h3>🎮 Über den Stream</h3>
+
+    <div class="info-box">
+      <h2>📺 Über den Stream</h2>
       <p>
-        Diablo II Resurrected – Non-Ladder<br>
-        Fokus auf Farming, Loot & Community<br>
-        Runs: Andariel, Mephisto, Pindle & mehr
+        Diablo II Resurrected Stream mit Fokus auf Sorc-Gameplay,
+        effiziente Farmrouten und Community-Interaktion.
       </p>
     </div>
 
-    <div class="info">
-      <h3>🎁 Community Loot</h3>
+    <div class="info-box">
+      <h2>🎁 Community Loot</h2>
       <p>
-        Alle Items sind kostenlos<br>
-        Fair Play – first come, first serve<br>
-        Kontakt im Stream oder via Twitch
+        Alle Items auf dieser Liste sind kostenlos.
+        Einfach im Chat melden, wenn etwas gebraucht wird.
       </p>
     </div>
 
-    <div class="info">
-      <h3>⏰ Streamzeiten</h3>
+    <div class="info-box">
+      <h2>⏰ Streamzeiten</h2>
       <p>
-        Meist ab 22:00 Uhr<br>
-        Montag – Sonntag<br>
-        Änderungen im Stream
+        Mehrmals pro Woche<br>
+        Zeiten variieren – Ankündigung im Stream & auf Twitch
       </p>
     </div>
+
   </div>
 
-  <!-- Rechtliches -->
-  <details>
-    <summary>Impressum</summary>
-    <p>
-      Angaben gemäß § 5 TMG<br>
-      Betreiber: me_solli<br>
-      Kontakt über Twitch
-    </p>
-  </details>
-
-  <details>
-    <summary>Datenschutzerklärung</summary>
-    <p>
-      Diese Seite verwendet keine Cookies, kein Tracking und keine externen Dienste.
-      Daten werden ausschließlich lokal im Browser verarbeitet.
-    </p>
-  </details>
+  <!-- Footer -->
+  <footer>
+    <a href="impressum.html">Impressum</a> |
+    <a href="datenschutz.html">Datenschutzerklärung</a>
+  </footer>
 
 </div>
 
+<!-- Items -->
 <script src="items.js"></script>
 <script>
-function stars(n){
-  return "★".repeat(n)+"☆".repeat(5-n);
-}
-const tbody=document.getElementById("lootTable");
-items.forEach(i=>{
+const tbody = document.querySelector("#lootTable tbody");
+
+items.forEach(item=>{
   const tr=document.createElement("tr");
   tr.innerHTML=`
-    <td>${i.name}</td>
-    <td>${i.category}</td>
-    <td class="stars">${stars(i.rating)}</td>
-    <td>${i.roll || "—"}</td>
-    <td>${i.contact}</td>
-    <td class="status-ok">${i.status}</td>
+    <td>${item.name}</td>
+    <td>${item.type}</td>
+    <td class="status-${item.status}">${item.status}</td>
   `;
   tbody.appendChild(tr);
 });
