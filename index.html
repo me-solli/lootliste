@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Community Lootliste – Free Items</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
@@ -13,13 +13,11 @@
       color: #eaeaea;
     }
 
-    /* ===== WRAPPER ===== */
     .wrapper {
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* ===== HEADER ===== */
     .header {
       padding: 24px;
       background: linear-gradient(90deg, #5a2d1c, #2d3b4f);
@@ -36,7 +34,6 @@
       opacity: 0.85;
     }
 
-    /* ===== CONTENT ===== */
     .container {
       padding: 24px;
     }
@@ -52,7 +49,6 @@
       color: #f5c451;
       border-bottom: 1px solid #333;
       padding: 10px;
-      font-size: 15px;
       white-space: nowrap;
     }
 
@@ -60,155 +56,102 @@
       padding: 10px;
       border-bottom: 1px solid #1e1e1e;
       font-size: 14px;
-      vertical-align: top;
     }
 
-    tbody tr:hover {
-      background: #141414;
-    }
-
-    /* ===== SPALTEN ===== */
     .item-name {
       font-weight: bold;
       min-width: 220px;
-      color: #ffffff;
+      color: #fff;
     }
 
-    .stars {
-      color: #f5c451;
-      white-space: nowrap;
-    }
+    .stars { color: #f5c451; }
+    .roll { font-size: 13px; color: #cfcfcf; }
 
-    .roll {
-      color: #cfcfcf;
-      font-size: 13px;
-      max-width: 360px;
-    }
+    .status.verfuegbar { color: #4cff4c; font-weight: bold; }
+    .status.reserviert { color: #ffd24c; font-weight: bold; }
+    .status.vergeben   { color: #ff5c5c; font-weight: bold; }
 
-    /* ===== STATUS ===== */
-    .status {
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .status.verfuegbar { color: #4cff4c; }
-    .status.reserviert { color: #ffd24c; }
-    .status.vergeben   { color: #ff5c5c; }
-
-    /* ===== FOOTER ===== */
     footer {
       margin-top: 40px;
       padding: 20px;
       border-top: 1px solid #222;
       font-size: 13px;
-      opacity: 0.85;
     }
 
     footer a {
       color: #f5c451;
-      text-decoration: none;
       margin-right: 16px;
+      text-decoration: none;
     }
 
     footer a:hover {
       text-decoration: underline;
     }
-
-    section {
-      margin-top: 40px;
-    }
-
-    section h2 {
-      color: #f5c451;
-      font-size: 20px;
-    }
   </style>
 </head>
 
 <body>
+<div class="wrapper">
 
-  <div class="wrapper">
+  <div class="header">
+    <h1>🎁 Community Lootliste – Free Items</h1>
+    <p>Diablo II Resurrected · Non-Ladder</p>
+  </div>
 
-    <!-- HEADER -->
-    <div class="header">
-      <h1>🎁 Community Lootliste – Free Items</h1>
-      <p>Diablo II Resurrected · Non-Ladder</p>
-    </div>
+  <div class="container">
 
-    <!-- CONTENT -->
-    <div class="container">
-
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Typ</th>
-            <th>Rating</th>
-            <th>Roll</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="loot-table"></tbody>
-      </table>
-
-      <!-- IMPRESSUM -->
-      <section id="impressum">
-        <h2>Impressum</h2>
-        <p>
-          Angaben gemäß § 5 TMG<br>
-          Betreiber: me_solli<br>
-          Kontakt über Twitch / Discord
-        </p>
-      </section>
-
-      <!-- DATENSCHUTZ -->
-      <section id="datenschutz">
-        <h2>Datenschutz</h2>
-        <p>
-          Diese Seite speichert keine personenbezogenen Daten.<br>
-          Es werden keine Cookies gesetzt und keine externen Dienste eingebunden.
-        </p>
-      </section>
-
-    </div>
-
-    <!-- FOOTER -->
-    <footer>
-      <a href="#impressum">Impressum</a>
-      <a href="#datenschutz">Datenschutz</a>
-    </footer>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Typ</th>
+          <th>Rating</th>
+          <th>Roll</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="loot-table"></tbody>
+    </table>
 
   </div>
 
-  <!-- ===== SCRIPT ===== -->
-  <script type="module">
-    import items from "./items.js";
+  <footer>
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </footer>
 
-    const tableBody = document.getElementById("loot-table");
+</div>
 
-    items.forEach(item => {
-      const row = document.createElement("tr");
+<!-- 🔥 GH-Pages-sicheres Script -->
+<script type="module">
+  import items from "./items.js";
 
-      const name =
-        item.name && item.name.trim() !== ""
-          ? item.name
-          : "Unbekanntes Item";
+  const tbody = document.getElementById("loot-table");
 
-      let statusClass = "verfuegbar";
-      if (item.status === "Reserviert") statusClass = "reserviert";
-      if (item.status === "Vergeben")   statusClass = "vergeben";
+  items.forEach(item => {
+    const tr = document.createElement("tr");
 
-      row.innerHTML = `
-        <td class="item-name">${name}</td>
-        <td>${item.category || "—"}</td>
-        <td class="stars">${item.stars || "—"}</td>
-        <td class="roll">${item.roll || "—"}</td>
-        <td class="status ${statusClass}">${item.status || "—"}</td>
-      `;
+    const name   = item.name?.trim() || "Unbekanntes Item";
+    const type   = item.category || "—";
+    const stars  = item.stars || "—";
+    const roll   = item.roll || "—";
+    const status = item.status || "Verfügbar";
 
-      tableBody.appendChild(row);
-    });
-  </script>
+    let statusClass = "verfuegbar";
+    if (status === "Reserviert") statusClass = "reserviert";
+    if (status === "Vergeben")   statusClass = "vergeben";
+
+    tr.innerHTML = `
+      <td class="item-name">${name}</td>
+      <td>${type}</td>
+      <td class="stars">${stars}</td>
+      <td class="roll">${roll}</td>
+      <td class="status ${statusClass}">${status}</td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+</script>
 
 </body>
 </html>
