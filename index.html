@@ -1,214 +1,232 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Free Community Lootliste – D2R Non-Ladder</title>
+<meta charset="UTF-8">
+<title>Free Community Lootliste – D2R Non-Ladder</title>
 
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --panel: #121212;
-      --row1: #1a1a1a;
-      --row2: #202020;
+<style>
+:root {
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --panel2:#161616;
+  --gold:#d4af37;
+  --fire:#e25822;
+  --ice:#4da6ff;
+  --text:#e6e6e6;
+  --muted:#9a9a9a;
+  --green:#4caf50;
+}
 
-      --gold: #d4af37;
-      --fire: #e25822;
-      --ice: #4da6ff;
+* { box-sizing:border-box; font-family:"Segoe UI",system-ui,sans-serif; }
 
-      --text: #e6e6e6;
-      --muted: #9a9a9a;
+body {
+  margin:0;
+  background:#000;
+  color:var(--text);
+}
 
-      --green: #4caf50;
-    }
+.wrapper {
+  width:1000px;
+  margin:20px auto;
+  padding:20px;
+  background:
+    radial-gradient(circle at top left, rgba(226,88,34,.08), transparent 40%),
+    radial-gradient(circle at top right, rgba(77,166,255,.08), transparent 40%),
+    linear-gradient(180deg,#090909,#0f0f0f);
+  border-radius:12px;
+  border:1px solid rgba(212,175,55,.25);
+}
 
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", system-ui, sans-serif;
-    }
+/* ---------- HEADER ---------- */
+h1 {
+  margin:0 0 18px;
+  font-size:22px;
+  color:var(--gold);
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+h1::before { content:"ᚱ"; }
 
-    body {
-      margin: 0;
-      background: #000;
-      color: var(--text);
-    }
+/* ---------- INFO BOXES ---------- */
+.info-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:22px;
+}
 
-    .wrapper {
-      width: 1000px;
-      margin: 20px auto;
-      padding: 20px;
-      background:
-        radial-gradient(circle at top left, rgba(226,88,34,0.08), transparent 40%),
-        radial-gradient(circle at top right, rgba(77,166,255,0.08), transparent 40%),
-        linear-gradient(180deg, #090909, #0f0f0f);
-      border-radius: 12px;
-      border: 1px solid rgba(212,175,55,0.25);
-    }
+.info-box {
+  background:linear-gradient(180deg,#141414,#0f0f0f);
+  border:1px solid rgba(212,175,55,.25);
+  border-radius:10px;
+  padding:14px 16px;
+}
 
-    h1 {
-      margin: 0 0 16px;
-      font-size: 22px;
-      color: var(--gold);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+.info-title {
+  font-size:15px;
+  font-weight:700;
+  color:var(--gold);
+  margin-bottom:6px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
 
-    h1::before {
-      content: "ᚱ";
-      font-size: 22px;
-    }
+.info-box p {
+  font-size:13px;
+  color:var(--muted);
+  margin:4px 0;
+}
 
-    h2 {
-      margin: 26px 0 10px;
-      font-size: 18px;
-      color: var(--gold);
-      border-bottom: 1px solid rgba(212,175,55,0.3);
-      padding-bottom: 4px;
-    }
+/* ---------- TABLE ---------- */
+table {
+  width:100%;
+  border-collapse:collapse;
+  background:var(--panel);
+  border-radius:10px;
+  overflow:hidden;
+}
 
-    p, li {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
+thead {
+  background:linear-gradient(
+    90deg,
+    rgba(226,88,34,.25),
+    rgba(212,175,55,.35),
+    rgba(77,166,255,.25)
+  );
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--panel);
-      border-radius: 8px;
-      overflow: hidden;
-    }
+th {
+  padding:10px 12px;
+  font-size:13px;
+  color:var(--gold);
+  text-align:left;
+}
 
-    thead {
-      background: linear-gradient(
-        90deg,
-        rgba(226,88,34,0.25),
-        rgba(212,175,55,0.35),
-        rgba(77,166,255,0.25)
-      );
-    }
+tbody tr:nth-child(odd){ background:#1a1a1a; }
+tbody tr:nth-child(even){ background:#202020; }
 
-    th {
-      padding: 10px 12px;
-      font-size: 13px;
-      color: var(--gold);
-      text-align: left;
-    }
+td {
+  padding:9px 12px;
+  font-size:14px;
+}
 
-    tbody tr:nth-child(odd) { background: var(--row1); }
-    tbody tr:nth-child(even) { background: var(--row2); }
+.stars { color:var(--gold); letter-spacing:1px; }
+.status { color:var(--green); font-weight:700; }
 
-    td {
-      padding: 9px 12px;
-      font-size: 14px;
-    }
+/* ---------- FOOTER SECTIONS ---------- */
+.section {
+  margin-top:26px;
+}
 
-    .stars {
-      color: var(--gold);
-      letter-spacing: 1px;
-    }
+.section h2 {
+  font-size:17px;
+  color:var(--gold);
+  margin-bottom:8px;
+  border-bottom:1px solid rgba(212,175,55,.3);
+  padding-bottom:4px;
+}
 
-    .status {
-      color: var(--green);
-      font-weight: 700;
-    }
+.section p {
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
 
-    footer {
-      margin-top: 30px;
-      font-size: 12px;
-      color: #777;
-    }
-  </style>
+footer {
+  margin-top:30px;
+  font-size:12px;
+  color:#777;
+}
+</style>
 </head>
 
 <body>
-
 <div class="wrapper">
 
-  <h1>Free Community Lootliste (D2R Non-Ladder)</h1>
+<h1>Free Community Lootliste (D2R Non-Ladder)</h1>
 
-  <!-- LOOTLISTE -->
-  <table>
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Kategorie</th>
-        <th>Bewertung</th>
-        <th>Qualität / Roll</th>
-        <th>Kontakt</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody id="loot-body"></tbody>
-  </table>
+<!-- INFO BOXES -->
+<div class="info-grid">
+  <div class="info-box">
+    <div class="info-title">🎮 Über den Stream</div>
+    <p>Diablo II Resurrected – Non-Ladder</p>
+    <p>Fokus auf Farming, Loot & Community</p>
+    <p>Runs: Andariel, Mephisto, Pindle & mehr</p>
+  </div>
 
-  <!-- ÜBER DEN STREAM -->
-  <h2>🎮 Über den Stream</h2>
-  <p>
-    Willkommen beim Diablo II: Resurrected Community-Stream (Non-Ladder).
-    Fokus liegt auf entspanntem Farming, Wissensaustausch und kostenlosen
-    Community-Items für Viewer.
-  </p>
+  <div class="info-box">
+    <div class="info-title">🎁 Community Loot</div>
+    <p>Alle Items sind kostenlos</p>
+    <p>Fair Play – first come, first serve</p>
+    <p>Kontakt direkt im Stream oder via Twitch</p>
+  </div>
 
-  <!-- COMMUNITY LOOT -->
-  <h2>🎁 Community Lootliste</h2>
-  <ul>
-    <li>Alle Items sind kostenlos (Free Loot)</li>
-    <li>Non-Ladder only</li>
-    <li>First come, first serve – fair & transparent</li>
-    <li>Kontaktaufnahme direkt im Twitch-Chat</li>
-  </ul>
+  <div class="info-box">
+    <div class="info-title">⏰ Streamzeiten</div>
+    <p>Meist ab 22:00 Uhr</p>
+    <p>Montag – Sonntag</p>
+    <p>Änderungen im Stream</p>
+  </div>
+</div>
 
-  <!-- STREAMZEITEN -->
-  <h2>⏰ Streamzeiten</h2>
-  <p>
-    📅 Unregelmäßig / nach Ankündigung<br>
-    🔔 Am besten Twitch-Benachrichtigungen aktivieren
-  </p>
+<!-- LOOTLISTE -->
+<table>
+<thead>
+<tr>
+  <th>Item</th>
+  <th>Kategorie</th>
+  <th>Bewertung</th>
+  <th>Qualität / Roll</th>
+  <th>Kontakt</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody id="loot-body"></tbody>
+</table>
 
-  <!-- IMPRESSUM -->
-  <h2>📄 Impressum</h2>
-  <p>
-    Angaben gemäß § 5 TMG<br><br>
-    Twitch-Name: <strong>me_solli</strong><br>
-    Kontakt: über Twitch-Nachrichten oder Chat
-  </p>
+<!-- IMPRESSUM -->
+<div class="section">
+<h2>📄 Impressum</h2>
+<p>
+Angaben gemäß § 5 TMG<br><br>
+Twitch-Name: <strong>me_solli</strong><br>
+Kontakt: über Twitch-Chat oder Nachrichten
+</p>
+</div>
 
-  <!-- DATENSCHUTZ -->
-  <h2>🔒 Datenschutzerklärung</h2>
-  <p>
-    Diese Website erhebt keine personenbezogenen Daten.
-    Es werden keine Cookies gesetzt und keine externen Tracker verwendet.
-    Beim Aufruf über GitHub Pages gelten zusätzlich die Datenschutzrichtlinien von GitHub.
-  </p>
+<!-- DATENSCHUTZ -->
+<div class="section">
+<h2>🔒 Datenschutzerklärung</h2>
+<p>
+Diese Website erhebt keine personenbezogenen Daten.<br>
+Keine Cookies, kein Tracking.<br>
+Beim Hosting über GitHub Pages gelten zusätzlich die Datenschutzrichtlinien von GitHub.
+</p>
+</div>
 
-  <footer>
-    © Community Lootliste · Diablo II Resurrected · Non-Ladder
-  </footer>
+<footer>
+© Community Lootliste · Diablo II Resurrected · Non-Ladder
+</footer>
 
 </div>
 
 <script src="items.js"></script>
 <script>
-  const body = document.getElementById("loot-body");
-
-  function stars(n) {
-    return "★".repeat(n) + "☆".repeat(5 - n);
-  }
-
-  items.forEach(item => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.category}</td>
-      <td class="stars">${stars(item.rating)}</td>
-      <td>${item.roll || "—"}</td>
-      <td>${item.contact}</td>
-      <td class="status">${item.status}</td>
-    `;
-    body.appendChild(tr);
-  });
+const body=document.getElementById("loot-body");
+function stars(n){return"★".repeat(n)+"☆".repeat(5-n);}
+items.forEach(item=>{
+  const tr=document.createElement("tr");
+  tr.innerHTML=`
+    <td>${item.name}</td>
+    <td>${item.category}</td>
+    <td class="stars">${stars(item.rating)}</td>
+    <td>${item.roll||"—"}</td>
+    <td>${item.contact}</td>
+    <td class="status">${item.status}</td>`;
+  body.appendChild(tr);
+});
 </script>
 
 </body>
