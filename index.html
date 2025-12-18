@@ -1,147 +1,154 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>🎁 Free Community Lootliste – D2R Non-Ladder</title>
+  <meta charset="UTF-8">
+  <title>Free Community Lootliste – D2R Non-Ladder</title>
 
   <style>
     :root {
-      --bg: #0b0b0b;
-      --panel: #151515;
-      --row1: #1c1c1c;
-      --row2: #232323;
-      --gold: #d6b15a;
-      --text: #eaeaea;
+      --bg: #0a0a0a;
+      --panel: #121212;
+      --row1: #1a1a1a;
+      --row2: #202020;
+
+      --gold: #d4af37;
+      --fire: #e25822;
+      --ice: #4da6ff;
+
+      --text: #e6e6e6;
+      --muted: #9a9a9a;
+
       --green: #4caf50;
-      --muted: #aaa;
+      --orange: #e67e22;
+      --red: #c0392b;
     }
 
     * {
       box-sizing: border-box;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Segoe UI", system-ui, sans-serif;
     }
 
     body {
       margin: 0;
-      background: transparent; /* OBS-freundlich */
+      background: transparent;
       color: var(--text);
     }
 
     .wrapper {
-      max-width: 1100px;
-      margin: 20px auto;
-      background: linear-gradient(#111, #0a0a0a);
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-      padding: 18px 22px 16px;
+      width: 1000px;
+      margin: 0 auto;
+      padding: 16px 20px 20px;
+      background:
+        radial-gradient(circle at top left, rgba(226,88,34,0.08), transparent 40%),
+        radial-gradient(circle at top right, rgba(77,166,255,0.08), transparent 40%),
+        linear-gradient(180deg, #090909, #0f0f0f);
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,0.25);
     }
 
     h1 {
-      margin: 0 0 14px 0;
+      margin: 0 0 14px;
       font-size: 22px;
       color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
     }
 
-    h2 {
-      margin: 0 0 8px 0;
-      font-size: 16px;
+    h1::before {
+      content: "ᚱ";
+      font-size: 22px;
       color: var(--gold);
+      text-shadow: 0 0 6px rgba(212,175,55,0.5);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
+      background: var(--panel);
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     thead {
-      background: linear-gradient(#2a210c, #191406);
+      background: linear-gradient(
+        90deg,
+        rgba(226,88,34,0.25),
+        rgba(212,175,55,0.35),
+        rgba(77,166,255,0.25)
+      );
     }
 
     th {
-      padding: 8px 10px;
-      text-align: left;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
       color: var(--gold);
-      font-weight: 600;
-      border-bottom: 1px solid #2d250f;
+      text-align: left;
+      white-space: nowrap;
     }
 
-    tbody tr:nth-child(odd) {
-      background: var(--row1);
-    }
-
-    tbody tr:nth-child(even) {
-      background: var(--row2);
-    }
+    tbody tr:nth-child(odd) { background: var(--row1); }
+    tbody tr:nth-child(even) { background: var(--row2); }
 
     td {
-      padding: 7px 10px;
+      padding: 9px 12px;
+      font-size: 14px;
       vertical-align: middle;
+    }
+
+    .item {
+      font-weight: 600;
+    }
+
+    .category {
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .stars {
       color: var(--gold);
       letter-spacing: 1px;
-      white-space: nowrap;
+      text-shadow: 0 0 4px rgba(212,175,55,0.4);
     }
 
-    .status {
-      color: var(--green);
-      font-weight: 600;
-    }
-
-    /* ===== INFOBEREICH (nur Webseite) ===== */
-
-    .web-only {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid #2a2a2a;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-    }
-
-    .info-box {
-      background: #141414;
-      border-radius: 8px;
-      padding: 12px 14px;
-      box-shadow: inset 0 0 0 1px #1f1f1f;
-    }
-
-    .info-box p {
-      margin: 6px 0;
+    .roll {
       font-size: 13px;
       color: var(--muted);
     }
 
-    .footer {
-      margin-top: 14px;
-      font-size: 12px;
-      color: #888;
+    .status {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .status.verfuegbar {
+      color: var(--green);
+      text-shadow: 0 0 4px rgba(76,175,80,0.4);
+    }
+
+    .status.reserviert {
+      color: var(--orange);
+    }
+
+    .status.vergeben {
+      color: var(--red);
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #777;
       text-align: right;
-    }
-
-    /* Rechtliches */
-    .legal {
-      font-size: 12px;
-      color: #888;
-      line-height: 1.6;
-    }
-
-    .legal a {
-      color: #aaa;
     }
   </style>
 </head>
 
 <body>
-  <div class="wrapper">
 
-    <!-- LOOTLISTE -->
-    <h1>🎁 Free Community Lootliste (D2R Non-Ladder)</h1>
+  <div class="wrapper">
+    <h1>Free Community Lootliste (D2R Non-Ladder)</h1>
 
     <table>
       <thead>
@@ -154,89 +161,39 @@
           <th>Status</th>
         </tr>
       </thead>
-      <tbody id="loot-body"></tbody>
+      <tbody id="loot-body">
+        <!-- JS füllt hier -->
+      </tbody>
     </table>
 
-    <!-- INFOBEREICH -->
-    <div class="web-only">
-      <div class="info-grid">
-
-        <div class="info-box">
-          <h2>🎮 Über den Stream</h2>
-          <p>Diablo II Resurrected – Non-Ladder</p>
-          <p>Fokus auf Farming, Loot & Community</p>
-          <p>Runs: Andariel, Mephisto, Pindle & mehr</p>
-        </div>
-
-        <div class="info-box">
-          <h2>🎁 Community Loot</h2>
-          <p>Alle Items sind kostenlos</p>
-          <p>Fair Play – first come, first serve</p>
-          <p>Kontakt direkt im Stream oder via Twitch</p>
-        </div>
-
-        <div class="info-box">
-          <h2>⏰ Streamzeiten</h2>
-          <p>Meist ab 22:00 Uhr</p>
-          <p>Montag – Sonntag</p>
-          <p>Änderungen im Stream</p>
-        </div>
-
-      </div>
+    <div class="hint">
+      🎁 Free Community Items · Non-Ladder · Stand: Live
     </div>
-
-    <!-- RECHTLICHES -->
-    <div class="web-only legal" style="margin-top:20px;">
-      <h2>Impressum</h2>
-      <p>
-        Angaben gemäß § 5 TMG<br>
-        Betreiber: me_solli (Twitch)<br>
-        Kontakt: Twitch Direktnachricht oder Chat<br><br>
-        Private, nicht-kommerzielle Webseite zur Unterstützung eines Twitch-Streams.
-      </p>
-
-      <h2 style="margin-top:14px;">Datenschutzerklärung</h2>
-      <p>
-        Diese Webseite erhebt keine personenbezogenen Daten.<br>
-        Es werden keine Cookies gesetzt und kein Tracking verwendet.<br><br>
-        Beim Aufruf können durch GitHub Pages technisch notwendige Server-Logdaten
-        verarbeitet werden. Darauf hat der Betreiber keinen Einfluss.
-      </p>
-
-      <p>
-        GitHub Datenschutzerklärung:
-        <a href="https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement"
-           target="_blank">
-          https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement
-        </a>
-      </p>
-    </div>
-
-    <div class="footer">
-      Twitch · me_solli · D2R Non-Ladder
-    </div>
-
   </div>
 
   <script src="items.js"></script>
   <script>
-    const tbody = document.getElementById("loot-body");
+    const body = document.getElementById("loot-body");
+
+    function renderStars(count) {
+      return "★".repeat(count) + "☆".repeat(5 - count);
+    }
 
     items.forEach(item => {
       const tr = document.createElement("tr");
-      const stars = "★".repeat(item.rating || 0);
 
       tr.innerHTML = `
-        <td>${item.name}</td>
-        <td>${item.category}</td>
-        <td class="stars">${stars}</td>
-        <td>${item.roll || "—"}</td>
+        <td class="item">${item.name}</td>
+        <td class="category">${item.category}</td>
+        <td class="stars">${renderStars(item.rating)}</td>
+        <td class="roll">${item.roll || "—"}</td>
         <td>${item.contact}</td>
-        <td class="status">${item.status}</td>
+        <td class="status ${item.statusClass}">${item.status}</td>
       `;
 
-      tbody.appendChild(tr);
+      body.appendChild(tr);
     });
   </script>
+
 </body>
 </html>
