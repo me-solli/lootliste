@@ -13,7 +13,7 @@
       color: #eaeaea;
     }
 
-    /* ===== LAYOUT WRAPPER ===== */
+    /* ===== WRAPPER ===== */
     .wrapper {
       max-width: 1200px;
       margin: 0 auto;
@@ -53,6 +53,7 @@
       border-bottom: 1px solid #333;
       padding: 10px;
       font-size: 15px;
+      white-space: nowrap;
     }
 
     tbody td {
@@ -69,7 +70,8 @@
     /* ===== SPALTEN ===== */
     .item-name {
       font-weight: bold;
-      min-width: 180px;
+      min-width: 220px;
+      color: #ffffff;
     }
 
     .stars {
@@ -80,7 +82,7 @@
     .roll {
       color: #cfcfcf;
       font-size: 13px;
-      max-width: 320px;
+      max-width: 360px;
     }
 
     /* ===== STATUS ===== */
@@ -99,7 +101,7 @@
       padding: 20px;
       border-top: 1px solid #222;
       font-size: 13px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     footer a {
@@ -130,7 +132,7 @@
     <!-- HEADER -->
     <div class="header">
       <h1>🎁 Community Lootliste – Free Items</h1>
-      <p>Diablo II Resurrected · Non-Ladder · me_solli</p>
+      <p>Diablo II Resurrected · Non-Ladder</p>
     </div>
 
     <!-- CONTENT -->
@@ -164,7 +166,7 @@
         <h2>Datenschutz</h2>
         <p>
           Diese Seite speichert keine personenbezogenen Daten.<br>
-          Es werden keine Cookies gesetzt und keine externen Tracker verwendet.
+          Es werden keine Cookies gesetzt und keine externen Dienste eingebunden.
         </p>
       </section>
 
@@ -178,7 +180,7 @@
 
   </div>
 
-  <!-- SCRIPT -->
+  <!-- ===== SCRIPT ===== -->
   <script type="module">
     import items from "./items.js";
 
@@ -187,16 +189,21 @@
     items.forEach(item => {
       const row = document.createElement("tr");
 
+      const name =
+        item.name && item.name.trim() !== ""
+          ? item.name
+          : "Unbekanntes Item";
+
       let statusClass = "verfuegbar";
       if (item.status === "Reserviert") statusClass = "reserviert";
-      if (item.status === "Vergeben") statusClass = "vergeben";
+      if (item.status === "Vergeben")   statusClass = "vergeben";
 
       row.innerHTML = `
-        <td class="item-name">${item.name}</td>
-        <td>${item.category}</td>
-        <td class="stars">${item.stars}</td>
-        <td class="roll">${item.roll}</td>
-        <td class="status ${statusClass}">${item.status}</td>
+        <td class="item-name">${name}</td>
+        <td>${item.category || "—"}</td>
+        <td class="stars">${item.stars || "—"}</td>
+        <td class="roll">${item.roll || "—"}</td>
+        <td class="status ${statusClass}">${item.status || "—"}</td>
       `;
 
       tableBody.appendChild(row);
