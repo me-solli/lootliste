@@ -1,224 +1,194 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Community Lootliste – Free Items</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: #eaeaea;
-    }
+<meta name="description" content="Kostenlose Community Lootliste für Diablo II Resurrected (Non-Ladder). Free Items aus dem Stream von me_solli.">
 
-    .wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+<style>
+body {
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0b0b0b;
+  color:#eaeaea;
+}
 
-    /* ===== HEADER ===== */
-    .header {
-      padding: 24px;
-      background: linear-gradient(90deg, #5a2d1c, #2d3b4f);
-      border-radius: 0 0 16px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
+.wrapper {
+  max-width:1200px;
+  margin:0 auto;
+}
 
-    .header-left h1 {
-      margin: 0;
-      font-size: 28px;
-    }
+header {
+  padding:26px;
+  background:linear-gradient(90deg,#5a2d1c,#2d3b4f);
+  border-radius:0 0 18px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
 
-    .header-left p {
-      margin-top: 6px;
-      opacity: 0.85;
-    }
+header h1 {
+  margin:0;
+  font-size:28px;
+}
 
-    .header-right {
-      text-align: right;
-      font-size: 14px;
-    }
+header p {
+  margin:6px 0 0;
+  opacity:.85;
+  font-size:14px;
+}
 
-    .twitch-link {
-      color: #b89cff;
-      text-decoration: none;
-      font-weight: bold;
-    }
+.twitch {
+  background:#9146FF;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:14px;
+  font-weight:bold;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.twitch:hover {
+  opacity:.85;
+}
 
-    .twitch-link:hover {
-      text-decoration: underline;
-    }
+.container {
+  padding:26px;
+}
 
-    /* ===== CONTENT ===== */
-    .container {
-      padding: 24px;
-    }
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
+thead th {
+  text-align:left;
+  color:#f5c451;
+  border-bottom:1px solid #333;
+  padding:10px;
+  white-space:nowrap;
+}
 
-    thead th {
-      text-align: left;
-      color: #f5c451;
-      border-bottom: 1px solid #333;
-      padding: 10px;
-      white-space: nowrap;
-      font-size: 14px;
-    }
+tbody td {
+  padding:10px;
+  border-bottom:1px solid #1e1e1e;
+  font-size:14px;
+}
 
-    tbody td {
-      padding: 10px;
-      border-bottom: 1px solid #1e1e1e;
-      font-size: 14px;
-      vertical-align: top;
-    }
+.item-name {
+  font-weight:bold;
+  color:#fff;
+  min-width:220px;
+}
 
-    .item-name {
-      font-weight: bold;
-      min-width: 220px;
-      color: #ffffff;
-    }
+.stars {
+  color:#f5c451;
+}
 
-    .stars {
-      color: #f5c451;
-      white-space: nowrap;
-    }
+.roll {
+  color:#cfcfcf;
+  font-size:13px;
+}
 
-    .roll {
-      font-size: 13px;
-      color: #cfcfcf;
-    }
+.status.verfuegbar { color:#4cff4c; font-weight:bold; }
+.status.reserviert { color:#ffd24c; font-weight:bold; }
+.status.vergeben   { color:#ff5c5c; font-weight:bold; }
 
-    .status.verfuegbar {
-      color: #4cff4c;
-      font-weight: bold;
-    }
+footer {
+  margin-top:40px;
+  padding:20px;
+  border-top:1px solid #222;
+  font-size:13px;
+}
 
-    .status.reserviert {
-      color: #ffd24c;
-      font-weight: bold;
-    }
+footer a {
+  color:#f5c451;
+  margin-right:16px;
+  text-decoration:none;
+}
 
-    .status.vergeben {
-      color: #ff5c5c;
-      font-weight: bold;
-    }
+footer a:hover {
+  text-decoration:underline;
+}
 
-    /* ===== FOOTER ===== */
-    footer {
-      margin-top: 40px;
-      padding: 20px 24px;
-      border-top: 1px solid #222;
-      font-size: 13px;
-    }
-
-    footer a {
-      color: #f5c451;
-      margin-right: 16px;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* ===== MOBILE ===== */
-    @media (max-width: 768px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .header-right {
-        text-align: left;
-      }
-    }
-  </style>
+@media (max-width:700px) {
+  header {
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+</style>
 </head>
 
 <body>
 <div class="wrapper">
 
-  <!-- ===== HEADER ===== -->
-  <div class="header">
-    <div class="header-left">
-      <h1>🎁 Community Lootliste – Free Items</h1>
-      <p>Diablo II Resurrected · Non-Ladder</p>
-    </div>
-
-    <div class="header-right">
-      <a class="twitch-link"
-         href="https://www.twitch.tv/me_solli"
-         target="_blank"
-         rel="noopener">
-        twitch.tv/me_solli
-      </a>
-    </div>
+<header>
+  <div>
+    <h1>🎁 Free Lootliste – Community Items</h1>
+    <p>Diablo II Resurrected · Non-Ladder</p>
   </div>
 
-  <!-- ===== CONTENT ===== -->
-  <div class="container">
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Typ</th>
-          <th>Rating</th>
-          <th>Roll</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="loot-table"></tbody>
-    </table>
-  </div>
+  <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
+    ▶ Twitch: me_solli
+  </a>
+</header>
 
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <a href="stream.html">Über den Stream</a>
-    <a href="impressum.html">Impressum</a>
-    <a href="datenschutz.html">Datenschutz</a>
-  </footer>
+<div class="container">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Typ</th>
+        <th>Rating</th>
+        <th>Roll</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="loot-table"></tbody>
+  </table>
 
 </div>
 
-<!-- ===== ITEMS ===== -->
+<footer>
+  <a href="impressum.html">Impressum</a>
+  <a href="datenschutz.html">Datenschutz</a>
+</footer>
+
+</div>
+
 <script type="module">
-  import items from "./items.js";
+import items from "./items.js";
 
-  const tbody = document.getElementById("loot-table");
+const tbody = document.getElementById("loot-table");
 
-  items.forEach(item => {
-    const tr = document.createElement("tr");
+items.forEach(item => {
+  const tr = document.createElement("tr");
 
-    const name   = item.name?.trim() || "Unbekanntes Item";
-    const type   = item.category || "—";
-    const stars  = item.stars || "—";
-    const roll   = item.roll || "—";
-    const status = item.status || "Verfügbar";
+  const name   = item.name?.trim() || "Unbekannt";
+  const type   = item.category || "—";
+  const stars  = item.stars || "—";
+  const roll   = item.roll || "—";
+  const status = item.status || "Verfügbar";
 
-    let statusClass = "verfuegbar";
-    if (status === "Reserviert") statusClass = "reserviert";
-    if (status === "Vergeben")   statusClass = "vergeben";
+  let statusClass = "verfuegbar";
+  if (status === "Reserviert") statusClass = "reserviert";
+  if (status === "Vergeben")   statusClass = "vergeben";
 
-    tr.innerHTML = `
-      <td class="item-name">${name}</td>
-      <td>${type}</td>
-      <td class="stars">${stars}</td>
-      <td class="roll">${roll}</td>
-      <td class="status ${statusClass}">${status}</td>
-    `;
+  tr.innerHTML = `
+    <td class="item-name">${name}</td>
+    <td>${type}</td>
+    <td class="stars">${stars}</td>
+    <td class="roll">${roll}</td>
+    <td class="status ${statusClass}">${status}</td>
+  `;
 
-    tbody.appendChild(tr);
-  });
+  tbody.appendChild(tr);
+});
 </script>
 
 </body>
