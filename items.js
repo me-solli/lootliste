@@ -1,73 +1,98 @@
-// Zentrale Item-Liste
-// Wird von index.html (Anzeige) und admin.html (Pflege) genutzt
-
-let items = JSON.parse(localStorage.getItem("lootItems")) || [
+const items = [
   {
-    name: "Trang-Ouls Schuppen",
-    category: "Set",
-    rating: 4,
-    quality: "—",
+    name: "undefined",
+    category: "Unique - Schild",
+    stars: "★★★★☆",
+    roll: "+80% def",
     contact: "me_solli",
-    status: "Verfügbar"
+    status: "undefined"
   },
   {
-    name: "Der Erlöser",
-    category: "Unique",
-    rating: 3,
-    quality: "281% ED / 75 DMG",
+    name: "undefined",
+    category: "Unique - Handschuhe",
+    stars: "★★★☆☆",
+    roll: "+25% def",
     contact: "me_solli",
-    status: "Verfügbar"
+    status: "undefined"
   },
   {
-    name: "Ali Baba",
-    category: "Unique",
-    rating: 3,
-    quality: "108% / 11 Dex",
+    name: "undefined",
+    category: "Unique - Armbrust",
+    stars: "★★★☆☆",
+    roll: "+195% ed",
     contact: "me_solli",
-    status: "Verfügbar"
-  }
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique - Schild",
+    stars: "★★★★☆",
+    roll: "+121% def",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique - Rüstung",
+    stars: "★★★★★",
+    roll: "+24 all res | +120% def | mdr 9",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique - Helm",
+    stars: "★★★★☆",
+    roll: "+163% def | +30 all res | +5 maek",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique - Helm",
+    stars: "★★★★☆",
+    roll: "+162% def | +30 all res | +5 maek",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Set – Rüstung",
+    stars: "★★★☆☆",
+    roll: "",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique – Wurfspeer",
+    stars: "★★★★☆",
+    roll: "+200% ed | 6% ll",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique – Wurfspeer",
+    stars: "★★★★☆",
+    roll: "+196% ed | 7% ll",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique – Gürtel",
+    stars: "★★★☆☆",
+    roll: "+172% def",
+    contact: "me_solli",
+    status: "undefined"
+  },
+  {
+    name: "undefined",
+    category: "Unique – Zweihandschwert",
+    stars: "★★★☆☆",
+    roll: "+155% ed",
+    contact: "me_solli",
+    status: "undefined"
+  },
 ];
-
-// ⭐ Sterne erzeugen (ohne Zahl)
-function renderStars(value) {
-  let stars = "";
-  for (let i = 1; i <= 5; i++) {
-    stars += i <= value ? "⭐" : "☆";
-  }
-  return stars;
-}
-
-// Tabelle rendern
-function renderTable() {
-  const tbody = document.querySelector("#lootTable tbody");
-  if (!tbody) return;
-
-  tbody.innerHTML = "";
-
-  items.forEach(item => {
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.category}</td>
-      <td class="stars">${renderStars(item.rating)}</td>
-      <td>${item.quality || "—"}</td>
-      <td>${item.contact}</td>
-      <td class="status ${item.status === "Verfügbar" ? "ok" : "gone"}">
-        ${item.status}
-      </td>
-    `;
-
-    tbody.appendChild(row);
-  });
-}
-
-// Item hinzufügen (Admin)
-function addItem(item) {
-  items.push(item);
-  localStorage.setItem("lootItems", JSON.stringify(items));
-  renderTable();
-}
-
-// Initial laden
-document.addEventListener("DOMContentLoaded", renderTable);
