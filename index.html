@@ -2,90 +2,140 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Community Lootliste – Free Items</title>
+  <title>🎁 Free Lootliste – Community Items | D2R Non-Ladder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: #eaeaea;
+    :root{
+      --bg:#0b0b0b;
+      --soft:#151515;
+      --border:#222;
+      --gold:#f5c451;
+      --text:#eaeaea;
+      --muted:#bdbdbd;
+      --green:#4cff4c;
+      --red:#ff5c5c;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .wrapper{
+      max-width:1200px;
+      margin:0 auto;
+      padding:0 16px 40px;
     }
 
-    .wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* ===== HERO ===== */
+    .hero{
+      margin-top:24px;
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .hero-inner{
+      position:relative;
+      min-height:220px;
+      background:url("./img/banner-diablo.jpg") center/cover no-repeat;
+    }
+    .hero-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.9));
+    }
+    .hero-content{
+      position:relative;
+      z-index:2;
+      padding:28px;
+      display:flex;
+      gap:20px;
+      align-items:center;
+    }
+    .hero-content img{
+      width:64px;height:64px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:28px;
+      color:#fff;
+    }
+    .hero p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .stream-status{
+      margin-top:8px;
+      font-size:13px;
+      color:var(--green);
+      font-weight:bold;
     }
 
-    .header {
-      padding: 24px;
-      background: linear-gradient(90deg, #5a2d1c, #2d3b4f);
-      border-radius: 0 0 16px 16px;
+    /* ===== CONTROLS ===== */
+    .controls{
+      margin-top:20px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    input,select{
+      background:var(--soft);
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:8px;
+      font-size:14px;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 28px;
+    /* ===== TABLE ===== */
+    table{
+      width:100%;
+      margin-top:20px;
+      border-collapse:collapse;
+      background:var(--soft);
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
     }
-
-    .header p {
-      margin-top: 6px;
-      opacity: 0.85;
+    thead th{
+      padding:12px;
+      text-align:left;
+      font-size:13px;
+      color:var(--gold);
+      border-bottom:1px solid var(--border);
     }
-
-    .container {
-      padding: 24px;
+    tbody td{
+      padding:10px 12px;
+      border-bottom:1px solid #1e1e1e;
+      font-size:14px;
     }
+    tbody tr:hover{background:#191919}
+    .item-name{font-weight:bold;color:#fff}
+    .stars{color:var(--gold)}
+    .status.verfuegbar{color:var(--green);font-weight:bold}
+    .status.vergeben{color:var(--red);font-weight:bold}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
+    /* ===== FOOTER ===== */
+    footer{
+      margin-top:40px;
+      padding-top:20px;
+      border-top:1px solid var(--border);
+      font-size:13px;
     }
-
-    thead th {
-      text-align: left;
-      color: #f5c451;
-      border-bottom: 1px solid #333;
-      padding: 10px;
-      white-space: nowrap;
+    footer a{
+      color:var(--gold);
+      margin-right:16px;
+      text-decoration:none;
     }
+    footer a:hover{text-decoration:underline}
 
-    tbody td {
-      padding: 10px;
-      border-bottom: 1px solid #1e1e1e;
-      font-size: 14px;
-    }
-
-    .item-name {
-      font-weight: bold;
-      min-width: 220px;
-      color: #fff;
-    }
-
-    .stars { color: #f5c451; }
-    .roll { font-size: 13px; color: #cfcfcf; }
-
-    .status.verfuegbar { color: #4cff4c; font-weight: bold; }
-    .status.reserviert { color: #ffd24c; font-weight: bold; }
-    .status.vergeben   { color: #ff5c5c; font-weight: bold; }
-
-    footer {
-      margin-top: 40px;
-      padding: 20px;
-      border-top: 1px solid #222;
-      font-size: 13px;
-    }
-
-    footer a {
-      color: #f5c451;
-      margin-right: 16px;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
+    /* ===== EDIT MODE ===== */
+    .edit-hint{
+      margin-top:10px;
+      font-size:12px;
+      color:#777;
     }
   </style>
 </head>
@@ -93,26 +143,50 @@
 <body>
 <div class="wrapper">
 
-  <div class="header">
-    <h1>🎁 Community Lootliste – Free Items</h1>
-    <p>Diablo II Resurrected · Non-Ladder</p>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <img src="./img/logo-rune.png" alt="Logo">
+        <div>
+          <h1>🎁 Free Lootliste – Community Items</h1>
+          <p>Diablo II: Resurrected · Non-Ladder · kostenlos für die Community</p>
+          <div class="stream-status">🟢 Stream: Offline</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="controls">
+    <input id="search" placeholder="Item suchen …">
+    <select id="statusFilter">
+      <option value="all">Alle Status</option>
+      <option value="Verfügbar">Verfügbar</option>
+      <option value="Vergeben">Vergeben</option>
+    </select>
+    <select id="sortStars">
+      <option value="none">Keine Sortierung</option>
+      <option value="desc">⭐ Höchste zuerst</option>
+      <option value="asc">⭐ Niedrigste zuerst</option>
+    </select>
   </div>
 
-  <div class="container">
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Typ</th>
+        <th>Rating</th>
+        <th>Roll</th>
+        <th>Kontakt</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="loot-table"></tbody>
+  </table>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Typ</th>
-          <th>Rating</th>
-          <th>Roll</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="loot-table"></tbody>
-    </table>
-
+  <div class="edit-hint">
+    Edit-Modus: <strong>STRG + ALT + E</strong>
   </div>
 
   <footer>
@@ -122,36 +196,58 @@
 
 </div>
 
-<!-- 🔥 GH-Pages-sicheres Script -->
 <script type="module">
-  import items from "./items.js";
+import items from "./items.js";
 
-  const tbody = document.getElementById("loot-table");
+let editMode=false;
+const tbody=document.getElementById("loot-table");
+const search=document.getElementById("search");
+const statusFilter=document.getElementById("statusFilter");
+const sortStars=document.getElementById("sortStars");
 
-  items.forEach(item => {
-    const tr = document.createElement("tr");
+function starCount(s){return (s.match(/★/g)||[]).length}
 
-    const name   = item.name?.trim() || "Unbekanntes Item";
-    const type   = item.category || "—";
-    const stars  = item.stars || "—";
-    const roll   = item.roll || "—";
-    const status = item.status || "Verfügbar";
+function render(){
+  tbody.innerHTML="";
+  let list=[...items];
 
-    let statusClass = "verfuegbar";
-    if (status === "Reserviert") statusClass = "reserviert";
-    if (status === "Vergeben")   statusClass = "vergeben";
+  if(search.value)
+    list=list.filter(i=>i.name.toLowerCase().includes(search.value.toLowerCase()));
 
-    tr.innerHTML = `
-      <td class="item-name">${name}</td>
-      <td>${type}</td>
-      <td class="stars">${stars}</td>
-      <td class="roll">${roll}</td>
-      <td class="status ${statusClass}">${status}</td>
+  if(statusFilter.value!=="all")
+    list=list.filter(i=>i.status===statusFilter.value);
+
+  if(sortStars.value!=="none"){
+    list.sort((a,b)=>{
+      const d=starCount(b.stars)-starCount(a.stars);
+      return sortStars.value==="desc"?d:-d;
+    });
+  }
+
+  list.forEach(i=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td class="item-name">${i.name}</td>
+      <td>${i.category}</td>
+      <td class="stars">${i.stars}</td>
+      <td>${i.roll}</td>
+      <td>${i.contact}</td>
+      <td class="status ${i.status==="Verfügbar"?"verfuegbar":"vergeben"}">${i.status}</td>
     `;
-
     tbody.appendChild(tr);
   });
-</script>
+}
 
+render();
+search.oninput=render;
+statusFilter.onchange=render;
+sortStars.onchange=render;
+
+document.addEventListener("keydown",e=>{
+  if(e.ctrlKey&&e.altKey&&e.key==="e"){
+    alert("Edit-Modus aktiviert.\nÄnderungen bitte in items.js vornehmen.");
+  }
+});
+</script>
 </body>
 </html>
