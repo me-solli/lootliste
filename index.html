@@ -2,256 +2,242 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Free Community Lootliste – D2R Non-Ladder</title>
+<title>🎁 Free Community Lootliste – D2R Non-Ladder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --bg:#0b0b0b;
-  --panel:#121212;
-  --panel2:#161616;
   --gold:#d4af37;
   --fire:#e25822;
   --ice:#4da6ff;
-  --text:#e6e6e6;
-  --muted:#9a9a9a;
-  --green:#4caf50;
+  --bg:#0b0b0b;
+  --panel:#141414;
 }
 
-*{box-sizing:border-box;font-family:"Segoe UI",system-ui,sans-serif;}
+*{box-sizing:border-box}
 
 body{
   margin:0;
-  background:#000;
-  color:var(--text);
+  background:radial-gradient(circle at top,#111,#000 70%);
+  color:#e6e6e6;
+  font-family:Segoe UI,Roboto,Arial,sans-serif;
 }
 
-.wrapper{
-  width:1000px;
-  margin:20px auto;
+/* ===== Container ===== */
+.container{
+  max-width:1100px;
+  margin:auto;
   padding:18px;
-  background:
-    radial-gradient(circle at top left, rgba(226,88,34,.08), transparent 40%),
-    radial-gradient(circle at top right, rgba(77,166,255,.08), transparent 40%),
-    linear-gradient(180deg,#090909,#0f0f0f);
-  border-radius:14px;
-  border:1px solid rgba(212,175,55,.25);
 }
 
-/* ---------- BANNER ---------- */
+/* ===== Banner ===== */
+@keyframes bannerGlow{
+  0%{box-shadow:0 0 20px rgba(212,175,55,.25), inset 0 0 40px rgba(226,88,34,.15)}
+  50%{box-shadow:0 0 35px rgba(212,175,55,.45), inset 0 0 60px rgba(77,166,255,.18)}
+  100%{box-shadow:0 0 20px rgba(212,175,55,.25), inset 0 0 40px rgba(226,88,34,.15)}
+}
+@keyframes runeFloat{
+  0%{transform:translateY(-50%)}
+  50%{transform:translateY(-56%)}
+  100%{transform:translateY(-50%)}
+}
+
 .banner{
   position:relative;
   padding:26px 24px;
-  margin-bottom:18px;
-  border-radius:12px;
-  background:
-    linear-gradient(90deg,
-      rgba(226,88,34,.25),
-      rgba(212,175,55,.35),
-      rgba(77,166,255,.25));
-  overflow:hidden;
+  margin-bottom:20px;
+  border-radius:14px;
+  background:linear-gradient(90deg,rgba(226,88,34,.25),rgba(212,175,55,.35),rgba(77,166,255,.25));
+  animation:bannerGlow 6s ease-in-out infinite;
 }
 
 .banner::after{
   content:"ᚱ";
   position:absolute;
-  right:24px;
+  right:26px;
   top:50%;
-  transform:translateY(-50%);
   font-size:64px;
-  opacity:.15;
+  opacity:.18;
+  animation:runeFloat 5s ease-in-out infinite;
 }
 
 .banner h1{
   margin:0;
+  color:var(--gold);
   font-size:26px;
-  color:#fff;
-  text-shadow:0 0 12px rgba(212,175,55,.5);
 }
-
 .banner p{
   margin:6px 0 0;
-  font-size:14px;
-  color:#eee;
+  opacity:.85;
 }
 
-/* ---------- TABLE ---------- */
-table{
-  width:100%;
-  border-collapse:collapse;
+/* ===== Lootliste ===== */
+.table-wrap{
   background:var(--panel);
   border-radius:12px;
   overflow:hidden;
+  box-shadow:0 0 25px rgba(0,0,0,.6);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
 }
 
 thead{
-  background:linear-gradient(
-    90deg,
-    rgba(226,88,34,.25),
-    rgba(212,175,55,.35),
-    rgba(77,166,255,.25)
-  );
+  background:linear-gradient(180deg,#1d1a10,#0e0c07);
 }
 
-th{
-  padding:10px 12px;
-  font-size:13px;
-  color:var(--gold);
+th,td{
+  padding:12px 14px;
   text-align:left;
-}
-
-tbody tr:nth-child(odd){background:#1a1a1a;}
-tbody tr:nth-child(even){background:#202020;}
-
-td{
-  padding:9px 12px;
   font-size:14px;
 }
 
-.stars{color:var(--gold);letter-spacing:1px;}
-.status{color:var(--green);font-weight:700;}
+th{
+  color:var(--gold);
+  font-weight:600;
+}
 
-/* ---------- INFO BOXES ---------- */
+tbody tr:nth-child(even){background:#181818}
+tbody tr:hover{background:#202020}
+
+.status-ok{color:#66ff88;font-weight:600}
+
+/* Sterne */
+.stars{
+  color:var(--gold);
+  letter-spacing:1px;
+}
+
+/* ===== Info Boxen ===== */
 .info-grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:14px;
   margin-top:22px;
 }
 
-.info-box{
-  background:linear-gradient(180deg,#141414,#0f0f0f);
-  border:1px solid rgba(212,175,55,.25);
-  border-radius:10px;
+.info{
+  background:linear-gradient(180deg,#141414,#0d0d0d);
+  border-radius:12px;
   padding:14px 16px;
+  box-shadow:0 0 20px rgba(0,0,0,.5);
 }
 
-.info-title{
-  font-size:15px;
-  font-weight:700;
+.info h3{
+  margin:0 0 6px;
   color:var(--gold);
-  margin-bottom:6px;
+  font-size:16px;
 }
 
-.info-box p{
+.info p{
+  margin:0;
   font-size:13px;
-  color:var(--muted);
-  margin:4px 0;
+  opacity:.85;
 }
 
-/* ---------- FOOTER ---------- */
-.section{
-  margin-top:26px;
-}
-
-.section h2{
-  font-size:17px;
-  color:var(--gold);
-  margin-bottom:6px;
-  border-bottom:1px solid rgba(212,175,55,.3);
-}
-
-.section p{
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
+/* ===== Footer ===== */
 footer{
-  margin-top:28px;
+  margin-top:26px;
+  padding:14px;
+  text-align:center;
   font-size:12px;
-  color:#777;
+  opacity:.6;
 }
+footer a{
+  color:var(--gold);
+  text-decoration:none;
+}
+footer a:hover{text-decoration:underline}
 </style>
 </head>
 
 <body>
-<div class="wrapper">
+<div class="container">
 
-<!-- BANNER -->
-<div class="banner">
-  <h1>🎁 Free Community Lootliste</h1>
-  <p>Diablo II Resurrected · Non-Ladder · Twitch Community</p>
-</div>
-
-<!-- LOOTLISTE -->
-<table>
-<thead>
-<tr>
-  <th>Item</th>
-  <th>Kategorie</th>
-  <th>Bewertung</th>
-  <th>Qualität / Roll</th>
-  <th>Kontakt</th>
-  <th>Status</th>
-</tr>
-</thead>
-<tbody id="loot-body"></tbody>
-</table>
-
-<!-- INFO BOXES UNTER DER LISTE -->
-<div class="info-grid">
-  <div class="info-box">
-    <div class="info-title">🎮 Über den Stream</div>
+  <!-- Banner -->
+  <div class="banner">
+    <h1>🎁 Free Community Lootliste</h1>
     <p>Diablo II Resurrected – Non-Ladder</p>
-    <p>Fokus auf Farming, Loot & Community</p>
-    <p>Runs: Andariel, Mephisto, Pindle & mehr</p>
   </div>
 
-  <div class="info-box">
-    <div class="info-title">🎁 Community Loot</div>
-    <p>Alle Items sind kostenlos</p>
-    <p>Fair Play – first come, first serve</p>
-    <p>Kontakt im Stream oder via Twitch</p>
+  <!-- Lootliste -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Kategorie</th>
+          <th>Bewertung</th>
+          <th>Qualität / Roll</th>
+          <th>Kontakt</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="lootTable"></tbody>
+    </table>
   </div>
 
-  <div class="info-box">
-    <div class="info-title">⏰ Streamzeiten</div>
-    <p>Meist ab 22:00 Uhr</p>
-    <p>Montag – Sonntag</p>
-    <p>Änderungen im Stream</p>
+  <!-- Info Boxen -->
+  <div class="info-grid">
+    <div class="info">
+      <h3>🎮 Über den Stream</h3>
+      <p>
+        Diablo II Resurrected – Non-Ladder<br>
+        Fokus auf Farming, Loot & Community<br>
+        Runs: Andariel, Mephisto, Pindle & mehr
+      </p>
+    </div>
+
+    <div class="info">
+      <h3>🎁 Community Loot</h3>
+      <p>
+        Alle Items sind kostenlos<br>
+        Fair Play – first come, first serve<br>
+        Kontakt im Stream oder via Twitch
+      </p>
+    </div>
+
+    <div class="info">
+      <h3>⏰ Streamzeiten</h3>
+      <p>
+        Meist ab 22:00 Uhr<br>
+        Montag – Sonntag<br>
+        Änderungen im Stream
+      </p>
+    </div>
   </div>
-</div>
 
-<!-- IMPRESSUM -->
-<div class="section">
-<h2>📄 Impressum</h2>
-<p>
-Twitch-Name: <strong>me_solli</strong><br>
-Kontakt ausschließlich über Twitch
-</p>
-</div>
-
-<!-- DATENSCHUTZ -->
-<div class="section">
-<h2>🔒 Datenschutzerklärung</h2>
-<p>
-Diese Website verwendet keine Cookies und kein Tracking.<br>
-Beim Hosting über GitHub Pages gelten zusätzlich die Datenschutzrichtlinien von GitHub.
-</p>
-</div>
-
-<footer>
-© Community Lootliste · D2R Non-Ladder
-</footer>
+  <!-- Footer -->
+  <footer>
+    © me_solli ·
+    <a href="#">Impressum</a> ·
+    <a href="#">Datenschutzerklärung</a>
+  </footer>
 
 </div>
 
+<!-- Items -->
 <script src="items.js"></script>
 <script>
-const body=document.getElementById("loot-body");
-function stars(n){return"★".repeat(n)+"☆".repeat(5-n);}
-items.forEach(item=>{
+function stars(n){
+  return "★".repeat(n)+"☆".repeat(5-n);
+}
+
+const tbody=document.getElementById("lootTable");
+items.forEach(i=>{
   const tr=document.createElement("tr");
   tr.innerHTML=`
-    <td>${item.name}</td>
-    <td>${item.category}</td>
-    <td class="stars">${stars(item.rating)}</td>
-    <td>${item.roll||"—"}</td>
-    <td>${item.contact}</td>
-    <td class="status">${item.status}</td>`;
-  body.appendChild(tr);
+    <td>${i.name}</td>
+    <td>${i.category}</td>
+    <td class="stars">${stars(i.rating)}</td>
+    <td>${i.roll || "—"}</td>
+    <td>${i.contact}</td>
+    <td class="status-ok">${i.status}</td>
+  `;
+  tbody.appendChild(tr);
 });
 </script>
-
 </body>
 </html>
