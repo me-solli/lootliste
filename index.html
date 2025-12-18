@@ -23,7 +23,6 @@ body{
   font-family:Segoe UI,Roboto,Arial,sans-serif;
 }
 
-/* ===== Container ===== */
 .container{
   max-width:1100px;
   margin:auto;
@@ -31,34 +30,12 @@ body{
 }
 
 /* ===== Banner ===== */
-@keyframes bannerGlow{
-  0%{box-shadow:0 0 20px rgba(212,175,55,.25), inset 0 0 40px rgba(226,88,34,.15)}
-  50%{box-shadow:0 0 35px rgba(212,175,55,.45), inset 0 0 60px rgba(77,166,255,.18)}
-  100%{box-shadow:0 0 20px rgba(212,175,55,.25), inset 0 0 40px rgba(226,88,34,.15)}
-}
-@keyframes runeFloat{
-  0%{transform:translateY(-50%)}
-  50%{transform:translateY(-56%)}
-  100%{transform:translateY(-50%)}
-}
-
 .banner{
-  position:relative;
   padding:26px 24px;
   margin-bottom:20px;
   border-radius:14px;
   background:linear-gradient(90deg,rgba(226,88,34,.25),rgba(212,175,55,.35),rgba(77,166,255,.25));
-  animation:bannerGlow 6s ease-in-out infinite;
-}
-
-.banner::after{
-  content:"ᚱ";
-  position:absolute;
-  right:26px;
-  top:50%;
-  font-size:64px;
-  opacity:.18;
-  animation:runeFloat 5s ease-in-out infinite;
+  box-shadow:0 0 35px rgba(212,175,55,.35);
 }
 
 .banner h1{
@@ -85,7 +62,7 @@ table{
 }
 
 thead{
-  background:linear-gradient(180deg,#1d1a10,#0e0c07);
+  background:#0e0c07;
 }
 
 th,td{
@@ -96,19 +73,13 @@ th,td{
 
 th{
   color:var(--gold);
-  font-weight:600;
 }
 
 tbody tr:nth-child(even){background:#181818}
 tbody tr:hover{background:#202020}
 
 .status-ok{color:#66ff88;font-weight:600}
-
-/* Sterne */
-.stars{
-  color:var(--gold);
-  letter-spacing:1px;
-}
+.stars{color:var(--gold);letter-spacing:1px}
 
 /* ===== Info Boxen ===== */
 .info-grid{
@@ -119,10 +90,10 @@ tbody tr:hover{background:#202020}
 }
 
 .info{
-  background:linear-gradient(180deg,#141414,#0d0d0d);
+  background:#141414;
   border-radius:12px;
   padding:14px 16px;
-  box-shadow:0 0 20px rgba(0,0,0,.5);
+  box-shadow:0 0 18px rgba(0,0,0,.5);
 }
 
 .info h3{
@@ -137,19 +108,25 @@ tbody tr:hover{background:#202020}
   opacity:.85;
 }
 
-/* ===== Footer ===== */
-footer{
-  margin-top:26px;
-  padding:14px;
-  text-align:center;
-  font-size:12px;
-  opacity:.6;
+/* ===== Legal ===== */
+details{
+  margin-top:14px;
+  background:#0f0f0f;
+  border-radius:10px;
+  padding:12px 14px;
 }
-footer a{
+
+summary{
+  cursor:pointer;
   color:var(--gold);
-  text-decoration:none;
+  font-weight:600;
 }
-footer a:hover{text-decoration:underline}
+
+details p{
+  font-size:12px;
+  opacity:.8;
+  margin-top:8px;
+}
 </style>
 </head>
 
@@ -209,22 +186,31 @@ footer a:hover{text-decoration:underline}
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    © me_solli ·
-    <a href="#">Impressum</a> ·
-    <a href="#">Datenschutzerklärung</a>
-  </footer>
+  <!-- Rechtliches -->
+  <details>
+    <summary>Impressum</summary>
+    <p>
+      Angaben gemäß § 5 TMG<br>
+      Betreiber: me_solli<br>
+      Kontakt über Twitch
+    </p>
+  </details>
+
+  <details>
+    <summary>Datenschutzerklärung</summary>
+    <p>
+      Diese Seite verwendet keine Cookies, kein Tracking und keine externen Dienste.
+      Daten werden ausschließlich lokal im Browser verarbeitet.
+    </p>
+  </details>
 
 </div>
 
-<!-- Items -->
 <script src="items.js"></script>
 <script>
 function stars(n){
   return "★".repeat(n)+"☆".repeat(5-n);
 }
-
 const tbody=document.getElementById("lootTable");
 items.forEach(i=>{
   const tr=document.createElement("tr");
@@ -239,5 +225,6 @@ items.forEach(i=>{
   tbody.appendChild(tr);
 });
 </script>
+
 </body>
 </html>
