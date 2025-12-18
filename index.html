@@ -5,7 +5,7 @@
 <title>Free Community Lootliste – D2R Non-Ladder</title>
 
 <style>
-:root {
+:root{
   --bg:#0b0b0b;
   --panel:#121212;
   --panel2:#161616;
@@ -17,78 +17,73 @@
   --green:#4caf50;
 }
 
-* { box-sizing:border-box; font-family:"Segoe UI",system-ui,sans-serif; }
+*{box-sizing:border-box;font-family:"Segoe UI",system-ui,sans-serif;}
 
-body {
+body{
   margin:0;
   background:#000;
   color:var(--text);
 }
 
-.wrapper {
+.wrapper{
   width:1000px;
   margin:20px auto;
-  padding:20px;
+  padding:18px;
   background:
     radial-gradient(circle at top left, rgba(226,88,34,.08), transparent 40%),
     radial-gradient(circle at top right, rgba(77,166,255,.08), transparent 40%),
     linear-gradient(180deg,#090909,#0f0f0f);
+  border-radius:14px;
+  border:1px solid rgba(212,175,55,.25);
+}
+
+/* ---------- BANNER ---------- */
+.banner{
+  position:relative;
+  padding:26px 24px;
+  margin-bottom:18px;
   border-radius:12px;
-  border:1px solid rgba(212,175,55,.25);
-}
-
-/* ---------- HEADER ---------- */
-h1 {
-  margin:0 0 18px;
-  font-size:22px;
-  color:var(--gold);
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-h1::before { content:"ᚱ"; }
-
-/* ---------- INFO BOXES ---------- */
-.info-grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  margin-bottom:22px;
-}
-
-.info-box {
-  background:linear-gradient(180deg,#141414,#0f0f0f);
-  border:1px solid rgba(212,175,55,.25);
-  border-radius:10px;
-  padding:14px 16px;
-}
-
-.info-title {
-  font-size:15px;
-  font-weight:700;
-  color:var(--gold);
-  margin-bottom:6px;
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.info-box p {
-  font-size:13px;
-  color:var(--muted);
-  margin:4px 0;
-}
-
-/* ---------- TABLE ---------- */
-table {
-  width:100%;
-  border-collapse:collapse;
-  background:var(--panel);
-  border-radius:10px;
+  background:
+    linear-gradient(90deg,
+      rgba(226,88,34,.25),
+      rgba(212,175,55,.35),
+      rgba(77,166,255,.25));
   overflow:hidden;
 }
 
-thead {
+.banner::after{
+  content:"ᚱ";
+  position:absolute;
+  right:24px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:64px;
+  opacity:.15;
+}
+
+.banner h1{
+  margin:0;
+  font-size:26px;
+  color:#fff;
+  text-shadow:0 0 12px rgba(212,175,55,.5);
+}
+
+.banner p{
+  margin:6px 0 0;
+  font-size:14px;
+  color:#eee;
+}
+
+/* ---------- TABLE ---------- */
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--panel);
+  border-radius:12px;
+  overflow:hidden;
+}
+
+thead{
   background:linear-gradient(
     90deg,
     rgba(226,88,34,.25),
@@ -97,45 +92,72 @@ thead {
   );
 }
 
-th {
+th{
   padding:10px 12px;
   font-size:13px;
   color:var(--gold);
   text-align:left;
 }
 
-tbody tr:nth-child(odd){ background:#1a1a1a; }
-tbody tr:nth-child(even){ background:#202020; }
+tbody tr:nth-child(odd){background:#1a1a1a;}
+tbody tr:nth-child(even){background:#202020;}
 
-td {
+td{
   padding:9px 12px;
   font-size:14px;
 }
 
-.stars { color:var(--gold); letter-spacing:1px; }
-.status { color:var(--green); font-weight:700; }
+.stars{color:var(--gold);letter-spacing:1px;}
+.status{color:var(--green);font-weight:700;}
 
-/* ---------- FOOTER SECTIONS ---------- */
-.section {
+/* ---------- INFO BOXES ---------- */
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:22px;
+}
+
+.info-box{
+  background:linear-gradient(180deg,#141414,#0f0f0f);
+  border:1px solid rgba(212,175,55,.25);
+  border-radius:10px;
+  padding:14px 16px;
+}
+
+.info-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--gold);
+  margin-bottom:6px;
+}
+
+.info-box p{
+  font-size:13px;
+  color:var(--muted);
+  margin:4px 0;
+}
+
+/* ---------- FOOTER ---------- */
+.section{
   margin-top:26px;
 }
 
-.section h2 {
+.section h2{
   font-size:17px;
   color:var(--gold);
-  margin-bottom:8px;
+  margin-bottom:6px;
   border-bottom:1px solid rgba(212,175,55,.3);
-  padding-bottom:4px;
 }
 
-.section p {
+.section p{
   font-size:13px;
   color:var(--muted);
   line-height:1.6;
 }
 
-footer {
-  margin-top:30px;
+footer{
+  margin-top:28px;
   font-size:12px;
   color:#777;
 }
@@ -145,30 +167,10 @@ footer {
 <body>
 <div class="wrapper">
 
-<h1>Free Community Lootliste (D2R Non-Ladder)</h1>
-
-<!-- INFO BOXES -->
-<div class="info-grid">
-  <div class="info-box">
-    <div class="info-title">🎮 Über den Stream</div>
-    <p>Diablo II Resurrected – Non-Ladder</p>
-    <p>Fokus auf Farming, Loot & Community</p>
-    <p>Runs: Andariel, Mephisto, Pindle & mehr</p>
-  </div>
-
-  <div class="info-box">
-    <div class="info-title">🎁 Community Loot</div>
-    <p>Alle Items sind kostenlos</p>
-    <p>Fair Play – first come, first serve</p>
-    <p>Kontakt direkt im Stream oder via Twitch</p>
-  </div>
-
-  <div class="info-box">
-    <div class="info-title">⏰ Streamzeiten</div>
-    <p>Meist ab 22:00 Uhr</p>
-    <p>Montag – Sonntag</p>
-    <p>Änderungen im Stream</p>
-  </div>
+<!-- BANNER -->
+<div class="banner">
+  <h1>🎁 Free Community Lootliste</h1>
+  <p>Diablo II Resurrected · Non-Ladder · Twitch Community</p>
 </div>
 
 <!-- LOOTLISTE -->
@@ -186,13 +188,36 @@ footer {
 <tbody id="loot-body"></tbody>
 </table>
 
+<!-- INFO BOXES UNTER DER LISTE -->
+<div class="info-grid">
+  <div class="info-box">
+    <div class="info-title">🎮 Über den Stream</div>
+    <p>Diablo II Resurrected – Non-Ladder</p>
+    <p>Fokus auf Farming, Loot & Community</p>
+    <p>Runs: Andariel, Mephisto, Pindle & mehr</p>
+  </div>
+
+  <div class="info-box">
+    <div class="info-title">🎁 Community Loot</div>
+    <p>Alle Items sind kostenlos</p>
+    <p>Fair Play – first come, first serve</p>
+    <p>Kontakt im Stream oder via Twitch</p>
+  </div>
+
+  <div class="info-box">
+    <div class="info-title">⏰ Streamzeiten</div>
+    <p>Meist ab 22:00 Uhr</p>
+    <p>Montag – Sonntag</p>
+    <p>Änderungen im Stream</p>
+  </div>
+</div>
+
 <!-- IMPRESSUM -->
 <div class="section">
 <h2>📄 Impressum</h2>
 <p>
-Angaben gemäß § 5 TMG<br><br>
 Twitch-Name: <strong>me_solli</strong><br>
-Kontakt: über Twitch-Chat oder Nachrichten
+Kontakt ausschließlich über Twitch
 </p>
 </div>
 
@@ -200,14 +225,13 @@ Kontakt: über Twitch-Chat oder Nachrichten
 <div class="section">
 <h2>🔒 Datenschutzerklärung</h2>
 <p>
-Diese Website erhebt keine personenbezogenen Daten.<br>
-Keine Cookies, kein Tracking.<br>
+Diese Website verwendet keine Cookies und kein Tracking.<br>
 Beim Hosting über GitHub Pages gelten zusätzlich die Datenschutzrichtlinien von GitHub.
 </p>
 </div>
 
 <footer>
-© Community Lootliste · Diablo II Resurrected · Non-Ladder
+© Community Lootliste · D2R Non-Ladder
 </footer>
 
 </div>
