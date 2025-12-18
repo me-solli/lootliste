@@ -5,8 +5,6 @@
 <title>🎁 Free Lootliste – Community Items | D2R Non-Ladder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Kostenlose Community Lootliste für Diablo II Resurrected (Non-Ladder). Free Items aus dem Stream von me_solli.">
-
 <style>
 body {
   margin:0;
@@ -20,26 +18,23 @@ body {
   margin:0 auto;
 }
 
+/* ===== Banner ===== */
+.banner {
+  background:url("img/banner-diablo.jpg") center / cover no-repeat;
+  border-radius:0 0 18px 18px;
+}
+
 header {
   padding:26px;
-  background:linear-gradient(90deg,#5a2d1c,#2d3b4f);
-  border-radius:0 0 18px 18px;
+  background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55));
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   gap:20px;
 }
 
-header h1 {
-  margin:0;
-  font-size:28px;
-}
-
-header p {
-  margin:6px 0 0;
-  opacity:.85;
-  font-size:14px;
-}
+header h1 { margin:0; font-size:28px; }
+header p { margin:6px 0 0; opacity:.85; font-size:14px; }
 
 .twitch {
   background:#9146FF;
@@ -50,18 +45,31 @@ header p {
   text-decoration:none;
   white-space:nowrap;
 }
-.twitch:hover {
-  opacity:.85;
+.twitch:hover { opacity:.85; }
+
+.container { padding:26px; }
+
+/* ===== Controls ===== */
+.controls {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:16px;
 }
 
-.container {
-  padding:26px;
+.controls input,
+.controls select {
+  padding:10px;
+  background:#111;
+  border:1px solid #333;
+  color:#fff;
+  border-radius:10px;
 }
 
+/* ===== Table ===== */
 table {
   width:100%;
   border-collapse:collapse;
-  margin-top:20px;
 }
 
 thead th {
@@ -69,7 +77,6 @@ thead th {
   color:#f5c451;
   border-bottom:1px solid #333;
   padding:10px;
-  white-space:nowrap;
 }
 
 tbody td {
@@ -78,47 +85,30 @@ tbody td {
   font-size:14px;
 }
 
-.item-name {
-  font-weight:bold;
-  color:#fff;
-  min-width:220px;
-}
-
-.stars {
-  color:#f5c451;
-}
-
-.roll {
-  color:#cfcfcf;
-  font-size:13px;
-}
+.item-name { font-weight:bold; color:#fff; min-width:220px; }
+.stars { color:#f5c451; }
+.roll { color:#cfcfcf; font-size:13px; }
 
 .status.verfuegbar { color:#4cff4c; font-weight:bold; }
 .status.reserviert { color:#ffd24c; font-weight:bold; }
-.status.vergeben   { color:#ff5c5c; font-weight:bold; }
+.status.vergeben { color:#ff5c5c; font-weight:bold; }
 
+/* ===== Footer ===== */
 footer {
   margin-top:40px;
   padding:20px;
   border-top:1px solid #222;
   font-size:13px;
 }
-
 footer a {
   color:#f5c451;
   margin-right:16px;
   text-decoration:none;
 }
-
-footer a:hover {
-  text-decoration:underline;
-}
+footer a:hover { text-decoration:underline; }
 
 @media (max-width:700px) {
-  header {
-    flex-direction:column;
-    align-items:flex-start;
-  }
+  header { flex-direction:column; align-items:flex-start; }
 }
 </style>
 </head>
@@ -126,18 +116,32 @@ footer a:hover {
 <body>
 <div class="wrapper">
 
-<header>
+<header class="banner">
   <div>
     <h1>🎁 Free Lootliste – Community Items</h1>
     <p>Diablo II Resurrected · Non-Ladder</p>
   </div>
-
   <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
     ▶ Twitch: me_solli
   </a>
 </header>
 
 <div class="container">
+
+  <!-- Controls -->
+  <div class="controls">
+    <input id="search" placeholder="Item suchen…">
+    <select id="statusFilter">
+      <option value="">Alle Status</option>
+      <option>Verfügbar</option>
+      <option>Reserviert</option>
+      <option>Vergeben</option>
+    </select>
+    <select id="sortRating">
+      <option value="desc">Rating ↓</option>
+      <option value="asc">Rating ↑</option>
+    </select>
+  </div>
 
   <table>
     <thead>
@@ -164,31 +168,56 @@ footer a:hover {
 <script type="module">
 import items from "./items.js";
 
-const tbody = document.getElementById("loot-table");
+const table = document.getElementById("loot-table");
+const search = document.getElementById("search");
+const statusFilter = document.getElementById("statusFilter");
+const sortRating = document.getElementById("sortRating");
 
-items.forEach(item => {
-  const tr = document.createElement("tr");
+function ratingValue(stars) {
+  return (stars.match(/★/g) || []).length;
+}
 
-  const name   = item.name?.trim() || "Unbekannt";
-  const type   = item.category || "—";
-  const stars  = item.stars || "—";
-  const roll   = item.roll || "—";
-  const status = item.status || "Verfügbar";
+function render() {
+  table.innerHTML = "";
 
-  let statusClass = "verfuegbar";
-  if (status === "Reserviert") statusClass = "reserviert";
-  if (status === "Vergeben")   statusClass = "vergeben";
+  let filtered = items.filter(i => {
+    const q = search.value.toLowerCase();
+    const statusOk = !statusFilter.value || i.status === statusFilter.value;
+    const searchOk =
+      i.name.toLowerCase().includes(q) ||
+      i.category.toLowerCase().includes(q);
+    return statusOk && searchOk;
+  });
 
-  tr.innerHTML = `
-    <td class="item-name">${name}</td>
-    <td>${type}</td>
-    <td class="stars">${stars}</td>
-    <td class="roll">${roll}</td>
-    <td class="status ${statusClass}">${status}</td>
-  `;
+  filtered.sort((a,b) => {
+    const diff = ratingValue(b.stars) - ratingValue(a.stars);
+    return sortRating.value === "desc" ? diff : -diff;
+  });
 
-  tbody.appendChild(tr);
-});
+  filtered.forEach(item => {
+    const tr = document.createElement("tr");
+
+    const starsClean = "★".repeat(ratingValue(item.stars));
+    let statusClass = "verfuegbar";
+    if (item.status === "Reserviert") statusClass = "reserviert";
+    if (item.status === "Vergeben") statusClass = "vergeben";
+
+    tr.innerHTML = `
+      <td class="item-name">${item.name}</td>
+      <td>${item.category}</td>
+      <td class="stars">${starsClean}</td>
+      <td class="roll">${item.roll || "—"}</td>
+      <td class="status ${statusClass}">${item.status}</td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+search.addEventListener("input", render);
+statusFilter.addEventListener("change", render);
+sortRating.addEventListener("change", render);
+
+render();
 </script>
 
 </body>
