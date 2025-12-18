@@ -12,35 +12,55 @@ body {
   background:#0b0b0b;
   color:#eee;
 }
+
 .wrap {
   max-width:1200px;
   margin:40px auto;
   padding:0 20px;
 }
+
 h1, h2 {
   color:#f5c451;
+  margin-top:0;
 }
+
 .card {
   background:#151515;
   border-radius:16px;
-  padding:22px;
+  padding:24px;
   margin-bottom:32px;
-  box-shadow:0 0 24px rgba(0,0,0,.6);
+  box-shadow:0 0 24px rgba(0,0,0,.55);
 }
+
 label {
   display:block;
   margin-top:14px;
   font-weight:600;
+  font-size:14px;
 }
+
 input, select {
   width:100%;
-  padding:10px;
+  padding:10px 12px;
   margin-top:6px;
   background:#0f0f0f;
   color:#fff;
   border:1px solid #333;
   border-radius:10px;
+  font-size:14px;
 }
+
+/* 🔒 FIX: lange Textfelder begrenzen */
+input[type="text"] {
+  max-width:680px;
+}
+
+@media (max-width:720px) {
+  input[type="text"] {
+    max-width:100%;
+  }
+}
+
 button {
   margin-top:18px;
   padding:10px 18px;
@@ -48,24 +68,42 @@ button {
   border-radius:12px;
   font-weight:700;
   cursor:pointer;
+  font-size:14px;
 }
+
 .add { background:#4cff4c; color:#000; }
 .save { background:#f5c451; color:#000; }
 .del  { background:#ff5c5c; color:#000; }
-.small { font-size:13px; color:#aaa; margin-top:8px; }
 
+.small {
+  font-size:13px;
+  color:#aaa;
+  margin-top:8px;
+}
+
+/* Tabelle */
 table {
   width:100%;
   border-collapse:collapse;
-  margin-top:14px;
+  margin-top:12px;
 }
+
 th, td {
   padding:10px;
   border-bottom:1px solid #222;
   font-size:14px;
 }
-th { color:#f5c451; text-align:left; }
 
+th {
+  color:#f5c451;
+  text-align:left;
+}
+
+.actions button {
+  margin-right:6px;
+}
+
+/* Output */
 textarea {
   width:100%;
   height:320px;
@@ -73,23 +111,29 @@ textarea {
   color:#9cff9c;
   border:1px solid #333;
   border-radius:10px;
-  padding:14px;
+  padding:12px;
   font-family:monospace;
   font-size:13px;
 }
+
+/* Login */
 .hidden { display:none; }
-.actions button { margin-right:6px; }
+
+.login-card {
+  max-width:420px;
+  margin:120px auto;
+}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div class="wrap" id="loginBox">
+<!-- 🔐 LOGIN -->
+<div class="wrap login-card" id="loginBox">
   <div class="card">
     <h1>🔐 Admin Login</h1>
-    <label>Admin-Passwort</label>
-    <input type="password" id="pw" placeholder="Passwort eingeben">
+    <label>Passwort</label>
+    <input type="password" id="pw" placeholder="Admin-Passwort">
     <button class="save" onclick="login()">Login</button>
   </div>
 </div>
@@ -105,11 +149,11 @@ textarea {
 
     <input type="hidden" id="editIndex">
 
-    <label>Item-Name</label>
-    <input id="name" placeholder="z.B. Harlequin Crest">
+    <label>Name</label>
+    <input type="text" id="name" placeholder="z. B. Harlequin Crest">
 
     <label>Kategorie</label>
-    <input id="category" placeholder="Unique – Helm">
+    <input type="text" id="category" placeholder="Unique – Helm">
 
     <label>Bewertung</label>
     <select id="stars">
@@ -121,7 +165,7 @@ textarea {
     </select>
 
     <label>Roll / Werte</label>
-    <input id="roll" placeholder="+120% def | +30 all res">
+    <input type="text" id="roll" placeholder="+120% def | +30 all res">
 
     <label>Status</label>
     <select id="status">
@@ -135,7 +179,7 @@ textarea {
 
   <!-- LIST -->
   <div class="card">
-    <h2>📋 Items</h2>
+    <h2>📋 Aktuelle Items</h2>
     <table>
       <thead>
         <tr>
@@ -154,7 +198,10 @@ textarea {
   <div class="card">
     <h2>📄 items.js (1:1 kopieren)</h2>
     <textarea id="output" readonly></textarea>
-    <div class="small">Nach dem Kopieren <b>items.js ersetzen</b> – die Index ist danach automatisch aktuell.</div>
+    <div class="small">
+      ⬆️ Inhalt komplett kopieren und <b>items.js ersetzen</b><br>
+      Die Lootliste (index.html) ist danach automatisch aktuell.
+    </div>
   </div>
 
 </div>
@@ -162,8 +209,10 @@ textarea {
 <script type="module">
 import itemsData from "./items.js";
 
+/* Clone für Bearbeitung */
 let items = JSON.parse(JSON.stringify(itemsData));
 
+/* LOGIN */
 function login() {
   if (document.getElementById("pw").value === "loot123") {
     document.getElementById("loginBox").classList.add("hidden");
@@ -175,6 +224,7 @@ function login() {
 }
 window.login = login;
 
+/* RENDER */
 function render() {
   const table = document.getElementById("itemTable");
   table.innerHTML = "";
@@ -200,8 +250,10 @@ function render() {
 export default items;`;
 }
 
+/* SAVE */
 function saveItem() {
   const idx = document.getElementById("editIndex").value;
+
   const item = {
     name: name.value.trim(),
     category: category.value.trim(),
@@ -212,15 +264,17 @@ function saveItem() {
   };
 
   if (!item.name || !item.category) {
-    alert("Name und Kategorie sind Pflichtfelder");
+    alert("Name und Kategorie sind Pflichtfelder.");
     return;
   }
 
   if (idx === "") items.push(item);
   else items[idx] = item;
 
-  document.getElementById("editIndex").value = "";
-  document.getElementById("formTitle").innerText = "➕ Item hinzufügen";
+  editIndex.value = "";
+  formTitle.innerText = "➕ Item hinzufügen";
+  document.querySelector(".add").innerText = "Speichern";
+
   name.value = category.value = roll.value = "";
   stars.value = "★★★★★";
   status.value = "Verfügbar";
@@ -229,6 +283,7 @@ function saveItem() {
 }
 window.saveItem = saveItem;
 
+/* EDIT */
 function editItem(i) {
   const it = items[i];
   editIndex.value = i;
@@ -241,6 +296,7 @@ function editItem(i) {
 }
 window.editItem = editItem;
 
+/* DELETE */
 function deleteItem(i) {
   if (confirm("Item wirklich löschen?")) {
     items.splice(i, 1);
