@@ -22,14 +22,14 @@ h1, h2 {
 }
 .card {
   background:#151515;
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:30px;
-  box-shadow:0 0 20px rgba(0,0,0,.5);
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:32px;
+  box-shadow:0 0 24px rgba(0,0,0,.6);
 }
 label {
   display:block;
-  margin-top:12px;
+  margin-top:14px;
   font-weight:600;
 }
 input, select {
@@ -39,25 +39,25 @@ input, select {
   background:#0f0f0f;
   color:#fff;
   border:1px solid #333;
-  border-radius:8px;
+  border-radius:10px;
 }
 button {
-  margin-top:16px;
-  padding:10px 16px;
+  margin-top:18px;
+  padding:10px 18px;
   border:0;
-  border-radius:10px;
+  border-radius:12px;
   font-weight:700;
   cursor:pointer;
 }
 .add { background:#4cff4c; color:#000; }
 .save { background:#f5c451; color:#000; }
 .del  { background:#ff5c5c; color:#000; }
-.small { font-size:13px; color:#aaa; }
+.small { font-size:13px; color:#aaa; margin-top:8px; }
 
 table {
   width:100%;
   border-collapse:collapse;
-  margin-top:10px;
+  margin-top:14px;
 }
 th, td {
   padding:10px;
@@ -68,30 +68,33 @@ th { color:#f5c451; text-align:left; }
 
 textarea {
   width:100%;
-  height:300px;
+  height:320px;
   background:#0f0f0f;
   color:#9cff9c;
   border:1px solid #333;
-  border-radius:8px;
-  padding:12px;
+  border-radius:10px;
+  padding:14px;
   font-family:monospace;
   font-size:13px;
 }
 .hidden { display:none; }
+.actions button { margin-right:6px; }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div class="wrap" id="loginBox">
   <div class="card">
     <h1>🔐 Admin Login</h1>
-    <label>Passwort</label>
-    <input type="password" id="pw">
+    <label>Admin-Passwort</label>
+    <input type="password" id="pw" placeholder="Passwort eingeben">
     <button class="save" onclick="login()">Login</button>
   </div>
 </div>
 
+<!-- ADMIN -->
 <div class="wrap hidden" id="adminBox">
 
   <h1>🎁 Lootliste – Admin</h1>
@@ -102,11 +105,11 @@ textarea {
 
     <input type="hidden" id="editIndex">
 
-    <label>Name</label>
-    <input id="name">
+    <label>Item-Name</label>
+    <input id="name" placeholder="z.B. Harlequin Crest">
 
     <label>Kategorie</label>
-    <input id="category">
+    <input id="category" placeholder="Unique – Helm">
 
     <label>Bewertung</label>
     <select id="stars">
@@ -118,7 +121,7 @@ textarea {
     </select>
 
     <label>Roll / Werte</label>
-    <input id="roll">
+    <input id="roll" placeholder="+120% def | +30 all res">
 
     <label>Status</label>
     <select id="status">
@@ -151,7 +154,7 @@ textarea {
   <div class="card">
     <h2>📄 items.js (1:1 kopieren)</h2>
     <textarea id="output" readonly></textarea>
-    <div class="small">Nach dem Kopieren <b>items.js ersetzen</b> → Index ist automatisch aktuell.</div>
+    <div class="small">Nach dem Kopieren <b>items.js ersetzen</b> – die Index ist danach automatisch aktuell.</div>
   </div>
 
 </div>
@@ -183,7 +186,7 @@ function render() {
       <td>${item.category}</td>
       <td>${item.stars}</td>
       <td>${item.status}</td>
-      <td>
+      <td class="actions">
         <button class="save" onclick="editItem(${i})">✏️</button>
         <button class="del" onclick="deleteItem(${i})">🗑</button>
       </td>
@@ -208,11 +211,20 @@ function saveItem() {
     status: status.value
   };
 
+  if (!item.name || !item.category) {
+    alert("Name und Kategorie sind Pflichtfelder");
+    return;
+  }
+
   if (idx === "") items.push(item);
   else items[idx] = item;
 
   document.getElementById("editIndex").value = "";
   document.getElementById("formTitle").innerText = "➕ Item hinzufügen";
+  name.value = category.value = roll.value = "";
+  stars.value = "★★★★★";
+  status.value = "Verfügbar";
+
   render();
 }
 window.saveItem = saveItem;
@@ -231,7 +243,7 @@ window.editItem = editItem;
 
 function deleteItem(i) {
   if (confirm("Item wirklich löschen?")) {
-    items.splice(i,1);
+    items.splice(i, 1);
     render();
   }
 }
