@@ -1,110 +1,242 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin – Lootliste</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      background:#0b0b0b; color:#eee; font-family:system-ui, sans-serif; padding:40px;
-    }
-    .wrap { max-width:900px; margin:0 auto; }
-    h1 { color:#f5c842; }
-    form, .output {
-      background:#151515; border-radius:12px; padding:20px; margin-bottom:30px;
-      box-shadow:0 0 20px rgba(0,0,0,.5);
-    }
-    label { display:block; margin-top:14px; font-weight:600; }
-    input, select {
-      width:100%; padding:10px; margin-top:6px;
-      background:#0f0f0f; color:#fff; border:1px solid #333; border-radius:8px;
-    }
-    button {
-      margin-top:20px; padding:12px 18px; border:0; border-radius:10px;
-      background:#f5c842; color:#000; font-weight:700; cursor:pointer;
-    }
-    textarea {
-      width:100%; height:280px; background:#0f0f0f; color:#9cff9c;
-      border:1px solid #333; border-radius:8px; padding:12px;
-      font-family:monospace; font-size:13px;
-    }
-    .hint { color:#aaa; font-size:13px; margin-top:6px; }
-  </style>
+<meta charset="UTF-8">
+<title>Admin – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  margin:0;
+  font-family:system-ui, sans-serif;
+  background:#0b0b0b;
+  color:#eee;
+}
+.wrap {
+  max-width:1200px;
+  margin:40px auto;
+  padding:0 20px;
+}
+h1, h2 {
+  color:#f5c451;
+}
+.card {
+  background:#151515;
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:30px;
+  box-shadow:0 0 20px rgba(0,0,0,.5);
+}
+label {
+  display:block;
+  margin-top:12px;
+  font-weight:600;
+}
+input, select {
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  background:#0f0f0f;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:8px;
+}
+button {
+  margin-top:16px;
+  padding:10px 16px;
+  border:0;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+.add { background:#4cff4c; color:#000; }
+.save { background:#f5c451; color:#000; }
+.del  { background:#ff5c5c; color:#000; }
+.small { font-size:13px; color:#aaa; }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+th, td {
+  padding:10px;
+  border-bottom:1px solid #222;
+  font-size:14px;
+}
+th { color:#f5c451; text-align:left; }
+
+textarea {
+  width:100%;
+  height:300px;
+  background:#0f0f0f;
+  color:#9cff9c;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:12px;
+  font-family:monospace;
+  font-size:13px;
+}
+.hidden { display:none; }
+</style>
 </head>
+
 <body>
-<div class="wrap">
-  <h1>🎁 Lootliste – Admin</h1>
 
-  <form id="itemForm">
-    <label>Item-Name</label>
-    <input id="name" required placeholder="z.B. Harlequin Crest" />
-
-    <label>Typ / Kategorie</label>
-    <input id="category" placeholder="Unique – Helm" />
-
-    <label>Sterne-Bewertung</label>
-    <select id="stars">
-      <option value="★★★★★">★★★★★ (5/5)</option>
-      <option value="★★★★☆">★★★★☆ (4/5)</option>
-      <option value="★★★☆☆">★★★☆☆ (3/5)</option>
-      <option value="★★☆☆☆">★★☆☆☆ (2/5)</option>
-      <option value="★☆☆☆☆">★☆☆☆☆ (1/5)</option>
-    </select>
-
-    <label>Roll / Werte</label>
-    <input id="roll" placeholder="+120% def | +30 all res" />
-
-    <label>Status</label>
-    <select id="status">
-      <option value="Verfügbar">Verfügbar</option>
-      <option value="Reserviert">Reserviert</option>
-      <option value="Vergeben">Vergeben</option>
-    </select>
-
-    <button type="submit">➕ Item hinzufügen</button>
-    <div class="hint">Items werden unten gesammelt und als <code>items.js</code> ausgegeben.</div>
-  </form>
-
-  <div class="output">
-    <h2>📄 items.js (zum Kopieren)</h2>
-    <textarea id="output" readonly></textarea>
+<div class="wrap" id="loginBox">
+  <div class="card">
+    <h1>🔐 Admin Login</h1>
+    <label>Passwort</label>
+    <input type="password" id="pw">
+    <button class="save" onclick="login()">Login</button>
   </div>
 </div>
 
-<script>
-  const items = [];
+<div class="wrap hidden" id="adminBox">
 
-  const form = document.getElementById('itemForm');
-  const output = document.getElementById('output');
+  <h1>🎁 Lootliste – Admin</h1>
 
-  function renderOutput() {
-    const content = `const items = ${JSON.stringify(items, null, 2)};`;
-    output.value = content;
+  <!-- ADD / EDIT -->
+  <div class="card">
+    <h2 id="formTitle">➕ Item hinzufügen</h2>
+
+    <input type="hidden" id="editIndex">
+
+    <label>Name</label>
+    <input id="name">
+
+    <label>Kategorie</label>
+    <input id="category">
+
+    <label>Bewertung</label>
+    <select id="stars">
+      <option>★★★★★</option>
+      <option>★★★★☆</option>
+      <option>★★★☆☆</option>
+      <option>★★☆☆☆</option>
+      <option>★☆☆☆☆</option>
+    </select>
+
+    <label>Roll / Werte</label>
+    <input id="roll">
+
+    <label>Status</label>
+    <select id="status">
+      <option>Verfügbar</option>
+      <option>Reserviert</option>
+      <option>Vergeben</option>
+    </select>
+
+    <button class="add" onclick="saveItem()">Speichern</button>
+  </div>
+
+  <!-- LIST -->
+  <div class="card">
+    <h2>📋 Items</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Kategorie</th>
+          <th>Rating</th>
+          <th>Status</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody id="itemTable"></tbody>
+    </table>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="card">
+    <h2>📄 items.js (1:1 kopieren)</h2>
+    <textarea id="output" readonly></textarea>
+    <div class="small">Nach dem Kopieren <b>items.js ersetzen</b> → Index ist automatisch aktuell.</div>
+  </div>
+
+</div>
+
+<script type="module">
+import itemsData from "./items.js";
+
+let items = JSON.parse(JSON.stringify(itemsData));
+
+function login() {
+  if (document.getElementById("pw").value === "loot123") {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("adminBox").classList.remove("hidden");
+    render();
+  } else {
+    alert("Falsches Passwort");
   }
+}
+window.login = login;
 
-  form.addEventListener('submit', e => {
-    e.preventDefault();
+function render() {
+  const table = document.getElementById("itemTable");
+  table.innerHTML = "";
 
-    const item = {
-      name: document.getElementById('name').value.trim(),
-      category: document.getElementById('category').value.trim(),
-      stars: document.getElementById('stars').value,
-      roll: document.getElementById('roll').value.trim() || "—",
-      contact: "me_solli",
-      status: document.getElementById('status').value
-    };
-
-    if (item.name.length < 3) {
-      alert('Item-Name zu kurz');
-      return;
-    }
-
-    items.push(item);
-    renderOutput();
-    form.reset();
+  items.forEach((item, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.name}</td>
+      <td>${item.category}</td>
+      <td>${item.stars}</td>
+      <td>${item.status}</td>
+      <td>
+        <button class="save" onclick="editItem(${i})">✏️</button>
+        <button class="del" onclick="deleteItem(${i})">🗑</button>
+      </td>
+    `;
+    table.appendChild(tr);
   });
 
-  renderOutput();
+  document.getElementById("output").value =
+`const items = ${JSON.stringify(items, null, 2)};
+
+export default items;`;
+}
+
+function saveItem() {
+  const idx = document.getElementById("editIndex").value;
+  const item = {
+    name: name.value.trim(),
+    category: category.value.trim(),
+    stars: stars.value,
+    roll: roll.value.trim() || "—",
+    contact: "me_solli",
+    status: status.value
+  };
+
+  if (idx === "") items.push(item);
+  else items[idx] = item;
+
+  document.getElementById("editIndex").value = "";
+  document.getElementById("formTitle").innerText = "➕ Item hinzufügen";
+  render();
+}
+window.saveItem = saveItem;
+
+function editItem(i) {
+  const it = items[i];
+  editIndex.value = i;
+  name.value = it.name;
+  category.value = it.category;
+  stars.value = it.stars;
+  roll.value = it.roll;
+  status.value = it.status;
+  formTitle.innerText = "✏️ Item bearbeiten";
+}
+window.editItem = editItem;
+
+function deleteItem(i) {
+  if (confirm("Item wirklich löschen?")) {
+    items.splice(i,1);
+    render();
+  }
+}
+window.deleteItem = deleteItem;
 </script>
+
 </body>
 </html>
