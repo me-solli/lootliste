@@ -3,47 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <title>Lootliste – Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-  margin:0;
-  font-family:system-ui, sans-serif;
-  background:#0b0b0b;
-  color:#eee;
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#111;
+  --panel2:#151515;
+  --border:#2a2a2a;
 }
 
-.wrap {
-  max-width:1100px;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
+  color:#eaeaea;
+}
+
+.wrapper{
+  max-width:1200px;
   margin:40px auto;
   padding:0 20px;
 }
 
-h1, h2 {
-  color:#f5c451;
-  margin:0 0 12px;
+h1,h2{
+  color:var(--gold);
+  margin:0 0 16px;
 }
 
-.card {
-  background:#151515;
+.card{
+  background:linear-gradient(180deg,#161616,#0e0e0e);
+  border:1px solid var(--border);
   border-radius:18px;
-  padding:26px;
+  padding:24px;
   margin-bottom:32px;
   box-shadow:0 0 30px rgba(0,0,0,.6);
 }
 
-.form-grid {
+/* FORM */
+.form-grid{
   display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:16px;
 }
 
-label {
+label{
+  font-size:13px;
   font-weight:600;
-  font-size:14px;
+  opacity:.9;
 }
 
-input, select {
+input,select{
   width:100%;
   padding:12px 14px;
   background:#0f0f0f;
@@ -53,67 +64,54 @@ input, select {
   font-size:14px;
 }
 
-button {
-  margin-top:8px;
-  padding:12px 22px;
-  border:0;
+button{
+  padding:12px 18px;
   border-radius:14px;
+  border:1px solid var(--border);
+  background:#151515;
+  color:#fff;
   font-weight:700;
   cursor:pointer;
-  font-size:14px;
-  width:max-content;
 }
 
-.add { background:#4cff4c; color:#000; }
-.save { background:#f5c451; color:#000; }
-.del  { background:#ff5c5c; color:#000; }
-
-.hidden { display:none; }
-
-.login {
-  max-width:420px;
-  margin:120px auto;
+button:hover{
+  border-color:var(--gold);
+  color:var(--gold);
 }
 
-table {
+.add{margin-top:8px}
+
+/* TABLE */
+table{
   width:100%;
   border-collapse:collapse;
-  margin-top:12px;
 }
 
-th, td {
+th,td{
   padding:10px;
   border-bottom:1px solid #222;
   font-size:14px;
 }
 
-th {
-  color:#f5c451;
+th{
+  color:var(--gold);
   text-align:left;
 }
 
-.actions button { margin-right:6px; }
-
-textarea {
-  width:100%;
-  height:320px;
-  background:#0f0f0f;
-  color:#9cff9c;
-  border:1px solid #333;
-  border-radius:12px;
-  padding:14px;
-  font-family:monospace;
-  font-size:13px;
+.actions button{
+  margin-right:6px;
 }
 
-.small {
-  font-size:13px;
-  color:#aaa;
-  margin-top:10px;
+/* LOGIN */
+.login{
+  max-width:420px;
+  margin:120px auto;
 }
+
+.hidden{display:none}
 
 /* TOAST */
-#toast {
+#toast{
   position:fixed;
   top:20px;
   right:20px;
@@ -125,30 +123,46 @@ textarea {
   box-shadow:0 10px 30px rgba(0,0,0,.4);
   opacity:0;
   transform:translateY(-10px);
-  transition:all .25s ease;
+  transition:.25s;
   z-index:9999;
+}
+
+textarea{
+  width:100%;
+  height:320px;
+  background:#0f0f0f;
+  color:#9cff9c;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:14px;
+  font-family:monospace;
+  font-size:13px;
+}
+
+.small{
+  font-size:13px;
+  opacity:.7;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="toast">✅ Item gespeichert</div>
+<div id="toast">OK</div>
 
 <!-- LOGIN -->
-<div class="wrap login" id="loginBox">
+<div class="wrapper login" id="loginBox">
   <div class="card">
     <h1>🔐 Admin Login</h1>
-    <div class="form-grid">
-      <label>Passwort</label>
-      <input type="password" id="pw">
-      <button class="save" onclick="login()">Login</button>
-    </div>
+    <label>Passwort</label>
+    <input type="password" id="pw">
+    <button onclick="login()">Login</button>
   </div>
 </div>
 
 <!-- ADMIN -->
-<div class="wrap hidden" id="adminBox">
+<div class="wrapper hidden" id="adminBox">
 
   <h1>🎁 Lootliste – Admin</h1>
 
@@ -191,9 +205,9 @@ textarea {
           <option>Vergeben</option>
         </select>
       </div>
-
-      <button class="add" onclick="saveItem()">Speichern</button>
     </div>
+
+    <button class="add" onclick="saveItem()">Speichern</button>
   </div>
 
   <div class="card">
@@ -213,9 +227,9 @@ textarea {
   </div>
 
   <div class="card">
-    <h2>📄 items.js (1:1 kopieren)</h2>
+    <h2>📄 items.js (kopieren & ersetzen)</h2>
     <textarea id="output" readonly></textarea>
-    <div class="small">Komplett kopieren → <b>items.js ersetzen</b></div>
+    <div class="small">Nach Änderungen komplett kopieren → <b>items.js</b></div>
   </div>
 
 </div>
@@ -223,125 +237,112 @@ textarea {
 <script type="module">
 import itemsData from "./items.js";
 
-/* DOM */
-const pw = document.getElementById("pw");
-const loginBox = document.getElementById("loginBox");
-const adminBox = document.getElementById("adminBox");
+const pw=document.getElementById("pw");
+const loginBox=document.getElementById("loginBox");
+const adminBox=document.getElementById("adminBox");
+const toast=document.getElementById("toast");
 
-const nameInput = document.getElementById("name");
-const categoryInput = document.getElementById("category");
-const starsSelect = document.getElementById("stars");
-const rollInput = document.getElementById("roll");
-const statusSelect = document.getElementById("status");
-const editIndex = document.getElementById("editIndex");
-const formTitle = document.getElementById("formTitle");
+const nameInput=document.getElementById("name");
+const categoryInput=document.getElementById("category");
+const starsSelect=document.getElementById("stars");
+const rollInput=document.getElementById("roll");
+const statusSelect=document.getElementById("status");
+const editIndex=document.getElementById("editIndex");
+const formTitle=document.getElementById("formTitle");
+const itemTable=document.getElementById("itemTable");
+const output=document.getElementById("output");
 
-const itemTable = document.getElementById("itemTable");
-const output = document.getElementById("output");
-const toast = document.getElementById("toast");
+let items=JSON.parse(JSON.stringify(itemsData));
 
-let items = JSON.parse(JSON.stringify(itemsData));
-
-function showToast(text, color) {
-  toast.textContent = text;
-  toast.style.background = color;
-  toast.style.opacity = "1";
-  toast.style.transform = "translateY(0)";
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.transform = "translateY(-10px)";
-  }, 1600);
+function showToast(text,color){
+  toast.textContent=text;
+  toast.style.background=color;
+  toast.style.opacity="1";
+  toast.style.transform="translateY(0)";
+  setTimeout(()=>{
+    toast.style.opacity="0";
+    toast.style.transform="translateY(-10px)";
+  },1600);
 }
 
-function login() {
-  if (pw.value === "loot123") {
+window.login=()=>{
+  if(pw.value==="loot123"){
     loginBox.classList.add("hidden");
     adminBox.classList.remove("hidden");
     render();
   } else alert("Falsches Passwort");
-}
-window.login = login;
+};
 
-function render() {
-  itemTable.innerHTML = "";
-  items.forEach((it,i) => {
-    itemTable.innerHTML += `
+function render(){
+  itemTable.innerHTML="";
+  items.forEach((it,i)=>{
+    itemTable.innerHTML+=`
       <tr>
         <td>${it.name}</td>
         <td>${it.category}</td>
         <td>${it.stars}</td>
         <td>${it.status}</td>
         <td class="actions">
-          <button class="save" onclick="editItem(${i})">✏️</button>
-          <button class="del" onclick="deleteItem(${i})">🗑</button>
+          <button onclick="editItem(${i})">✏️</button>
+          <button onclick="deleteItem(${i})">🗑</button>
         </td>
       </tr>`;
   });
 
-  output.value =
-`const items = ${JSON.stringify(items, null, 2)};
-
-export default items;`;
+  output.value=`const items = ${JSON.stringify(items,null,2)};\n\nexport default items;`;
 }
 
-function saveItem() {
-  const isEdit = editIndex.value !== "";
-
-  const item = {
-    name: nameInput.value.trim(),
-    category: categoryInput.value.trim(),
-    stars: starsSelect.value,
-    roll: rollInput.value.trim() || "—",
-    contact: "me_solli",
-    status: statusSelect.value
+window.saveItem=()=>{
+  const item={
+    name:nameInput.value.trim(),
+    category:categoryInput.value.trim(),
+    stars:starsSelect.value,
+    roll:rollInput.value.trim()||"—",
+    contact:"me_solli",
+    status:statusSelect.value
   };
 
-  if (!item.name || !item.category) {
-    alert("Name & Kategorie sind Pflicht.");
+  if(!item.name||!item.category){
+    alert("Name & Kategorie sind Pflicht");
     return;
   }
 
-  if (isEdit) {
-    items[editIndex.value] = item;
-    showToast("🔄 Item aktualisiert", "#f5c451");
+  if(editIndex.value!==""){
+    items[editIndex.value]=item;
+    showToast("Item aktualisiert",varGold());
   } else {
     items.push(item);
-    showToast("✅ Item gespeichert", "#4cff4c");
+    showToast("Item gespeichert","#4cff4c");
   }
 
-  editIndex.value = "";
-  formTitle.innerText = "➕ Item hinzufügen";
-
-  nameInput.value = "";
-  categoryInput.value = "";
-  rollInput.value = "";
-  starsSelect.value = "★★★★★";
-  statusSelect.value = "Verfügbar";
-
+  editIndex.value="";
+  formTitle.innerText="➕ Item hinzufügen";
+  nameInput.value=categoryInput.value=rollInput.value="";
+  starsSelect.value="★★★★★";
+  statusSelect.value="Verfügbar";
   render();
-}
-window.saveItem = saveItem;
+};
 
-function editItem(i) {
-  const it = items[i];
-  editIndex.value = i;
-  nameInput.value = it.name;
-  categoryInput.value = it.category;
-  starsSelect.value = it.stars;
-  rollInput.value = it.roll;
-  statusSelect.value = it.status;
-  formTitle.innerText = "✏️ Item bearbeiten";
-}
-window.editItem = editItem;
+window.editItem=(i)=>{
+  const it=items[i];
+  editIndex.value=i;
+  nameInput.value=it.name;
+  categoryInput.value=it.category;
+  starsSelect.value=it.stars;
+  rollInput.value=it.roll;
+  statusSelect.value=it.status;
+  formTitle.innerText="✏️ Item bearbeiten";
+};
 
-function deleteItem(i) {
-  if (confirm("Item wirklich löschen?")) {
+window.deleteItem=(i)=>{
+  if(confirm("Item löschen?")){
     items.splice(i,1);
     render();
-    showToast("🗑 Item gelöscht", "#ff5c5c");
+    showToast("Item gelöscht","#ff5c5c");
   }
-}
-window.deleteItem = deleteItem;
+};
+
+function varGold(){return "#f5c451";}
 </script>
 
 </body>
