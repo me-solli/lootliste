@@ -99,8 +99,7 @@ header p{
 }
 
 .card{
-  background:
-    linear-gradient(180deg, #161616, #0e0e0e);
+  background:linear-gradient(180deg, #161616, #0e0e0e);
   border:1px solid var(--border);
   border-radius:16px;
   overflow:hidden;
@@ -108,16 +107,11 @@ header p{
   flex-direction:column;
 }
 
-.card:hover{
-  border-color:#3a3a3a;
-}
-
 .card img{
   width:100%;
   height:150px;
   object-fit:contain;
-  background:
-    radial-gradient(circle at top, #1c1c1c, #0b0b0b);
+  background:radial-gradient(circle at top, #1c1c1c, #0b0b0b);
   border-bottom:1px solid #222;
 }
 
@@ -128,44 +122,18 @@ header p{
   gap:8px;
 }
 
-.item-name{
-  font-weight:bold;
-  font-size:15px;
-  color:#fff;
-}
+.item-name{font-weight:bold;font-size:15px}
+.category{font-size:12px;opacity:.75}
+.stars{color:var(--gold)}
+.roll{font-size:13px;color:#cfcfcf}
 
-.category{
-  font-size:12px;
-  opacity:.75;
-}
-
-.stars{
-  color:var(--gold);
-  font-size:14px;
-}
-
-.roll{
-  font-size:13px;
-  color:#cfcfcf;
-}
-
-.status{
-  font-weight:bold;
-  font-size:13px;
-}
+.status{font-weight:bold}
 .status.verfuegbar{color:#4cff4c}
 .status.reserviert{color:#ffd24c}
 .status.vergeben{color:#ff5c5c}
 
-.player{
-  font-size:13px;
-  opacity:.85;
-}
-.player a{
-  color:var(--gold);
-  text-decoration:none;
-}
-.player a:hover{text-decoration:underline}
+.player{font-size:13px;opacity:.85}
+.player a{color:var(--gold);text-decoration:none}
 
 .cta{
   margin-top:6px;
@@ -178,24 +146,7 @@ header p{
   color:#fff;
   text-decoration:none;
 }
-.cta:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
-
-/* ===== Footer ===== */
-footer{
-  margin-top:40px;
-  padding:20px;
-  border-top:1px solid #222;
-  font-size:13px;
-}
-footer a{
-  color:var(--gold);
-  margin-right:16px;
-  text-decoration:none;
-}
-footer a:hover{text-decoration:underline}
+.cta:hover{border-color:var(--gold);color:var(--gold)}
 </style>
 </head>
 
@@ -207,7 +158,6 @@ footer a:hover{text-decoration:underline}
     <h1>🎁 Free Lootliste – Community Items</h1>
     <p>Diablo II Resurrected · Non-Ladder · 100 % Free Loot</p>
   </div>
-
   <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
     ▶ Twitch: me_solli
   </a>
@@ -251,12 +201,6 @@ footer a:hover{text-decoration:underline}
 <div class="cards" id="cards"></div>
 
 </div>
-
-<footer>
-  <a href="impressum.html">Impressum</a>
-  <a href="datenschutz.html">Datenschutz</a>
-</footer>
-
 </div>
 
 <script type="module">
@@ -272,14 +216,23 @@ function ratingValue(stars){
   return (stars?.match(/★/g)||[]).length;
 }
 
+// 👉 Item-Art automatisch aus category ziehen
+function getItemType(item){
+  if(!item.category) return "";
+  const parts = item.category.split("–");
+  return parts[1]?.trim() || parts[0].trim();
+}
+
 function render(){
   cards.innerHTML="";
 
   let filtered = items.filter(i=>{
     const q = search.value.toLowerCase();
+    const type = getItemType(i);
+
     return (
       (!statusFilter.value || i.status === statusFilter.value) &&
-      (!typeFilter.value || i.type === typeFilter.value) &&
+      (!typeFilter.value || type === typeFilter.value) &&
       (
         i.name.toLowerCase().includes(q) ||
         i.category.toLowerCase().includes(q)
@@ -300,7 +253,7 @@ function render(){
     const card=document.createElement("div");
     card.className="card";
     card.innerHTML=`
-      <img src="${item.image || 'img/item-default.png'}" alt="">
+      <img src="${item.image || 'img/item-default.png'}">
       <div class="card-body">
         <div class="item-name">${item.name}</div>
         <div class="category">${item.category}</div>
