@@ -34,7 +34,7 @@ h1, h2 {
 
 .form-grid {
   display:grid;
-  grid-template-columns: 1fr;
+  grid-template-columns:1fr;
   gap:16px;
 }
 
@@ -111,10 +111,29 @@ textarea {
   color:#aaa;
   margin-top:10px;
 }
+
+/* TOAST */
+#toast {
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#4cff4c;
+  color:#000;
+  padding:14px 18px;
+  border-radius:14px;
+  font-weight:700;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+  opacity:0;
+  transform:translateY(-10px);
+  transition:all .25s ease;
+  z-index:9999;
+}
 </style>
 </head>
 
 <body>
+
+<div id="toast">✅ Item gespeichert</div>
 
 <!-- LOGIN -->
 <div class="wrap login" id="loginBox">
@@ -122,7 +141,7 @@ textarea {
     <h1>🔐 Admin Login</h1>
     <div class="form-grid">
       <label>Passwort</label>
-      <input type="password" id="pw" placeholder="Admin-Passwort">
+      <input type="password" id="pw">
       <button class="save" onclick="login()">Login</button>
     </div>
   </div>
@@ -140,12 +159,12 @@ textarea {
     <div class="form-grid">
       <div>
         <label>Name</label>
-        <input id="name" placeholder="z. B. Harlequin Crest">
+        <input id="name">
       </div>
 
       <div>
         <label>Kategorie</label>
-        <input id="category" placeholder="Unique – Helm">
+        <input id="category">
       </div>
 
       <div>
@@ -161,7 +180,7 @@ textarea {
 
       <div>
         <label>Roll / Werte</label>
-        <input id="roll" placeholder="+120% def | +30 all res">
+        <input id="roll">
       </div>
 
       <div>
@@ -198,12 +217,13 @@ textarea {
     <textarea id="output" readonly></textarea>
     <div class="small">Komplett kopieren → <b>items.js ersetzen</b></div>
   </div>
+
 </div>
 
 <script type="module">
 import itemsData from "./items.js";
 
-// DOM
+/* DOM */
 const pw = document.getElementById("pw");
 const loginBox = document.getElementById("loginBox");
 const adminBox = document.getElementById("adminBox");
@@ -218,8 +238,20 @@ const formTitle = document.getElementById("formTitle");
 
 const itemTable = document.getElementById("itemTable");
 const output = document.getElementById("output");
+const toast = document.getElementById("toast");
 
 let items = JSON.parse(JSON.stringify(itemsData));
+
+function showToast(text, color) {
+  toast.textContent = text;
+  toast.style.background = color;
+  toast.style.opacity = "1";
+  toast.style.transform = "translateY(0)";
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-10px)";
+  }, 1600);
+}
 
 function login() {
   if (pw.value === "loot123") {
@@ -246,10 +278,15 @@ function render() {
       </tr>`;
   });
 
-  output.value = `const items = ${JSON.stringify(items, null, 2)};\n\nexport default items;`;
+  output.value =
+`const items = ${JSON.stringify(items, null, 2)};
+
+export default items;`;
 }
 
 function saveItem() {
+  const isEdit = editIndex.value !== "";
+
   const item = {
     name: nameInput.value.trim(),
     category: categoryInput.value.trim(),
@@ -264,8 +301,13 @@ function saveItem() {
     return;
   }
 
-  if (editIndex.value === "") items.push(item);
-  else items[editIndex.value] = item;
+  if (isEdit) {
+    items[editIndex.value] = item;
+    showToast("🔄 Item aktualisiert", "#f5c451");
+  } else {
+    items.push(item);
+    showToast("✅ Item gespeichert", "#4cff4c");
+  }
 
   editIndex.value = "";
   formTitle.innerText = "➕ Item hinzufügen";
@@ -296,6 +338,7 @@ function deleteItem(i) {
   if (confirm("Item wirklich löschen?")) {
     items.splice(i,1);
     render();
+    showToast("🗑 Item gelöscht", "#ff5c5c");
   }
 }
 window.deleteItem = deleteItem;
