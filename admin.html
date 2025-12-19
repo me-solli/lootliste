@@ -3,55 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <title>Lootliste – Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
-  --panel:#111;
-  --panel2:#151515;
+  --panel:#141414;
   --border:#2a2a2a;
 }
 
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
-  color:#eaeaea;
+  font-family:system-ui, sans-serif;
+  background:var(--bg);
+  color:#eee;
 }
 
-.wrapper{
-  max-width:1200px;
+.wrap{
+  max-width:1100px;
   margin:40px auto;
   padding:0 20px;
 }
 
 h1,h2{
   color:var(--gold);
-  margin:0 0 16px;
+  margin:0 0 14px;
 }
 
 .card{
   background:linear-gradient(180deg,#161616,#0e0e0e);
   border:1px solid var(--border);
   border-radius:18px;
-  padding:24px;
+  padding:26px;
   margin-bottom:32px;
-  box-shadow:0 0 30px rgba(0,0,0,.6);
 }
 
-/* FORM */
 .form-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:1fr 1fr;
   gap:16px;
 }
 
 label{
   font-size:13px;
   font-weight:600;
-  opacity:.9;
 }
 
 input,select{
@@ -61,27 +57,22 @@ input,select{
   color:#fff;
   border:1px solid #333;
   border-radius:12px;
-  font-size:14px;
 }
 
 button{
-  padding:12px 18px;
+  padding:12px 22px;
+  border:0;
   border-radius:14px;
-  border:1px solid var(--border);
-  background:#151515;
-  color:#fff;
   font-weight:700;
   cursor:pointer;
 }
 
-button:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
+.add{background:#4cff4c;color:#000}
+.save{background:var(--gold);color:#000}
+.del{background:#ff5c5c;color:#000}
 
-.add{margin-top:8px}
+.hidden{display:none}
 
-/* TABLE */
 table{
   width:100%;
   border-collapse:collapse;
@@ -93,39 +84,7 @@ th,td{
   font-size:14px;
 }
 
-th{
-  color:var(--gold);
-  text-align:left;
-}
-
-.actions button{
-  margin-right:6px;
-}
-
-/* LOGIN */
-.login{
-  max-width:420px;
-  margin:120px auto;
-}
-
-.hidden{display:none}
-
-/* TOAST */
-#toast{
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:#4cff4c;
-  color:#000;
-  padding:14px 18px;
-  border-radius:14px;
-  font-weight:700;
-  box-shadow:0 10px 30px rgba(0,0,0,.4);
-  opacity:0;
-  transform:translateY(-10px);
-  transition:.25s;
-  z-index:9999;
-}
+th{color:var(--gold);text-align:left}
 
 textarea{
   width:100%;
@@ -139,98 +98,137 @@ textarea{
   font-size:13px;
 }
 
-.small{
-  font-size:13px;
-  opacity:.7;
-  margin-top:10px;
+#toast{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#4cff4c;
+  color:#000;
+  padding:14px 18px;
+  border-radius:14px;
+  font-weight:700;
+  opacity:0;
+  transition:.25s;
 }
 </style>
 </head>
 
 <body>
 
-<div id="toast">OK</div>
+<div id="toast">Gespeichert</div>
 
 <!-- LOGIN -->
-<div class="wrapper login" id="loginBox">
+<div class="wrap" id="loginBox">
   <div class="card">
     <h1>🔐 Admin Login</h1>
     <label>Passwort</label>
     <input type="password" id="pw">
-    <button onclick="login()">Login</button>
+    <br><br>
+    <button class="save" onclick="login()">Login</button>
   </div>
 </div>
 
 <!-- ADMIN -->
-<div class="wrapper hidden" id="adminBox">
+<div class="wrap hidden" id="adminBox">
 
-  <h1>🎁 Lootliste – Admin</h1>
+<h1>🎁 Lootliste – Admin</h1>
 
-  <div class="card">
-    <h2 id="formTitle">➕ Item hinzufügen</h2>
-    <input type="hidden" id="editIndex">
+<div class="card">
+<h2 id="formTitle">➕ Item hinzufügen</h2>
+<input type="hidden" id="editIndex">
 
-    <div class="form-grid">
-      <div>
-        <label>Name</label>
-        <input id="name">
-      </div>
+<div class="form-grid">
 
-      <div>
-        <label>Kategorie</label>
-        <input id="category">
-      </div>
+<div>
+<label>Name</label>
+<input id="name">
+</div>
 
-      <div>
-        <label>Bewertung</label>
-        <select id="stars">
-          <option>★★★★★</option>
-          <option>★★★★☆</option>
-          <option>★★★☆☆</option>
-          <option>★★☆☆☆</option>
-          <option>★☆☆☆☆</option>
-        </select>
-      </div>
+<div>
+<label>Qualität</label>
+<select id="category">
+  <option value="">Bitte wählen</option>
+  <option>unique</option>
+  <option>set</option>
+  <option>rune</option>
+  <option>charm</option>
+  <option>selten</option>
+  <option>magisch</option>
+</select>
+</div>
 
-      <div>
-        <label>Roll / Werte</label>
-        <input id="roll">
-      </div>
+<div>
+<label>Item-Art</label>
+<select id="type">
+  <option value="">Bitte wählen</option>
+  <option>Helm</option>
+  <option>Amulett</option>
+  <option>Waffe</option>
+  <option>Rüstung</option>
+  <option>Schild</option>
+  <option>Gürtel</option>
+  <option>Ring</option>
+  <option>Handschuhe</option>
+  <option>Schuhe</option>
+  <option>Kleiner Zauber</option>
+  <option>Großer Zauber</option>
+  <option>Riesenzauber</option>
+  <option>Sonstiges</option>
+</select>
+</div>
 
-      <div>
-        <label>Status</label>
-        <select id="status">
-          <option>Verfügbar</option>
-          <option>Reserviert</option>
-          <option>Vergeben</option>
-        </select>
-      </div>
-    </div>
+<div>
+<label>Bewertung</label>
+<select id="stars">
+  <option>★★★★★</option>
+  <option>★★★★☆</option>
+  <option>★★★☆☆</option>
+  <option>★★☆☆☆</option>
+  <option>★☆☆☆☆</option>
+</select>
+</div>
 
-    <button class="add" onclick="saveItem()">Speichern</button>
-  </div>
+<div>
+<label>Roll / Werte</label>
+<input id="roll">
+</div>
 
-  <div class="card">
-    <h2>📋 Aktuelle Items</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Kategorie</th>
-          <th>Rating</th>
-          <th>Status</th>
-          <th>Aktion</th>
-        </tr>
-      </thead>
-      <tbody id="itemTable"></tbody>
-    </table>
-  </div>
+<div>
+<label>Status</label>
+<select id="status">
+  <option>Verfügbar</option>
+  <option>Reserviert</option>
+  <option>Vergeben</option>
+</select>
+</div>
 
-  <div class="card">
-    <h2>📄 items.js (kopieren & ersetzen)</h2>
-    <textarea id="output" readonly></textarea>
-    <div class="small">Nach Änderungen komplett kopieren → <b>items.js</b></div>
-  </div>
+</div>
+
+<br>
+<button class="add" onclick="saveItem()">Speichern</button>
+</div>
+
+<div class="card">
+<h2>📋 Items</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Qualität</th>
+<th>Art</th>
+<th>Rating</th>
+<th>Status</th>
+<th>Aktion</th>
+</tr>
+</thead>
+<tbody id="itemTable"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>📄 items.js</h2>
+<textarea id="output" readonly></textarea>
+</div>
 
 </div>
 
@@ -242,107 +240,93 @@ const loginBox=document.getElementById("loginBox");
 const adminBox=document.getElementById("adminBox");
 const toast=document.getElementById("toast");
 
-const nameInput=document.getElementById("name");
-const categoryInput=document.getElementById("category");
-const starsSelect=document.getElementById("stars");
-const rollInput=document.getElementById("roll");
-const statusSelect=document.getElementById("status");
-const editIndex=document.getElementById("editIndex");
-const formTitle=document.getElementById("formTitle");
-const itemTable=document.getElementById("itemTable");
-const output=document.getElementById("output");
-
 let items=JSON.parse(JSON.stringify(itemsData));
 
-function showToast(text,color){
+function showToast(text){
   toast.textContent=text;
-  toast.style.background=color;
-  toast.style.opacity="1";
-  toast.style.transform="translateY(0)";
-  setTimeout(()=>{
-    toast.style.opacity="0";
-    toast.style.transform="translateY(-10px)";
-  },1600);
+  toast.style.opacity=1;
+  setTimeout(()=>toast.style.opacity=0,1500);
 }
 
-window.login=()=>{
+function login(){
   if(pw.value==="loot123"){
     loginBox.classList.add("hidden");
     adminBox.classList.remove("hidden");
     render();
-  } else alert("Falsches Passwort");
-};
+  }else alert("Falsches Passwort");
+}
+window.login=login;
 
 function render(){
-  itemTable.innerHTML="";
-  items.forEach((it,i)=>{
-    itemTable.innerHTML+=`
-      <tr>
-        <td>${it.name}</td>
-        <td>${it.category}</td>
-        <td>${it.stars}</td>
-        <td>${it.status}</td>
-        <td class="actions">
-          <button onclick="editItem(${i})">✏️</button>
-          <button onclick="deleteItem(${i})">🗑</button>
-        </td>
-      </tr>`;
+  const table=document.getElementById("itemTable");
+  table.innerHTML="";
+  items.forEach((i,idx)=>{
+    table.innerHTML+=`
+<tr>
+<td>${i.name}</td>
+<td>${i.category}</td>
+<td>${i.type}</td>
+<td>${i.stars}</td>
+<td>${i.status}</td>
+<td>
+<button class="save" onclick="editItem(${idx})">✏️</button>
+<button class="del" onclick="deleteItem(${idx})">🗑</button>
+</td>
+</tr>`;
   });
 
-  output.value=`const items = ${JSON.stringify(items,null,2)};\n\nexport default items;`;
+  document.getElementById("output").value=
+`const items = ${JSON.stringify(items,null,2)};
+export default items;`;
 }
 
-window.saveItem=()=>{
+function saveItem(){
   const item={
-    name:nameInput.value.trim(),
-    category:categoryInput.value.trim(),
-    stars:starsSelect.value,
-    roll:rollInput.value.trim()||"—",
+    name:name.value.trim(),
+    category:category.value,
+    type:type.value,
+    stars:stars.value,
+    roll:roll.value||"—",
     contact:"me_solli",
-    status:statusSelect.value
+    status:status.value
   };
 
-  if(!item.name||!item.category){
-    alert("Name & Kategorie sind Pflicht");
+  if(!item.name||!item.category||!item.type){
+    alert("Name, Qualität und Item-Art sind Pflicht");
     return;
   }
 
-  if(editIndex.value!==""){
+  if(editIndex.value){
     items[editIndex.value]=item;
-    showToast("Item aktualisiert",varGold());
-  } else {
+  }else{
     items.push(item);
-    showToast("Item gespeichert","#4cff4c");
   }
 
   editIndex.value="";
-  formTitle.innerText="➕ Item hinzufügen";
-  nameInput.value=categoryInput.value=rollInput.value="";
-  starsSelect.value="★★★★★";
-  statusSelect.value="Verfügbar";
+  showToast("Gespeichert");
   render();
-};
+}
+window.saveItem=saveItem;
 
-window.editItem=(i)=>{
+function editItem(i){
   const it=items[i];
   editIndex.value=i;
-  nameInput.value=it.name;
-  categoryInput.value=it.category;
-  starsSelect.value=it.stars;
-  rollInput.value=it.roll;
-  statusSelect.value=it.status;
-  formTitle.innerText="✏️ Item bearbeiten";
-};
+  name.value=it.name;
+  category.value=it.category;
+  type.value=it.type;
+  stars.value=it.stars;
+  roll.value=it.roll;
+  status.value=it.status;
+}
+window.editItem=editItem;
 
-window.deleteItem=(i)=>{
+function deleteItem(i){
   if(confirm("Item löschen?")){
     items.splice(i,1);
     render();
-    showToast("Item gelöscht","#ff5c5c");
   }
-};
-
-function varGold(){return "#f5c451";}
+}
+window.deleteItem=deleteItem;
 </script>
 
 </body>
