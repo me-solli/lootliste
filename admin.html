@@ -6,87 +6,95 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-:root{
-  --gold:#f5c451;
-  --bg:#0b0b0b;
-  --panel:#141414;
-  --border:#2a2a2a;
-}
-
-body{
+body {
   margin:0;
   font-family:system-ui, sans-serif;
-  background:var(--bg);
+  background:#0b0b0b;
   color:#eee;
 }
 
-.wrap{
+.wrap {
   max-width:1100px;
   margin:40px auto;
   padding:0 20px;
 }
 
-h1,h2{
-  color:var(--gold);
-  margin:0 0 14px;
+h1, h2 {
+  color:#f5c451;
+  margin:0 0 12px;
 }
 
-.card{
-  background:linear-gradient(180deg,#161616,#0e0e0e);
-  border:1px solid var(--border);
+.card {
+  background:#151515;
   border-radius:18px;
   padding:26px;
   margin-bottom:32px;
+  box-shadow:0 0 30px rgba(0,0,0,.6);
 }
 
-.form-grid{
+.form-grid {
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1fr;
   gap:16px;
 }
 
-label{
-  font-size:13px;
+label {
   font-weight:600;
+  font-size:14px;
 }
 
-input,select{
+input, select {
   width:100%;
   padding:12px 14px;
   background:#0f0f0f;
   color:#fff;
   border:1px solid #333;
   border-radius:12px;
+  font-size:14px;
 }
 
-button{
+button {
+  margin-top:8px;
   padding:12px 22px;
   border:0;
   border-radius:14px;
   font-weight:700;
   cursor:pointer;
+  font-size:14px;
+  width:max-content;
 }
 
-.add{background:#4cff4c;color:#000}
-.save{background:var(--gold);color:#000}
-.del{background:#ff5c5c;color:#000}
+.add { background:#4cff4c; color:#000; }
+.save { background:#f5c451; color:#000; }
+.del  { background:#ff5c5c; color:#000; }
 
-.hidden{display:none}
+.hidden { display:none; }
 
-table{
+.login {
+  max-width:420px;
+  margin:120px auto;
+}
+
+table {
   width:100%;
   border-collapse:collapse;
+  margin-top:12px;
 }
 
-th,td{
+th, td {
   padding:10px;
   border-bottom:1px solid #222;
   font-size:14px;
 }
 
-th{color:var(--gold);text-align:left}
+th {
+  color:#f5c451;
+  text-align:left;
+}
 
-textarea{
+.actions button { margin-right:6px; }
+
+textarea {
   width:100%;
   height:320px;
   background:#0f0f0f;
@@ -98,7 +106,14 @@ textarea{
   font-size:13px;
 }
 
-#toast{
+.small {
+  font-size:13px;
+  color:#aaa;
+  margin-top:10px;
+}
+
+/* TOAST */
+#toast {
   position:fixed;
   top:20px;
   right:20px;
@@ -107,226 +122,236 @@ textarea{
   padding:14px 18px;
   border-radius:14px;
   font-weight:700;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
   opacity:0;
-  transition:.25s;
+  transform:translateY(-10px);
+  transition:all .25s ease;
+  z-index:9999;
 }
 </style>
 </head>
 
 <body>
 
-<div id="toast">Gespeichert</div>
+<div id="toast">✅ Item gespeichert</div>
 
 <!-- LOGIN -->
-<div class="wrap" id="loginBox">
+<div class="wrap login" id="loginBox">
   <div class="card">
     <h1>🔐 Admin Login</h1>
-    <label>Passwort</label>
-    <input type="password" id="pw">
-    <br><br>
-    <button class="save" onclick="login()">Login</button>
+    <div class="form-grid">
+      <label>Passwort</label>
+      <input type="password" id="pw">
+      <button class="save" id="loginBtn">Login</button>
+    </div>
   </div>
 </div>
 
 <!-- ADMIN -->
 <div class="wrap hidden" id="adminBox">
 
-<h1>🎁 Lootliste – Admin</h1>
+  <h1>🎁 Lootliste – Admin</h1>
 
-<div class="card">
-<h2 id="formTitle">➕ Item hinzufügen</h2>
-<input type="hidden" id="editIndex">
+  <div class="card">
+    <h2 id="formTitle">➕ Item hinzufügen</h2>
+    <input type="hidden" id="editIndex">
 
-<div class="form-grid">
+    <div class="form-grid">
+      <div>
+        <label>Name</label>
+        <input id="name">
+      </div>
 
-<div>
-<label>Name</label>
-<input id="name">
-</div>
+      <div>
+        <label>Kategorie</label>
+        <input id="category">
+      </div>
 
-<div>
-<label>Qualität</label>
-<select id="category">
-  <option value="">Bitte wählen</option>
-  <option>unique</option>
-  <option>set</option>
-  <option>rune</option>
-  <option>charm</option>
-  <option>selten</option>
-  <option>magisch</option>
-</select>
-</div>
+      <div>
+        <label>Bewertung</label>
+        <select id="stars">
+          <option>★★★★★</option>
+          <option>★★★★☆</option>
+          <option>★★★☆☆</option>
+          <option>★★☆☆☆</option>
+          <option>★☆☆☆☆</option>
+        </select>
+      </div>
 
-<div>
-<label>Item-Art</label>
-<select id="type">
-  <option value="">Bitte wählen</option>
-  <option>Helm</option>
-  <option>Amulett</option>
-  <option>Waffe</option>
-  <option>Rüstung</option>
-  <option>Schild</option>
-  <option>Gürtel</option>
-  <option>Ring</option>
-  <option>Handschuhe</option>
-  <option>Schuhe</option>
-  <option>Kleiner Zauber</option>
-  <option>Großer Zauber</option>
-  <option>Riesenzauber</option>
-  <option>Sonstiges</option>
-</select>
-</div>
+      <div>
+        <label>Roll / Werte</label>
+        <input id="roll">
+      </div>
 
-<div>
-<label>Bewertung</label>
-<select id="stars">
-  <option>★★★★★</option>
-  <option>★★★★☆</option>
-  <option>★★★☆☆</option>
-  <option>★★☆☆☆</option>
-  <option>★☆☆☆☆</option>
-</select>
-</div>
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option>Verfügbar</option>
+          <option>Reserviert</option>
+          <option>Vergeben</option>
+        </select>
+      </div>
 
-<div>
-<label>Roll / Werte</label>
-<input id="roll">
-</div>
+      <button class="add" id="saveBtn">Speichern</button>
+    </div>
+  </div>
 
-<div>
-<label>Status</label>
-<select id="status">
-  <option>Verfügbar</option>
-  <option>Reserviert</option>
-  <option>Vergeben</option>
-</select>
-</div>
+  <div class="card">
+    <h2>📋 Aktuelle Items</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Kategorie</th>
+          <th>Rating</th>
+          <th>Status</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody id="itemTable"></tbody>
+    </table>
+  </div>
 
-</div>
-
-<br>
-<button class="add" onclick="saveItem()">Speichern</button>
-</div>
-
-<div class="card">
-<h2>📋 Items</h2>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Qualität</th>
-<th>Art</th>
-<th>Rating</th>
-<th>Status</th>
-<th>Aktion</th>
-</tr>
-</thead>
-<tbody id="itemTable"></tbody>
-</table>
-</div>
-
-<div class="card">
-<h2>📄 items.js</h2>
-<textarea id="output" readonly></textarea>
-</div>
+  <div class="card">
+    <h2>📄 items.js (1:1 kopieren)</h2>
+    <textarea id="output" readonly></textarea>
+    <div class="small">Komplett kopieren → <b>items.js ersetzen</b></div>
+  </div>
 
 </div>
 
 <script type="module">
 import itemsData from "./items.js";
 
-const pw=document.getElementById("pw");
-const loginBox=document.getElementById("loginBox");
-const adminBox=document.getElementById("adminBox");
-const toast=document.getElementById("toast");
+/* DOM */
+const pw = document.getElementById("pw");
+const loginBtn = document.getElementById("loginBtn");
+const loginBox = document.getElementById("loginBox");
+const adminBox = document.getElementById("adminBox");
 
-let items=JSON.parse(JSON.stringify(itemsData));
+const nameInput = document.getElementById("name");
+const categoryInput = document.getElementById("category");
+const starsSelect = document.getElementById("stars");
+const rollInput = document.getElementById("roll");
+const statusSelect = document.getElementById("status");
+const editIndex = document.getElementById("editIndex");
+const formTitle = document.getElementById("formTitle");
 
-function showToast(text){
-  toast.textContent=text;
-  toast.style.opacity=1;
-  setTimeout(()=>toast.style.opacity=0,1500);
+const itemTable = document.getElementById("itemTable");
+const output = document.getElementById("output");
+const toast = document.getElementById("toast");
+const saveBtn = document.getElementById("saveBtn");
+
+let items = JSON.parse(JSON.stringify(itemsData));
+
+function showToast(text, color) {
+  toast.textContent = text;
+  toast.style.background = color;
+  toast.style.opacity = "1";
+  toast.style.transform = "translateY(0)";
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-10px)";
+  }, 1600);
 }
 
-function login(){
-  if(pw.value==="loot123"){
+function login() {
+  if (pw.value === "loot123") {
     loginBox.classList.add("hidden");
     adminBox.classList.remove("hidden");
     render();
-  }else alert("Falsches Passwort");
+  } else {
+    alert("Falsches Passwort");
+  }
 }
-window.login=login;
 
-function render(){
-  const table=document.getElementById("itemTable");
-  table.innerHTML="";
-  items.forEach((i,idx)=>{
-    table.innerHTML+=`
-<tr>
-<td>${i.name}</td>
-<td>${i.category}</td>
-<td>${i.type}</td>
-<td>${i.stars}</td>
-<td>${i.status}</td>
-<td>
-<button class="save" onclick="editItem(${idx})">✏️</button>
-<button class="del" onclick="deleteItem(${idx})">🗑</button>
-</td>
-</tr>`;
+loginBtn.addEventListener("click", login);
+saveBtn.addEventListener("click", saveItem);
+
+function render() {
+  itemTable.innerHTML = "";
+  items.forEach((it,i) => {
+    itemTable.innerHTML += `
+      <tr>
+        <td>${it.name}</td>
+        <td>${it.category}</td>
+        <td>${it.stars}</td>
+        <td>${it.status}</td>
+        <td class="actions">
+          <button class="save" data-edit="${i}">✏️</button>
+          <button class="del" data-del="${i}">🗑</button>
+        </td>
+      </tr>`;
   });
 
-  document.getElementById("output").value=
-`const items = ${JSON.stringify(items,null,2)};
+  output.value =
+`const items = ${JSON.stringify(items, null, 2)};
+
 export default items;`;
+
+  document.querySelectorAll("[data-edit]").forEach(b =>
+    b.addEventListener("click", () => editItem(b.dataset.edit))
+  );
+  document.querySelectorAll("[data-del]").forEach(b =>
+    b.addEventListener("click", () => deleteItem(b.dataset.del))
+  );
 }
 
-function saveItem(){
-  const item={
-    name:name.value.trim(),
-    category:category.value,
-    type:type.value,
-    stars:stars.value,
-    roll:roll.value||"—",
-    contact:"me_solli",
-    status:status.value
+function saveItem() {
+  const isEdit = editIndex.value !== "";
+
+  const item = {
+    name: nameInput.value.trim(),
+    category: categoryInput.value.trim(),
+    stars: starsSelect.value,
+    roll: rollInput.value.trim() || "—",
+    contact: "me_solli",
+    status: statusSelect.value
   };
 
-  if(!item.name||!item.category||!item.type){
-    alert("Name, Qualität und Item-Art sind Pflicht");
+  if (!item.name || !item.category) {
+    alert("Name & Kategorie sind Pflicht.");
     return;
   }
 
-  if(editIndex.value){
-    items[editIndex.value]=item;
-  }else{
+  if (isEdit) {
+    items[editIndex.value] = item;
+    showToast("🔄 Item aktualisiert", "#f5c451");
+  } else {
     items.push(item);
+    showToast("✅ Item gespeichert", "#4cff4c");
   }
 
-  editIndex.value="";
-  showToast("Gespeichert");
+  editIndex.value = "";
+  formTitle.innerText = "➕ Item hinzufügen";
+
+  nameInput.value = "";
+  categoryInput.value = "";
+  rollInput.value = "";
+  starsSelect.value = "★★★★★";
+  statusSelect.value = "Verfügbar";
+
   render();
 }
-window.saveItem=saveItem;
 
-function editItem(i){
-  const it=items[i];
-  editIndex.value=i;
-  name.value=it.name;
-  category.value=it.category;
-  type.value=it.type;
-  stars.value=it.stars;
-  roll.value=it.roll;
-  status.value=it.status;
+function editItem(i) {
+  const it = items[i];
+  editIndex.value = i;
+  nameInput.value = it.name;
+  categoryInput.value = it.category;
+  starsSelect.value = it.stars;
+  rollInput.value = it.roll;
+  statusSelect.value = it.status;
+  formTitle.innerText = "✏️ Item bearbeiten";
 }
-window.editItem=editItem;
 
-function deleteItem(i){
-  if(confirm("Item löschen?")){
+function deleteItem(i) {
+  if (confirm("Item wirklich löschen?")) {
     items.splice(i,1);
     render();
+    showToast("🗑 Item gelöscht", "#ff5c5c");
   }
 }
-window.deleteItem=deleteItem;
 </script>
 
 </body>
