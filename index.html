@@ -10,36 +10,60 @@
   --gold:#f5c451;
   --bg:#0b0b0b;
   --panel:#111;
-  --panel2:#141414;
   --border:#2a2a2a;
 }
 
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:radial-gradient(ellipse at top, #1a1a1a 0%, #0b0b0b 60%);
+  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
   color:#eaeaea;
 }
 
-.wrapper{max-width:1280px;margin:0 auto}
+.wrapper{
+  max-width:1280px;
+  margin:0 auto;
+}
 
 /* ===== Banner ===== */
 .banner{
-  background:url("img/banner-diablo.jpg") center / cover no-repeat;
+  background:url("img/banner-diablo.jpg") center/cover no-repeat;
   border-radius:0 0 18px 18px;
 }
 
 header{
   padding:28px;
-  background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8));
+  background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.85));
   display:flex;
   justify-content:space-between;
   gap:24px;
   flex-wrap:wrap;
 }
 
-header h1{margin:0;font-size:30px}
-header p{margin:8px 0 0;font-size:14px;opacity:.9}
+header h1{
+  margin:0;
+  font-size:30px;
+}
+
+header p{
+  margin:8px 0 0;
+  font-size:14px;
+  opacity:.9;
+}
+
+.header-right{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.header-links a{
+  color:var(--gold);
+  font-size:14px;
+  text-decoration:none;
+  margin-right:12px;
+}
+.header-links a:hover{text-decoration:underline}
 
 .twitch{
   background:#9146FF;
@@ -48,9 +72,16 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   border-radius:14px;
   font-weight:bold;
   text-decoration:none;
+  width:fit-content;
 }
 .twitch:hover{opacity:.85}
 
+#visitorCounter{
+  font-size:13px;
+  opacity:.85;
+}
+
+/* ===== Content ===== */
 .container{padding:26px}
 
 /* ===== Controls ===== */
@@ -58,7 +89,7 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   display:flex;
   flex-wrap:wrap;
   gap:12px;
-  margin-bottom:14px;
+  margin-bottom:22px;
 }
 
 .controls input,
@@ -69,14 +100,6 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   color:#fff;
   border-radius:10px;
 }
-
-/* ===== Stream Info ===== */
-.stream-info{
-  font-size:13px;
-  opacity:.85;
-  margin-bottom:22px;
-}
-.stream-info b{color:var(--gold)}
 
 /* ===== Cards ===== */
 .cards{
@@ -97,7 +120,11 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   border:1px solid var(--border);
   border-radius:16px;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
 }
+
+.card:hover{border-color:#3a3a3a}
 
 .card img{
   width:100%;
@@ -107,24 +134,36 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   border-bottom:1px solid #222;
 }
 
-.card-body{padding:14px;display:flex;flex-direction:column;gap:8px}
+.card-body{
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
 
-.item-name{font-weight:bold}
+.item-name{font-weight:bold;font-size:15px}
 .category{font-size:12px;opacity:.75}
 .stars{color:var(--gold)}
 .roll{font-size:13px;color:#cfcfcf}
 
-.status{font-weight:bold}
+.status{font-weight:bold;font-size:13px}
 .status.verfuegbar{color:#4cff4c}
 .status.reserviert{color:#ffd24c}
 .status.vergeben{color:#ff5c5c}
 
-.player{font-size:13px;opacity:.85}
-.player a{color:var(--gold);text-decoration:none}
+.player{
+  font-size:13px;
+  opacity:.85;
+}
+.player a{
+  color:var(--gold);
+  text-decoration:none;
+}
+.player a:hover{text-decoration:underline}
 
 .cta{
   margin-top:6px;
-  padding:8px 10px;
+  padding:8px;
   text-align:center;
   font-size:13px;
   background:#151515;
@@ -133,7 +172,10 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   color:#fff;
   text-decoration:none;
 }
-.cta:hover{border-color:var(--gold);color:var(--gold)}
+.cta:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
 
 /* ===== Footer ===== */
 footer{
@@ -159,9 +201,18 @@ footer a:hover{text-decoration:underline}
     <h1>🎁 Free Lootliste – Community Items</h1>
     <p>Diablo II Resurrected · Non-Ladder · 100 % Free Loot</p>
   </div>
-  <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
-    ▶ Twitch: me_solli
-  </a>
+
+  <div class="header-right">
+    <div class="header-links">
+      <a href="stream.html">Über den Stream</a>
+    </div>
+
+    <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
+      ▶ Twitch: me_solli
+    </a>
+
+    <div id="visitorCounter">👁 Besucher gesamt: …</div>
+  </div>
 </header>
 
 <div class="container">
@@ -199,11 +250,6 @@ footer a:hover{text-decoration:underline}
   </select>
 </div>
 
-<div class="stream-info">
-  📺 <b>Über den Stream:</b>  
-  Alle Items sind kostenlos. Anfrage bitte direkt <b>live im Twitch-Chat</b> oder über den Button beim Item.
-</div>
-
 <div class="cards" id="cards"></div>
 
 </div>
@@ -218,70 +264,84 @@ footer a:hover{text-decoration:underline}
 <script type="module">
 import items from "./items.js";
 
-const cards=document.getElementById("cards");
-const search=document.getElementById("search");
-const statusFilter=document.getElementById("statusFilter");
-const typeFilter=document.getElementById("typeFilter");
-const sortRating=document.getElementById("sortRating");
+const cards = document.getElementById("cards");
+const search = document.getElementById("search");
+const statusFilter = document.getElementById("statusFilter");
+const typeFilter = document.getElementById("typeFilter");
+const sortRating = document.getElementById("sortRating");
 
 function ratingValue(stars){
   return (stars?.match(/★/g)||[]).length;
 }
 
-function getItemType(item){
-  const parts=item.category.split("–");
-  return parts[1]?.trim()||parts[0].trim();
-}
-
 function render(){
   cards.innerHTML="";
 
-  let filtered=items.filter(i=>{
-    const q=search.value.toLowerCase();
-    return(
-      (!statusFilter.value||i.status===statusFilter.value)&&
-      (!typeFilter.value||getItemType(i)===typeFilter.value)&&
-      (i.name.toLowerCase().includes(q)||i.category.toLowerCase().includes(q))
+  let filtered = items.filter(i=>{
+    const q = search.value.toLowerCase();
+    return (
+      (!statusFilter.value || i.status === statusFilter.value) &&
+      (!typeFilter.value || i.type === typeFilter.value) &&
+      (
+        i.name.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q)
+      )
     );
   });
 
   filtered.sort((a,b)=>{
-    const d=ratingValue(b.stars)-ratingValue(a.stars);
-    return sortRating.value==="desc"?d:-d;
+    const diff = ratingValue(b.stars) - ratingValue(a.stars);
+    return sortRating.value === "desc" ? diff : -diff;
   });
 
   filtered.forEach(item=>{
-    let sc="verfuegbar";
-    if(item.status==="Reserviert")sc="reserviert";
-    if(item.status==="Vergeben")sc="vergeben";
+    let statusClass="verfuegbar";
+    if(item.status==="Reserviert")statusClass="reserviert";
+    if(item.status==="Vergeben")statusClass="vergeben";
 
-    cards.innerHTML+=`
-    <div class="card">
-      <img src="${item.image||'img/item-default.png'}">
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${item.image || 'img/item-default.png'}" alt="">
       <div class="card-body">
         <div class="item-name">${item.name}</div>
         <div class="category">${item.category}</div>
         <div class="stars">${item.stars}</div>
-        <div class="roll">${item.roll||"—"}</div>
-        <div class="status ${sc}">${item.status}</div>
+        <div class="roll">${item.roll || "—"}</div>
+        <div class="status ${statusClass}">${item.status}</div>
         <div class="player">
           Spieler:
-          <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
+          <a href="https://twitch.tv/${item.contact}" target="_blank">
+            ${item.contact}
+          </a>
         </div>
         <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">
           Über Twitch anfragen
         </a>
       </div>
-    </div>`;
+    `;
+    cards.appendChild(card);
   });
 }
 
-search.oninput=render;
-statusFilter.onchange=render;
-typeFilter.onchange=render;
-sortRating.onchange=render;
+search.addEventListener("input",render);
+statusFilter.addEventListener("change",render);
+typeFilter.addEventListener("change",render);
+sortRating.addEventListener("change",render);
 
 render();
+
+/* ===== Visitor Counter ===== */
+fetch("https://api.countapi.xyz/hit/me-solli-lootliste/index")
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("visitorCounter").innerHTML =
+      `👁 Besucher gesamt: <b>${data.value}</b>`;
+  })
+  .catch(()=>{
+    document.getElementById("visitorCounter").innerHTML =
+      "👁 Besucher gesamt: —";
+  });
 </script>
 
 </body>
