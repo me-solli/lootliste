@@ -32,7 +32,6 @@ h1, h2 {
   box-shadow:0 0 30px rgba(0,0,0,.6);
 }
 
-/* ===== FORM LAYOUT ===== */
 .form-grid {
   display:grid;
   grid-template-columns: 1fr;
@@ -69,7 +68,13 @@ button {
 .save { background:#f5c451; color:#000; }
 .del  { background:#ff5c5c; color:#000; }
 
-/* ===== TABLE ===== */
+.hidden { display:none; }
+
+.login {
+  max-width:420px;
+  margin:120px auto;
+}
+
 table {
   width:100%;
   border-collapse:collapse;
@@ -87,11 +92,8 @@ th {
   text-align:left;
 }
 
-.actions button {
-  margin-right:6px;
-}
+.actions button { margin-right:6px; }
 
-/* ===== OUTPUT ===== */
 textarea {
   width:100%;
   height:320px;
@@ -108,14 +110,6 @@ textarea {
   font-size:13px;
   color:#aaa;
   margin-top:10px;
-}
-
-/* ===== LOGIN ===== */
-.hidden { display:none; }
-
-.login {
-  max-width:420px;
-  margin:120px auto;
 }
 </style>
 </head>
@@ -139,10 +133,8 @@ textarea {
 
   <h1>🎁 Lootliste – Admin</h1>
 
-  <!-- ADD / EDIT -->
   <div class="card">
     <h2 id="formTitle">➕ Item hinzufügen</h2>
-
     <input type="hidden" id="editIndex">
 
     <div class="form-grid">
@@ -185,7 +177,6 @@ textarea {
     </div>
   </div>
 
-  <!-- LIST -->
   <div class="card">
     <h2>📋 Aktuelle Items</h2>
     <table>
@@ -202,20 +193,31 @@ textarea {
     </table>
   </div>
 
-  <!-- OUTPUT -->
   <div class="card">
     <h2>📄 items.js (1:1 kopieren)</h2>
     <textarea id="output" readonly></textarea>
-    <div class="small">
-      Komplett kopieren → <b>items.js ersetzen</b><br>
-      Die Lootliste ist danach automatisch aktuell.
-    </div>
+    <div class="small">Komplett kopieren → <b>items.js ersetzen</b></div>
   </div>
-
 </div>
 
 <script type="module">
 import itemsData from "./items.js";
+
+// DOM
+const pw = document.getElementById("pw");
+const loginBox = document.getElementById("loginBox");
+const adminBox = document.getElementById("adminBox");
+
+const nameInput = document.getElementById("name");
+const categoryInput = document.getElementById("category");
+const starsSelect = document.getElementById("stars");
+const rollInput = document.getElementById("roll");
+const statusSelect = document.getElementById("status");
+const editIndex = document.getElementById("editIndex");
+const formTitle = document.getElementById("formTitle");
+
+const itemTable = document.getElementById("itemTable");
+const output = document.getElementById("output");
 
 let items = JSON.parse(JSON.stringify(itemsData));
 
@@ -244,20 +246,17 @@ function render() {
       </tr>`;
   });
 
-  output.value =
-`const items = ${JSON.stringify(items, null, 2)};
-
-export default items;`;
+  output.value = `const items = ${JSON.stringify(items, null, 2)};\n\nexport default items;`;
 }
 
 function saveItem() {
   const item = {
-    name: name.value.trim(),
-    category: category.value.trim(),
-    stars: stars.value,
-    roll: roll.value.trim() || "—",
+    name: nameInput.value.trim(),
+    category: categoryInput.value.trim(),
+    stars: starsSelect.value,
+    roll: rollInput.value.trim() || "—",
     contact: "me_solli",
-    status: status.value
+    status: statusSelect.value
   };
 
   if (!item.name || !item.category) {
@@ -270,9 +269,12 @@ function saveItem() {
 
   editIndex.value = "";
   formTitle.innerText = "➕ Item hinzufügen";
-  name.value = category.value = roll.value = "";
-  stars.value = "★★★★★";
-  status.value = "Verfügbar";
+
+  nameInput.value = "";
+  categoryInput.value = "";
+  rollInput.value = "";
+  starsSelect.value = "★★★★★";
+  statusSelect.value = "Verfügbar";
 
   render();
 }
@@ -281,11 +283,11 @@ window.saveItem = saveItem;
 function editItem(i) {
   const it = items[i];
   editIndex.value = i;
-  name.value = it.name;
-  category.value = it.category;
-  stars.value = it.stars;
-  roll.value = it.roll;
-  status.value = it.status;
+  nameInput.value = it.name;
+  categoryInput.value = it.category;
+  starsSelect.value = it.stars;
+  rollInput.value = it.roll;
+  statusSelect.value = it.status;
   formTitle.innerText = "✏️ Item bearbeiten";
 }
 window.editItem = editItem;
