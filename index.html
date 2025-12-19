@@ -6,240 +6,200 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
+:root {
   --gold:#f5c451;
   --bg:#0b0b0b;
-  --panel:#111;
-  --panel2:#141414;
+  --card:#141414;
   --border:#2a2a2a;
+  --accent:#ff4a1c;
 }
 
-body{
+body {
   margin:0;
   font-family:Arial, sans-serif;
-  background:
-    radial-gradient(ellipse at top, #1a1a1a 0%, #0b0b0b 60%);
+  background:var(--bg);
   color:#eaeaea;
 }
 
-.wrapper{
-  max-width:1280px;
+.wrapper {
+  max-width:1300px;
   margin:0 auto;
 }
 
-/* ===== Banner ===== */
-.banner{
-  background:url("img/banner-diablo.jpg") center / cover no-repeat;
+/* ===== Header ===== */
+header {
+  background:url("img/banner-diablo.jpg") center/cover no-repeat;
+  padding:28px;
   border-radius:0 0 18px 18px;
 }
 
-header{
-  padding:28px;
-  background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8));
+header .inner {
+  background:rgba(0,0,0,.55);
+  padding:20px;
+  border-radius:14px;
   display:flex;
   justify-content:space-between;
-  gap:24px;
+  gap:20px;
   flex-wrap:wrap;
 }
 
-header h1{
+header h1 {
   margin:0;
-  font-size:30px;
-  color:#fff;
+  font-size:28px;
 }
 
-header p{
-  margin:8px 0 0;
-  font-size:14px;
-  opacity:.9;
+header p {
+  margin:6px 0 0;
+  opacity:.85;
 }
 
-.twitch{
+.twitch {
   background:#9146FF;
   color:#fff;
-  padding:12px 18px;
+  padding:10px 18px;
   border-radius:14px;
   font-weight:bold;
   text-decoration:none;
-  align-self:flex-start;
+  align-self:center;
 }
-.twitch:hover{opacity:.85}
-
-.container{padding:26px}
+.twitch:hover { opacity:.85; }
 
 /* ===== Controls ===== */
-.controls{
+.controls {
+  padding:24px;
   display:flex;
   flex-wrap:wrap;
   gap:12px;
-  margin-bottom:22px;
 }
 
 .controls input,
-.controls select{
-  padding:10px 12px;
+.controls select {
   background:#111;
   border:1px solid #333;
   color:#fff;
+  padding:10px;
   border-radius:10px;
 }
 
 /* ===== Cards ===== */
-.cards{
+.cards {
   display:grid;
-  grid-template-columns:repeat(3,1fr); /* DESKTOP */
+  grid-template-columns:repeat(4,1fr);
   gap:18px;
+  padding:0 24px 40px;
 }
 
-@media(max-width:1000px){
-  .cards{grid-template-columns:repeat(2,1fr)}
+@media (max-width:1000px) {
+  .cards { grid-template-columns:repeat(2,1fr); }
 }
-@media(max-width:600px){
-  .cards{grid-template-columns:1fr}
+@media (max-width:600px) {
+  .cards { grid-template-columns:1fr; }
 }
 
-.card{
-  background:
-    linear-gradient(180deg, #161616, #0e0e0e);
+.card {
+  background:linear-gradient(180deg,#151515,#0f0f0f);
   border:1px solid var(--border);
   border-radius:16px;
-  overflow:hidden;
+  padding:16px;
+  box-shadow:0 0 12px rgba(255,60,0,.08);
   display:flex;
   flex-direction:column;
+  gap:10px;
 }
 
-.card:hover{
-  border-color:#3a3a3a;
+.card:hover {
+  box-shadow:0 0 18px rgba(255,80,20,.18);
+  transform:translateY(-2px);
 }
 
-.card img{
-  width:100%;
-  height:150px;
-  object-fit:contain;
-  background:
-    radial-gradient(circle at top, #1c1c1c, #0b0b0b);
-  border-bottom:1px solid #222;
+.icon {
+  font-size:34px;
 }
 
-.card-body{
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.item-name{
+.name {
   font-weight:bold;
-  font-size:15px;
-  color:#fff;
+  font-size:16px;
 }
 
-.category{
-  font-size:12px;
-  opacity:.75;
+.type {
+  font-size:13px;
+  opacity:.8;
 }
 
-.stars{
+.stars {
   color:var(--gold);
-  font-size:14px;
+  letter-spacing:1px;
 }
 
-.roll{
+.roll {
   font-size:13px;
-  color:#cfcfcf;
+  color:#ccc;
 }
 
-.status{
-  font-weight:bold;
-  font-size:13px;
-}
-.status.verfuegbar{color:#4cff4c}
-.status.reserviert{color:#ffd24c}
-.status.vergeben{color:#ff5c5c}
-
-.player{
+.player {
   font-size:13px;
   opacity:.85;
 }
-.player a{
-  color:var(--gold);
-  text-decoration:none;
-}
-.player a:hover{text-decoration:underline}
 
-.cta{
-  margin-top:6px;
-  padding:8px 10px;
-  text-align:center;
-  font-size:13px;
-  background:#151515;
-  border:1px solid var(--border);
-  border-radius:10px;
+.status {
+  font-weight:bold;
+}
+.status.Verfügbar { color:#4cff4c; }
+.status.Reserviert { color:#ffd24c; }
+.status.Vergeben { color:#ff5c5c; }
+
+.cta {
+  margin-top:auto;
+  background:var(--accent);
   color:#fff;
+  text-align:center;
+  padding:10px;
+  border-radius:12px;
+  font-weight:bold;
   text-decoration:none;
 }
-.cta:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
+.cta:hover { opacity:.9; }
 
 /* ===== Footer ===== */
-footer{
-  margin-top:40px;
+footer {
   padding:20px;
   border-top:1px solid #222;
   font-size:13px;
+  text-align:center;
 }
-footer a{
+footer a {
   color:var(--gold);
-  margin-right:16px;
+  margin:0 10px;
   text-decoration:none;
 }
-footer a:hover{text-decoration:underline}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-<header class="banner">
-  <div>
-    <h1>🎁 Free Lootliste – Community Items</h1>
-    <p>Diablo II Resurrected · Non-Ladder · 100 % Free Loot</p>
+<header>
+  <div class="inner">
+    <div>
+      <h1>🎁 Free Lootliste – Community Items</h1>
+      <p>Diablo II Resurrected · Non-Ladder</p>
+    </div>
+    <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">▶ Twitch: me_solli</a>
   </div>
-
-  <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
-    ▶ Twitch: me_solli
-  </a>
 </header>
-
-<div class="container">
 
 <div class="controls">
   <input id="search" placeholder="Item suchen…">
   <select id="typeFilter">
     <option value="">Alle Item-Arten</option>
-    <option>Rüstung</option>
-    <option>Waffe</option>
-    <option>Helm</option>
-    <option>Schild</option>
-    <option>Riesenzauber</option>
   </select>
-  <select id="statusFilter">
-    <option value="">Alle Status</option>
-    <option>Verfügbar</option>
-    <option>Reserviert</option>
-    <option>Vergeben</option>
-  </select>
-  <select id="sortRating">
+  <select id="sortStars">
     <option value="desc">Rating ↓</option>
     <option value="asc">Rating ↑</option>
   </select>
 </div>
 
 <div class="cards" id="cards"></div>
-
-</div>
 
 <footer>
   <a href="impressum.html">Impressum</a>
@@ -251,69 +211,72 @@ footer a:hover{text-decoration:underline}
 <script type="module">
 import items from "./items.js";
 
+const icons = {
+  helm:"🪖",
+  amulett:"📿",
+  waffe:"⚔️",
+  rüstung:"🛡️",
+  schild:"🛡️",
+  gürtel:"🧷",
+  ring:"💍",
+  handschuhe:"🧤",
+  schuhe:"👢",
+  "kleiner zauber":"✨",
+  "großer zauber":"✨",
+  riesenzauber:"✨",
+  sonstiges:"📦"
+};
+
 const cards = document.getElementById("cards");
 const search = document.getElementById("search");
-const statusFilter = document.getElementById("statusFilter");
 const typeFilter = document.getElementById("typeFilter");
-const sortRating = document.getElementById("sortRating");
+const sortStars = document.getElementById("sortStars");
 
-function ratingValue(stars){
-  return (stars?.match(/★/g)||[]).length;
+const types = [...new Set(items.map(i => i.type || "sonstiges"))];
+types.forEach(t => {
+  const o = document.createElement("option");
+  o.value = t;
+  o.textContent = t;
+  typeFilter.appendChild(o);
+});
+
+function starCount(s) {
+  return (s?.match(/★/g)||[]).length;
 }
 
-function render(){
-  cards.innerHTML="";
+function render() {
+  cards.innerHTML = "";
 
-  let filtered = items.filter(i=>{
+  let list = items.filter(i => {
     const q = search.value.toLowerCase();
-    return (
-      (!statusFilter.value || i.status===statusFilter.value) &&
-      (!typeFilter.value || i.category===typeFilter.value) &&
-      (i.name.toLowerCase().includes(q) ||
-       i.category.toLowerCase().includes(q))
-    );
+    const typeOk = !typeFilter.value || i.type === typeFilter.value;
+    const searchOk = i.name.toLowerCase().includes(q);
+    return typeOk && searchOk;
   });
 
-  filtered.sort((a,b)=>{
-    const diff = ratingValue(b.stars)-ratingValue(a.stars);
-    return sortRating.value==="desc"?diff:-diff;
+  list.sort((a,b)=>{
+    const d = starCount(b.stars)-starCount(a.stars);
+    return sortStars.value==="desc"?d:-d;
   });
 
-  filtered.forEach(item=>{
-    let statusClass="verfuegbar";
-    if(item.status==="Reserviert")statusClass="reserviert";
-    if(item.status==="Vergeben")statusClass="vergeben";
-
-    const card=document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
-      <img src="${item.image || 'img/item-default.png'}" alt="">
-      <div class="card-body">
-        <div class="item-name">${item.name}</div>
-        <div class="category">${item.category}</div>
-        <div class="stars">${item.stars}</div>
-        <div class="roll">${item.roll||"—"}</div>
-        <div class="status ${statusClass}">${item.status}</div>
-        <div class="player">
-          Spieler:
-          <a href="https://twitch.tv/${item.contact}" target="_blank">
-            ${item.contact}
-          </a>
-        </div>
-        <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">
-          Über Twitch anfragen
-        </a>
-      </div>
+  list.forEach(i=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`
+      <div class="icon">${icons[i.type]||icons.sonstiges}</div>
+      <div class="name">${i.name}</div>
+      <div class="type">${i.type}</div>
+      <div class="stars">${"★".repeat(starCount(i.stars))}</div>
+      <div class="roll">${i.roll||"—"}</div>
+      <div class="player">👤 Spieler: ${i.player||"—"}</div>
+      <div class="status ${i.status}">${i.status}</div>
+      <div class="cta">💬 !loot im Chat</div>
     `;
-    cards.appendChild(card);
+    cards.appendChild(div);
   });
 }
 
-search.addEventListener("input",render);
-statusFilter.addEventListener("change",render);
-typeFilter.addEventListener("change",render);
-sortRating.addEventListener("change",render);
-
+[search,typeFilter,sortStars].forEach(e=>e.addEventListener("input",render));
 render();
 </script>
 
