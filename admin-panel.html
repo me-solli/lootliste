@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Lootliste – Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+}
+
+body{
+  margin:0;
+  font-family:system-ui, sans-serif;
+  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
+  color:#eaeaea;
+}
+
+.wrapper{
+  max-width:1200px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+h1,h2{
+  color:var(--gold);
+  margin:0 0 14px;
+}
+
+.card{
+  background:linear-gradient(180deg,#161616,#0e0e0e);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:26px;
+  margin-bottom:28px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+
+label{
+  font-size:13px;
+  opacity:.85;
+}
+
+input,select{
+  width:100%;
+  padding:10px 12px;
+  background:#0f0f0f;
+  border:1px solid #333;
+  color:#fff;
+  border-radius:10px;
+}
+
+button{
+  padding:10px 18px;
+  border-radius:12px;
+  border:0;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.add{background:#4cff4c;color:#000}
+.save{background:var(--gold);color:#000}
+.del{background:#ff5c5c;color:#000}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid #222;
+  font-size:14px;
+}
+
+th{color:var(--gold);text-align:left}
+
+textarea{
+  width:100%;
+  height:280px;
+  background:#0f0f0f;
+  color:#9cff9c;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:14px;
+  font-family:monospace;
+  font-size:13px;
+}
+
+#toast{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#4cff4c;
+  color:#000;
+  padding:14px 18px;
+  border-radius:14px;
+  font-weight:700;
+  opacity:0;
+  transform:translateY(-10px);
+  transition:.25s;
+  z-index:9999;
+}
+</style>
+</head>
+
+<body>
+
+<div id="toast">Gespeichert</div>
+
+<div class="wrapper">
+
+<h1>🎁 Lootliste – Admin Panel</h1>
+
+<!-- FORM -->
+<div class="card">
+  <h2 id="formTitle">➕ Item hinzufügen</h2>
+  <input type="hidden" id="editIndex">
+
+  <div class="grid">
+    <div>
+      <label>Name</label>
+      <input id="name">
+    </div>
+
+    <div>
+      <label>Category</label>
+      <select id="category">
+        <option>Unique</option>
+        <option>Set</option>
+        <option>Rune</option>
+        <option>Zauber</option>
+        <option>Selten</option>
+        <option>Magisch</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Item-Typ</label>
+      <select id="type">
+        <option>Helm</option>
+        <option>Amulett</option>
+        <option>Waffe</option>
+        <option>Rüstung</option>
+        <option>Schild</option>
+        <option>Gürtel</option>
+        <option>Ring</option>
+        <option>Handschuhe</option>
+        <option>Schuhe</option>
+        <option>Kleiner Zauber</option>
+        <option>Großer Zauber</option>
+        <option>Riesenzauber</option>
+        <option>Sonstiges</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Bewertung</label>
+      <select id="stars">
+        <option>★★★★★</option>
+        <option>★★★★☆</option>
+        <option>★★★☆☆</option>
+        <option>★★☆☆☆</option>
+        <option>★☆☆☆☆</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Roll / Werte</label>
+      <input id="roll">
+    </div>
+
+    <div>
+      <label>Status</label>
+      <select id="status">
+        <option>Verfügbar</option>
+        <option>Reserviert</option>
+        <option>Vergeben</option>
+      </select>
+    </div>
+  </div>
+
+  <br>
+  <button class="add" onclick="saveItem()">Speichern</button>
+</div>
+
+<!-- LISTE -->
+<div class="card">
+  <h2>📋 Aktuelle Items</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Cat</th>
+        <th>Typ</th>
+        <th>⭐</th>
+        <th>Status</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody id="itemTable"></tbody>
+  </table>
+</div>
+
+<!-- EXPORT -->
+<div class="card">
+  <h2>📄 items.js (ersetzen)</h2>
+  <textarea id="output" readonly></textarea>
+</div>
+
+</div>
+
+<script type="module">
+import itemsData from "./items.js";
+
+const nameI = document.getElementById("name");
+const catI = document.getElementById("category");
+const typeI = document.getElementById("type");
+const starsI = document.getElementById("stars");
+const rollI = document.getElementById("roll");
+const statusI = document.getElementById("status");
+const editIndex = document.getElementById("editIndex");
+const table = document.getElementById("itemTable");
+const output = document.getElementById("output");
+const toast = document.getElementById("toast");
+const formTitle = document.getElementById("formTitle");
+
+let items = JSON.parse(JSON.stringify(itemsData));
+
+function showToast(text,color){
+  toast.textContent=text;
+  toast.style.background=color;
+  toast.style.opacity=1;
+  toast.style.transform="translateY(0)";
+  setTimeout(()=>{
+    toast.style.opacity=0;
+    toast.style.transform="translateY(-10px)";
+  },1500);
+}
+
+function render(){
+  table.innerHTML="";
+  items.forEach((it,i)=>{
+    table.innerHTML+=`
+      <tr>
+        <td>${it.name}</td>
+        <td>${it.category}</td>
+        <td>${it.type}</td>
+        <td>${it.stars}</td>
+        <td>${it.status}</td>
+        <td>
+          <button class="save" onclick="editItem(${i})">✏️</button>
+          <button class="del" onclick="deleteItem(${i})">🗑</button>
+        </td>
+      </tr>`;
+  });
+
+  output.value =
+`const items = ${JSON.stringify(items,null,2)};
+
+export default items;`;
+}
+
+function saveItem(){
+  const item={
+    name:nameI.value.trim(),
+    category:catI.value,
+    type:typeI.value,
+    stars:starsI.value,
+    roll:rollI.value||"—",
+    contact:"me_solli",
+    status:statusI.value
+  };
+
+  if(!item.name){alert("Name fehlt");return;}
+
+  if(editIndex.value!==""){
+    items[editIndex.value]=item;
+    editIndex.value="";
+    formTitle.textContent="➕ Item hinzufügen";
+    showToast("Item aktualisiert","#f5c451");
+  }else{
+    items.push(item);
+    showToast("Item gespeichert","#4cff4c");
+  }
+
+  nameI.value="";
+  rollI.value="";
+  render();
+}
+
+window.saveItem=saveItem;
+
+window.editItem=i=>{
+  const it=items[i];
+  editIndex.value=i;
+  nameI.value=it.name;
+  catI.value=it.category;
+  typeI.value=it.type;
+  starsI.value=it.stars;
+  rollI.value=it.roll;
+  statusI.value=it.status;
+  formTitle.textContent="✏️ Item bearbeiten";
+};
+
+window.deleteItem=i=>{
+  if(confirm("Item löschen?")){
+    items.splice(i,1);
+    render();
+    showToast("Item gelöscht","#ff5c5c");
+  }
+};
+
+render();
+</script>
+
+</body>
+</html>
