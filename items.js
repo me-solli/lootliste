@@ -1,75 +1,53 @@
 const items = [
   {
-    name: "Lidlose Wand",
-    category: "unique",
-    type: "Schild",
-    stars: "★★★★☆",
-    roll: "+80% def",
-    contact: "me_solli",
-    status: "Verfügbar"
-  },
-  {
-    name: "Magierfaust",
-    category: "unique",
-    type: "Handschuhe",
-    stars: "★★★☆☆",
-    roll: "+25% def",
-    contact: "me_solli",
-    status: "Verfügbar"
-  },
-  {
-    name: "Buriza-Do Kyanon",
-    category: "unique",
-    type: "Waffe",
-    stars: "★★★☆☆",
-    roll": "+195% ed",
-    contact: "me_solli",
-    status: "Verfügbar"
-  },
-  {
-    name: "Haut des Vipernmagiers",
-    category: "unique",
-    type: "Rüstung",
-    stars: "★★★★★",
-    roll: "+24 all res | +120% def | mdr 9",
-    contact: "me_solli",
-    status: "Verfügbar"
-  },
-  {
-    name: "Jalals Mähne",
-    category: "unique",
-    type: "Helm",
-    stars: "★★★★☆",
-    roll: "+163% def | +30 all res | +5 maek",
-    contact: "me_solli",
-    status: "Verfügbar"
-  },
-  {
-    name: "Trang-Ouls Schuppen",
-    category: "set",
-    type: "Rüstung",
-    stars: "★★★☆☆",
-    roll: "—",
-    contact: "me_solli",
-    status: "Verfügbar"
-  },
-  {
     name: "Bartucs Halsabschneider",
-    category: "unique",
     type: "Waffe",
+    category: "Unique",
     stars: "★★★★☆",
-    roll: "+189% ed | 30% fhr | 9% ll | +20 str | +20 dex",
+    roll: "+80% ed",
+    status: "Verfügbar",
     contact: "me_solli",
-    status: "Verfügbar"
+    image: "img/item-default.png"
   },
   {
     name: "Der Himmelsriss",
-    category: "charm",
     type: "Riesenzauber",
+    category: "Zauber",
     stars: "★★★★★",
-    roll: "-90% lr",
+    roll: "-75% blitzresi",
+    status: "Verfügbar",
     contact: "me_solli",
-    status: "Verfügbar"
+    image: "img/item-default.png"
+  },
+  {
+    name: "Tal Rashas Wächterauge",
+    type: "Helm",
+    category: "Set",
+    stars: "★★★★☆",
+    roll: "+100% def",
+    status: "Reserviert",
+    contact: "me_solli",
+    image: "img/item-default.png"
+  },
+  {
+    name: "Nagelring",
+    type: "Ring",
+    category: "Unique",
+    stars: "★★★☆☆",
+    roll: "+30% mf",
+    status: "Vergeben",
+    contact: "me_solli",
+    image: "img/item-default.png"
+  },
+  {
+    name: "Ist",
+    type: "Sonstiges",
+    category: "Rune",
+    stars: "★★★★★",
+    roll: "—",
+    status: "Verfügbar",
+    contact: "me_solli",
+    image: "img/item-default.png"
   }
 ];
 
