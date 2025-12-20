@@ -22,7 +22,7 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1300px;margin:0 auto}
+.wrapper{max-width:1400px;margin:0 auto}
 
 header{
   background:url("img/banner-diablo.jpg") center/cover no-repeat;
@@ -41,40 +41,19 @@ header p{margin:6px 0 0;font-size:14px;opacity:.9}
   border-radius:14px;
   font-weight:bold;
   display:none;
-  animation:slideIn .3s ease;
 }
-.feedback.ok{
-  background:rgba(76,255,76,.12);
-  border:1px solid var(--ok);
-  color:var(--ok);
-}
-.feedback.err{
-  background:rgba(255,92,92,.12);
-  border:1px solid var(--err);
-  color:var(--err);
-}
-@keyframes slideIn{
-  from{opacity:0;transform:translateY(-6px)}
-  to{opacity:1;transform:none}
-}
+.feedback.ok{border:1px solid var(--ok);color:var(--ok);background:rgba(76,255,76,.12)}
+.feedback.err{border:1px solid var(--err);color:var(--err);background:rgba(255,92,92,.12)}
 
 /* ===== Layout ===== */
-.container{
-  padding:30px;
-  display:grid;
-  gap:26px;
-}
-
+.container{padding:30px;display:grid;gap:26px}
 .panel{
   background:linear-gradient(180deg,#161616,#0e0e0e);
   border:1px solid var(--border);
   border-radius:18px;
   padding:22px;
 }
-.panel h2{
-  margin:0 0 16px;
-  color:var(--gold);
-}
+.panel h2{margin:0 0 16px;color:var(--gold)}
 
 /* ===== Form ===== */
 .form-grid{
@@ -92,6 +71,15 @@ input,select{
   color:#fff;
 }
 
+.preview-img{
+  width:100%;
+  height:140px;
+  object-fit:contain;
+  background:#000;
+  border-radius:12px;
+  border:1px solid #333;
+}
+
 /* ===== Buttons ===== */
 .actions{display:flex;gap:12px;margin-top:18px}
 button{
@@ -103,16 +91,30 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-button.save{border-color:var(--gold);color:var(--gold)}
-button.cancel{border-color:#777;color:#aaa}
-button.del{border-color:var(--err);color:var(--err)}
-button.edit{border-color:#5cc8ff;color:#5cc8ff}
+.save{border-color:var(--gold);color:var(--gold)}
+.edit{border-color:#5cc8ff;color:#5cc8ff}
+.del{border-color:var(--err);color:var(--err)}
+.copy{border-color:#9cff9c;color:#9cff9c}
 button:hover{opacity:.85}
 
 /* ===== Table ===== */
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:10px;border-bottom:1px solid #222;text-align:left}
 th{color:var(--gold)}
+td img{width:42px;height:42px;object-fit:contain}
+
+/* ===== Preview Card ===== */
+.card{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  background:#0f0f0f;
+  border:1px solid #333;
+  border-radius:14px;
+  padding:12px;
+}
+.card img{width:64px;height:64px;object-fit:contain}
+.card strong{font-size:15px}
 
 textarea{
   width:100%;
@@ -125,25 +127,15 @@ textarea{
   font-family:monospace;
   font-size:13px;
 }
-
-footer{
-  margin:40px 0 20px;
-  padding-top:20px;
-  border-top:1px solid #222;
-  font-size:13px;
-  text-align:center;
-  opacity:.7;
-}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
-
 <header>
   <div class="header-inner">
     <h1>🛠 Lootliste – Admin Panel</h1>
-    <p>Items verwalten · items.js erzeugen</p>
+    <p>Items verwalten · Vorschau · items.js Export</p>
   </div>
 </header>
 
@@ -152,164 +144,186 @@ footer{
 <div class="container">
 
 <div class="panel">
-  <h2 id="formTitle">➕ Item hinzufügen</h2>
+<h2>➕ / ✏️ Item</h2>
 
-  <div class="form-grid">
-    <div><label>Name</label><input id="name"></div>
-    <div><label>Kategorie</label><input id="category"></div>
-    <div><label>Typ</label><input id="type"></div>
-    <div>
-      <label>Bewertung</label>
-      <select id="stars">
-        <option>★★★★★</option>
-        <option>★★★★☆</option>
-        <option>★★★☆☆</option>
-        <option>★★☆☆☆</option>
-        <option>★☆☆☆☆</option>
-      </select>
-    </div>
-    <div><label>Roll / Werte</label><input id="roll"></div>
-    <div>
-      <label>Status</label>
-      <select id="status">
-        <option>Verfügbar</option>
-        <option>Reserviert</option>
-        <option>Vergeben</option>
-      </select>
-    </div>
+<div class="form-grid">
+  <div><label>Name</label><input id="name"></div>
+
+  <div>
+    <label>Kategorie</label>
+    <select id="category">
+      <option>Unique</option>
+      <option>Set</option>
+      <option>Runeword</option>
+      <option>Charm</option>
+      <option>Rare</option>
+    </select>
   </div>
 
-  <div class="actions">
-    <button class="save" onclick="saveItem()">Speichern</button>
-    <button class="cancel" onclick="resetForm()">Abbrechen</button>
+  <div>
+    <label>Typ</label>
+    <select id="type">
+      <option>Helm</option>
+      <option>Waffe</option>
+      <option>Rüstung</option>
+      <option>Amulett</option>
+      <option>Ring</option>
+      <option>Charme – Riesenzauber</option>
+      <option>Charme – Kleiner</option>
+    </select>
   </div>
+
+  <div>
+    <label>Bewertung</label>
+    <select id="stars">
+      <option>★★★★★</option><option>★★★★☆</option>
+      <option>★★★☆☆</option><option>★★☆☆☆</option>
+      <option>★☆☆☆☆</option>
+    </select>
+  </div>
+
+  <div><label>Roll / Werte</label><input id="roll"></div>
+
+  <div>
+    <label>Status</label>
+    <select id="status">
+      <option>Verfügbar</option>
+      <option>Reserviert</option>
+      <option>Vergeben</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Bild URL</label>
+    <input id="img" placeholder="img/items/bartucs.webp">
+  </div>
+
+  <div>
+    <label>Vorschau</label>
+    <img id="imgPreview" class="preview-img">
+  </div>
+</div>
+
+<div class="actions">
+  <button class="save" onclick="saveItem()">Speichern</button>
+</div>
 </div>
 
 <div class="panel">
-  <h2>📋 Aktuelle Items</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th><th>Kategorie</th><th>Typ</th>
-        <th>Rating</th><th>Status</th><th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody id="itemTable"></tbody>
-  </table>
+<h2>👁 Live-Vorschau</h2>
+<div id="previewCard"></div>
 </div>
 
 <div class="panel">
-  <h2>📄 items.js Export</h2>
-  <textarea id="output" readonly></textarea>
+<h2>📋 Items</h2>
+<table>
+<thead>
+<tr><th></th><th>Name</th><th>Kategorie</th><th>Typ</th><th>Rating</th><th>Status</th><th></th></tr>
+</thead>
+<tbody id="itemTable"></tbody>
+</table>
+</div>
+
+<div class="panel">
+<h2>📄 items.js Export</h2>
+<button class="copy" onclick="copyExport()">📋 Kopieren</button>
+<textarea id="output" readonly></textarea>
 </div>
 
 </div>
-
-<footer>Lootliste · Admin Panel</footer>
 
 <script type="module">
 import itemsData from "./items.js";
+const $=id=>document.getElementById(id);
+const fb=$("feedback");
+let items=[...itemsData];
+let edit=null;
+const fallback="img/items/placeholder.webp";
 
-const $ = id => document.getElementById(id);
-const feedback = $("feedback");
-
-let items = JSON.parse(JSON.stringify(itemsData));
-let editIndex = null;
-
-function showFeedback(text,type="ok"){
-  feedback.textContent=text;
-  feedback.className="feedback "+type;
-  feedback.style.display="block";
-  setTimeout(()=>feedback.style.display="none",3200);
+function feedback(t,err=false){
+  fb.textContent=t;
+  fb.className="feedback "+(err?"err":"ok");
+  fb.style.display="block";
+  setTimeout(()=>fb.style.display="none",3000);
 }
 
-function resetForm(){
-  ["name","category","type","roll"].forEach(id=>$(id).value="");
-  $("status").value="Verfügbar";
-  $("stars").value="★★★★★";
-  $("formTitle").textContent="➕ Item hinzufügen";
-  editIndex=null;
+$("img").oninput=updatePreview;
+["name","category","type","stars","status","roll"].forEach(id=>$(id).oninput=updatePreview);
+
+function updatePreview(){
+  const img=$("img").value||fallback;
+  $("imgPreview").src=img;
+  $("previewCard").innerHTML=`
+    <div class="card">
+      <img src="${img}">
+      <div>
+        <strong>${$("name").value||"Itemname"}</strong><br>
+        ${$("category").value} · ${$("type").value}<br>
+        ${$("stars").value} · ${$("status").value}
+      </div>
+    </div>`;
 }
 
 function render(){
   $("itemTable").innerHTML="";
-  items.forEach((it,i)=>{
+  items.forEach((i,idx)=>{
     $("itemTable").innerHTML+=`
     <tr>
-      <td>${it.name}</td>
-      <td>${it.category}</td>
-      <td>${it.type}</td>
-      <td>${it.stars}</td>
-      <td>${it.status}</td>
+      <td><img src="${i.img||fallback}"></td>
+      <td>${i.name}</td>
+      <td>${i.category}</td>
+      <td>${i.type}</td>
+      <td>${i.stars}</td>
+      <td>${i.status}</td>
       <td>
-        <button class="edit" onclick="editItem(${i})">✏️</button>
-        <button class="del" onclick="delItem(${i})">🗑</button>
+        <button class="edit" onclick="editItem(${idx})">✏️</button>
+        <button class="del" onclick="delItem(${idx})">🗑</button>
       </td>
     </tr>`;
   });
-
-  $("output").value =
-`const items = ${JSON.stringify(items,null,2)};
-
-export default items;`;
+  $("output").value=`const items = ${JSON.stringify(items,null,2)};\n\nexport default items;`;
 }
 
 function saveItem(){
-  if(!$("name").value.trim()){
-    showFeedback("❌ Name fehlt","err");
-    return;
-  }
-
+  if(!$("name").value){feedback("Name fehlt",true);return;}
   const obj={
     name:$("name").value,
     category:$("category").value,
     type:$("type").value,
     stars:$("stars").value,
     roll:$("roll").value||"—",
+    status:$("status").value,
     contact:"me_solli",
-    status:$("status").value
+    img:$("img").value||fallback
   };
-
-  if(editIndex!==null){
-    items[editIndex]=obj;
-    showFeedback("✏️ Item aktualisiert");
-  }else{
-    items.push(obj);
-    showFeedback("✅ Item gespeichert");
-  }
-
-  resetForm();
+  edit!==null?items[edit]=obj:items.push(obj);
+  edit=null;
   render();
+  feedback("Item gespeichert");
 }
 
 function editItem(i){
   const it=items[i];
-  $("name").value=it.name;
-  $("category").value=it.category;
-  $("type").value=it.type;
-  $("stars").value=it.stars;
-  $("roll").value=it.roll;
-  $("status").value=it.status;
-  $("formTitle").textContent="✏️ Item bearbeiten";
-  editIndex=i;
+  Object.keys(it).forEach(k=>$(k)&&($(k).value=it[k]));
+  updatePreview();
+  edit=i;
 }
 
 function delItem(i){
-  if(confirm("Item wirklich löschen?")){
+  if(confirm("Item löschen?")){
     items.splice(i,1);
     render();
-    showFeedback("🗑 Item gelöscht");
+    feedback("Item gelöscht");
   }
 }
 
-window.saveItem=saveItem;
-window.editItem=editItem;
-window.delItem=delItem;
-window.resetForm=resetForm;
+function copyExport(){
+  navigator.clipboard.writeText($("output").value);
+  feedback("📋 items.js kopiert");
+}
 
 render();
+updatePreview();
 </script>
-
-</div>
 </body>
 </html>
