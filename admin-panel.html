@@ -211,7 +211,8 @@ textarea{
 </div>
 
 <div class="actions">
-<button type="button" class="save" onclick="saveItem()">Speichern</button>
+  <!-- WICHTIGER FIX -->
+  <button type="button" class="save" onclick="saveItem()">Speichern</button>
 </div>
 </div>
 
@@ -224,7 +225,15 @@ textarea{
 <h2>📋 Items</h2>
 <table>
 <thead>
-<tr><th></th><th>Name</th><th>Kategorie</th><th>Typ</th><th>Rating</th><th>Status</th><th></th></tr>
+<tr>
+  <th></th>
+  <th>Name</th>
+  <th>Kategorie</th>
+  <th>Typ</th>
+  <th>Rating</th>
+  <th>Status</th>
+  <th></th>
+</tr>
 </thead>
 <tbody id="itemTable"></tbody>
 </table>
@@ -232,7 +241,7 @@ textarea{
 
 <div class="panel">
 <h2>📄 items.js Export</h2>
-<button class="copy" onclick="copyExport()">📋 Kopieren</button>
+<button type="button" class="copy" onclick="copyExport()">📋 Kopieren</button>
 <textarea id="output" readonly></textarea>
 </div>
 
@@ -282,8 +291,8 @@ function render(){
       <td>${i.stars}</td>
       <td>${i.status}</td>
       <td>
-        <button class="edit" onclick="editItem(${idx})">✏️</button>
-        <button class="del" onclick="delItem(${idx})">🗑</button>
+        <button type="button" class="edit" onclick="editItem(${idx})">✏️</button>
+        <button type="button" class="del" onclick="delItem(${idx})">🗑</button>
       </td>
     </tr>`;
   });
@@ -291,7 +300,10 @@ function render(){
 }
 
 function saveItem(){
-  if(!$("name").value){feedback("Name fehlt",true);return;}
+  if(!$("name").value){
+    feedback("Name fehlt",true);
+    return;
+  }
   const obj={
     name:$("name").value,
     category:$("category").value,
