@@ -18,7 +18,7 @@
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:var(--bg);
+  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
   color:#eaeaea;
 }
 
@@ -26,83 +26,64 @@ body{
 
 header{
   background:#000;
-  padding:22px;
 }
-header h1{margin:0}
-header p{margin:6px 0 0;opacity:.85}
+.header-inner{
+  padding:28px;
+}
+header h1{margin:0;font-size:28px}
+header p{margin:6px 0 0;font-size:14px;opacity:.9}
 
+/* Feedback */
 .feedback{
-  margin:20px;
+  margin:20px 30px 0;
   padding:14px 18px;
-  border-radius:12px;
+  border-radius:14px;
   font-weight:bold;
   display:none;
 }
-.feedback.ok{border:1px solid var(--ok);color:var(--ok)}
-.feedback.err{border:1px solid var(--err);color:var(--err)}
+.feedback.ok{border:1px solid var(--ok);color:var(--ok);background:rgba(76,255,76,.12)}
+.feedback.err{border:1px solid var(--err);color:var(--err);background:rgba(255,92,92,.12)}
 
-.container{
-  padding:20px;
-  display:grid;
-  gap:24px;
-}
-
+.container{padding:30px;display:grid;gap:26px}
 .panel{
   background:linear-gradient(180deg,#161616,#0e0e0e);
   border:1px solid var(--border);
-  border-radius:16px;
-  padding:20px;
+  border-radius:18px;
+  padding:22px;
 }
-.panel h2{margin:0 0 14px;color:var(--gold)}
+.panel h2{margin:0 0 16px;color:var(--gold)}
 
 .form-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
+  gap:16px;
 }
 
 label{font-size:13px;font-weight:bold;opacity:.85}
-
 input,select,textarea{
   width:100%;
   padding:10px 12px;
   background:#0f0f0f;
   border:1px solid #333;
-  border-radius:8px;
+  border-radius:10px;
   color:#fff;
 }
 
-textarea.stats{
-  grid-column:1/-1;
-  height:70px;
-  resize:vertical;
-}
+textarea{height:90px;resize:vertical}
 
-.preview{
-  display:flex;
-  gap:14px;
-  align-items:center;
-  margin-top:14px;
-  background:#0f0f0f;
-  border:1px solid #333;
-  border-radius:12px;
-  padding:12px;
-}
-.preview img{
-  width:64px;
-  height:64px;
+.preview-img{
+  width:100%;
+  height:140px;
   object-fit:contain;
+  background:#000;
+  border-radius:12px;
+  border:1px solid #333;
 }
 
-.actions{
-  margin-top:14px;
-  display:flex;
-  gap:12px;
-}
-
+.actions{display:flex;gap:12px;margin-top:18px}
 button{
-  padding:8px 14px;
-  border-radius:8px;
+  padding:10px 18px;
+  border-radius:12px;
   border:1px solid var(--border);
   background:#151515;
   color:#fff;
@@ -115,54 +96,42 @@ button{
 .copy{border-color:#9cff9c;color:#9cff9c}
 button:hover{opacity:.85}
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
-th,td{
-  padding:8px;
-  border-bottom:1px solid #222;
-  text-align:left;
-}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px;border-bottom:1px solid #222;text-align:left}
 th{color:var(--gold)}
-td img{width:36px;height:36px;object-fit:contain}
+td img{width:42px;height:42px;object-fit:contain}
 
-textarea#output{
-  width:100%;
-  height:240px;
+.card{
+  display:flex;
+  gap:16px;
+  align-items:center;
   background:#0f0f0f;
   border:1px solid #333;
-  border-radius:10px;
-  color:#9cff9c;
+  border-radius:14px;
   padding:12px;
-  font-family:monospace;
-  font-size:13px;
 }
+.card img{width:64px;height:64px;object-fit:contain}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
-
 <header>
-  <h1>🛠 Lootliste – Admin Panel</h1>
-  <p>Items anlegen · bearbeiten · löschen · items.js exportieren</p>
+  <div class="header-inner">
+    <h1>🛠 Lootliste – Admin Panel</h1>
+    <p>Items anlegen · bearbeiten · löschen · Export</p>
+  </div>
 </header>
 
 <div id="feedback" class="feedback"></div>
 
 <div class="container">
 
-<!-- ================= ITEM FORM ================= -->
 <div class="panel">
 <h2>➕ / ✏️ Item</h2>
 
 <div class="form-grid">
-  <div>
-    <label>Name</label>
-    <input id="name">
-  </div>
+  <div><label>Name</label><input id="name"></div>
 
   <div>
     <label>Kategorie</label>
@@ -170,9 +139,8 @@ textarea#output{
       <option>Unique</option>
       <option>Set</option>
       <option>Runeword</option>
-      <option>Rare</option>
-      <option>Magic</option>
       <option>Charm</option>
+      <option>Rare</option>
     </select>
   </div>
 
@@ -180,14 +148,13 @@ textarea#output{
     <label>Typ</label>
     <select id="type">
       <option>Waffe</option>
-      <option>Helm</option>
       <option>Rüstung</option>
+      <option>Helm</option>
       <option>Schild</option>
-      <option>Gürtel</option>
-      <option>Ring</option>
       <option>Amulett</option>
+      <option>Ring</option>
       <option>Charme – Riesenzauber</option>
-      <option>Charme – Klein</option>
+      <option>Charme – Kleiner</option>
     </select>
   </div>
 
@@ -201,166 +168,149 @@ textarea#output{
   </div>
 
   <div>
+    <label>Sterne-Rating</label>
+    <select id="rating">
+      <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+      <option value="4">⭐⭐⭐⭐☆ (4/5)</option>
+      <option value="3">⭐⭐⭐☆☆ (3/5)</option>
+      <option value="2">⭐⭐☆☆☆ (2/5)</option>
+      <option value="1">⭐☆☆☆☆ (1/5)</option>
+    </select>
+  </div>
+
+  <div>
     <label>Bild URL</label>
     <input id="img" placeholder="img/items/bartucs.webp">
   </div>
-
-  <div style="grid-column:1/-1">
-    <label>Werte / Roll (z. B. +80% ed, 20 ias)</label>
-    <textarea id="stats" class="stats"></textarea>
-  </div>
 </div>
 
-<div class="preview" id="preview"></div>
+<label style="margin-top:14px;display:block">Werte / Roll / Stats</label>
+<textarea id="stats" placeholder="+80% ed, 20 ias"></textarea>
 
 <div class="actions">
-  <button type="button" class="save" onclick="saveItem()">Speichern</button>
+  <button class="save" onclick="saveItem()">Speichern</button>
 </div>
 </div>
 
-<!-- ================= ITEM LIST ================= -->
+<div class="panel">
+<h2>👁 Live-Vorschau</h2>
+<div id="preview"></div>
+</div>
+
 <div class="panel">
 <h2>📋 Items</h2>
-
 <table>
 <thead>
 <tr>
-  <th></th>
-  <th>Name</th>
-  <th>Werte</th>
-  <th>Kategorie</th>
-  <th>Typ</th>
-  <th>Status</th>
-  <th></th>
+  <th></th><th>Name</th><th>Typ</th><th>Rating</th><th>Status</th><th></th>
 </tr>
 </thead>
 <tbody id="itemTable"></tbody>
 </table>
 </div>
 
-<!-- ================= EXPORT ================= -->
 <div class="panel">
 <h2>📄 items.js Export</h2>
 <button class="copy" onclick="copyExport()">📋 Kopieren</button>
-<br><br>
 <textarea id="output" readonly></textarea>
 </div>
 
 </div>
-</div>
 
-<script>
-const $ = id => document.getElementById(id);
-const fb = $("feedback");
-const fallback = "img/items/placeholder.webp";
+<script type="module">
+import itemsData from "./items.js";
+const $=id=>document.getElementById(id);
+const fb=$("feedback");
+const fallback="img/items/placeholder.webp";
+let items=[...itemsData];
+let editIndex=null;
 
-let items = [];
-let editIndex = null;
+function stars(n){
+  return "⭐".repeat(n)+"☆".repeat(5-n)+" ("+n+"/5)";
+}
 
 function feedback(msg,err=false){
-  fb.textContent = msg;
-  fb.className = "feedback " + (err ? "err" : "ok");
-  fb.style.display = "block";
+  fb.textContent=msg;
+  fb.className="feedback "+(err?"err":"ok");
+  fb.style.display="block";
   setTimeout(()=>fb.style.display="none",3000);
 }
 
-async function loadItems(){
-  try{
-    const mod = await import("./items.js");
-    items = Array.isArray(mod.default) ? [...mod.default] : [];
-  }catch{
-    items = [];
-    feedback("items.js nicht geladen – leer gestartet", true);
-  }
-  render();
-}
-
-function updatePreview(){
-  $("preview").innerHTML = `
-    <img src="${$("img").value || fallback}">
-    <div>
-      <strong>${$("name").value || "Itemname"}</strong><br>
-      ${$("stats").value || ""}<br>
-      ${$("category").value} · ${$("type").value}<br>
-      ${$("status").value}
-    </div>
-  `;
-}
-
-["name","category","type","status","img","stats"].forEach(id=>{
-  $(id).addEventListener("input", updatePreview);
+["name","category","type","status","rating","stats","img"].forEach(id=>{
+  $(id).oninput=updatePreview;
 });
 
+function updatePreview(){
+  $("preview").innerHTML=`
+    <div class="card">
+      <img src="${$("img").value||fallback}">
+      <div>
+        <strong>${$("name").value||"Itemname"}</strong><br>
+        ${stars(Number($("rating").value))}<br>
+        ${$("stats").value||""}<br>
+        ${$("category").value} · ${$("type").value}<br>
+        ${$("status").value}
+      </div>
+    </div>`;
+}
+
+function render(){
+  $("itemTable").innerHTML="";
+  items.forEach((i,idx)=>{
+    $("itemTable").innerHTML+=`
+    <tr>
+      <td><img src="${i.img||fallback}"></td>
+      <td>${i.name}</td>
+      <td>${i.type}</td>
+      <td>${stars(i.rating||5)}</td>
+      <td>${i.status}</td>
+      <td>
+        <button class="edit" onclick="editItem(${idx})">✏️</button>
+        <button class="del" onclick="delItem(${idx})">🗑</button>
+      </td>
+    </tr>`;
+  });
+  $("output").value=
+`const items = ${JSON.stringify(items,null,2)};
+export default items;`;
+}
+
 function saveItem(){
-  if(!$("name").value){
-    feedback("Name fehlt", true);
-    return;
-  }
-
-  const obj = {
-    name: $("name").value,
-    category: $("category").value,
-    type: $("type").value,
-    status: $("status").value,
-    stats: $("stats").value,
-    img: $("img").value || fallback
+  if(!$("name").value){feedback("Name fehlt",true);return;}
+  const obj={
+    name:$("name").value,
+    category:$("category").value,
+    type:$("type").value,
+    status:$("status").value,
+    rating:Number($("rating").value),
+    stats:$("stats").value||"—",
+    img:$("img").value||fallback
   };
-
-  if(editIndex !== null){
-    items[editIndex] = obj;
-  }else{
-    items.push(obj);
-  }
-
-  editIndex = null;
+  editIndex!==null?items[editIndex]=obj:items.push(obj);
+  editIndex=null;
   render();
   feedback("Item gespeichert");
 }
 
 function editItem(i){
-  const it = items[i];
-
-  $("name").value = it.name || "";
-  $("category").value = it.category || "";
-  $("type").value = it.type || "";
-  $("status").value = it.status || "";
-  $("stats").value = it.stats || "";
-  $("img").value = it.img || "";
-
-  editIndex = i;
+  const it=items[i];
+  $("name").value=it.name;
+  $("category").value=it.category;
+  $("type").value=it.type;
+  $("status").value=it.status;
+  $("rating").value=it.rating||5;
+  $("stats").value=it.stats||"";
+  $("img").value=it.img||"";
+  editIndex=i;
   updatePreview();
 }
 
 function delItem(i){
-  if(confirm("Item wirklich löschen?")){
+  if(confirm("Item löschen?")){
     items.splice(i,1);
     render();
     feedback("Item gelöscht");
   }
-}
-
-function render(){
-  $("itemTable").innerHTML = "";
-  items.forEach((i,idx)=>{
-    $("itemTable").innerHTML += `
-      <tr>
-        <td><img src="${i.img || fallback}"></td>
-        <td>${i.name}</td>
-        <td>${i.stats || ""}</td>
-        <td>${i.category}</td>
-        <td>${i.type}</td>
-        <td>${i.status}</td>
-        <td>
-          <button class="edit" onclick="editItem(${idx})">✏️</button>
-          <button class="del" onclick="delItem(${idx})">🗑</button>
-        </td>
-      </tr>
-    `;
-  });
-
-  $("output").value =
-`const items = ${JSON.stringify(items, null, 2)};
-export default items;`;
 }
 
 function copyExport(){
@@ -368,7 +318,7 @@ function copyExport(){
   feedback("items.js kopiert");
 }
 
-loadItems();
+render();
 updatePreview();
 </script>
 </body>
