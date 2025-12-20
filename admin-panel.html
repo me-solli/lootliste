@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Lootliste – Admin Panel</title>
+<title>🛠 Lootliste – Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -24,6 +24,7 @@ body{
 
 .wrapper{max-width:1280px;margin:0 auto}
 
+/* ===== Header ===== */
 header{
   background:url("img/banner-diablo.jpg") center/cover no-repeat;
 }
@@ -34,7 +35,7 @@ header{
 header h1{margin:0;font-size:28px}
 header p{margin:8px 0 0;font-size:14px;opacity:.9}
 
-/* ===== FEEDBACK ===== */
+/* ===== Feedback ===== */
 .feedback{
   margin:20px 30px 0;
   padding:14px 18px;
@@ -136,7 +137,7 @@ footer{
 <header>
   <div class="header-inner">
     <h1>🛠 Lootliste – Admin Panel</h1>
-    <p>Items verwalten · Export für Index</p>
+    <p>Items verwalten · items.js erzeugen</p>
   </div>
 </header>
 
@@ -144,13 +145,15 @@ footer{
 
 <div class="container">
 
+<!-- FORM -->
 <div class="panel">
   <h2>➕ Item hinzufügen</h2>
 
   <div class="form-grid">
     <div><label>Name</label><input id="name"></div>
-    <div><label>Kategorie</label><input id="category"></div>
-    <div><label>Typ</label><input id="type"></div>
+    <div><label>Kategorie (Unique, Set, …)</label><input id="category"></div>
+    <div><label>Typ (Helm, Waffe, …)</label><input id="type"></div>
+
     <div>
       <label>Bewertung</label>
       <select id="stars">
@@ -161,7 +164,9 @@ footer{
         <option>★☆☆☆☆</option>
       </select>
     </div>
+
     <div><label>Roll / Werte</label><input id="roll"></div>
+
     <div>
       <label>Status</label>
       <select id="status">
@@ -177,35 +182,39 @@ footer{
   </div>
 </div>
 
+<!-- TABLE -->
 <div class="panel">
   <h2>📋 Aktuelle Items</h2>
   <table>
     <thead>
       <tr>
-        <th>Name</th><th>Kategorie</th><th>Typ</th>
-        <th>Rating</th><th>Status</th><th></th>
+        <th>Name</th>
+        <th>Kategorie</th>
+        <th>Typ</th>
+        <th>Rating</th>
+        <th>Status</th>
+        <th></th>
       </tr>
     </thead>
     <tbody id="itemTable"></tbody>
   </table>
 </div>
 
+<!-- EXPORT -->
 <div class="panel">
-  <h2>📄 items.js Export</h2>
+  <h2>📄 items.js Export (kopieren)</h2>
   <textarea id="output" readonly></textarea>
 </div>
 
 </div>
 
-<footer>Lootliste · Admin</footer>
+<footer>Lootliste · Admin Panel</footer>
 
-<script type="module">
-import itemsData from "./items.js";
-
+<script>
 const $ = id => document.getElementById(id);
 const feedback = $("feedback");
 
-let items = JSON.parse(JSON.stringify(itemsData));
+let items = [];
 
 function showFeedback(text,type="ok"){
   feedback.textContent=text;
@@ -241,19 +250,22 @@ function saveItem(){
   }
 
   items.push({
-    name:$("name").value,
-    category:$("category").value,
-    type:$("type").value,
+    name:$("name").value.trim(),
+    category:$("category").value.trim(),
+    type:$("type").value.trim(),
     stars:$("stars").value,
     roll:$("roll").value||"—",
     contact:"me_solli",
     status:$("status").value
   });
 
+  $("name").value="";
+  $("roll").value="";
+  $("status").value="Verfügbar";
+
   render();
   showFeedback("✅ Item gespeichert");
 }
-window.saveItem=saveItem;
 
 function delItem(i){
   if(confirm("Item wirklich löschen?")){
@@ -262,7 +274,6 @@ function delItem(i){
     showFeedback("🗑 Item gelöscht");
   }
 }
-window.delItem=delItem;
 
 render();
 </script>
