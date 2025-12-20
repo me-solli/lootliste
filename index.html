@@ -20,10 +20,7 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{
-  max-width:1280px;
-  margin:0 auto;
-}
+.wrapper{max-width:1280px;margin:0 auto}
 
 /* ===== Banner ===== */
 .banner{
@@ -40,16 +37,8 @@ header{
   flex-wrap:wrap;
 }
 
-header h1{
-  margin:0;
-  font-size:30px;
-}
-
-header p{
-  margin:8px 0 0;
-  font-size:14px;
-  opacity:.9;
-}
+header h1{margin:0;font-size:30px}
+header p{margin:8px 0 0;font-size:14px;opacity:.9}
 
 .header-right{
   display:flex;
@@ -75,10 +64,7 @@ header p{
 }
 .twitch:hover{opacity:.85}
 
-#visitorCounter{
-  font-size:13px;
-  opacity:.85;
-}
+#visitorCounter{font-size:13px;opacity:.85}
 
 /* ===== Content ===== */
 .container{padding:26px}
@@ -90,7 +76,6 @@ header p{
   gap:12px;
   margin-bottom:22px;
 }
-
 .controls input,
 .controls select{
   padding:10px 12px;
@@ -106,13 +91,8 @@ header p{
   grid-template-columns:repeat(3,1fr);
   gap:18px;
 }
-
-@media(max-width:1000px){
-  .cards{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:600px){
-  .cards{grid-template-columns:1fr}
-}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cards{grid-template-columns:1fr}}
 
 .card{
   background:linear-gradient(180deg,#161616,#0e0e0e);
@@ -122,15 +102,29 @@ header p{
   display:flex;
   flex-direction:column;
 }
-
 .card:hover{border-color:#3a3a3a}
 
-.card img{
+/* Bild + Icon */
+.card-img{
+  position:relative;
+}
+.card-img img.item-img{
   width:100%;
   height:150px;
   object-fit:contain;
   background:radial-gradient(circle at top,#1c1c1c,#0b0b0b);
   border-bottom:1px solid #222;
+}
+.card-img img.type-icon{
+  position:absolute;
+  top:8px;
+  left:8px;
+  width:34px;
+  height:34px;
+  background:#000;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:4px;
 }
 
 .card-body{
@@ -150,14 +144,8 @@ header p{
 .status.reserviert{color:#ffd24c}
 .status.vergeben{color:#ff5c5c}
 
-.player{
-  font-size:13px;
-  opacity:.85;
-}
-.player a{
-  color:var(--gold);
-  text-decoration:none;
-}
+.player{font-size:13px;opacity:.85}
+.player a{color:var(--gold);text-decoration:none}
 .player a:hover{text-decoration:underline}
 
 .cta{
@@ -171,23 +159,15 @@ header p{
   color:#fff;
   text-decoration:none;
 }
-.cta:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
+.cta:hover{border-color:var(--gold);color:var(--gold)}
 
-/* ===== Footer ===== */
 footer{
   margin-top:40px;
   padding:20px;
   border-top:1px solid #222;
   font-size:13px;
 }
-footer a{
-  color:var(--gold);
-  margin-right:16px;
-  text-decoration:none;
-}
+footer a{color:var(--gold);margin-right:16px;text-decoration:none}
 footer a:hover{text-decoration:underline}
 </style>
 </head>
@@ -226,13 +206,9 @@ footer a:hover{text-decoration:underline}
     <option>Waffe</option>
     <option>Rüstung</option>
     <option>Schild</option>
-    <option>Gürtel</option>
     <option>Ring</option>
-    <option>Handschuhe</option>
-    <option>Schuhe</option>
-    <option>Kleiner Zauber</option>
-    <option>Großer Zauber</option>
-    <option>Riesenzauber</option>
+    <option>Charme – Riesenzauber</option>
+    <option>Charme – Kleiner</option>
     <option>Sonstiges</option>
   </select>
 
@@ -269,8 +245,30 @@ const statusFilter = document.getElementById("statusFilter");
 const typeFilter = document.getElementById("typeFilter");
 const sortRating = document.getElementById("sortRating");
 
-function ratingValue(stars){
-  return (stars?.match(/★/g)||[]).length;
+/* ===== ICON MAPPING ===== */
+function getIcon(type){
+  const map = {
+    "Waffe":"waffe",
+    "Helm":"helm",
+    "Rüstung":"ruestung",
+    "Schild":"schild",
+    "Ring":"ring",
+    "Amulett":"amulett",
+    "Charme – Riesenzauber":"charm",
+    "Charme – Kleiner":"charm",
+    "Rune":"rune",
+    "Runeword":"rune"
+  };
+  return `img/icons/${map[type] || "default"}.png`;
+}
+
+function starsFromRating(n){
+  return "⭐".repeat(n)+"☆".repeat(5-n)+" ("+n+"/5)";
+}
+
+function ratingValue(item){
+  if(typeof item.rating==="number") return item.rating;
+  return (item.stars?.match(/★/g)||[]).length;
 }
 
 function render(){
@@ -289,7 +287,7 @@ function render(){
   });
 
   filtered.sort((a,b)=>{
-    const diff = ratingValue(b.stars) - ratingValue(a.stars);
+    const diff = ratingValue(b) - ratingValue(a);
     return sortRating.value === "desc" ? diff : -diff;
   });
 
@@ -298,15 +296,25 @@ function render(){
     if(item.status==="Reserviert")statusClass="reserviert";
     if(item.status==="Vergeben")statusClass="vergeben";
 
+    const img = item.img || item.image || "img/item-default.png";
+    const rating = typeof item.rating==="number"
+      ? starsFromRating(item.rating)
+      : item.stars;
+
+    const roll = item.stats || item.roll || "—";
+
     const card=document.createElement("div");
     card.className="card";
     card.innerHTML=`
-      <img src="${item.image || 'img/item-default.png'}" alt="">
+      <div class="card-img">
+        <img class="item-img" src="${img}">
+        <img class="type-icon" src="${getIcon(item.type)}">
+      </div>
       <div class="card-body">
         <div class="item-name">${item.name}</div>
-        <div class="category">${item.category}</div>
-        <div class="stars">${item.stars}</div>
-        <div class="roll">${item.roll || "—"}</div>
+        <div class="category">${item.category} · ${item.type}</div>
+        <div class="stars">${rating}</div>
+        <div class="roll">${roll}</div>
         <div class="status ${statusClass}">${item.status}</div>
         <div class="player">
           Spieler:
@@ -323,29 +331,21 @@ function render(){
   });
 }
 
-search.addEventListener("input",render);
-statusFilter.addEventListener("change",render);
-typeFilter.addEventListener("change",render);
-sortRating.addEventListener("change",render);
+[search,statusFilter,typeFilter,sortRating].forEach(el=>{
+  el.addEventListener("input",render);
+  el.addEventListener("change",render);
+});
 
 render();
 
-/* ===== Visitor Counter (stabil) ===== */
+/* Visitor Counter */
 const counterEl = document.getElementById("visitorCounter");
-
 fetch("https://api.countapi.xyz/hit/me-solli.github.io/lootliste")
-  .then(res => res.json())
-  .then(data => {
-    if (data && typeof data.value === "number") {
-      counterEl.innerHTML = `👁 Besucher gesamt: <b>${data.value}</b>`;
-    } else {
-      counterEl.innerHTML = "👁 Besucher gesamt: —";
-    }
+  .then(res=>res.json())
+  .then(data=>{
+    counterEl.innerHTML=`👁 Besucher gesamt: <b>${data?.value ?? "—"}</b>`;
   })
-  .catch(err => {
-    console.error("Visitor Counter Fehler:", err);
-    counterEl.innerHTML = "👁 Besucher gesamt: —";
-  });
+  .catch(()=>counterEl.innerHTML="👁 Besucher gesamt: —");
 </script>
 
 </body>
