@@ -8,6 +8,7 @@
 <style>
 :root{
   --gold:#f5c451;
+  --bg:#0b0b0b;
   --panel:#111;
   --border:#2a2a2a;
   --ok:#4cff4c;
@@ -17,7 +18,7 @@
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:#0b0b0b;
+  background:var(--bg);
   color:#eaeaea;
 }
 
@@ -25,10 +26,10 @@ body{
 
 header{
   background:#000;
-  padding:24px;
+  padding:22px;
 }
 header h1{margin:0}
-header p{opacity:.8;margin:6px 0 0}
+header p{margin:6px 0 0;opacity:.85}
 
 .feedback{
   margin:20px;
@@ -37,12 +38,17 @@ header p{opacity:.8;margin:6px 0 0}
   font-weight:bold;
   display:none;
 }
-.feedback.ok{color:var(--ok);border:1px solid var(--ok)}
-.feedback.err{color:var(--err);border:1px solid var(--err)}
+.feedback.ok{border:1px solid var(--ok);color:var(--ok)}
+.feedback.err{border:1px solid var(--err);color:var(--err)}
 
-.container{padding:20px;display:grid;gap:24px}
+.container{
+  padding:20px;
+  display:grid;
+  gap:24px;
+}
+
 .panel{
-  background:var(--panel);
+  background:linear-gradient(180deg,#161616,#0e0e0e);
   border:1px solid var(--border);
   border-radius:16px;
   padding:20px;
@@ -51,30 +57,48 @@ header p{opacity:.8;margin:6px 0 0}
 
 .form-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:14px;
 }
 
-label{font-size:13px;opacity:.85}
-input,select{
+label{font-size:13px;font-weight:bold;opacity:.85}
+
+input,select,textarea{
   width:100%;
-  padding:10px;
+  padding:10px 12px;
   background:#0f0f0f;
   border:1px solid #333;
   border-radius:8px;
   color:#fff;
 }
 
+textarea.stats{
+  grid-column:1/-1;
+  height:70px;
+  resize:vertical;
+}
+
 .preview{
   display:flex;
   gap:14px;
   align-items:center;
-  margin-top:12px;
+  margin-top:14px;
   background:#0f0f0f;
-  padding:12px;
+  border:1px solid #333;
   border-radius:12px;
+  padding:12px;
 }
-.preview img{width:64px;height:64px;object-fit:contain}
+.preview img{
+  width:64px;
+  height:64px;
+  object-fit:contain;
+}
+
+.actions{
+  margin-top:14px;
+  display:flex;
+  gap:12px;
+}
 
 button{
   padding:8px 14px;
@@ -82,197 +106,217 @@ button{
   border:1px solid var(--border);
   background:#151515;
   color:#fff;
-  cursor:pointer;
   font-weight:bold;
+  cursor:pointer;
 }
-.save{color:var(--gold);border-color:var(--gold)}
-.edit{color:#5cc8ff;border-color:#5cc8ff}
-.del{color:var(--err);border-color:var(--err)}
+.save{border-color:var(--gold);color:var(--gold)}
+.edit{border-color:#5cc8ff;color:#5cc8ff}
+.del{border-color:var(--err);color:var(--err)}
+.copy{border-color:#9cff9c;color:#9cff9c}
 button:hover{opacity:.85}
 
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{padding:8px;border-bottom:1px solid #222}
-th{color:var(--gold)}
-td img{width:36px}
-
-textarea{
+table{
   width:100%;
-  height:220px;
+  border-collapse:collapse;
+  font-size:14px;
+}
+th,td{
+  padding:8px;
+  border-bottom:1px solid #222;
+  text-align:left;
+}
+th{color:var(--gold)}
+td img{width:36px;height:36px;object-fit:contain}
+
+textarea#output{
+  width:100%;
+  height:240px;
   background:#0f0f0f;
   border:1px solid #333;
   border-radius:10px;
   color:#9cff9c;
   padding:12px;
   font-family:monospace;
+  font-size:13px;
 }
 </style>
 </head>
 
 <body>
 <div class="wrapper">
+
 <header>
   <h1>🛠 Lootliste – Admin Panel</h1>
-  <p>Items anlegen · bearbeiten · löschen · exportieren</p>
+  <p>Items anlegen · bearbeiten · löschen · items.js exportieren</p>
 </header>
 
 <div id="feedback" class="feedback"></div>
 
 <div class="container">
 
+<!-- ================= ITEM FORM ================= -->
 <div class="panel">
 <h2>➕ / ✏️ Item</h2>
 
 <div class="form-grid">
-  <div><label>Name</label><input id="name"></div>
+  <div>
+    <label>Name</label>
+    <input id="name">
+  </div>
 
   <div>
     <label>Kategorie</label>
     <select id="category">
-      <option value="unique">Unique</option>
-      <option value="set">Set</option>
-      <option value="runeword">Runeword</option>
-      <option value="rare">Rare</option>
-      <option value="magic">Magic</option>
-      <option value="charm">Charm</option>
+      <option>Unique</option>
+      <option>Set</option>
+      <option>Runeword</option>
+      <option>Rare</option>
+      <option>Magic</option>
+      <option>Charm</option>
     </select>
   </div>
 
   <div>
     <label>Typ</label>
     <select id="type">
-      <option value="waffe">Waffe</option>
-      <option value="helm">Helm</option>
-      <option value="ruestung">Rüstung</option>
-      <option value="schild">Schild</option>
-      <option value="guertel">Gürtel</option>
-      <option value="ring">Ring</option>
-      <option value="amulett">Amulett</option>
-      <option value="rune">Rune</option>
-      <option value="charm">Charm</option>
+      <option>Waffe</option>
+      <option>Helm</option>
+      <option>Rüstung</option>
+      <option>Schild</option>
+      <option>Gürtel</option>
+      <option>Ring</option>
+      <option>Amulett</option>
+      <option>Charme – Riesenzauber</option>
+      <option>Charme – Klein</option>
     </select>
   </div>
 
   <div>
     <label>Status</label>
     <select id="status">
-      <option value="verfuegbar">Verfügbar</option>
-      <option value="reserviert">Reserviert</option>
-      <option value="vergeben">Vergeben</option>
+      <option>Verfügbar</option>
+      <option>Reserviert</option>
+      <option>Vergeben</option>
     </select>
   </div>
 
   <div>
-    <label>Bild</label>
+    <label>Bild URL</label>
     <input id="img" placeholder="img/items/bartucs.webp">
+  </div>
+
+  <div style="grid-column:1/-1">
+    <label>Werte / Roll (z. B. +80% ed, 20 ias)</label>
+    <textarea id="stats" class="stats"></textarea>
   </div>
 </div>
 
 <div class="preview" id="preview"></div>
 
-<br>
-<button type="button" class="save" onclick="saveItem()">Speichern</button>
+<div class="actions">
+  <button type="button" class="save" onclick="saveItem()">Speichern</button>
+</div>
 </div>
 
+<!-- ================= ITEM LIST ================= -->
 <div class="panel">
 <h2>📋 Items</h2>
+
 <table>
 <thead>
-<tr><th></th><th>Name</th><th>Kategorie</th><th>Typ</th><th>Status</th><th></th></tr>
+<tr>
+  <th></th>
+  <th>Name</th>
+  <th>Werte</th>
+  <th>Kategorie</th>
+  <th>Typ</th>
+  <th>Status</th>
+  <th></th>
+</tr>
 </thead>
 <tbody id="itemTable"></tbody>
 </table>
 </div>
 
+<!-- ================= EXPORT ================= -->
 <div class="panel">
 <h2>📄 items.js Export</h2>
+<button class="copy" onclick="copyExport()">📋 Kopieren</button>
+<br><br>
 <textarea id="output" readonly></textarea>
 </div>
 
 </div>
+</div>
 
 <script>
-const $=id=>document.getElementById(id);
-const fb=$("feedback");
-const fallback="img/items/placeholder.webp";
+const $ = id => document.getElementById(id);
+const fb = $("feedback");
+const fallback = "img/items/placeholder.webp";
 
-let items=[];
-let editIndex=null;
+let items = [];
+let editIndex = null;
 
 function feedback(msg,err=false){
-  fb.textContent=msg;
-  fb.className="feedback "+(err?"err":"ok");
-  fb.style.display="block";
+  fb.textContent = msg;
+  fb.className = "feedback " + (err ? "err" : "ok");
+  fb.style.display = "block";
   setTimeout(()=>fb.style.display="none",3000);
 }
 
 async function loadItems(){
   try{
     const mod = await import("./items.js");
-    items=[...mod.default];
+    items = [...mod.default];
   }catch{
-    items=[];
-    feedback("items.js nicht geladen – leer gestartet",true);
+    items = [];
+    feedback("items.js nicht geladen – leer gestartet", true);
   }
   render();
 }
 
-function render(){
-  $("itemTable").innerHTML="";
-  items.forEach((i,idx)=>{
-    $("itemTable").innerHTML+=`
-      <tr>
-        <td><img src="${i.img||fallback}"></td>
-        <td>${i.name}</td>
-        <td>${i.category}</td>
-        <td>${i.type}</td>
-        <td>${i.status}</td>
-        <td>
-          <button class="edit" onclick="editItem(${idx})">✏️</button>
-          <button class="del" onclick="delItem(${idx})">🗑</button>
-        </td>
-      </tr>`;
-  });
-
-  $("output").value=
-`const items = ${JSON.stringify(items,null,2)};
-export default items;`;
-}
-
 function updatePreview(){
-  $("preview").innerHTML=`
-    <img src="${$("img").value||fallback}">
+  $("preview").innerHTML = `
+    <img src="${$("img").value || fallback}">
     <div>
-      <strong>${$("name").value||"Itemname"}</strong><br>
+      <strong>${$("name").value || "Itemname"}</strong><br>
+      ${$("stats").value || ""}<br>
       ${$("category").value} · ${$("type").value}<br>
       ${$("status").value}
-    </div>`;
+    </div>
+  `;
 }
 
-["name","category","type","status","img"].forEach(id=>{
-  $(id).addEventListener("input",updatePreview);
+["name","category","type","status","img","stats"].forEach(id=>{
+  $(id).addEventListener("input", updatePreview);
 });
 
 function saveItem(){
   if(!$("name").value){
-    feedback("Name fehlt",true); return;
+    feedback("Name fehlt", true);
+    return;
   }
-  const obj={
-    name:$("name").value,
-    category:$("category").value,
-    type:$("type").value,
-    status:$("status").value,
-    img:$("img").value||fallback
+
+  const obj = {
+    name: $("name").value,
+    category: $("category").value,
+    type: $("type").value,
+    status: $("status").value,
+    stats: $("stats").value,
+    img: $("img").value || fallback
   };
-  editIndex!==null ? items[editIndex]=obj : items.push(obj);
-  editIndex=null;
+
+  editIndex !== null ? items[editIndex] = obj : items.push(obj);
+  editIndex = null;
+
   render();
   feedback("Item gespeichert");
 }
 
 function editItem(i){
-  const it=items[i];
-  Object.keys(it).forEach(k=>$(k)&&($(k).value=it[k]));
-  editIndex=i;
+  const it = items[i];
+  Object.keys(it).forEach(k => $(k) && ($(k).value = it[k]));
+  editIndex = i;
   updatePreview();
 }
 
@@ -284,7 +328,37 @@ function delItem(i){
   }
 }
 
+function render(){
+  $("itemTable").innerHTML = "";
+  items.forEach((i,idx)=>{
+    $("itemTable").innerHTML += `
+      <tr>
+        <td><img src="${i.img || fallback}"></td>
+        <td>${i.name}</td>
+        <td>${i.stats || ""}</td>
+        <td>${i.category}</td>
+        <td>${i.type}</td>
+        <td>${i.status}</td>
+        <td>
+          <button class="edit" onclick="editItem(${idx})">✏️</button>
+          <button class="del" onclick="delItem(${idx})">🗑</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  $("output").value =
+`const items = ${JSON.stringify(items, null, 2)};
+export default items;`;
+}
+
+function copyExport(){
+  navigator.clipboard.writeText($("output").value);
+  feedback("items.js kopiert");
+}
+
 loadItems();
+updatePreview();
 </script>
 </body>
 </html>
