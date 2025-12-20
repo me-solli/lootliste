@@ -22,9 +22,8 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1280px;margin:0 auto}
+.wrapper{max-width:1300px;margin:0 auto}
 
-/* ===== Header ===== */
 header{
   background:url("img/banner-diablo.jpg") center/cover no-repeat;
 }
@@ -33,15 +32,16 @@ header{
   background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.9));
 }
 header h1{margin:0;font-size:28px}
-header p{margin:8px 0 0;font-size:14px;opacity:.9}
+header p{margin:6px 0 0;font-size:14px;opacity:.9}
 
-/* ===== Feedback ===== */
+/* ===== FEEDBACK ===== */
 .feedback{
   margin:20px 30px 0;
   padding:14px 18px;
   border-radius:14px;
   font-weight:bold;
   display:none;
+  animation:slideIn .3s ease;
 }
 .feedback.ok{
   background:rgba(76,255,76,.12);
@@ -52,6 +52,10 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   background:rgba(255,92,92,.12);
   border:1px solid var(--err);
   color:var(--err);
+}
+@keyframes slideIn{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:none}
 }
 
 /* ===== Layout ===== */
@@ -100,7 +104,9 @@ button{
   cursor:pointer;
 }
 button.save{border-color:var(--gold);color:var(--gold)}
+button.cancel{border-color:#777;color:#aaa}
 button.del{border-color:var(--err);color:var(--err)}
+button.edit{border-color:#5cc8ff;color:#5cc8ff}
 button:hover{opacity:.85}
 
 /* ===== Table ===== */
@@ -110,7 +116,7 @@ th{color:var(--gold)}
 
 textarea{
   width:100%;
-  height:300px;
+  height:260px;
   background:#0f0f0f;
   border:1px solid #333;
   border-radius:12px;
@@ -145,15 +151,13 @@ footer{
 
 <div class="container">
 
-<!-- FORM -->
 <div class="panel">
-  <h2>➕ Item hinzufügen</h2>
+  <h2 id="formTitle">➕ Item hinzufügen</h2>
 
   <div class="form-grid">
     <div><label>Name</label><input id="name"></div>
-    <div><label>Kategorie (Unique, Set, …)</label><input id="category"></div>
-    <div><label>Typ (Helm, Waffe, …)</label><input id="type"></div>
-
+    <div><label>Kategorie</label><input id="category"></div>
+    <div><label>Typ</label><input id="type"></div>
     <div>
       <label>Bewertung</label>
       <select id="stars">
@@ -164,9 +168,7 @@ footer{
         <option>★☆☆☆☆</option>
       </select>
     </div>
-
     <div><label>Roll / Werte</label><input id="roll"></div>
-
     <div>
       <label>Status</label>
       <select id="status">
@@ -179,30 +181,25 @@ footer{
 
   <div class="actions">
     <button class="save" onclick="saveItem()">Speichern</button>
+    <button class="cancel" onclick="resetForm()">Abbrechen</button>
   </div>
 </div>
 
-<!-- TABLE -->
 <div class="panel">
   <h2>📋 Aktuelle Items</h2>
   <table>
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Kategorie</th>
-        <th>Typ</th>
-        <th>Rating</th>
-        <th>Status</th>
-        <th></th>
+        <th>Name</th><th>Kategorie</th><th>Typ</th>
+        <th>Rating</th><th>Status</th><th>Aktion</th>
       </tr>
     </thead>
     <tbody id="itemTable"></tbody>
   </table>
 </div>
 
-<!-- EXPORT -->
 <div class="panel">
-  <h2>📄 items.js Export (kopieren)</h2>
+  <h2>📄 items.js Export</h2>
   <textarea id="output" readonly></textarea>
 </div>
 
@@ -210,31 +207,45 @@ footer{
 
 <footer>Lootliste · Admin Panel</footer>
 
-<script>
+<script type="module">
+import itemsData from "./items.js";
+
 const $ = id => document.getElementById(id);
 const feedback = $("feedback");
 
-let items = [];
+let items = JSON.parse(JSON.stringify(itemsData));
+let editIndex = null;
 
 function showFeedback(text,type="ok"){
   feedback.textContent=text;
   feedback.className="feedback "+type;
   feedback.style.display="block";
-  setTimeout(()=>feedback.style.display="none",3000);
+  setTimeout(()=>feedback.style.display="none",3200);
+}
+
+function resetForm(){
+  ["name","category","type","roll"].forEach(id=>$(id).value="");
+  $("status").value="Verfügbar";
+  $("stars").value="★★★★★";
+  $("formTitle").textContent="➕ Item hinzufügen";
+  editIndex=null;
 }
 
 function render(){
   $("itemTable").innerHTML="";
   items.forEach((it,i)=>{
     $("itemTable").innerHTML+=`
-      <tr>
-        <td>${it.name}</td>
-        <td>${it.category}</td>
-        <td>${it.type}</td>
-        <td>${it.stars}</td>
-        <td>${it.status}</td>
-        <td><button class="del" onclick="delItem(${i})">🗑</button></td>
-      </tr>`;
+    <tr>
+      <td>${it.name}</td>
+      <td>${it.category}</td>
+      <td>${it.type}</td>
+      <td>${it.stars}</td>
+      <td>${it.status}</td>
+      <td>
+        <button class="edit" onclick="editItem(${i})">✏️</button>
+        <button class="del" onclick="delItem(${i})">🗑</button>
+      </td>
+    </tr>`;
   });
 
   $("output").value =
@@ -249,22 +260,38 @@ function saveItem(){
     return;
   }
 
-  items.push({
-    name:$("name").value.trim(),
-    category:$("category").value.trim(),
-    type:$("type").value.trim(),
+  const obj={
+    name:$("name").value,
+    category:$("category").value,
+    type:$("type").value,
     stars:$("stars").value,
     roll:$("roll").value||"—",
     contact:"me_solli",
     status:$("status").value
-  });
+  };
 
-  $("name").value="";
-  $("roll").value="";
-  $("status").value="Verfügbar";
+  if(editIndex!==null){
+    items[editIndex]=obj;
+    showFeedback("✏️ Item aktualisiert");
+  }else{
+    items.push(obj);
+    showFeedback("✅ Item gespeichert");
+  }
 
+  resetForm();
   render();
-  showFeedback("✅ Item gespeichert");
+}
+
+function editItem(i){
+  const it=items[i];
+  $("name").value=it.name;
+  $("category").value=it.category;
+  $("type").value=it.type;
+  $("stars").value=it.stars;
+  $("roll").value=it.roll;
+  $("status").value=it.status;
+  $("formTitle").textContent="✏️ Item bearbeiten";
+  editIndex=i;
 }
 
 function delItem(i){
@@ -274,6 +301,11 @@ function delItem(i){
     showFeedback("🗑 Item gelöscht");
   }
 }
+
+window.saveItem=saveItem;
+window.editItem=editItem;
+window.delItem=delItem;
+window.resetForm=resetForm;
 
 render();
 </script>
