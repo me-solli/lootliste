@@ -24,12 +24,8 @@ body{
 
 .wrapper{max-width:1400px;margin:0 auto}
 
-header{
-  background:#000;
-}
-.header-inner{
-  padding:28px;
-}
+header{background:#000}
+.header-inner{padding:28px}
 header h1{margin:0;font-size:28px}
 header p{margin:6px 0 0;font-size:14px;opacity:.9}
 
@@ -56,13 +52,21 @@ header p{margin:6px 0 0;font-size:14px;opacity:.9}
 .form-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
+  gap:18px;
 }
 
-label{font-size:13px;font-weight:bold;opacity:.85}
+/* 🔧 Abstand-Fix */
+label{
+  font-size:13px;
+  font-weight:bold;
+  opacity:.85;
+  display:block;
+  margin-bottom:4px;
+}
+
 input,select,textarea{
   width:100%;
-  padding:10px 12px;
+  padding:11px 12px;
   background:#0f0f0f;
   border:1px solid #333;
   border-radius:10px;
@@ -71,16 +75,8 @@ input,select,textarea{
 
 textarea{height:90px;resize:vertical}
 
-.preview-img{
-  width:100%;
-  height:140px;
-  object-fit:contain;
-  background:#000;
-  border-radius:12px;
-  border:1px solid #333;
-}
-
 .actions{display:flex;gap:12px;margin-top:18px}
+
 button{
   padding:10px 18px;
   border-radius:12px;
@@ -131,7 +127,10 @@ td img{width:42px;height:42px;object-fit:contain}
 <h2>➕ / ✏️ Item</h2>
 
 <div class="form-grid">
-  <div><label>Name</label><input id="name"></div>
+  <div>
+    <label>Name</label>
+    <input id="name">
+  </div>
 
   <div>
     <label>Kategorie</label>
@@ -184,7 +183,7 @@ td img{width:42px;height:42px;object-fit:contain}
   </div>
 </div>
 
-<label style="margin-top:14px;display:block">Werte / Roll / Stats</label>
+<label style="margin-top:14px">Werte / Roll / Stats</label>
 <textarea id="stats" placeholder="+80% ed, 20 ias"></textarea>
 
 <div class="actions">
@@ -222,6 +221,7 @@ import itemsData from "./items.js";
 const $=id=>document.getElementById(id);
 const fb=$("feedback");
 const fallback="img/items/placeholder.webp";
+
 let items=[...itemsData];
 let editIndex=null;
 
@@ -317,6 +317,12 @@ function copyExport(){
   navigator.clipboard.writeText($("output").value);
   feedback("items.js kopiert");
 }
+
+/* 🔑 WICHTIG: Funktionen global verfügbar machen */
+window.editItem = editItem;
+window.delItem = delItem;
+window.saveItem = saveItem;
+window.copyExport = copyExport;
 
 render();
 updatePreview();
