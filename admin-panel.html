@@ -34,7 +34,7 @@ header{
 header h1{margin:0;font-size:28px}
 header p{margin:6px 0 0;font-size:14px;opacity:.9}
 
-/* ===== FEEDBACK ===== */
+/* FEEDBACK */
 .feedback{
   margin:20px 30px 0;
   padding:14px 18px;
@@ -45,7 +45,6 @@ header p{margin:6px 0 0;font-size:14px;opacity:.9}
 .feedback.ok{border:1px solid var(--ok);color:var(--ok);background:rgba(76,255,76,.12)}
 .feedback.err{border:1px solid var(--err);color:var(--err);background:rgba(255,92,92,.12)}
 
-/* ===== Layout ===== */
 .container{padding:30px;display:grid;gap:26px}
 .panel{
   background:linear-gradient(180deg,#161616,#0e0e0e);
@@ -55,7 +54,6 @@ header p{margin:6px 0 0;font-size:14px;opacity:.9}
 }
 .panel h2{margin:0 0 16px;color:var(--gold)}
 
-/* ===== Form ===== */
 .form-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -71,17 +69,7 @@ input,select{
   color:#fff;
 }
 
-.preview-img{
-  width:100%;
-  height:140px;
-  object-fit:contain;
-  background:#000;
-  border-radius:12px;
-  border:1px solid #333;
-}
-
-/* ===== Buttons ===== */
-.actions{display:flex;gap:12px;margin-top:18px}
+.actions{margin-top:18px}
 button{
   padding:10px 18px;
   border-radius:12px;
@@ -92,40 +80,22 @@ button{
   cursor:pointer;
 }
 .save{border-color:var(--gold);color:var(--gold)}
-.edit{border-color:#5cc8ff;color:#5cc8ff}
-.del{border-color:var(--err);color:var(--err)}
-.copy{border-color:#9cff9c;color:#9cff9c}
 button:hover{opacity:.85}
 
-/* ===== Table ===== */
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:10px;border-bottom:1px solid #222;text-align:left}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #222}
 th{color:var(--gold)}
-td img{width:42px;height:42px;object-fit:contain}
-
-/* ===== Preview Card ===== */
-.card{
-  display:flex;
-  gap:16px;
-  align-items:center;
-  background:#0f0f0f;
-  border:1px solid #333;
-  border-radius:14px;
-  padding:12px;
-}
-.card img{width:64px;height:64px;object-fit:contain}
-.card strong{font-size:15px}
+td img{width:42px}
 
 textarea{
   width:100%;
-  height:260px;
+  height:240px;
   background:#0f0f0f;
   border:1px solid #333;
   border-radius:12px;
   color:#9cff9c;
   padding:14px;
   font-family:monospace;
-  font-size:13px;
 }
 </style>
 </head>
@@ -135,7 +105,7 @@ textarea{
 <header>
   <div class="header-inner">
     <h1>🛠 Lootliste – Admin Panel</h1>
-    <p>Items verwalten · Vorschau · items.js Export</p>
+    <p>Items verwalten · Vorschau · Export</p>
   </div>
 </header>
 
@@ -144,7 +114,7 @@ textarea{
 <div class="container">
 
 <div class="panel">
-<h2>➕ / ✏️ Item</h2>
+<h2>➕ Item</h2>
 
 <div class="form-grid">
   <div><label>Name</label><input id="name"></div>
@@ -168,27 +138,12 @@ textarea{
       <option value="helm">Helm</option>
       <option value="ruestung">Rüstung</option>
       <option value="schild">Schild</option>
-      <option value="guertel">Gürtel</option>
       <option value="ring">Ring</option>
       <option value="amulett">Amulett</option>
       <option value="rune">Rune</option>
       <option value="charm">Charm</option>
-      <option value="sonstiges">Sonstiges</option>
     </select>
   </div>
-
-  <div>
-    <label>Bewertung</label>
-    <select id="stars">
-      <option value="★★★★★">★★★★★</option>
-      <option value="★★★★☆">★★★★☆</option>
-      <option value="★★★☆☆">★★★☆☆</option>
-      <option value="★★☆☆☆">★★☆☆☆</option>
-      <option value="★☆☆☆☆">★☆☆☆☆</option>
-    </select>
-  </div>
-
-  <div><label>Roll / Werte</label><input id="roll"></div>
 
   <div>
     <label>Status</label>
@@ -198,150 +153,68 @@ textarea{
       <option value="vergeben">Vergeben</option>
     </select>
   </div>
-
-  <div>
-    <label>Bild URL</label>
-    <input id="img" placeholder="img/items/bartucs.webp">
-  </div>
-
-  <div>
-    <label>Vorschau</label>
-    <img id="imgPreview" class="preview-img">
-  </div>
 </div>
 
 <div class="actions">
-  <!-- WICHTIGER FIX -->
-  <button type="button" class="save" onclick="saveItem()">Speichern</button>
+  <button type="button" class="save" id="saveBtn">Speichern</button>
 </div>
-</div>
-
-<div class="panel">
-<h2>👁 Live-Vorschau</h2>
-<div id="previewCard"></div>
-</div>
-
-<div class="panel">
-<h2>📋 Items</h2>
-<table>
-<thead>
-<tr>
-  <th></th>
-  <th>Name</th>
-  <th>Kategorie</th>
-  <th>Typ</th>
-  <th>Rating</th>
-  <th>Status</th>
-  <th></th>
-</tr>
-</thead>
-<tbody id="itemTable"></tbody>
-</table>
 </div>
 
 <div class="panel">
 <h2>📄 items.js Export</h2>
-<button type="button" class="copy" onclick="copyExport()">📋 Kopieren</button>
 <textarea id="output" readonly></textarea>
 </div>
 
 </div>
 
-<script type="module">
-import itemsData from "./items.js";
+<script>
 const $=id=>document.getElementById(id);
 const fb=$("feedback");
-let items=[...itemsData];
-let edit=null;
 const fallback="img/items/placeholder.webp";
+let items=[];
 
-function feedback(t,err=false){
-  fb.textContent=t;
-  fb.className="feedback "+(err?"err":"ok");
+function feedback(text,error=false){
+  fb.textContent=text;
+  fb.className="feedback "+(error?"err":"ok");
   fb.style.display="block";
   setTimeout(()=>fb.style.display="none",3000);
 }
 
-$("img").oninput=updatePreview;
-["name","category","type","stars","status","roll"].forEach(id=>$(id).oninput=updatePreview);
-
-function updatePreview(){
-  const img=$("img").value||fallback;
-  $("imgPreview").src=img;
-  $("previewCard").innerHTML=`
-    <div class="card">
-      <img src="${img}">
-      <div>
-        <strong>${$("name").value||"Itemname"}</strong><br>
-        ${$("category").selectedOptions[0].text} · ${$("type").selectedOptions[0].text}<br>
-        ${$("stars").value} · ${$("status").selectedOptions[0].text}
-      </div>
-    </div>`;
+async function loadItems(){
+  try{
+    const mod = await import("./items.js");
+    items=[...mod.default];
+    render();
+  }catch(e){
+    items=[];
+    feedback("⚠ items.js konnte nicht geladen werden – starte leer",true);
+    render();
+  }
 }
 
 function render(){
-  $("itemTable").innerHTML="";
-  items.forEach((i,idx)=>{
-    $("itemTable").innerHTML+=`
-    <tr>
-      <td><img src="${i.img||fallback}"></td>
-      <td>${i.name}</td>
-      <td>${i.category}</td>
-      <td>${i.type}</td>
-      <td>${i.stars}</td>
-      <td>${i.status}</td>
-      <td>
-        <button type="button" class="edit" onclick="editItem(${idx})">✏️</button>
-        <button type="button" class="del" onclick="delItem(${idx})">🗑</button>
-      </td>
-    </tr>`;
-  });
-  $("output").value=`const items = ${JSON.stringify(items,null,2)};\n\nexport default items;`;
+  $("output").value=
+`const items = ${JSON.stringify(items,null,2)};
+export default items;`;
 }
 
-function saveItem(){
+$("saveBtn").addEventListener("click",()=>{
   if(!$("name").value){
     feedback("Name fehlt",true);
     return;
   }
-  const obj={
+  items.push({
     name:$("name").value,
     category:$("category").value,
     type:$("type").value,
-    stars:$("stars").value,
-    roll:$("roll").value||"—",
     status:$("status").value,
-    contact:"me_solli",
-    img:$("img").value||fallback
-  };
-  edit!==null?items[edit]=obj:items.push(obj);
-  edit=null;
+    img:fallback
+  });
   render();
   feedback("Item gespeichert");
-}
+});
 
-function editItem(i){
-  const it=items[i];
-  Object.keys(it).forEach(k=>$(k)&&($(k).value=it[k]));
-  updatePreview();
-  edit=i;
-}
-
-function delItem(i){
-  if(confirm("Item löschen?")){
-    items.splice(i,1);
-    render();
-    feedback("Item gelöscht");
-  }
-}
-
-function copyExport(){
-  navigator.clipboard.writeText($("output").value);
-  feedback("📋 items.js kopiert");
-}
-
-render();
-updatePreview();
+loadItems();
 </script>
 </body>
 </html>
