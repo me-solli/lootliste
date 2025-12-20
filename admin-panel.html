@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🛠 Lootliste – Admin Panel</title>
+<title>🎁 Lootliste – Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -11,29 +11,54 @@
   --bg:#0b0b0b;
   --panel:#111;
   --border:#2a2a2a;
+  --ok:#4cff4c;
+  --err:#ff5c5c;
 }
 
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:radial-gradient(ellipse at top, #1a1a1a 0%, #0b0b0b 60%);
+  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
   color:#eaeaea;
 }
 
-.wrapper{max-width:1280px;margin:0 auto;}
+.wrapper{max-width:1280px;margin:0 auto}
 
 header{
   background:url("img/banner-diablo.jpg") center/cover no-repeat;
-  border-radius:0 0 18px 18px;
 }
 .header-inner{
-  padding:26px;
+  padding:28px;
   background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.9));
 }
-header h1{margin:0;font-size:28px;}
-header p{margin:6px 0 0;font-size:14px;opacity:.85}
+header h1{margin:0;font-size:28px}
+header p{margin:8px 0 0;font-size:14px;opacity:.9}
 
-.container{padding:30px;display:grid;gap:26px}
+/* ===== FEEDBACK ===== */
+.feedback{
+  margin:20px 30px 0;
+  padding:14px 18px;
+  border-radius:14px;
+  font-weight:bold;
+  display:none;
+}
+.feedback.ok{
+  background:rgba(76,255,76,.12);
+  border:1px solid var(--ok);
+  color:var(--ok);
+}
+.feedback.err{
+  background:rgba(255,92,92,.12);
+  border:1px solid var(--err);
+  color:var(--err);
+}
+
+/* ===== Layout ===== */
+.container{
+  padding:30px;
+  display:grid;
+  gap:26px;
+}
 
 .panel{
   background:linear-gradient(180deg,#161616,#0e0e0e);
@@ -41,22 +66,18 @@ header p{margin:6px 0 0;font-size:14px;opacity:.85}
   border-radius:18px;
   padding:22px;
 }
-
 .panel h2{
   margin:0 0 16px;
   color:var(--gold);
-  font-size:20px;
 }
 
-/* FORM */
+/* ===== Form ===== */
 .form-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:16px;
 }
-
 label{font-size:13px;font-weight:bold;opacity:.85}
-
 input,select{
   width:100%;
   padding:10px 12px;
@@ -64,11 +85,10 @@ input,select{
   border:1px solid #333;
   border-radius:10px;
   color:#fff;
-  font-size:14px;
 }
 
+/* ===== Buttons ===== */
 .actions{display:flex;gap:12px;margin-top:18px}
-
 button{
   padding:10px 18px;
   border-radius:12px;
@@ -79,10 +99,10 @@ button{
   cursor:pointer;
 }
 button.save{border-color:var(--gold);color:var(--gold)}
-button.del{border-color:#ff5c5c;color:#ff5c5c}
+button.del{border-color:var(--err);color:var(--err)}
 button:hover{opacity:.85}
 
-/* TABLE */
+/* ===== Table ===== */
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:10px;border-bottom:1px solid #222;text-align:left}
 th{color:var(--gold)}
@@ -99,39 +119,19 @@ textarea{
   font-size:13px;
 }
 
-/* LOGIN */
-#loginBox{
-  max-width:420px;
-  margin:120px auto;
-  padding:30px;
-  background:#111;
-  border:1px solid #333;
-  border-radius:18px;
-}
-#loginBox h2{margin-top:0;color:var(--gold)}
-
 footer{
   margin:40px 0 20px;
-  text-align:center;
+  padding-top:20px;
+  border-top:1px solid #222;
   font-size:13px;
-  opacity:.6;
+  text-align:center;
+  opacity:.7;
 }
 </style>
 </head>
 
 <body>
-
-<!-- LOGIN -->
-<div id="loginBox">
-  <h2>🔒 Admin Login</h2>
-  <input id="pw" type="password" placeholder="Passwort">
-  <div class="actions">
-    <button class="save" onclick="login()">Login</button>
-  </div>
-</div>
-
-<!-- ADMIN -->
-<div class="wrapper" id="admin" style="display:none">
+<div class="wrapper">
 
 <header>
   <div class="header-inner">
@@ -140,156 +140,133 @@ footer{
   </div>
 </header>
 
+<div id="feedback" class="feedback"></div>
+
 <div class="container">
 
 <div class="panel">
-<h2>➕ Item hinzufügen</h2>
+  <h2>➕ Item hinzufügen</h2>
 
-<div class="form-grid">
-  <div>
-    <label>Name</label>
-    <input id="name">
+  <div class="form-grid">
+    <div><label>Name</label><input id="name"></div>
+    <div><label>Kategorie</label><input id="category"></div>
+    <div><label>Typ</label><input id="type"></div>
+    <div>
+      <label>Bewertung</label>
+      <select id="stars">
+        <option>★★★★★</option>
+        <option>★★★★☆</option>
+        <option>★★★☆☆</option>
+        <option>★★☆☆☆</option>
+        <option>★☆☆☆☆</option>
+      </select>
+    </div>
+    <div><label>Roll / Werte</label><input id="roll"></div>
+    <div>
+      <label>Status</label>
+      <select id="status">
+        <option>Verfügbar</option>
+        <option>Reserviert</option>
+        <option>Vergeben</option>
+      </select>
+    </div>
   </div>
 
-  <div>
-    <label>Kategorie</label>
-    <select id="category">
-      <option>Unique</option>
-      <option>Set</option>
-      <option>Magisch</option>
-      <option>Selten</option>
-      <option>Rune</option>
-      <option>Zauber</option>
-    </select>
+  <div class="actions">
+    <button class="save" onclick="saveItem()">Speichern</button>
   </div>
-
-  <div>
-    <label>Typ</label>
-    <select id="type">
-      <option>Helm</option>
-      <option>Amulett</option>
-      <option>Waffe</option>
-      <option>Rüstung</option>
-      <option>Schild</option>
-      <option>Gürtel</option>
-      <option>Ring</option>
-      <option>Handschuhe</option>
-      <option>Schuhe</option>
-      <option>Kleiner Zauber</option>
-      <option>Großer Zauber</option>
-      <option>Riesenzauber</option>
-      <option>Sonstiges</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Bewertung</label>
-    <select id="stars">
-      <option>★★★★★</option>
-      <option>★★★★☆</option>
-      <option>★★★☆☆</option>
-      <option>★★☆☆☆</option>
-      <option>★☆☆☆☆</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Roll / Werte</label>
-    <input id="roll">
-  </div>
-
-  <div>
-    <label>Status</label>
-    <select id="status">
-      <option>Verfügbar</option>
-      <option>Reserviert</option>
-      <option>Vergeben</option>
-    </select>
-  </div>
-</div>
-
-<div class="actions">
-  <button class="save" onclick="saveItem()">Speichern</button>
-</div>
 </div>
 
 <div class="panel">
-<h2>📋 Aktuelle Items</h2>
-<table>
-<thead>
-<tr>
-<th>Name</th><th>Kategorie</th><th>Typ</th><th>Rating</th><th>Status</th><th></th>
-</tr>
-</thead>
-<tbody id="itemTable"></tbody>
-</table>
+  <h2>📋 Aktuelle Items</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th><th>Kategorie</th><th>Typ</th>
+        <th>Rating</th><th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="itemTable"></tbody>
+  </table>
 </div>
 
 <div class="panel">
-<h2>📄 items.js Export</h2>
-<textarea id="output" readonly></textarea>
+  <h2>📄 items.js Export</h2>
+  <textarea id="output" readonly></textarea>
 </div>
 
 </div>
 
-<footer>Lootliste · Admin Panel</footer>
-</div>
+<footer>Lootliste · Admin</footer>
 
 <script type="module">
 import itemsData from "./items.js";
 
-const admin=document.getElementById("admin");
-const loginBox=document.getElementById("loginBox");
+const $ = id => document.getElementById(id);
+const feedback = $("feedback");
 
-window.login=()=>{
-  if(document.getElementById("pw").value==="lootliste"){
-    loginBox.style.display="none";
-    admin.style.display="block";
-  }else alert("Falsches Passwort");
-};
+let items = JSON.parse(JSON.stringify(itemsData));
 
-let items=JSON.parse(JSON.stringify(itemsData));
-const table=document.getElementById("itemTable");
-const output=document.getElementById("output");
-
-function render(){
-  table.innerHTML="";
-  items.forEach((it,i)=>{
-    table.innerHTML+=`
-    <tr>
-      <td>${it.name}</td>
-      <td>${it.category}</td>
-      <td>${it.type}</td>
-      <td>${it.stars}</td>
-      <td>${it.status}</td>
-      <td><button class="del" onclick="del(${i})">🗑</button></td>
-    </tr>`;
-  });
-  output.value=`const items = ${JSON.stringify(items,null,2)};\n\nexport default items;`;
+function showFeedback(text,type="ok"){
+  feedback.textContent=text;
+  feedback.className="feedback "+type;
+  feedback.style.display="block";
+  setTimeout(()=>feedback.style.display="none",3000);
 }
 
-window.saveItem=()=>{
-  items.push({
-    name:name.value,
-    category:category.value,
-    type:type.value,
-    stars:stars.value,
-    roll:roll.value||"—",
-    contact:"me_solli",
-    status:status.value
+function render(){
+  $("itemTable").innerHTML="";
+  items.forEach((it,i)=>{
+    $("itemTable").innerHTML+=`
+      <tr>
+        <td>${it.name}</td>
+        <td>${it.category}</td>
+        <td>${it.type}</td>
+        <td>${it.stars}</td>
+        <td>${it.status}</td>
+        <td><button class="del" onclick="delItem(${i})">🗑</button></td>
+      </tr>`;
   });
-  render();
-};
 
-window.del=(i)=>{
-  if(confirm("Item löschen?")){
+  $("output").value =
+`const items = ${JSON.stringify(items,null,2)};
+
+export default items;`;
+}
+
+function saveItem(){
+  if(!$("name").value.trim()){
+    showFeedback("❌ Name fehlt","err");
+    return;
+  }
+
+  items.push({
+    name:$("name").value,
+    category:$("category").value,
+    type:$("type").value,
+    stars:$("stars").value,
+    roll:$("roll").value||"—",
+    contact:"me_solli",
+    status:$("status").value
+  });
+
+  render();
+  showFeedback("✅ Item gespeichert");
+}
+window.saveItem=saveItem;
+
+function delItem(i){
+  if(confirm("Item wirklich löschen?")){
     items.splice(i,1);
     render();
+    showFeedback("🗑 Item gelöscht");
   }
-};
+}
+window.delItem=delItem;
 
 render();
 </script>
 
+</div>
 </body>
 </html>
