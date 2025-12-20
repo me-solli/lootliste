@@ -267,7 +267,7 @@ function feedback(msg,err=false){
 async function loadItems(){
   try{
     const mod = await import("./items.js");
-    items = [...mod.default];
+    items = Array.isArray(mod.default) ? [...mod.default] : [];
   }catch{
     items = [];
     feedback("items.js nicht geladen – leer gestartet", true);
@@ -306,16 +306,27 @@ function saveItem(){
     img: $("img").value || fallback
   };
 
-  editIndex !== null ? items[editIndex] = obj : items.push(obj);
-  editIndex = null;
+  if(editIndex !== null){
+    items[editIndex] = obj;
+  }else{
+    items.push(obj);
+  }
 
+  editIndex = null;
   render();
   feedback("Item gespeichert");
 }
 
 function editItem(i){
   const it = items[i];
-  Object.keys(it).forEach(k => $(k) && ($(k).value = it[k]));
+
+  $("name").value = it.name || "";
+  $("category").value = it.category || "";
+  $("type").value = it.type || "";
+  $("status").value = it.status || "";
+  $("stats").value = it.stats || "";
+  $("img").value = it.img || "";
+
   editIndex = i;
   updatePreview();
 }
