@@ -331,7 +331,7 @@ sortRating.addEventListener("change",render);
 render();
 
 /* ===== Visitor Counter ===== */
-fetch("https://api.countapi.xyz/hit/me-solli-lootliste/index")
+fetch("https://api.countapi.xyz/hit/me-solli-lootliste/visits")
   .then(res => res.json())
   .then(data => {
     document.getElementById("visitorCounter").innerHTML =
