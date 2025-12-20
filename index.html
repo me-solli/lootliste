@@ -20,23 +20,50 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1280px;margin:0 auto}
+.wrapper{
+  max-width:1280px;
+  margin:0 auto;
+}
 
 /* ===== Banner ===== */
 .banner{
   background:url("img/banner-diablo.jpg") center/cover no-repeat;
   border-radius:0 0 18px 18px;
 }
+
 header{
   padding:28px;
-  background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.85));
+  background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.85));
   display:flex;
   justify-content:space-between;
   gap:24px;
   flex-wrap:wrap;
 }
-header h1{margin:0;font-size:30px}
-header p{margin:8px 0 0;font-size:14px;opacity:.9}
+
+header h1{
+  margin:0;
+  font-size:30px;
+}
+
+header p{
+  margin:8px 0 0;
+  font-size:14px;
+  opacity:.9;
+}
+
+.header-right{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:flex-start;
+}
+
+.header-links a{
+  color:var(--gold);
+  font-size:14px;
+  text-decoration:none;
+}
+.header-links a:hover{text-decoration:underline}
 
 .twitch{
   background:#9146FF;
@@ -48,18 +75,13 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
 }
 .twitch:hover{opacity:.85}
 
-.container{padding:26px}
-
-/* ===== Info ===== */
-.info{
-  background:linear-gradient(180deg,#151515,#0f0f0f);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:22px;
-  font-size:14px;
-  line-height:1.5;
+#visitorCounter{
+  font-size:13px;
+  opacity:.85;
 }
+
+/* ===== Content ===== */
+.container{padding:26px}
 
 /* ===== Controls ===== */
 .controls{
@@ -68,7 +90,9 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   gap:12px;
   margin-bottom:22px;
 }
-.controls input,.controls select{
+
+.controls input,
+.controls select{
   padding:10px 12px;
   background:#111;
   border:1px solid #333;
@@ -79,12 +103,16 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
 /* ===== Cards ===== */
 .cards{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:18px;
 }
-@media(max-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:500px){.cards{grid-template-columns:1fr}}
+
+@media(max-width:1000px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .cards{grid-template-columns:1fr}
+}
 
 .card{
   background:linear-gradient(180deg,#161616,#0e0e0e);
@@ -94,6 +122,7 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   display:flex;
   flex-direction:column;
 }
+
 .card:hover{border-color:#3a3a3a}
 
 .card img{
@@ -108,21 +137,28 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   padding:14px;
   display:flex;
   flex-direction:column;
-  gap:7px;
+  gap:8px;
 }
 
 .item-name{font-weight:bold;font-size:15px}
-.meta{font-size:12px;opacity:.75}
+.category{font-size:12px;opacity:.75}
 .stars{color:var(--gold)}
 .roll{font-size:13px;color:#cfcfcf}
 
 .status{font-weight:bold;font-size:13px}
-.status.Verfügbar{color:#4cff4c}
-.status.Reserviert{color:#ffd24c}
-.status.Vergeben{color:#ff5c5c}
+.status.verfuegbar{color:#4cff4c}
+.status.reserviert{color:#ffd24c}
+.status.vergeben{color:#ff5c5c}
 
-.player{font-size:13px;opacity:.85}
-.player a{color:var(--gold);text-decoration:none}
+.player{
+  font-size:13px;
+  opacity:.85;
+}
+.player a{
+  color:var(--gold);
+  text-decoration:none;
+}
+.player a:hover{text-decoration:underline}
 
 .cta{
   margin-top:6px;
@@ -135,8 +171,12 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   color:#fff;
   text-decoration:none;
 }
-.cta:hover{border-color:var(--gold);color:var(--gold)}
+.cta:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
 
+/* ===== Footer ===== */
 footer{
   margin-top:40px;
   padding:20px;
@@ -148,6 +188,7 @@ footer a{
   margin-right:16px;
   text-decoration:none;
 }
+footer a:hover{text-decoration:underline}
 </style>
 </head>
 
@@ -159,33 +200,40 @@ footer a{
     <h1>🎁 Free Lootliste – Community Items</h1>
     <p>Diablo II Resurrected · Non-Ladder · 100 % Free Loot</p>
   </div>
-  <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">▶ Twitch: me_solli</a>
+
+  <div class="header-right">
+    <div class="header-links">
+      <a href="stream.html">Über den Stream</a>
+    </div>
+
+    <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
+      ▶ Twitch: me_solli
+    </a>
+
+    <div id="visitorCounter">👁 Besucher gesamt: …</div>
+  </div>
 </header>
 
 <div class="container">
-
-<div class="info">
-<b>Über den Stream</b><br>
-Alle Items stammen aus Community-Drops im Stream.<br>
-Alles hier ist kostenlos – first come, first serve.
-</div>
 
 <div class="controls">
   <input id="search" placeholder="Item suchen…">
 
   <select id="typeFilter">
     <option value="">Alle Item-Arten</option>
-    <option>Helm</option><option>Amulett</option><option>Waffe</option>
-    <option>Rüstung</option><option>Schild</option><option>Gürtel</option>
-    <option>Ring</option><option>Handschuhe</option><option>Schuhe</option>
-    <option>Kleiner Zauber</option><option>Großer Zauber</option>
-    <option>Riesenzauber</option><option>Sonstiges</option>
-  </select>
-
-  <select id="categoryFilter">
-    <option value="">Alle Kategorien</option>
-    <option>Unique</option><option>Set</option><option>Selten</option>
-    <option>Magisch</option><option>Rune</option><option>Zauber</option>
+    <option>Helm</option>
+    <option>Amulett</option>
+    <option>Waffe</option>
+    <option>Rüstung</option>
+    <option>Schild</option>
+    <option>Gürtel</option>
+    <option>Ring</option>
+    <option>Handschuhe</option>
+    <option>Schuhe</option>
+    <option>Kleiner Zauber</option>
+    <option>Großer Zauber</option>
+    <option>Riesenzauber</option>
+    <option>Sonstiges</option>
   </select>
 
   <select id="statusFilter">
@@ -194,9 +242,15 @@ Alles hier ist kostenlos – first come, first serve.
     <option>Reserviert</option>
     <option>Vergeben</option>
   </select>
+
+  <select id="sortRating">
+    <option value="desc">Rating ↓</option>
+    <option value="asc">Rating ↑</option>
+  </select>
 </div>
 
 <div class="cards" id="cards"></div>
+
 </div>
 
 <footer>
@@ -209,47 +263,84 @@ Alles hier ist kostenlos – first come, first serve.
 <script type="module">
 import items from "./items.js";
 
-const cards=document.getElementById("cards");
-const search=document.getElementById("search");
-const typeFilter=document.getElementById("typeFilter");
-const categoryFilter=document.getElementById("categoryFilter");
-const statusFilter=document.getElementById("statusFilter");
+const cards = document.getElementById("cards");
+const search = document.getElementById("search");
+const statusFilter = document.getElementById("statusFilter");
+const typeFilter = document.getElementById("typeFilter");
+const sortRating = document.getElementById("sortRating");
 
-function ratingValue(s){return (s.match(/★/g)||[]).length}
+function ratingValue(stars){
+  return (stars?.match(/★/g)||[]).length;
+}
 
 function render(){
   cards.innerHTML="";
-  items.filter(i=>{
-    const q=search.value.toLowerCase();
-    return(
-      (!typeFilter.value||i.type===typeFilter.value)&&
-      (!categoryFilter.value||i.category===categoryFilter.value)&&
-      (!statusFilter.value||i.status===statusFilter.value)&&
-      (i.name.toLowerCase().includes(q))
+
+  let filtered = items.filter(i=>{
+    const q = search.value.toLowerCase();
+    return (
+      (!statusFilter.value || i.status === statusFilter.value) &&
+      (!typeFilter.value || i.type === typeFilter.value) &&
+      (
+        i.name.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q)
+      )
     );
-  }).forEach(i=>{
-    cards.innerHTML+=`
-    <div class="card">
-      <img src="${i.image||'img/item-default.png'}">
+  });
+
+  filtered.sort((a,b)=>{
+    const diff = ratingValue(b.stars) - ratingValue(a.stars);
+    return sortRating.value === "desc" ? diff : -diff;
+  });
+
+  filtered.forEach(item=>{
+    let statusClass="verfuegbar";
+    if(item.status==="Reserviert")statusClass="reserviert";
+    if(item.status==="Vergeben")statusClass="vergeben";
+
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${item.image || 'img/item-default.png'}" alt="">
       <div class="card-body">
-        <div class="item-name">${i.name}</div>
-        <div class="meta">${i.category} · ${i.type}</div>
-        <div class="stars">${i.stars}</div>
-        <div class="roll">${i.roll}</div>
-        <div class="status ${i.status}">${i.status}</div>
-        <div class="player">Spieler:
-          <a href="https://twitch.tv/${i.contact}" target="_blank">${i.contact}</a>
+        <div class="item-name">${item.name}</div>
+        <div class="category">${item.category}</div>
+        <div class="stars">${item.stars}</div>
+        <div class="roll">${item.roll || "—"}</div>
+        <div class="status ${statusClass}">${item.status}</div>
+        <div class="player">
+          Spieler:
+          <a href="https://twitch.tv/${item.contact}" target="_blank">
+            ${item.contact}
+          </a>
         </div>
-        <a class="cta" href="https://twitch.tv/${i.contact}" target="_blank">
+        <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">
           Über Twitch anfragen
         </a>
       </div>
-    </div>`;
+    `;
+    cards.appendChild(card);
   });
 }
 
-[search,typeFilter,categoryFilter,statusFilter].forEach(e=>e.addEventListener("input",render));
+search.addEventListener("input",render);
+statusFilter.addEventListener("change",render);
+typeFilter.addEventListener("change",render);
+sortRating.addEventListener("change",render);
+
 render();
+
+/* ===== Visitor Counter ===== */
+fetch("https://api.countapi.xyz/hit/me-solli-lootliste/index")
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("visitorCounter").innerHTML =
+      `👁 Besucher gesamt: <b>${data.value}</b>`;
+  })
+  .catch(()=>{
+    document.getElementById("visitorCounter").innerHTML =
+      "👁 Besucher gesamt: —";
+  });
 </script>
 
 </body>
