@@ -330,16 +330,21 @@ sortRating.addEventListener("change",render);
 
 render();
 
-/* ===== Visitor Counter ===== */
-fetch("https://api.countapi.xyz/hit/me-solli-lootliste/visits")
+/* ===== Visitor Counter (stabil) ===== */
+const counterEl = document.getElementById("visitorCounter");
+
+fetch("https://api.countapi.xyz/hit/me-solli.github.io/lootliste")
   .then(res => res.json())
   .then(data => {
-    document.getElementById("visitorCounter").innerHTML =
-      `👁 Besucher gesamt: <b>${data.value}</b>`;
+    if (data && typeof data.value === "number") {
+      counterEl.innerHTML = `👁 Besucher gesamt: <b>${data.value}</b>`;
+    } else {
+      counterEl.innerHTML = "👁 Besucher gesamt: —";
+    }
   })
-  .catch(()=>{
-    document.getElementById("visitorCounter").innerHTML =
-      "👁 Besucher gesamt: —";
+  .catch(err => {
+    console.error("Visitor Counter Fehler:", err);
+    counterEl.innerHTML = "👁 Besucher gesamt: —";
   });
 </script>
 
