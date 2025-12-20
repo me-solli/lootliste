@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Lootliste – Admin Panel</title>
+<title>🛠 Lootliste – Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -10,57 +10,33 @@
   --gold:#f5c451;
   --bg:#0b0b0b;
   --panel:#111;
-  --panel2:#141414;
   --border:#2a2a2a;
 }
 
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:
-    radial-gradient(ellipse at top, #1a1a1a 0%, #0b0b0b 60%);
+  background:radial-gradient(ellipse at top, #1a1a1a 0%, #0b0b0b 60%);
   color:#eaeaea;
 }
 
-.wrapper{
-  max-width:1280px;
-  margin:0 auto;
-}
+.wrapper{max-width:1280px;margin:0 auto;}
 
-/* ===== Header ===== */
 header{
-  background:url("img/banner-diablo.jpg") center / cover no-repeat;
+  background:url("img/banner-diablo.jpg") center/cover no-repeat;
   border-radius:0 0 18px 18px;
 }
-
 .header-inner{
-  padding:28px;
+  padding:26px;
   background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.9));
 }
+header h1{margin:0;font-size:28px;}
+header p{margin:6px 0 0;font-size:14px;opacity:.85}
 
-header h1{
-  margin:0;
-  font-size:28px;
-  color:#fff;
-}
+.container{padding:30px;display:grid;gap:26px}
 
-header p{
-  margin:8px 0 0;
-  font-size:14px;
-  opacity:.9;
-}
-
-/* ===== Layout ===== */
-.container{
-  padding:30px;
-  display:grid;
-  gap:26px;
-}
-
-/* ===== Panels ===== */
 .panel{
-  background:
-    linear-gradient(180deg, #161616, #0e0e0e);
+  background:linear-gradient(180deg,#161616,#0e0e0e);
   border:1px solid var(--border);
   border-radius:18px;
   padding:22px;
@@ -72,20 +48,16 @@ header p{
   font-size:20px;
 }
 
-/* ===== Form ===== */
+/* FORM */
 .form-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:16px;
 }
 
-label{
-  font-size:13px;
-  font-weight:bold;
-  opacity:.85;
-}
+label{font-size:13px;font-weight:bold;opacity:.85}
 
-input, select{
+input,select{
   width:100%;
   padding:10px 12px;
   background:#0f0f0f;
@@ -95,12 +67,7 @@ input, select{
   font-size:14px;
 }
 
-/* ===== Buttons ===== */
-.actions{
-  display:flex;
-  gap:12px;
-  margin-top:18px;
-}
+.actions{display:flex;gap:12px;margin-top:18px}
 
 button{
   padding:10px 18px;
@@ -111,37 +78,15 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-
-button.save{
-  border-color:var(--gold);
-  color:var(--gold);
-}
-button.del{
-  border-color:#ff5c5c;
-  color:#ff5c5c;
-}
+button.save{border-color:var(--gold);color:var(--gold)}
+button.del{border-color:#ff5c5c;color:#ff5c5c}
 button:hover{opacity:.85}
 
-/* ===== Table ===== */
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px;border-bottom:1px solid #222;text-align:left}
+th{color:var(--gold)}
 
-th,td{
-  padding:10px;
-  border-bottom:1px solid #222;
-  text-align:left;
-}
-
-th{
-  color:var(--gold);
-}
-
-td small{opacity:.7}
-
-/* ===== Code Output ===== */
 textarea{
   width:100%;
   height:300px;
@@ -154,173 +99,197 @@ textarea{
   font-size:13px;
 }
 
-/* ===== Footer ===== */
+/* LOGIN */
+#loginBox{
+  max-width:420px;
+  margin:120px auto;
+  padding:30px;
+  background:#111;
+  border:1px solid #333;
+  border-radius:18px;
+}
+#loginBox h2{margin-top:0;color:var(--gold)}
+
 footer{
   margin:40px 0 20px;
-  padding-top:20px;
-  border-top:1px solid #222;
-  font-size:13px;
   text-align:center;
-  opacity:.7;
+  font-size:13px;
+  opacity:.6;
 }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h2>🔒 Admin Login</h2>
+  <input id="pw" type="password" placeholder="Passwort">
+  <div class="actions">
+    <button class="save" onclick="login()">Login</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="wrapper" id="admin" style="display:none">
 
 <header>
   <div class="header-inner">
     <h1>🛠 Lootliste – Admin Panel</h1>
-    <p>Items verwalten · Kategorien & Typen pflegen · Export für Index</p>
+    <p>Items verwalten · Export für Index</p>
   </div>
 </header>
 
 <div class="container">
 
-<!-- ADD / EDIT -->
 <div class="panel">
-  <h2>➕ Item hinzufügen / bearbeiten</h2>
+<h2>➕ Item hinzufügen</h2>
 
-  <div class="form-grid">
-    <div>
-      <label>Name</label>
-      <input id="name">
-    </div>
-
-    <div>
-      <label>Kategorie (Unique, Set, …)</label>
-      <input id="category">
-    </div>
-
-    <div>
-      <label>Typ (Helm, Waffe, …)</label>
-      <input id="type">
-    </div>
-
-    <div>
-      <label>Bewertung</label>
-      <select id="stars">
-        <option>★★★★★</option>
-        <option>★★★★☆</option>
-        <option>★★★☆☆</option>
-        <option>★★☆☆☆</option>
-        <option>★☆☆☆☆</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Roll / Werte</label>
-      <input id="roll">
-    </div>
-
-    <div>
-      <label>Status</label>
-      <select id="status">
-        <option>Verfügbar</option>
-        <option>Reserviert</option>
-        <option>Vergeben</option>
-      </select>
-    </div>
+<div class="form-grid">
+  <div>
+    <label>Name</label>
+    <input id="name">
   </div>
 
-  <div class="actions">
-    <button class="save" onclick="saveItem()">Speichern</button>
+  <div>
+    <label>Kategorie</label>
+    <select id="category">
+      <option>Unique</option>
+      <option>Set</option>
+      <option>Magisch</option>
+      <option>Selten</option>
+      <option>Rune</option>
+      <option>Zauber</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Typ</label>
+    <select id="type">
+      <option>Helm</option>
+      <option>Amulett</option>
+      <option>Waffe</option>
+      <option>Rüstung</option>
+      <option>Schild</option>
+      <option>Gürtel</option>
+      <option>Ring</option>
+      <option>Handschuhe</option>
+      <option>Schuhe</option>
+      <option>Kleiner Zauber</option>
+      <option>Großer Zauber</option>
+      <option>Riesenzauber</option>
+      <option>Sonstiges</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Bewertung</label>
+    <select id="stars">
+      <option>★★★★★</option>
+      <option>★★★★☆</option>
+      <option>★★★☆☆</option>
+      <option>★★☆☆☆</option>
+      <option>★☆☆☆☆</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Roll / Werte</label>
+    <input id="roll">
+  </div>
+
+  <div>
+    <label>Status</label>
+    <select id="status">
+      <option>Verfügbar</option>
+      <option>Reserviert</option>
+      <option>Vergeben</option>
+    </select>
   </div>
 </div>
 
-<!-- TABLE -->
+<div class="actions">
+  <button class="save" onclick="saveItem()">Speichern</button>
+</div>
+</div>
+
 <div class="panel">
-  <h2>📋 Aktuelle Items</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Kategorie</th>
-        <th>Typ</th>
-        <th>Rating</th>
-        <th>Status</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody id="itemTable"></tbody>
-  </table>
+<h2>📋 Aktuelle Items</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th><th>Kategorie</th><th>Typ</th><th>Rating</th><th>Status</th><th></th>
+</tr>
+</thead>
+<tbody id="itemTable"></tbody>
+</table>
 </div>
 
-<!-- EXPORT -->
 <div class="panel">
-  <h2>📄 items.js Export</h2>
-  <textarea id="output" readonly></textarea>
+<h2>📄 items.js Export</h2>
+<textarea id="output" readonly></textarea>
 </div>
 
 </div>
 
-<footer>
-  Lootliste 2.0 · Admin Panel
-</footer>
+<footer>Lootliste · Admin Panel</footer>
+</div>
 
 <script type="module">
 import itemsData from "./items.js";
 
-const nameInput = document.getElementById("name");
-const categoryInput = document.getElementById("category");
-const typeInput = document.getElementById("type");
-const starsSelect = document.getElementById("stars");
-const rollInput = document.getElementById("roll");
-const statusSelect = document.getElementById("status");
+const admin=document.getElementById("admin");
+const loginBox=document.getElementById("loginBox");
 
-const itemTable = document.getElementById("itemTable");
-const output = document.getElementById("output");
+window.login=()=>{
+  if(document.getElementById("pw").value==="lootliste"){
+    loginBox.style.display="none";
+    admin.style.display="block";
+  }else alert("Falsches Passwort");
+};
 
-let items = JSON.parse(JSON.stringify(itemsData));
+let items=JSON.parse(JSON.stringify(itemsData));
+const table=document.getElementById("itemTable");
+const output=document.getElementById("output");
 
 function render(){
-  itemTable.innerHTML="";
+  table.innerHTML="";
   items.forEach((it,i)=>{
-    itemTable.innerHTML+=`
-      <tr>
-        <td>${it.name}</td>
-        <td>${it.category}</td>
-        <td>${it.type}</td>
-        <td>${it.stars}</td>
-        <td>${it.status}</td>
-        <td>
-          <button class="del" onclick="del(${i})">🗑</button>
-        </td>
-      </tr>`;
+    table.innerHTML+=`
+    <tr>
+      <td>${it.name}</td>
+      <td>${it.category}</td>
+      <td>${it.type}</td>
+      <td>${it.stars}</td>
+      <td>${it.status}</td>
+      <td><button class="del" onclick="del(${i})">🗑</button></td>
+    </tr>`;
   });
-
-  output.value =
-`const items = ${JSON.stringify(items, null, 2)};
-
-export default items;`;
+  output.value=`const items = ${JSON.stringify(items,null,2)};\n\nexport default items;`;
 }
 
-function saveItem(){
+window.saveItem=()=>{
   items.push({
-    name:nameInput.value,
-    category:categoryInput.value,
-    type:typeInput.value,
-    stars:starsSelect.value,
-    roll:rollInput.value||"—",
+    name:name.value,
+    category:category.value,
+    type:type.value,
+    stars:stars.value,
+    roll:roll.value||"—",
     contact:"me_solli",
-    status:statusSelect.value
+    status:status.value
   });
   render();
-}
-window.saveItem=saveItem;
+};
 
-function del(i){
+window.del=(i)=>{
   if(confirm("Item löschen?")){
     items.splice(i,1);
     render();
   }
-}
-window.del=del;
+};
 
 render();
 </script>
 
-</div>
 </body>
 </html>
