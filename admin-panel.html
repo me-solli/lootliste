@@ -8,7 +8,6 @@
 <style>
 :root{
   --gold:#f5c451;
-  --bg:#0b0b0b;
   --panel:#111;
   --border:#2a2a2a;
   --ok:#4cff4c;
@@ -18,83 +17,92 @@
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
+  background:#0b0b0b;
   color:#eaeaea;
 }
 
 .wrapper{max-width:1400px;margin:0 auto}
 
 header{
-  background:url("img/banner-diablo.jpg") center/cover no-repeat;
+  background:#000;
+  padding:24px;
 }
-.header-inner{
-  padding:28px;
-  background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.9));
-}
-header h1{margin:0;font-size:28px}
-header p{margin:6px 0 0;font-size:14px;opacity:.9}
+header h1{margin:0}
+header p{opacity:.8;margin:6px 0 0}
 
-/* FEEDBACK */
 .feedback{
-  margin:20px 30px 0;
+  margin:20px;
   padding:14px 18px;
-  border-radius:14px;
+  border-radius:12px;
   font-weight:bold;
   display:none;
 }
-.feedback.ok{border:1px solid var(--ok);color:var(--ok);background:rgba(76,255,76,.12)}
-.feedback.err{border:1px solid var(--err);color:var(--err);background:rgba(255,92,92,.12)}
+.feedback.ok{color:var(--ok);border:1px solid var(--ok)}
+.feedback.err{color:var(--err);border:1px solid var(--err)}
 
-.container{padding:30px;display:grid;gap:26px}
+.container{padding:20px;display:grid;gap:24px}
 .panel{
-  background:linear-gradient(180deg,#161616,#0e0e0e);
+  background:var(--panel);
   border:1px solid var(--border);
-  border-radius:18px;
-  padding:22px;
+  border-radius:16px;
+  padding:20px;
 }
-.panel h2{margin:0 0 16px;color:var(--gold)}
+.panel h2{margin:0 0 14px;color:var(--gold)}
 
 .form-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
 }
-label{font-size:13px;font-weight:bold;opacity:.85}
+
+label{font-size:13px;opacity:.85}
 input,select{
   width:100%;
-  padding:10px 12px;
+  padding:10px;
   background:#0f0f0f;
   border:1px solid #333;
-  border-radius:10px;
+  border-radius:8px;
   color:#fff;
 }
 
-.actions{margin-top:18px}
-button{
-  padding:10px 18px;
+.preview{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  margin-top:12px;
+  background:#0f0f0f;
+  padding:12px;
   border-radius:12px;
+}
+.preview img{width:64px;height:64px;object-fit:contain}
+
+button{
+  padding:8px 14px;
+  border-radius:8px;
   border:1px solid var(--border);
   background:#151515;
   color:#fff;
-  font-weight:bold;
   cursor:pointer;
+  font-weight:bold;
 }
-.save{border-color:var(--gold);color:var(--gold)}
+.save{color:var(--gold);border-color:var(--gold)}
+.edit{color:#5cc8ff;border-color:#5cc8ff}
+.del{color:var(--err);border-color:var(--err)}
 button:hover{opacity:.85}
 
-table{width:100%;border-collapse:collapse}
-th,td{padding:10px;border-bottom:1px solid #222}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:8px;border-bottom:1px solid #222}
 th{color:var(--gold)}
-td img{width:42px}
+td img{width:36px}
 
 textarea{
   width:100%;
-  height:240px;
+  height:220px;
   background:#0f0f0f;
   border:1px solid #333;
-  border-radius:12px;
+  border-radius:10px;
   color:#9cff9c;
-  padding:14px;
+  padding:12px;
   font-family:monospace;
 }
 </style>
@@ -103,10 +111,8 @@ textarea{
 <body>
 <div class="wrapper">
 <header>
-  <div class="header-inner">
-    <h1>🛠 Lootliste – Admin Panel</h1>
-    <p>Items verwalten · Vorschau · Export</p>
-  </div>
+  <h1>🛠 Lootliste – Admin Panel</h1>
+  <p>Items anlegen · bearbeiten · löschen · exportieren</p>
 </header>
 
 <div id="feedback" class="feedback"></div>
@@ -114,7 +120,7 @@ textarea{
 <div class="container">
 
 <div class="panel">
-<h2>➕ Item</h2>
+<h2>➕ / ✏️ Item</h2>
 
 <div class="form-grid">
   <div><label>Name</label><input id="name"></div>
@@ -138,6 +144,7 @@ textarea{
       <option value="helm">Helm</option>
       <option value="ruestung">Rüstung</option>
       <option value="schild">Schild</option>
+      <option value="guertel">Gürtel</option>
       <option value="ring">Ring</option>
       <option value="amulett">Amulett</option>
       <option value="rune">Rune</option>
@@ -153,11 +160,27 @@ textarea{
       <option value="vergeben">Vergeben</option>
     </select>
   </div>
+
+  <div>
+    <label>Bild</label>
+    <input id="img" placeholder="img/items/bartucs.webp">
+  </div>
 </div>
 
-<div class="actions">
-  <button type="button" class="save" id="saveBtn">Speichern</button>
+<div class="preview" id="preview"></div>
+
+<br>
+<button type="button" class="save" onclick="saveItem()">Speichern</button>
 </div>
+
+<div class="panel">
+<h2>📋 Items</h2>
+<table>
+<thead>
+<tr><th></th><th>Name</th><th>Kategorie</th><th>Typ</th><th>Status</th><th></th></tr>
+</thead>
+<tbody id="itemTable"></tbody>
+</table>
 </div>
 
 <div class="panel">
@@ -171,11 +194,13 @@ textarea{
 const $=id=>document.getElementById(id);
 const fb=$("feedback");
 const fallback="img/items/placeholder.webp";
-let items=[];
 
-function feedback(text,error=false){
-  fb.textContent=text;
-  fb.className="feedback "+(error?"err":"ok");
+let items=[];
+let editIndex=null;
+
+function feedback(msg,err=false){
+  fb.textContent=msg;
+  fb.className="feedback "+(err?"err":"ok");
   fb.style.display="block";
   setTimeout(()=>fb.style.display="none",3000);
 }
@@ -184,35 +209,80 @@ async function loadItems(){
   try{
     const mod = await import("./items.js");
     items=[...mod.default];
-    render();
-  }catch(e){
+  }catch{
     items=[];
-    feedback("⚠ items.js konnte nicht geladen werden – starte leer",true);
-    render();
+    feedback("items.js nicht geladen – leer gestartet",true);
   }
+  render();
 }
 
 function render(){
+  $("itemTable").innerHTML="";
+  items.forEach((i,idx)=>{
+    $("itemTable").innerHTML+=`
+      <tr>
+        <td><img src="${i.img||fallback}"></td>
+        <td>${i.name}</td>
+        <td>${i.category}</td>
+        <td>${i.type}</td>
+        <td>${i.status}</td>
+        <td>
+          <button class="edit" onclick="editItem(${idx})">✏️</button>
+          <button class="del" onclick="delItem(${idx})">🗑</button>
+        </td>
+      </tr>`;
+  });
+
   $("output").value=
 `const items = ${JSON.stringify(items,null,2)};
 export default items;`;
 }
 
-$("saveBtn").addEventListener("click",()=>{
+function updatePreview(){
+  $("preview").innerHTML=`
+    <img src="${$("img").value||fallback}">
+    <div>
+      <strong>${$("name").value||"Itemname"}</strong><br>
+      ${$("category").value} · ${$("type").value}<br>
+      ${$("status").value}
+    </div>`;
+}
+
+["name","category","type","status","img"].forEach(id=>{
+  $(id).addEventListener("input",updatePreview);
+});
+
+function saveItem(){
   if(!$("name").value){
-    feedback("Name fehlt",true);
-    return;
+    feedback("Name fehlt",true); return;
   }
-  items.push({
+  const obj={
     name:$("name").value,
     category:$("category").value,
     type:$("type").value,
     status:$("status").value,
-    img:fallback
-  });
+    img:$("img").value||fallback
+  };
+  editIndex!==null ? items[editIndex]=obj : items.push(obj);
+  editIndex=null;
   render();
   feedback("Item gespeichert");
-});
+}
+
+function editItem(i){
+  const it=items[i];
+  Object.keys(it).forEach(k=>$(k)&&($(k).value=it[k]));
+  editIndex=i;
+  updatePreview();
+}
+
+function delItem(i){
+  if(confirm("Item wirklich löschen?")){
+    items.splice(i,1);
+    render();
+    feedback("Item gelöscht");
+  }
+}
 
 loadItems();
 </script>
