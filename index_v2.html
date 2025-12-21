@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Lootliste – Community Items | D2R Non-Ladder (v2 Demo)</title>
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -12,6 +12,9 @@
   --panel:#121212;
   --border:#2a2a2a;
   --soft:#1a1a1a;
+  --green:#4cff4c;
+  --yellow:#ffd24c;
+  --red:#ff5c5c;
 }
 
 *{box-sizing:border-box}
@@ -20,57 +23,56 @@ body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:
-    radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 65%);
+    radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
   color:#eaeaea;
 }
 
-.wrapper{
-  max-width:1400px;
-  margin:0 auto;
-}
+.wrapper{max-width:1500px;margin:0 auto}
 
-/* ===== BANNER ===== */
-.banner{
+/* ===== HERO ===== */
+.hero{
   background:url("img/banner-diablo.jpg") center/cover no-repeat;
-  border-radius:0 0 22px 22px;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
 }
 
-.banner-inner{
-  padding:34px 30px;
-  background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.9));
-  display:flex;
-  justify-content:space-between;
-  gap:24px;
-  flex-wrap:wrap;
+.hero-inner{
+  padding:44px 36px;
+  background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.92));
 }
 
-.banner h1{
+.hero h1{
   margin:0;
-  font-size:34px;
-  letter-spacing:.5px;
+  font-size:42px;
+  letter-spacing:1px;
 }
 
-.banner p{
-  margin:10px 0 0;
+.hero h1 span{color:var(--gold)}
+
+.hero p{
+  margin:10px 0 18px;
   opacity:.9;
-  font-size:15px;
 }
 
-.demo-badge{
-  display:inline-block;
-  margin-top:10px;
-  font-size:12px;
-  padding:4px 10px;
-  border:1px solid var(--gold);
-  color:var(--gold);
+.hero-stats{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  font-size:14px;
+}
+
+.hero-stats div{
+  padding:8px 14px;
+  background:rgba(0,0,0,.4);
+  border:1px solid var(--border);
   border-radius:999px;
 }
 
-.banner-right{
+.hero-right{
+  margin-top:18px;
   display:flex;
-  flex-direction:column;
-  gap:10px;
-  align-items:flex-end;
+  gap:14px;
+  flex-wrap:wrap;
 }
 
 .twitch{
@@ -89,27 +91,26 @@ body{
 .icon-bar{
   display:flex;
   gap:14px;
-  padding:18px 22px;
+  padding:20px 24px;
   overflow-x:auto;
-  background:linear-gradient(180deg,#121212,#0e0e0e);
+  background:linear-gradient(180deg,#141414,#0d0d0d);
   border-bottom:1px solid #222;
 }
 
 .icon-btn{
-  min-width:90px;
+  min-width:96px;
   text-align:center;
   cursor:pointer;
-  padding:10px 6px;
-  border-radius:14px;
+  padding:12px 6px;
+  border-radius:16px;
   border:1px solid transparent;
-  transition:.2s;
+  transition:.25s;
 }
 
 .icon-btn img{
-  width:40px;
-  height:40px;
-  object-fit:contain;
-  filter:drop-shadow(0 0 6px rgba(245,196,81,.25));
+  width:42px;
+  height:42px;
+  filter:drop-shadow(0 0 8px rgba(245,196,81,.35));
 }
 
 .icon-btn span{
@@ -121,28 +122,38 @@ body{
 
 .icon-btn:hover{
   border-color:var(--gold);
+  box-shadow:0 0 18px rgba(245,196,81,.25);
 }
 
 .icon-btn.active{
   border-color:var(--gold);
   background:rgba(245,196,81,.08);
+  box-shadow:0 0 22px rgba(245,196,81,.45);
 }
 
 /* ===== CONTENT ===== */
-.container{
-  padding:26px;
+.container{padding:30px}
+
+/* ===== META BAR ===== */
+.meta-bar{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+  font-size:13px;
+  opacity:.9;
 }
 
-/* ===== FILTER PANEL ===== */
+/* ===== FILTER ===== */
 .filter-panel{
-  background:linear-gradient(180deg,#161616,#0f0f0f);
+  background:linear-gradient(180deg,#171717,#0f0f0f);
   border:1px solid var(--border);
   border-radius:18px;
   padding:18px;
   display:flex;
   flex-wrap:wrap;
   gap:12px;
-  margin-bottom:14px;
+  margin-bottom:18px;
 }
 
 .filter-panel input,
@@ -154,18 +165,11 @@ body{
   border-radius:10px;
 }
 
-/* ===== INFO BAR ===== */
-.info-bar{
-  margin-bottom:18px;
-  font-size:13px;
-  opacity:.9;
-}
-
 /* ===== CARDS ===== */
 .cards{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:20px;
+  gap:22px;
 }
 
 @media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
@@ -173,78 +177,91 @@ body{
 
 .card{
   display:flex;
-  background:linear-gradient(180deg,#181818,#0f0f0f);
+  background:linear-gradient(180deg,#191919,#0f0f0f);
   border:1px solid var(--border);
-  border-radius:18px;
+  border-radius:20px;
   overflow:hidden;
+  transition:.25s;
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:var(--gold);
+  box-shadow:0 10px 28px rgba(0,0,0,.6);
 }
 
 .card img{
-  width:110px;
-  background:radial-gradient(circle at top,#1e1e1e,#0b0b0b);
+  width:120px;
+  background:radial-gradient(circle at top,#1f1f1f,#0b0b0b);
   object-fit:contain;
-  padding:16px;
+  padding:18px;
 }
 
 .card-body{
-  padding:14px;
+  padding:16px;
   display:flex;
   flex-direction:column;
   gap:6px;
   flex:1;
 }
 
-.item-name{font-weight:bold;font-size:15px}
+.item-name{font-weight:bold;font-size:16px}
 .category{font-size:12px;opacity:.7}
 .stars{color:var(--gold)}
 .roll{font-size:13px;color:#cfcfcf}
 
-.status{
+.status-badge{
+  position:absolute;
+  top:12px;
+  right:12px;
+  font-size:12px;
+  padding:4px 10px;
+  border-radius:999px;
   font-weight:bold;
-  font-size:13px;
 }
-.status.verfuegbar{color:#4cff4c}
-.status.reserviert{color:#ffd24c}
-.status.vergeben{color:#ff5c5c}
+
+.verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
+.reserviert{background:rgba(255,210,76,.15);color:var(--yellow)}
+.vergeben{background:rgba(255,92,92,.15);color:var(--red)}
 
 .player{font-size:13px;opacity:.85}
 .player a{color:var(--gold);text-decoration:none}
 
 .cta{
-  margin-top:6px;
-  padding:8px;
+  margin-top:8px;
+  padding:9px;
   text-align:center;
   font-size:13px;
   background:#151515;
   border:1px solid var(--border);
-  border-radius:10px;
+  border-radius:12px;
   color:#fff;
   text-decoration:none;
 }
 .cta:hover{border-color:var(--gold);color:var(--gold)}
 
 footer{
-  margin-top:40px;
-  padding:20px;
+  margin-top:50px;
+  padding:22px;
   border-top:1px solid #222;
   font-size:13px;
 }
-footer a{color:var(--gold);margin-right:16px;text-decoration:none}
+footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-<!-- ===== BANNER ===== -->
-<header class="banner">
-  <div class="banner-inner">
-    <div>
-      <h1>Lootliste</h1>
-      <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
-      <span class="demo-badge">Design-Demo (v2)</span>
-    </div>
-    <div class="banner-right">
+<header class="hero">
+  <div class="hero-inner">
+    <h1>🎁 <span>FREE LOOTLISTE</span></h1>
+    <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
+
+    <div class="hero-stats" id="heroStats"></div>
+
+    <div class="hero-right">
       <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
         ▶ Twitch: me_solli
       </a>
@@ -253,12 +270,12 @@ footer a{color:var(--gold);margin-right:16px;text-decoration:none}
   </div>
 </header>
 
-<!-- ===== ICON BAR ===== -->
 <div class="icon-bar" id="iconBar"></div>
 
 <div class="container">
 
-<!-- ===== FILTER ===== -->
+<div class="meta-bar" id="metaBar"></div>
+
 <div class="filter-panel">
   <input id="search" placeholder="Item suchen…">
 
@@ -275,7 +292,6 @@ footer a{color:var(--gold);margin-right:16px;text-decoration:none}
   </select>
 </div>
 
-<div class="info-bar" id="infoBar"></div>
 <div class="cards" id="cards"></div>
 </div>
 
@@ -289,28 +305,27 @@ footer a{color:var(--gold);margin-right:16px;text-decoration:none}
 <script type="module">
 import items from "./items.js";
 
-/* ===== ICON MAP ===== */
-const ICONS = {
+const ICONS={
   "Waffe":"waffe","Helm":"helm","Rüstung":"ruestung","Schild":"schild",
   "Gürtel":"guertel","Handschuhe":"handschuhe","Amulett":"amulett",
   "Ring":"ring","Charm":"charm","Rune":"rune","Sonstiges":"sonstiges"
 };
 
-function getIcon(type){
-  return `img/icons/${ICONS[type]||"default"}.png`;
-}
-
-/* ===== ICON BAR BUILD ===== */
 const iconBar=document.getElementById("iconBar");
+const cards=document.getElementById("cards");
+const search=document.getElementById("search");
+const statusFilter=document.getElementById("statusFilter");
+const sortRating=document.getElementById("sortRating");
+const metaBar=document.getElementById("metaBar");
+const heroStats=document.getElementById("heroStats");
+const visitorCounter=document.getElementById("visitorCounter");
+
 let activeType="";
 
 Object.keys(ICONS).forEach(type=>{
   const btn=document.createElement("div");
   btn.className="icon-btn";
-  btn.innerHTML=`
-    <img src="img/icons/${ICONS[type]}.png">
-    <span>${type}</span>
-  `;
+  btn.innerHTML=`<img src="img/icons/${ICONS[type]}.png"><span>${type}</span>`;
   btn.onclick=()=>{
     document.querySelectorAll(".icon-btn").forEach(b=>b.classList.remove("active"));
     if(activeType===type){activeType="";}
@@ -320,14 +335,6 @@ Object.keys(ICONS).forEach(type=>{
   iconBar.appendChild(btn);
 });
 
-/* ===== CORE ===== */
-const cards=document.getElementById("cards");
-const search=document.getElementById("search");
-const statusFilter=document.getElementById("statusFilter");
-const sortRating=document.getElementById("sortRating");
-const infoBar=document.getElementById("infoBar");
-const visitorCounter=document.getElementById("visitorCounter");
-
 function ratingValue(s){return (s?.match(/★/g)||[]).length}
 
 function render(){
@@ -335,7 +342,7 @@ function render(){
 
   let filtered=items.filter(i=>{
     const q=search.value.toLowerCase();
-    return (
+    return(
       (!activeType||i.type===activeType) &&
       (!statusFilter.value||i.status===statusFilter.value) &&
       (i.name.toLowerCase().includes(q)||i.category.toLowerCase().includes(q))
@@ -347,19 +354,31 @@ function render(){
     return sortRating.value==="desc"?d:-d;
   });
 
-  infoBar.innerHTML=`📦 ${filtered.length} Items · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
+  const total=items.length;
+  const frei=items.filter(i=>i.status==="Verfügbar").length;
+  const res=items.filter(i=>i.status==="Reserviert").length;
+  const weg=items.filter(i=>i.status==="Vergeben").length;
+
+  heroStats.innerHTML=`
+    <div>📦 ${total} Items</div>
+    <div style="color:var(--green)">🟢 ${frei} verfügbar</div>
+    <div style="color:var(--yellow)">🟡 ${res} reserviert</div>
+    <div style="color:var(--red)">🔴 ${weg} vergeben</div>
+  `;
+
+  metaBar.innerHTML=`📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
   filtered.forEach(item=>{
     const s=item.status==="Reserviert"?"reserviert":item.status==="Vergeben"?"vergeben":"verfuegbar";
     cards.innerHTML+=`
       <div class="card">
-        <img src="${getIcon(item.type)}">
+        <span class="status-badge ${s}">${item.status}</span>
+        <img src="img/icons/${ICONS[item.type]||"default"}.png">
         <div class="card-body">
           <div class="item-name">${item.name}</div>
           <div class="category">${item.category} · ${item.type}</div>
           <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
           <div class="roll">${item.roll||"—"}</div>
-          <div class="status ${s}">${item.status}</div>
           <div class="player">
             Spieler:
             <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
@@ -372,7 +391,7 @@ function render(){
   });
 }
 
-/* ===== VISITOR COUNTER ===== */
+/* Visitor Counter */
 const K="lootliste_visitors",D="lootliste_last_visit";
 const t=new Date().toDateString();
 if(localStorage.getItem(D)!==t){
