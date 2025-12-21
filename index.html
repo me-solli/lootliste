@@ -20,10 +20,7 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{
-  max-width:1280px;
-  margin:0 auto;
-}
+.wrapper{max-width:1280px;margin:0 auto}
 
 /* ===== Banner ===== */
 .banner{
@@ -40,22 +37,13 @@ header{
   flex-wrap:wrap;
 }
 
-header h1{
-  margin:0;
-  font-size:30px;
-}
-
-header p{
-  margin:8px 0 0;
-  font-size:14px;
-  opacity:.9;
-}
+header h1{margin:0;font-size:30px}
+header p{margin:8px 0 0;font-size:14px;opacity:.9}
 
 .header-right{
   display:flex;
   flex-direction:column;
   gap:8px;
-  align-items:flex-start;
 }
 
 .header-links a{
@@ -75,10 +63,7 @@ header p{
 }
 .twitch:hover{opacity:.85}
 
-#visitorCounter{
-  font-size:13px;
-  opacity:.85;
-}
+#visitorCounter{font-size:13px;opacity:.85}
 
 /* ===== Content ===== */
 .container{padding:26px}
@@ -107,12 +92,8 @@ header p{
   gap:18px;
 }
 
-@media(max-width:1000px){
-  .cards{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:600px){
-  .cards{grid-template-columns:1fr}
-}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cards{grid-template-columns:1fr}}
 
 .card{
   background:linear-gradient(180deg,#161616,#0e0e0e);
@@ -148,14 +129,8 @@ header p{
 .status.reserviert{color:#ffd24c}
 .status.vergeben{color:#ff5c5c}
 
-.player{
-  font-size:13px;
-  opacity:.85;
-}
-.player a{
-  color:var(--gold);
-  text-decoration:none;
-}
+.player{font-size:13px;opacity:.85}
+.player a{color:var(--gold);text-decoration:none}
 .player a:hover{text-decoration:underline}
 
 .cta{
@@ -169,23 +144,15 @@ header p{
   color:#fff;
   text-decoration:none;
 }
-.cta:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
+.cta:hover{border-color:var(--gold);color:var(--gold)}
 
-/* ===== Footer ===== */
 footer{
   margin-top:40px;
   padding:20px;
   border-top:1px solid #222;
   font-size:13px;
 }
-footer a{
-  color:var(--gold);
-  margin-right:16px;
-  text-decoration:none;
-}
+footer a{color:var(--gold);margin-right:16px;text-decoration:none}
 footer a:hover{text-decoration:underline}
 </style>
 </head>
@@ -246,7 +213,6 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <div class="cards" id="cards"></div>
-
 </div>
 
 <footer>
@@ -259,7 +225,7 @@ footer a:hover{text-decoration:underline}
 <script type="module">
 import items from "./items.js";
 
-/* ===== ICON MAPPING ===== */
+/* ===== ICON MAPPING (FIX) ===== */
 function getIcon(type){
   const map = {
     "Waffe": "img/icons/waffe.png",
@@ -267,14 +233,14 @@ function getIcon(type){
     "Rüstung": "img/icons/ruestung.png",
     "Schild": "img/icons/schild.png",
     "Gürtel": "img/icons/guertel.png",
-    "Handschuhe": "img/icons/handschuhe_v2.png",
+    "Handschuhe": "img/icons/handschuhe.png",
     "Amulett": "img/icons/amulett.png",
     "Ring": "img/icons/ring.png",
     "Charm": "img/icons/charm.png",
     "Rune": "img/icons/rune.png",
     "Sonstiges": "img/icons/sonstiges.png"
   };
-  return map[type] || "img/icons/default.png";
+  return map[type?.trim()] || "img/icons/default.png";
 }
 
 const cards = document.getElementById("cards");
@@ -284,11 +250,11 @@ const typeFilter = document.getElementById("typeFilter");
 const sortRating = document.getElementById("sortRating");
 
 function ratingValue(stars){
-  return (stars?.match(/★/g)||[]).length;
+  return (stars?.match(/★/g) || []).length;
 }
 
 function render(){
-  cards.innerHTML="";
+  cards.innerHTML = "";
 
   let filtered = items.filter(i=>{
     const q = search.value.toLowerCase();
