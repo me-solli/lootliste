@@ -20,7 +20,10 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1280px;margin:0 auto}
+.wrapper{
+  max-width:1280px;
+  margin:0 auto;
+}
 
 /* ===== Banner ===== */
 .banner{
@@ -73,7 +76,7 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   display:flex;
   flex-wrap:wrap;
   gap:12px;
-  margin-bottom:22px;
+  margin-bottom:10px;
 }
 
 .controls input,
@@ -83,6 +86,13 @@ header p{margin:8px 0 0;font-size:14px;opacity:.9}
   border:1px solid #333;
   color:#fff;
   border-radius:10px;
+}
+
+/* ===== Info Bar ===== */
+.info-bar{
+  font-size:13px;
+  opacity:.9;
+  margin-bottom:18px;
 }
 
 /* ===== Cards ===== */
@@ -170,11 +180,9 @@ footer a:hover{text-decoration:underline}
     <div class="header-links">
       <a href="stream.html">Über den Stream</a>
     </div>
-
     <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
       ▶ Twitch: me_solli
     </a>
-
     <div id="visitorCounter">👁 Besucher gesamt: …</div>
   </div>
 </header>
@@ -212,6 +220,8 @@ footer a:hover{text-decoration:underline}
   </select>
 </div>
 
+<div class="info-bar" id="infoBar"></div>
+
 <div class="cards" id="cards"></div>
 </div>
 
@@ -225,7 +235,7 @@ footer a:hover{text-decoration:underline}
 <script type="module">
 import items from "./items.js";
 
-/* ===== ICON MAPPING (FIX) ===== */
+/* ===== ICON MAPPING ===== */
 function getIcon(type){
   const map = {
     "Waffe": "img/icons/waffe.png",
@@ -233,7 +243,7 @@ function getIcon(type){
     "Rüstung": "img/icons/ruestung.png",
     "Schild": "img/icons/schild.png",
     "Gürtel": "img/icons/guertel.png",
-    "Handschuhe": "img/icons/handschuhe.png",
+    "Handschuhe": "img/icons/handschuhe_v2.png",
     "Amulett": "img/icons/amulett.png",
     "Ring": "img/icons/ring.png",
     "Charm": "img/icons/charm.png",
@@ -248,13 +258,19 @@ const search = document.getElementById("search");
 const statusFilter = document.getElementById("statusFilter");
 const typeFilter = document.getElementById("typeFilter");
 const sortRating = document.getElementById("sortRating");
+const infoBar = document.getElementById("infoBar");
+const visitorCounter = document.getElementById("visitorCounter");
 
 function ratingValue(stars){
-  return (stars?.match(/★/g) || []).length;
+  return (stars?.match(/★/g)||[]).length;
+}
+
+function formatDate(){
+  return new Date().toLocaleDateString("de-DE");
 }
 
 function render(){
-  cards.innerHTML = "";
+  cards.innerHTML="";
 
   let filtered = items.filter(i=>{
     const q = search.value.toLowerCase();
@@ -273,6 +289,20 @@ function render(){
     return sortRating.value === "desc" ? diff : -diff;
   });
 
+  const total = filtered.length;
+  const verf = filtered.filter(i=>i.status==="Verfügbar").length;
+  const res  = filtered.filter(i=>i.status==="Reserviert").length;
+  const verg = filtered.filter(i=>i.status==="Vergeben").length;
+
+  infoBar.innerHTML = `
+    📦 Items: <b>${total}</b> gesamt ·
+    🟢 <b>${verf}</b> verfügbar ·
+    🟡 <b>${res}</b> reserviert ·
+    🔴 <b>${verg}</b> vergeben
+    <br>
+    🕒 Zuletzt aktualisiert: <b>${formatDate()}</b>
+  `;
+
   filtered.forEach(item=>{
     let statusClass="verfuegbar";
     if(item.status==="Reserviert")statusClass="reserviert";
@@ -281,7 +311,9 @@ function render(){
     const card=document.createElement("div");
     card.className="card";
     card.innerHTML=`
-      <img src="${getIcon(item.type)}" alt="${item.type}">
+      <img src="${getIcon(item.type)}"
+           alt="${item.type}"
+           onerror="this.src='img/icons/default.png'">
       <div class="card-body">
         <div class="item-name">${item.name}</div>
         <div class="category">${item.category} · ${item.type}</div>
@@ -303,24 +335,30 @@ function render(){
   });
 }
 
+/* ===== EVENTS ===== */
 search.addEventListener("input",render);
 statusFilter.addEventListener("change",render);
 typeFilter.addEventListener("change",render);
 sortRating.addEventListener("change",render);
 
+/* ===== VISITOR COUNTER (STABIL) ===== */
+const VISITOR_KEY = "lootliste_visitors";
+const VISITOR_DAY = "lootliste_last_visit";
+
+const today = new Date().toDateString();
+const lastVisit = localStorage.getItem(VISITOR_DAY);
+let visitors = Number(localStorage.getItem(VISITOR_KEY) || 0);
+
+if(lastVisit !== today){
+  visitors++;
+  localStorage.setItem(VISITOR_KEY, visitors);
+  localStorage.setItem(VISITOR_DAY, today);
+}
+
+visitorCounter.innerHTML = `👁 Besucher gesamt: <b>${visitors}</b>`;
+
+/* ===== INIT ===== */
 render();
-
-/* ===== Visitor Counter ===== */
-const counterEl = document.getElementById("visitorCounter");
-
-fetch("https://api.countapi.xyz/hit/me-solli.github.io/lootliste")
-  .then(res => res.json())
-  .then(data => {
-    counterEl.innerHTML = `👁 Besucher gesamt: <b>${data.value}</b>`;
-  })
-  .catch(() => {
-    counterEl.innerHTML = "👁 Besucher gesamt: —";
-  });
 </script>
 
 </body>
