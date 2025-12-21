@@ -1,1 +1,435 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+  --soft:#1a1a1a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
+  color:#eaeaea;
+}
+
+.wrapper{
+  max-width:1280px;
+  margin:0 auto;
+}
+
+/* ===== HEADER / BANNER ===== */
+.banner{
+  background:url("img/banner-diablo.jpg") center/cover no-repeat;
+  border-radius:0 0 22px 22px;
+  overflow:hidden;
+}
+
+header{
+  padding:26px 28px;
+  background:linear-gradient(
+    rgba(0,0,0,.7),
+    rgba(0,0,0,.88)
+  );
+  display:flex;
+  justify-content:space-between;
+  gap:28px;
+  flex-wrap:wrap;
+}
+
+header h1{
+  margin:0;
+  font-size:28px;
+  letter-spacing:.2px;
+}
+
+header p{
+  margin:6px 0 0;
+  font-size:14px;
+  opacity:.9;
+}
+
+.header-right{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+}
+
+.header-links a{
+  color:var(--gold);
+  font-size:14px;
+  text-decoration:none;
+}
+.header-links a:hover{text-decoration:underline}
+
+.twitch{
+  background:#9146FF;
+  color:#fff;
+  padding:11px 18px;
+  border-radius:14px;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-block;
+}
+.twitch:hover{opacity:.85}
+
+#visitorCounter{
+  font-size:13px;
+  opacity:.85;
+}
+
+/* ===== MAIN ===== */
+.container{
+  padding:26px;
+}
+
+/* ===== CONTROLS ===== */
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.controls input,
+.controls select{
+  padding:10px 12px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:#fff;
+  border-radius:10px;
+  font-size:14px;
+}
+
+/* ===== INFO BAR ===== */
+.info-bar{
+  font-size:13px;
+  opacity:.9;
+  margin-bottom:18px;
+}
+
+/* ===== CARDS ===== */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+@media(max-width:1000px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:620px){
+  .cards{grid-template-columns:1fr}
+}
+
+.card{
+  background:linear-gradient(180deg,#161616,#0e0e0e);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition:transform .15s ease,border-color .15s ease;
+}
+.card:hover{
+  transform:translateY(-2px);
+  border-color:#3a3a3a;
+}
+
+.card img{
+  width:100%;
+  height:150px;
+  object-fit:contain;
+  background:
+    radial-gradient(circle at top,#1e1e1e,#0b0b0b);
+  border-bottom:1px solid #222;
+}
+
+.card-body{
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.item-name{
+  font-weight:700;
+  font-size:15px;
+}
+
+.category{
+  font-size:12px;
+  opacity:.75;
+}
+
+.stars{
+  color:var(--gold);
+  font-size:14px;
+}
+
+.roll{
+  font-size:13px;
+  color:#cfcfcf;
+}
+
+.status{
+  font-weight:700;
+  font-size:13px;
+}
+
+.status.verfuegbar{color:#4cff4c}
+.status.reserviert{color:#ffd24c}
+.status.vergeben{color:#ff5c5c}
+
+.player{
+  font-size:13px;
+  opacity:.9;
+}
+
+.player a{
+  color:var(--gold);
+  text-decoration:none;
+}
+.player a:hover{text-decoration:underline}
+
+.cta{
+  margin-top:6px;
+  padding:9px;
+  text-align:center;
+  font-size:13px;
+  background:#151515;
+  border:1px solid var(--border);
+  border-radius:10px;
+  color:#fff;
+  text-decoration:none;
+}
+.cta:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+/* ===== FOOTER ===== */
+footer{
+  margin-top:42px;
+  padding:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+}
+
+footer a{
+  color:var(--gold);
+  margin-right:16px;
+  text-decoration:none;
+}
+footer a:hover{text-decoration:underline}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<header class="banner">
+  <div>
+    <h1>🎁 Free Lootliste – Community Items</h1>
+    <p>Diablo II Resurrected · Non-Ladder · 100 % Free Loot</p>
+  </div>
+
+  <div class="header-right">
+    <div class="header-links">
+      <a href="stream.html">Über den Stream</a>
+    </div>
+    <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
+      ▶ Twitch: me_solli
+    </a>
+    <div id="visitorCounter">👁 Besucher gesamt: …</div>
+  </div>
+</header>
+
+<div class="container">
+
+<div class="controls">
+  <input id="search" placeholder="Item suchen…">
+
+  <select id="typeFilter">
+    <option value="">Alle Item-Arten</option>
+    <option>Helm</option>
+    <option>Amulett</option>
+    <option>Waffe</option>
+    <option>Rüstung</option>
+    <option>Schild</option>
+    <option>Gürtel</option>
+    <option>Handschuhe</option>
+    <option>Ring</option>
+    <option>Charm</option>
+    <option>Rune</option>
+    <option>Sonstiges</option>
+  </select>
+
+  <select id="statusFilter">
+    <option value="">Alle Status</option>
+    <option>Verfügbar</option>
+    <option>Reserviert</option>
+    <option>Vergeben</option>
+  </select>
+
+  <select id="sortRating">
+    <option value="desc">Rating ↓</option>
+    <option value="asc">Rating ↑</option>
+  </select>
+</div>
+
+<div class="info-bar" id="infoBar"></div>
+<div class="cards" id="cards"></div>
+
+</div>
+
+<footer>
+  <a href="impressum.html">Impressum</a>
+  <a href="datenschutz.html">Datenschutz</a>
+</footer>
+
+</div>
+
+<script type="module">
+import items from "./items.js";
+
+/* ===== ICON MAPPING ===== */
+function getIcon(type){
+  const map = {
+    "Waffe":"img/icons/waffe.png",
+    "Helm":"img/icons/helm.png",
+    "Rüstung":"img/icons/ruestung.png",
+    "Schild":"img/icons/schild.png",
+    "Gürtel":"img/icons/guertel.png",
+    "Handschuhe":"img/icons/handschuhe.png",
+    "Amulett":"img/icons/amulett.png",
+    "Ring":"img/icons/ring.png",
+    "Charm":"img/icons/charm.png",
+    "Rune":"img/icons/rune.png",
+    "Sonstiges":"img/icons/sonstiges.png"
+  };
+  return map[type?.trim()] || "img/icons/default.png";
+}
+
+const cards = document.getElementById("cards");
+const search = document.getElementById("search");
+const statusFilter = document.getElementById("statusFilter");
+const typeFilter = document.getElementById("typeFilter");
+const sortRating = document.getElementById("sortRating");
+const infoBar = document.getElementById("infoBar");
+const visitorCounter = document.getElementById("visitorCounter");
+
+function ratingValue(stars){
+  return (stars?.match(/★/g)||[]).length;
+}
+
+function formatDate(){
+  return new Date().toLocaleDateString("de-DE");
+}
+
+function render(){
+  cards.innerHTML="";
+
+  let filtered = items.filter(i=>{
+    const q = search.value.toLowerCase();
+    return (
+      (!statusFilter.value || i.status === statusFilter.value) &&
+      (!typeFilter.value || i.type === typeFilter.value) &&
+      (
+        i.name.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q)
+      )
+    );
+  });
+
+  filtered.sort((a,b)=>{
+    const diff = ratingValue(b.stars) - ratingValue(a.stars);
+    return sortRating.value === "desc" ? diff : -diff;
+  });
+
+  const total = filtered.length;
+  const verf = filtered.filter(i=>i.status==="Verfügbar").length;
+  const res  = filtered.filter(i=>i.status==="Reserviert").length;
+  const verg = filtered.filter(i=>i.status==="Vergeben").length;
+
+  infoBar.innerHTML = `
+    📦 Items: <b>${total}</b> gesamt ·
+    🟢 <b>${verf}</b> verfügbar ·
+    🟡 <b>${res}</b> reserviert ·
+    🔴 <b>${verg}</b> vergeben
+    <br>
+    🕒 Zuletzt aktualisiert: <b>${formatDate()}</b>
+  `;
+
+  filtered.forEach(item=>{
+    let statusClass="verfuegbar";
+    if(item.status==="Reserviert")statusClass="reserviert";
+    if(item.status==="Vergeben")statusClass="vergeben";
+
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${getIcon(item.type)}" alt="${item.type}"
+           onerror="this.src='img/icons/default.png'">
+      <div class="card-body">
+        <div class="item-name">${item.name}</div>
+        <div class="category">${item.category} · ${item.type}</div>
+        <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
+        <div class="roll">${item.roll || "—"}</div>
+        <div class="status ${statusClass}">${item.status}</div>
+        <div class="player">
+          Spieler:
+          <a href="https://twitch.tv/${item.contact}" target="_blank">
+            ${item.contact}
+          </a>
+        </div>
+        <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">
+          Über Twitch anfragen
+        </a>
+      </div>
+    `;
+    cards.appendChild(card);
+  });
+}
+
+/* ===== EVENTS ===== */
+search.addEventListener("input",render);
+statusFilter.addEventListener("change",render);
+typeFilter.addEventListener("change",render);
+sortRating.addEventListener("change",render);
+
+/* ===== VISITOR COUNTER ===== */
+const VISITOR_KEY="lootliste_visitors";
+const VISITOR_DAY="lootliste_last_visit";
+
+const today=new Date().toDateString();
+const lastVisit=localStorage.getItem(VISITOR_DAY);
+let visitors=Number(localStorage.getItem(VISITOR_KEY)||0);
+
+if(lastVisit!==today){
+  visitors++;
+  localStorage.setItem(VISITOR_KEY,visitors);
+  localStorage.setItem(VISITOR_DAY,today);
+}
+
+visitorCounter.innerHTML=`👁 Besucher gesamt: <b>${visitors}</b>`;
+
+/* ===== INIT ===== */
+render();
+</script>
+
+</body>
+</html>
 
