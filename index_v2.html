@@ -239,8 +239,65 @@ body{
   border-radius:12px;
   color:#fff;
   text-decoration:none;
+  cursor:pointer;
 }
 .cta:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ===== MODAL ===== */
+#requestModal{display:none}
+
+#requestModal .backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  z-index:100;
+}
+
+#requestModal .modal{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:#121212;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  width:90%;
+  max-width:420px;
+  z-index:101;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+#requestModal input,
+#requestModal textarea{
+  padding:10px;
+  background:#111;
+  border:1px solid #333;
+  border-radius:10px;
+  color:#fff;
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+}
+
+.modal-actions button{
+  flex:1;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#151515;
+  color:#fff;
+  cursor:pointer;
+}
+
+.modal-actions button:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
 
 footer{
   margin-top:50px;
@@ -303,6 +360,21 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 </div>
 
+<!-- ===== REQUEST MODAL ===== -->
+<div id="requestModal">
+  <div class="backdrop"></div>
+  <div class="modal">
+    <strong id="modalItem"></strong>
+    <input id="reqName" placeholder="Dein Nickname *">
+    <input id="reqContact" placeholder="Kontakt (Mail oder Discord) *">
+    <textarea id="reqMsg" placeholder="Nachricht (optional)"></textarea>
+    <div class="modal-actions">
+      <button id="sendReq">Anfrage senden</button>
+      <button id="closeReq">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import items from "./items.js";
 
@@ -321,7 +393,14 @@ const metaBar=document.getElementById("metaBar");
 const heroStats=document.getElementById("heroStats");
 const visitorCounter=document.getElementById("visitorCounter");
 
+const modal=document.getElementById("requestModal");
+const modalItem=document.getElementById("modalItem");
+const reqName=document.getElementById("reqName");
+const reqContact=document.getElementById("reqContact");
+const reqMsg=document.getElementById("reqMsg");
+
 let activeType="";
+let currentItem="";
 
 Object.keys(ICONS).forEach(type=>{
   const btn=document.createElement("div");
@@ -369,8 +448,12 @@ function render(){
 
   metaBar.innerHTML=`📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
+  const requests=JSON.parse(localStorage.getItem("loot_requests")||"[]");
+
   filtered.forEach(item=>{
     const s=item.status==="Reserviert"?"reserviert":item.status==="Vergeben"?"vergeben":"verfuegbar";
+    const count=requests.filter(r=>r.item===item.name).length;
+
     cards.innerHTML+=`
       <div class="card">
         <span class="status-badge ${s}">${item.status}</span>
@@ -380,6 +463,7 @@ function render(){
           <div class="category">${item.category} · ${item.type}</div>
           <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
           <div class="roll">${item.roll||"—"}</div>
+          ${count?`<div style="font-size:12px;opacity:.8">📬 ${count} Anfrage(n)</div>`:""}
           <div class="player">
             Spieler:
             <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
@@ -387,12 +471,51 @@ function render(){
           <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">
             Über Twitch anfragen
           </a>
+          <div class="cta request-btn" data-item="${item.name}">
+            📨 Item anfragen
+          </div>
         </div>
       </div>`;
   });
 }
 
-/* Visitor Counter */
+/* ===== REQUEST LOGIC ===== */
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("request-btn")){
+    currentItem=e.target.dataset.item;
+    modalItem.textContent="Item: "+currentItem;
+    modal.style.display="block";
+  }
+});
+
+document.getElementById("closeReq").onclick=()=>{
+  modal.style.display="none";
+};
+
+document.getElementById("sendReq").onclick=()=>{
+  if(!reqName.value||!reqContact.value){
+    alert("Bitte Pflichtfelder ausfüllen");
+    return;
+  }
+
+  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]");
+  data.push({
+    item:currentItem,
+    name:reqName.value,
+    contact:reqContact.value,
+    msg:reqMsg.value,
+    time:new Date().toISOString()
+  });
+
+  localStorage.setItem("loot_requests",JSON.stringify(data));
+
+  reqName.value=reqContact.value=reqMsg.value="";
+  modal.style.display="none";
+  render();
+  alert("Anfrage gespeichert 👍");
+};
+
+/* ===== VISITOR COUNTER ===== */
 const K="lootliste_visitors",D="lootliste_last_visit";
 const t=new Date().toDateString();
 if(localStorage.getItem(D)!==t){
