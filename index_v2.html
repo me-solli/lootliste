@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2)</title>
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.1)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -22,8 +22,7 @@
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
+  background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
   color:#eaeaea;
 }
 
@@ -42,18 +41,9 @@ body{
   background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.92));
 }
 
-.hero h1{
-  margin:0;
-  font-size:42px;
-  letter-spacing:1px;
-}
-
+.hero h1{margin:0;font-size:42px;letter-spacing:1px}
 .hero h1 span{color:var(--gold)}
-
-.hero p{
-  margin:10px 0 18px;
-  opacity:.9;
-}
+.hero p{margin:10px 0 18px;opacity:.9}
 
 .hero-stats{
   display:flex;
@@ -405,12 +395,14 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 <script type="module">
 import items from "./items.js";
 
+/* ===== ICON MAPPING ===== */
 const ICONS={
   "Waffe":"waffe","Helm":"helm","Rüstung":"ruestung","Schild":"schild",
   "Gürtel":"guertel","Handschuhe":"handschuhe","Amulett":"amulett",
   "Ring":"ring","Charm":"charm","Rune":"rune","Sonstiges":"sonstiges"
 };
 
+/* ===== DOM ===== */
 const iconBar=document.getElementById("iconBar");
 const cards=document.getElementById("cards");
 const search=document.getElementById("search");
@@ -430,6 +422,7 @@ const reqMsg=document.getElementById("reqMsg");
 let activeType="";
 let currentItem="";
 
+/* ===== ICON BAR BUILD ===== */
 Object.keys(ICONS).forEach(type=>{
   const btn=document.createElement("div");
   btn.className="icon-btn";
@@ -443,21 +436,21 @@ Object.keys(ICONS).forEach(type=>{
   iconBar.appendChild(btn);
 });
 
+/* ===== HELPERS ===== */
 function ratingValue(s){return (s?.match(/★/g)||[]).length}
 
+/* ===== RENDER ===== */
 function render(){
   cards.innerHTML="";
 
-  let filtered=items.filter(i=>{
+  const filtered=items.filter(i=>{
     const q=search.value.toLowerCase();
     return(
       (!activeType||i.type===activeType) &&
       (!statusFilter.value||i.status===statusFilter.value) &&
       (i.name.toLowerCase().includes(q)||i.category.toLowerCase().includes(q))
     );
-  });
-
-  filtered.sort((a,b)=>{
+  }).sort((a,b)=>{
     const d=ratingValue(b.stars)-ratingValue(a.stars);
     return sortRating.value==="desc"?d:-d;
   });
@@ -496,12 +489,8 @@ function render(){
             Spieler:
             <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
           </div>
-          <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">
-            Über Twitch anfragen
-          </a>
-          <div class="cta request-btn" data-item="${item.name}">
-            📨 Item anfragen
-          </div>
+          <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">Über Twitch anfragen</a>
+          <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
         </div>
       </div>`;
   });
@@ -509,26 +498,21 @@ function render(){
   renderRequestFeed();
 }
 
+/* ===== REQUEST FEED ===== */
 function renderRequestFeed(){
-  if(!requestFeed) return;
-
   const data=JSON.parse(localStorage.getItem("loot_requests")||"[]")
-    .slice(-5)
-    .reverse();
+    .slice(-5).reverse();
 
   requestFeed.innerHTML=data.length
     ? data.map(r=>`
       <div class="request-entry">
         📨 <b>${r.name}</b> → <i>${r.item}</i><br>
-        <span style="opacity:.6">
-          ${new Date(r.time).toLocaleString("de-DE")}
-        </span>
-      </div>
-    `).join("")
+        <span style="opacity:.6">${new Date(r.time).toLocaleString("de-DE")}</span>
+      </div>`).join("")
     : `<div class="request-entry">Noch keine Anfragen</div>`;
 }
 
-/* ===== REQUEST LOGIC ===== */
+/* ===== REQUEST MODAL ===== */
 document.addEventListener("click",e=>{
   if(e.target.classList.contains("request-btn")){
     currentItem=e.target.dataset.item;
@@ -537,9 +521,7 @@ document.addEventListener("click",e=>{
   }
 });
 
-document.getElementById("closeReq").onclick=()=>{
-  modal.style.display="none";
-};
+document.getElementById("closeReq").onclick=()=>modal.style.display="none";
 
 document.getElementById("sendReq").onclick=()=>{
   if(!reqName.value||!reqContact.value){
@@ -557,22 +539,21 @@ document.getElementById("sendReq").onclick=()=>{
   });
 
   localStorage.setItem("loot_requests",JSON.stringify(data));
-
   reqName.value=reqContact.value=reqMsg.value="";
   modal.style.display="none";
   render();
-  alert("Anfrage gespeichert 👍");
 };
 
 /* ===== VISITOR COUNTER ===== */
 const K="lootliste_visitors",D="lootliste_last_visit";
-const t=new Date().toDateString();
-if(localStorage.getItem(D)!==t){
+const today=new Date().toDateString();
+if(localStorage.getItem(D)!==today){
   localStorage.setItem(K,(+localStorage.getItem(K)||0)+1);
-  localStorage.setItem(D,t);
+  localStorage.setItem(D,today);
 }
 visitorCounter.innerHTML=`👁 Besucher gesamt: <b>${localStorage.getItem(K)}</b>`;
 
+/* ===== INIT ===== */
 search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
