@@ -23,7 +23,7 @@ const items = [
     category: "Unique",
     stars: "★★★★★",
     roll: "+190% def",
-    status: "Reserviert",
+    status: "Verfügbar",
     contact: "me_solli"
   },
   {
@@ -32,7 +32,7 @@ const items = [
     category: "Set",
     stars: "★★★★☆",
     roll: "+120 mana",
-    status: "Vergeben",
+    status: "Verfügbar",
     contact: "me_solli"
   },
   {
