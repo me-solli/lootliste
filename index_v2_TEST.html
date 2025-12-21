@@ -166,6 +166,29 @@ body{
   border-radius:10px;
 }
 
+/* ===== REQUEST FEED ===== */
+.request-feed{
+  background:linear-gradient(180deg,#171717,#0f0f0f);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:22px;
+}
+
+.request-feed h3{
+  margin:0 0 10px;
+  font-size:15px;
+  color:var(--gold);
+}
+
+.request-entry{
+  font-size:13px;
+  padding:6px 0;
+  border-bottom:1px solid #222;
+  opacity:.9;
+}
+.request-entry:last-child{border-bottom:none}
+
 /* ===== CARDS ===== */
 .cards{
   display:grid;
@@ -238,7 +261,6 @@ body{
   border:1px solid var(--border);
   border-radius:12px;
   color:#fff;
-  text-decoration:none;
   cursor:pointer;
 }
 .cta:hover{border-color:var(--gold);color:var(--gold)}
@@ -350,6 +372,11 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   </select>
 </div>
 
+<div class="request-feed">
+  <h3>📬 Letzte Anfragen</h3>
+  <div id="requestFeed"></div>
+</div>
+
 <div class="cards" id="cards"></div>
 </div>
 
@@ -392,6 +419,7 @@ const sortRating=document.getElementById("sortRating");
 const metaBar=document.getElementById("metaBar");
 const heroStats=document.getElementById("heroStats");
 const visitorCounter=document.getElementById("visitorCounter");
+const requestFeed=document.getElementById("requestFeed");
 
 const modal=document.getElementById("requestModal");
 const modalItem=document.getElementById("modalItem");
@@ -477,6 +505,27 @@ function render(){
         </div>
       </div>`;
   });
+
+  renderRequestFeed();
+}
+
+function renderRequestFeed(){
+  if(!requestFeed) return;
+
+  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]")
+    .slice(-5)
+    .reverse();
+
+  requestFeed.innerHTML=data.length
+    ? data.map(r=>`
+      <div class="request-entry">
+        📨 <b>${r.name}</b> → <i>${r.item}</i><br>
+        <span style="opacity:.6">
+          ${new Date(r.time).toLocaleString("de-DE")}
+        </span>
+      </div>
+    `).join("")
+    : `<div class="request-entry">Noch keine Anfragen</div>`;
 }
 
 /* ===== REQUEST LOGIC ===== */
