@@ -225,6 +225,7 @@ footer a:hover{text-decoration:underline}
     <option>Rüstung</option>
     <option>Schild</option>
     <option>Gürtel</option>
+    <option>Handschuhe</option>
     <option>Ring</option>
     <option>Charm</option>
     <option>Rune</option>
@@ -266,6 +267,7 @@ function getIcon(type){
     "Rüstung": "img/icons/ruestung.png",
     "Schild": "img/icons/schild.png",
     "Gürtel": "img/icons/guertel.png",
+    "Handschuhe": "img/icons/handschuhe.png",
     "Amulett": "img/icons/amulett.png",
     "Ring": "img/icons/ring.png",
     "Charm": "img/icons/charm.png",
@@ -317,7 +319,7 @@ function render(){
       <div class="card-body">
         <div class="item-name">${item.name}</div>
         <div class="category">${item.category} · ${item.type}</div>
-        <div class="stars">${item.stars}</div>
+        <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
         <div class="roll">${item.roll || "—"}</div>
         <div class="status ${statusClass}">${item.status}</div>
         <div class="player">
