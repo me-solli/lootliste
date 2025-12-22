@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.1)</title>
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.2 CORE)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -16,16 +16,13 @@
   --yellow:#ffd24c;
   --red:#ff5c5c;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
   color:#eaeaea;
 }
-
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* ===== HERO ===== */
@@ -35,37 +32,31 @@ body{
   overflow:hidden;
   min-height:260px;
 }
-
 .hero-inner{
   padding:44px 36px;
   background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.92));
 }
-
 .hero h1{margin:0;font-size:42px;letter-spacing:1px}
 .hero h1 span{color:var(--gold)}
 .hero p{margin:10px 0 18px;opacity:.9}
-
 .hero-stats{
   display:flex;
   gap:18px;
   flex-wrap:wrap;
   font-size:14px;
 }
-
 .hero-stats div{
   padding:8px 14px;
   background:rgba(0,0,0,.4);
   border:1px solid var(--border);
   border-radius:999px;
 }
-
 .hero-right{
   margin-top:18px;
   display:flex;
   gap:14px;
   flex-wrap:wrap;
 }
-
 .twitch{
   background:#9146FF;
   color:#fff;
@@ -75,7 +66,6 @@ body{
   text-decoration:none;
 }
 .twitch:hover{opacity:.85}
-
 #visitorCounter{font-size:13px;opacity:.85}
 
 /* ===== ICON BAR ===== */
@@ -87,7 +77,6 @@ body{
   background:linear-gradient(180deg,#141414,#0d0d0d);
   border-bottom:1px solid #222;
 }
-
 .icon-btn{
   min-width:96px;
   text-align:center;
@@ -97,25 +86,21 @@ body{
   border:1px solid transparent;
   transition:.25s;
 }
-
 .icon-btn img{
   width:42px;
   height:42px;
   filter:drop-shadow(0 0 8px rgba(245,196,81,.35));
 }
-
 .icon-btn span{
   display:block;
   margin-top:6px;
   font-size:12px;
   opacity:.85;
 }
-
 .icon-btn:hover{
   border-color:var(--gold);
   box-shadow:0 0 18px rgba(245,196,81,.25);
 }
-
 .icon-btn.active{
   border-color:var(--gold);
   background:rgba(245,196,81,.08);
@@ -146,7 +131,6 @@ body{
   gap:12px;
   margin-bottom:18px;
 }
-
 .filter-panel input,
 .filter-panel select{
   padding:10px 12px;
@@ -164,13 +148,11 @@ body{
   padding:16px;
   margin-bottom:22px;
 }
-
 .request-feed h3{
   margin:0 0 10px;
   font-size:15px;
   color:var(--gold);
 }
-
 .request-entry{
   font-size:13px;
   padding:6px 0;
@@ -185,7 +167,6 @@ body{
   grid-template-columns:repeat(3,1fr);
   gap:22px;
 }
-
 @media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.cards{grid-template-columns:1fr}}
 
@@ -198,20 +179,17 @@ body{
   transition:.25s;
   position:relative;
 }
-
 .card:hover{
   transform:translateY(-4px);
   border-color:var(--gold);
   box-shadow:0 10px 28px rgba(0,0,0,.6);
 }
-
 .card img{
   width:120px;
   background:radial-gradient(circle at top,#1f1f1f,#0b0b0b);
   object-fit:contain;
   padding:18px;
 }
-
 .card-body{
   padding:16px;
   display:flex;
@@ -219,12 +197,10 @@ body{
   gap:6px;
   flex:1;
 }
-
 .item-name{font-weight:bold;font-size:16px}
 .category{font-size:12px;opacity:.7}
 .stars{color:var(--gold)}
 .roll{font-size:13px;color:#cfcfcf}
-
 .status-badge{
   position:absolute;
   top:12px;
@@ -234,14 +210,11 @@ body{
   border-radius:999px;
   font-weight:bold;
 }
-
 .verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
 .reserviert{background:rgba(255,210,76,.15);color:var(--yellow)}
 .vergeben{background:rgba(255,92,92,.15);color:var(--red)}
-
 .player{font-size:13px;opacity:.85}
 .player a{color:var(--gold);text-decoration:none}
-
 .cta{
   margin-top:8px;
   padding:9px;
@@ -257,14 +230,12 @@ body{
 
 /* ===== MODAL ===== */
 #requestModal{display:none}
-
 #requestModal .backdrop{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.75);
   z-index:100;
 }
-
 #requestModal .modal{
   position:fixed;
   top:50%;
@@ -281,7 +252,6 @@ body{
   flex-direction:column;
   gap:10px;
 }
-
 #requestModal input,
 #requestModal textarea{
   padding:10px;
@@ -290,12 +260,10 @@ body{
   border-radius:10px;
   color:#fff;
 }
-
 .modal-actions{
   display:flex;
   gap:10px;
 }
-
 .modal-actions button{
   flex:1;
   padding:10px;
@@ -305,10 +273,9 @@ body{
   color:#fff;
   cursor:pointer;
 }
-
 .modal-actions button:hover{
   border-color:var(--gold);
-  color:var(--gold);
+  color:var(--gold)
 }
 
 footer{
@@ -328,13 +295,9 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   <div class="hero-inner">
     <h1>🎁 <span>FREE LOOTLISTE</span></h1>
     <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
-
     <div class="hero-stats" id="heroStats"></div>
-
     <div class="hero-right">
-      <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
-        ▶ Twitch: me_solli
-      </a>
+      <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">▶ Twitch: me_solli</a>
       <div id="visitorCounter">👁 Besucher gesamt: …</div>
     </div>
   </div>
@@ -343,31 +306,28 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 <div class="icon-bar" id="iconBar"></div>
 
 <div class="container">
+  <div class="meta-bar" id="metaBar"></div>
 
-<div class="meta-bar" id="metaBar"></div>
+  <div class="filter-panel">
+    <input id="search" placeholder="Item suchen…">
+    <select id="statusFilter">
+      <option value="">Alle Status</option>
+      <option>Verfügbar</option>
+      <option>Reserviert</option>
+      <option>Vergeben</option>
+    </select>
+    <select id="sortRating">
+      <option value="desc">Rating ↓</option>
+      <option value="asc">Rating ↑</option>
+    </select>
+  </div>
 
-<div class="filter-panel">
-  <input id="search" placeholder="Item suchen…">
+  <div class="request-feed">
+    <h3>📬 Letzte Anfragen</h3>
+    <div id="requestFeed"></div>
+  </div>
 
-  <select id="statusFilter">
-    <option value="">Alle Status</option>
-    <option>Verfügbar</option>
-    <option>Reserviert</option>
-    <option>Vergeben</option>
-  </select>
-
-  <select id="sortRating">
-    <option value="desc">Rating ↓</option>
-    <option value="asc">Rating ↑</option>
-  </select>
-</div>
-
-<div class="request-feed">
-  <h3>📬 Letzte Anfragen</h3>
-  <div id="requestFeed"></div>
-</div>
-
-<div class="cards" id="cards"></div>
+  <div class="cards" id="cards"></div>
 </div>
 
 <footer>
@@ -393,7 +353,18 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </div>
 
 <script type="module">
-import items from "./items.js";
+import itemsRaw from "./items.js";
+
+/* ===== CORE HELPERS ===== */
+const uid = () => crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+
+/* ===== NORMALIZE ITEMS (add id + phase, non-destructive) ===== */
+const items = itemsRaw.map(i => ({
+  id: i.id || uid(),
+  phase: i.phase || "open",
+  requestStart: i.requestStart || null,
+  ...i
+}));
 
 /* ===== ICON MAPPING ===== */
 const ICONS={
@@ -412,7 +383,6 @@ const metaBar=document.getElementById("metaBar");
 const heroStats=document.getElementById("heroStats");
 const visitorCounter=document.getElementById("visitorCounter");
 const requestFeed=document.getElementById("requestFeed");
-
 const modal=document.getElementById("requestModal");
 const modalItem=document.getElementById("modalItem");
 const reqName=document.getElementById("reqName");
@@ -420,7 +390,7 @@ const reqContact=document.getElementById("reqContact");
 const reqMsg=document.getElementById("reqMsg");
 
 let activeType="";
-let currentItem="";
+let currentItemId=null;
 
 /* ===== ICON BAR BUILD ===== */
 Object.keys(ICONS).forEach(type=>{
@@ -442,7 +412,6 @@ function ratingValue(s){return (s?.match(/★/g)||[]).length}
 /* ===== RENDER ===== */
 function render(){
   cards.innerHTML="";
-
   const filtered=items.filter(i=>{
     const q=search.value.toLowerCase();
     return(
@@ -473,7 +442,7 @@ function render(){
 
   filtered.forEach(item=>{
     const s=item.status==="Reserviert"?"reserviert":item.status==="Vergeben"?"vergeben":"verfuegbar";
-    const count=requests.filter(r=>r.item===item.name).length;
+    const count=requests.filter(r=>r.itemId===item.id || r.item===item.name).length;
 
     cards.innerHTML+=`
       <div class="card">
@@ -490,7 +459,7 @@ function render(){
             <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
           </div>
           <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">Über Twitch anfragen</a>
-          <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
+          <div class="cta request-btn" data-id="${item.id}" data-name="${item.name}">📨 Item anfragen</div>
         </div>
       </div>`;
   });
@@ -500,13 +469,11 @@ function render(){
 
 /* ===== REQUEST FEED ===== */
 function renderRequestFeed(){
-  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]")
-    .slice(-5).reverse();
-
+  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]").slice(-5).reverse();
   requestFeed.innerHTML=data.length
     ? data.map(r=>`
       <div class="request-entry">
-        📨 <b>${r.name}</b> → <i>${r.item}</i><br>
+        📨 <b>${r.name}</b> → <i>${r.itemName||r.item}</i><br>
         <span style="opacity:.6">${new Date(r.time).toLocaleString("de-DE")}</span>
       </div>`).join("")
     : `<div class="request-entry">Noch keine Anfragen</div>`;
@@ -515,29 +482,32 @@ function renderRequestFeed(){
 /* ===== REQUEST MODAL ===== */
 document.addEventListener("click",e=>{
   if(e.target.classList.contains("request-btn")){
-    currentItem=e.target.dataset.item;
-    modalItem.textContent="Item: "+currentItem;
+    currentItemId=e.target.dataset.id;
+    modalItem.textContent="Item: "+e.target.dataset.name;
     modal.style.display="block";
   }
 });
-
 document.getElementById("closeReq").onclick=()=>modal.style.display="none";
-
 document.getElementById("sendReq").onclick=()=>{
   if(!reqName.value||!reqContact.value){
     alert("Bitte Pflichtfelder ausfüllen");
     return;
   }
-
   const data=JSON.parse(localStorage.getItem("loot_requests")||"[]");
+  const item=items.find(i=>i.id===currentItemId);
+  if(item && !item.requestStart){
+    item.requestStart=Date.now();
+    item.phase="request_open";
+  }
   data.push({
-    item:currentItem,
+    itemId: currentItemId,
+    itemName: item?.name,
     name:reqName.value,
     contact:reqContact.value,
     msg:reqMsg.value,
-    time:new Date().toISOString()
+    time:new Date().toISOString(),
+    phase:"request_open"
   });
-
   localStorage.setItem("loot_requests",JSON.stringify(data));
   reqName.value=reqContact.value=reqMsg.value="";
   modal.style.display="none";
@@ -559,57 +529,5 @@ statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
 </script>
-
-<!-- ADMIN ACCESS -->
-<button id="adminBtn" style="
-position:fixed;
-top:12px;
-right:12px;
-z-index:9999;
-background:#1c1c1c;
-color:#f5c451;
-border:1px solid #f5c451;
-padding:8px 12px;
-border-radius:6px;
-cursor:pointer;
-font-weight:bold;">
-🔒 Admin
-</button>
-
-<script>
-document.getElementById("adminBtn").addEventListener("click", () => {
-  const pw = prompt("Admin Passwort:");
-  if (pw === "lootadmin") {
-    window.location.href = "admin.html";
-  } else if (pw !== null) {
-    alert("❌ Falsches Passwort");
-  }
-});
-</script>
-<!-- /ADMIN ACCESS -->
-
-
-<script>
-// ===== ADMIN LOGIN (HASHED, NO PLAINTEXT) =====
-const ADMIN_HASH = "2c277a9a03e2109424397034874848da93a217d59e0a75dbb546e992417939c7";
-
-function sha256(str) {
-  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
-    .then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join(""));
-}
-
-async function adminLogin() {
-  const pw = prompt("Admin Passwort:");
-  if(!pw) return;
-  const h = await sha256(pw);
-  if(h === ADMIN_HASH) {
-    sessionStorage.setItem("admin","1");
-    window.location.href = "admin.html";
-  } else {
-    alert("Falsches Passwort");
-  }
-}
-</script>
-
 </body>
 </html>
