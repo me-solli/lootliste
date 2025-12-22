@@ -559,5 +559,34 @@ statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
 </script>
+
+<!-- ADMIN ACCESS -->
+<button id="adminBtn" style="
+position:fixed;
+top:12px;
+right:12px;
+z-index:9999;
+background:#1c1c1c;
+color:#f5c451;
+border:1px solid #f5c451;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;">
+🔒 Admin
+</button>
+
+<script>
+document.getElementById("adminBtn").addEventListener("click", () => {
+  const pw = prompt("Admin Passwort:");
+  if (pw === "lootadmin") {
+    window.location.href = "admin.html";
+  } else if (pw !== null) {
+    alert("❌ Falsches Passwort");
+  }
+});
+</script>
+<!-- /ADMIN ACCESS -->
+
 </body>
 </html>
