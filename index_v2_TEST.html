@@ -588,5 +588,28 @@ document.getElementById("adminBtn").addEventListener("click", () => {
 </script>
 <!-- /ADMIN ACCESS -->
 
+
+<script>
+// ===== ADMIN LOGIN (HASHED, NO PLAINTEXT) =====
+const ADMIN_HASH = "2c277a9a03e2109424397034874848da93a217d59e0a75dbb546e992417939c7";
+
+function sha256(str) {
+  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
+    .then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join(""));
+}
+
+async function adminLogin() {
+  const pw = prompt("Admin Passwort:");
+  if(!pw) return;
+  const h = await sha256(pw);
+  if(h === ADMIN_HASH) {
+    sessionStorage.setItem("admin","1");
+    window.location.href = "admin.html";
+  } else {
+    alert("Falsches Passwort");
+  }
+}
+</script>
+
 </body>
 </html>
