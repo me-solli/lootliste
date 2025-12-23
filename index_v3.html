@@ -657,4 +657,30 @@ document.getElementById("registerBtn").onclick=()=>{
 authClose.onclick=()=>authModal.style.display="none";
 </script>
 
+
+<script>
+/* ===== AUTH BACKEND WIRING (STEP 3A) ===== */
+const authSubmit=document.getElementById("authSubmit");
+const authState=document.getElementById("authState");
+
+authSubmit.onclick=async ()=>{
+  const mode=document.getElementById("authTitle").textContent==="Registrieren"?"register":"login";
+  const username=document.getElementById("authName").value;
+  const password=document.getElementById("authPass").value;
+  if(!username||!password){ alert("Bitte ausfüllen"); return; }
+
+  const res=await fetch(`/api/${mode}`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({username,password})
+  });
+
+  const data=await res.json();
+  if(!res.ok){ alert(data.error||"Fehler"); return; }
+
+  authState.textContent="👤 "+data.user.username;
+  document.getElementById("authModal").style.display="none";
+};
+</script>
+
 </html>
