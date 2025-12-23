@@ -318,6 +318,31 @@ footer{
   font-size:13px;
 }
 footer a{color:var(--gold);margin-right:18px;text-decoration:none}
+
+/* ===== AUTH BOX ===== */
+.auth-box{
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
+  font-size:13px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.auth-box button{
+  padding:6px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#151515;
+  color:#fff;
+  cursor:pointer;
+}
+.auth-box button:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
 </style>
 </head>
 
@@ -332,37 +357,17 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     <div class="hero-stats" id="heroStats"></div>
 
     <div class="hero-right">
+
+      <div id="authBox" class="auth-box">
+        <span id="authState">👤 Nicht eingeloggt</span>
+        <button id="loginBtn">Login</button>
+        <button id="registerBtn">Registrieren</button>
+      </div>
+
       <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
         ▶ Twitch: me_solli
       </a>
-      <div id="visitorCounter">👁 Besucher gesamt: …
-      <div id="authBox" style="
-        padding:10px 14px;
-        border:1px solid #2a2a2a;
-        border-radius:14px;
-        background:rgba(0,0,0,.45);
-        font-size:13px;
-        display:flex;
-        gap:10px;
-        align-items:center;">
-        <span id="authState">👤 Nicht eingeloggt</span>
-        <button id="loginBtn" style="
-          padding:6px 12px;
-          border-radius:10px;
-          border:1px solid #2a2a2a;
-          background:#151515;
-          color:#fff;
-          cursor:pointer;">Login</button>
-        <button id="registerBtn" style="
-          padding:6px 12px;
-          border-radius:10px;
-          border:1px solid #2a2a2a;
-          background:#151515;
-          color:#fff;
-          cursor:pointer;">Registrieren</button>
-      </div>
-
-</div>
+      <div id="visitorCounter">👁 Besucher gesamt: …</div>
     </div>
   </div>
 </header>
