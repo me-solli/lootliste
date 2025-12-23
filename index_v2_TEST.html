@@ -1,8 +1,14 @@
+<!--
+  Lootliste V3
+  Basis: index_v2.2_CORE_READY.html (1:1 Kopie)
+  Schritt 1: reine Basis, keine Logikänderungen
+-->
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.2 CORE)</title>
+<title>[V3 Basis] 🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.2 CORE)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -289,6 +295,23 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </head>
 
 <body>
+
+<!-- =========================
+     PROFILE UI (V3 STEP 3)
+========================= -->
+<div id="profileBar" style="padding:8px 12px;background:#111;color:#ccc;display:flex;justify-content:space-between;align-items:center;">
+  <span id="profileStatus">👤 Kein Profil aktiv</span>
+  <button id="profileBtn">Profil erstellen</button>
+</div>
+
+<div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;">
+  <div style="background:#1b1b1b;color:#eee;max-width:320px;margin:15% auto;padding:16px;border-radius:6px;">
+    <h3>Profil erstellen</h3>
+    <input id="profileNameInput" placeholder="Spielername" style="width:100%;padding:6px;margin-bottom:10px;">
+    <button id="saveProfileBtn">Profil speichern</button>
+  </div>
+</div>
+
 <div class="wrapper">
 
 <header class="hero">
@@ -528,6 +551,149 @@ search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
+
+/* =========================
+   V3 CORE – STEP 2
+   Soft Accounts + Auto Dice
+   V3.1-ready architecture
+========================= */
+
+const V3_CONFIG = {
+  REQUEST_HOURS: 24,
+  DICE_HOURS: 12
+};
+
+function getPlayer() {
+  let player = JSON.parse(localStorage.getItem("v3_player"));
+  if (!player) {
+    const name = prompt("Bitte Spielernamen eingeben:");
+    if (!name) return null;
+    player = {
+      id: "p_" + Math.random().toString(36).slice(2, 9),
+      name,
+      createdAt: Date.now(),
+      stats: { itemsWon: 0, itemsDonated: 0, rolls: 0, trust: 0 },
+      flags: { softDupe: false }
+    };
+    localStorage.setItem("v3_player", JSON.stringify(player));
+  }
+  return player;
+}
+
+function getPhase(item) {
+  if (!item.phase) {
+    item.phase = {
+      current: "request",
+      startedAt: Date.now(),
+      endsAt: Date.now() + V3_CONFIG.REQUEST_HOURS * 3600000,
+      rolls: []
+    };
+  }
+  const now = Date.now();
+  if (item.phase.current === "request" && now > item.phase.endsAt) {
+    item.phase.current = "dice";
+    item.phase.startedAt = now;
+    item.phase.endsAt = now + V3_CONFIG.DICE_HOURS * 3600000;
+  }
+  if (item.phase.current === "dice" && now > item.phase.endsAt) {
+    item.phase.current = "finished";
+  }
+  return item.phase.current;
+}
+
+function rollDice(item) {
+  const player = getPlayer();
+  if (!player) return alert("Kein Spieler aktiv");
+  const phase = getPhase(item);
+  if (phase !== "dice") return alert("Keine Würfelphase aktiv");
+
+  if (item.phase.rolls.find(r => r.playerId === player.id)) {
+    return alert("Du hast bereits gewürfelt");
+  }
+
+  const value = Math.floor(Math.random() * 100) + 1;
+  item.phase.rolls.push({
+    playerId: player.id,
+    playerName: player.name,
+    value,
+    time: Date.now()
+  });
+  player.stats.rolls++;
+  localStorage.setItem("v3_player", JSON.stringify(player));
+  saveItems();
+  alert("Du hast eine " + value + " gewürfelt!");
+}
+
+function getWinner(item) {
+  if (!item.phase || item.phase.rolls.length === 0) return null;
+  return item.phase.rolls.reduce((a, b) => a.value > b.value ? a : b);
+}
+
+/* =========================
+   END V3 CORE
+========================= */
+
+
+/* =========================
+   PROFILE LOGIC (V3 STEP 3)
+========================= */
+
+function loadProfile() {
+  return JSON.parse(localStorage.getItem("v3_player"));
+}
+
+function requireProfile() {
+  const p = loadProfile();
+  if (!p) {
+    alert("Bitte erst ein Profil erstellen.");
+    return false;
+  }
+  return true;
+}
+
+function updateProfileBar() {
+  const p = loadProfile();
+  const status = document.getElementById("profileStatus");
+  const btn = document.getElementById("profileBtn");
+  if (p) {
+    status.textContent = "👤 Profil: " + p.name;
+    btn.textContent = "Mein Profil";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("profileBtn").onclick = () => {
+    document.getElementById("profileModal").style.display = "block";
+  };
+  document.getElementById("saveProfileBtn").onclick = () => {
+    const name = document.getElementById("profileNameInput").value.trim();
+    if (!name) return alert("Name fehlt");
+    const player = {
+      id: "p_" + Math.random().toString(36).slice(2,9),
+      name,
+      createdAt: Date.now(),
+      stats: { itemsWon:0, itemsDonated:0, rolls:0, trust:0 },
+      flags: { softDupe:false }
+    };
+    localStorage.setItem("v3_player", JSON.stringify(player));
+    document.getElementById("profileModal").style.display = "none";
+    updateProfileBar();
+  };
+  updateProfileBar();
+});
+
 </script>
+
+<!-- =========================
+     PROFILE VIEW (V3 STEP 4)
+========================= -->
+<div id="profileViewModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;">
+  <div style="background:#1b1b1b;color:#eee;max-width:360px;margin:10% auto;padding:18px;border-radius:8px;">
+    <h3>👤 Spielerprofil</h3>
+    <div id="profileViewContent" style="font-size:14px;line-height:1.6;"></div>
+    <button id="closeProfileView" style="margin-top:12px;">Schließen</button>
+  </div>
+</div>
+
 </body>
 </html>
