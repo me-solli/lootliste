@@ -320,15 +320,21 @@ footer{
 footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 /* ===== AUTH BOX ===== */
+.hero{ position:relative; }
+
 .auth-box{
+  position:absolute;
+  top:22px;
+  right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
   padding:10px 14px;
   border:1px solid var(--border);
   border-radius:14px;
   background:rgba(0,0,0,.55);
   font-size:13px;
-  display:flex;
-  gap:10px;
-  align-items:center;
+  z-index:5;
 }
 .auth-box button{
   padding:6px 12px;
@@ -343,18 +349,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   color:var(--gold);
 }
 
-
-/* ===== AUTH POSITION ===== */
-.hero{
-  position:relative;
-}
-.hero-right{
-  position:absolute;
-  top:24px;
-  right:24px;
-  margin-top:0;
-}
-
 </style>
 </head>
 
@@ -363,19 +357,19 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 <header class="hero">
   <div class="hero-inner">
+
+  <div id="authBox" class="auth-box">
+    <span id="authState">👤 Nicht eingeloggt</span>
+    <button id="loginBtn">Login</button>
+    <button id="registerBtn">Registrieren</button>
+  </div>
+
     <h1>🎁 <span>FREE LOOTLISTE</span></h1>
     <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
 
     <div class="hero-stats" id="heroStats"></div>
 
     <div class="hero-right">
-
-      <div id="authBox" class="auth-box">
-        <span id="authState">👤 Nicht eingeloggt</span>
-        <button id="loginBtn">Login</button>
-        <button id="registerBtn">Registrieren</button>
-      </div>
-
       <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
         ▶ Twitch: me_solli
       </a>
