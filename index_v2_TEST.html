@@ -1,14 +1,8 @@
-<!--
-  Lootliste V3
-  Basis: index_v2.2_CORE_READY.html (1:1 Kopie)
-  Schritt 1: reine Basis, keine Logikänderungen
--->
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>[V3 Basis] 🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.2 CORE)</title>
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.1)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -22,13 +16,16 @@
   --yellow:#ffd24c;
   --red:#ff5c5c;
 }
+
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
   color:#eaeaea;
 }
+
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* ===== HERO ===== */
@@ -38,31 +35,37 @@ body{
   overflow:hidden;
   min-height:260px;
 }
+
 .hero-inner{
   padding:44px 36px;
   background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.92));
 }
+
 .hero h1{margin:0;font-size:42px;letter-spacing:1px}
 .hero h1 span{color:var(--gold)}
 .hero p{margin:10px 0 18px;opacity:.9}
+
 .hero-stats{
   display:flex;
   gap:18px;
   flex-wrap:wrap;
   font-size:14px;
 }
+
 .hero-stats div{
   padding:8px 14px;
   background:rgba(0,0,0,.4);
   border:1px solid var(--border);
   border-radius:999px;
 }
+
 .hero-right{
   margin-top:18px;
   display:flex;
   gap:14px;
   flex-wrap:wrap;
 }
+
 .twitch{
   background:#9146FF;
   color:#fff;
@@ -72,6 +75,7 @@ body{
   text-decoration:none;
 }
 .twitch:hover{opacity:.85}
+
 #visitorCounter{font-size:13px;opacity:.85}
 
 /* ===== ICON BAR ===== */
@@ -83,6 +87,7 @@ body{
   background:linear-gradient(180deg,#141414,#0d0d0d);
   border-bottom:1px solid #222;
 }
+
 .icon-btn{
   min-width:96px;
   text-align:center;
@@ -92,21 +97,25 @@ body{
   border:1px solid transparent;
   transition:.25s;
 }
+
 .icon-btn img{
   width:42px;
   height:42px;
   filter:drop-shadow(0 0 8px rgba(245,196,81,.35));
 }
+
 .icon-btn span{
   display:block;
   margin-top:6px;
   font-size:12px;
   opacity:.85;
 }
+
 .icon-btn:hover{
   border-color:var(--gold);
   box-shadow:0 0 18px rgba(245,196,81,.25);
 }
+
 .icon-btn.active{
   border-color:var(--gold);
   background:rgba(245,196,81,.08);
@@ -137,6 +146,7 @@ body{
   gap:12px;
   margin-bottom:18px;
 }
+
 .filter-panel input,
 .filter-panel select{
   padding:10px 12px;
@@ -154,11 +164,13 @@ body{
   padding:16px;
   margin-bottom:22px;
 }
+
 .request-feed h3{
   margin:0 0 10px;
   font-size:15px;
   color:var(--gold);
 }
+
 .request-entry{
   font-size:13px;
   padding:6px 0;
@@ -173,6 +185,7 @@ body{
   grid-template-columns:repeat(3,1fr);
   gap:22px;
 }
+
 @media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.cards{grid-template-columns:1fr}}
 
@@ -185,17 +198,20 @@ body{
   transition:.25s;
   position:relative;
 }
+
 .card:hover{
   transform:translateY(-4px);
   border-color:var(--gold);
   box-shadow:0 10px 28px rgba(0,0,0,.6);
 }
+
 .card img{
   width:120px;
   background:radial-gradient(circle at top,#1f1f1f,#0b0b0b);
   object-fit:contain;
   padding:18px;
 }
+
 .card-body{
   padding:16px;
   display:flex;
@@ -203,10 +219,12 @@ body{
   gap:6px;
   flex:1;
 }
+
 .item-name{font-weight:bold;font-size:16px}
 .category{font-size:12px;opacity:.7}
 .stars{color:var(--gold)}
 .roll{font-size:13px;color:#cfcfcf}
+
 .status-badge{
   position:absolute;
   top:12px;
@@ -216,11 +234,14 @@ body{
   border-radius:999px;
   font-weight:bold;
 }
+
 .verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
 .reserviert{background:rgba(255,210,76,.15);color:var(--yellow)}
 .vergeben{background:rgba(255,92,92,.15);color:var(--red)}
+
 .player{font-size:13px;opacity:.85}
 .player a{color:var(--gold);text-decoration:none}
+
 .cta{
   margin-top:8px;
   padding:9px;
@@ -236,12 +257,14 @@ body{
 
 /* ===== MODAL ===== */
 #requestModal{display:none}
+
 #requestModal .backdrop{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.75);
   z-index:100;
 }
+
 #requestModal .modal{
   position:fixed;
   top:50%;
@@ -258,6 +281,7 @@ body{
   flex-direction:column;
   gap:10px;
 }
+
 #requestModal input,
 #requestModal textarea{
   padding:10px;
@@ -266,10 +290,12 @@ body{
   border-radius:10px;
   color:#fff;
 }
+
 .modal-actions{
   display:flex;
   gap:10px;
 }
+
 .modal-actions button{
   flex:1;
   padding:10px;
@@ -279,9 +305,10 @@ body{
   color:#fff;
   cursor:pointer;
 }
+
 .modal-actions button:hover{
   border-color:var(--gold);
-  color:var(--gold)
+  color:var(--gold);
 }
 
 footer{
@@ -295,32 +322,19 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </head>
 
 <body>
-
-<!-- =========================
-     PROFILE UI (V3 STEP 3)
-========================= -->
-<div id="profileBar" style="padding:8px 12px;background:#111;color:#ccc;display:flex;justify-content:space-between;align-items:center;">
-  <span id="profileStatus">👤 Kein Profil aktiv</span>
-  <button id="profileBtn">Profil erstellen</button>
-</div>
-
-<div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;">
-  <div style="background:#1b1b1b;color:#eee;max-width:320px;margin:15% auto;padding:16px;border-radius:6px;">
-    <h3>Profil erstellen</h3>
-    <input id="profileNameInput" placeholder="Spielername" style="width:100%;padding:6px;margin-bottom:10px;">
-    <button id="saveProfileBtn">Profil speichern</button>
-  </div>
-</div>
-
 <div class="wrapper">
 
 <header class="hero">
   <div class="hero-inner">
     <h1>🎁 <span>FREE LOOTLISTE</span></h1>
     <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
+
     <div class="hero-stats" id="heroStats"></div>
+
     <div class="hero-right">
-      <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">▶ Twitch: me_solli</a>
+      <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
+        ▶ Twitch: me_solli
+      </a>
       <div id="visitorCounter">👁 Besucher gesamt: …</div>
     </div>
   </div>
@@ -329,28 +343,31 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 <div class="icon-bar" id="iconBar"></div>
 
 <div class="container">
-  <div class="meta-bar" id="metaBar"></div>
 
-  <div class="filter-panel">
-    <input id="search" placeholder="Item suchen…">
-    <select id="statusFilter">
-      <option value="">Alle Status</option>
-      <option>Verfügbar</option>
-      <option>Reserviert</option>
-      <option>Vergeben</option>
-    </select>
-    <select id="sortRating">
-      <option value="desc">Rating ↓</option>
-      <option value="asc">Rating ↑</option>
-    </select>
-  </div>
+<div class="meta-bar" id="metaBar"></div>
 
-  <div class="request-feed">
-    <h3>📬 Letzte Anfragen</h3>
-    <div id="requestFeed"></div>
-  </div>
+<div class="filter-panel">
+  <input id="search" placeholder="Item suchen…">
 
-  <div class="cards" id="cards"></div>
+  <select id="statusFilter">
+    <option value="">Alle Status</option>
+    <option>Verfügbar</option>
+    <option>Reserviert</option>
+    <option>Vergeben</option>
+  </select>
+
+  <select id="sortRating">
+    <option value="desc">Rating ↓</option>
+    <option value="asc">Rating ↑</option>
+  </select>
+</div>
+
+<div class="request-feed">
+  <h3>📬 Letzte Anfragen</h3>
+  <div id="requestFeed"></div>
+</div>
+
+<div class="cards" id="cards"></div>
 </div>
 
 <footer>
@@ -376,18 +393,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </div>
 
 <script type="module">
-import itemsRaw from "./items.js";
-
-/* ===== CORE HELPERS ===== */
-const uid = () => crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
-
-/* ===== NORMALIZE ITEMS (add id + phase, non-destructive) ===== */
-const items = itemsRaw.map(i => ({
-  id: i.id || uid(),
-  phase: i.phase || "open",
-  requestStart: i.requestStart || null,
-  ...i
-}));
+import items from "./items.js";
 
 /* ===== ICON MAPPING ===== */
 const ICONS={
@@ -406,6 +412,7 @@ const metaBar=document.getElementById("metaBar");
 const heroStats=document.getElementById("heroStats");
 const visitorCounter=document.getElementById("visitorCounter");
 const requestFeed=document.getElementById("requestFeed");
+
 const modal=document.getElementById("requestModal");
 const modalItem=document.getElementById("modalItem");
 const reqName=document.getElementById("reqName");
@@ -413,7 +420,7 @@ const reqContact=document.getElementById("reqContact");
 const reqMsg=document.getElementById("reqMsg");
 
 let activeType="";
-let currentItemId=null;
+let currentItem="";
 
 /* ===== ICON BAR BUILD ===== */
 Object.keys(ICONS).forEach(type=>{
@@ -435,6 +442,7 @@ function ratingValue(s){return (s?.match(/★/g)||[]).length}
 /* ===== RENDER ===== */
 function render(){
   cards.innerHTML="";
+
   const filtered=items.filter(i=>{
     const q=search.value.toLowerCase();
     return(
@@ -465,7 +473,7 @@ function render(){
 
   filtered.forEach(item=>{
     const s=item.status==="Reserviert"?"reserviert":item.status==="Vergeben"?"vergeben":"verfuegbar";
-    const count=requests.filter(r=>r.itemId===item.id || r.item===item.name).length;
+    const count=requests.filter(r=>r.item===item.name).length;
 
     cards.innerHTML+=`
       <div class="card">
@@ -482,7 +490,7 @@ function render(){
             <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
           </div>
           <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">Über Twitch anfragen</a>
-          <div class="cta request-btn" data-id="${item.id}" data-name="${item.name}">📨 Item anfragen</div>
+          <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
         </div>
       </div>`;
   });
@@ -492,11 +500,13 @@ function render(){
 
 /* ===== REQUEST FEED ===== */
 function renderRequestFeed(){
-  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]").slice(-5).reverse();
+  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]")
+    .slice(-5).reverse();
+
   requestFeed.innerHTML=data.length
     ? data.map(r=>`
       <div class="request-entry">
-        📨 <b>${r.name}</b> → <i>${r.itemName||r.item}</i><br>
+        📨 <b>${r.name}</b> → <i>${r.item}</i><br>
         <span style="opacity:.6">${new Date(r.time).toLocaleString("de-DE")}</span>
       </div>`).join("")
     : `<div class="request-entry">Noch keine Anfragen</div>`;
@@ -505,32 +515,29 @@ function renderRequestFeed(){
 /* ===== REQUEST MODAL ===== */
 document.addEventListener("click",e=>{
   if(e.target.classList.contains("request-btn")){
-    currentItemId=e.target.dataset.id;
-    modalItem.textContent="Item: "+e.target.dataset.name;
+    currentItem=e.target.dataset.item;
+    modalItem.textContent="Item: "+currentItem;
     modal.style.display="block";
   }
 });
+
 document.getElementById("closeReq").onclick=()=>modal.style.display="none";
+
 document.getElementById("sendReq").onclick=()=>{
   if(!reqName.value||!reqContact.value){
     alert("Bitte Pflichtfelder ausfüllen");
     return;
   }
+
   const data=JSON.parse(localStorage.getItem("loot_requests")||"[]");
-  const item=items.find(i=>i.id===currentItemId);
-  if(item && !item.requestStart){
-    item.requestStart=Date.now();
-    item.phase="request_open";
-  }
   data.push({
-    itemId: currentItemId,
-    itemName: item?.name,
+    item:currentItem,
     name:reqName.value,
     contact:reqContact.value,
     msg:reqMsg.value,
-    time:new Date().toISOString(),
-    phase:"request_open"
+    time:new Date().toISOString()
   });
+
   localStorage.setItem("loot_requests",JSON.stringify(data));
   reqName.value=reqContact.value=reqMsg.value="";
   modal.style.display="none";
@@ -551,149 +558,6 @@ search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
-
-/* =========================
-   V3 CORE – STEP 2
-   Soft Accounts + Auto Dice
-   V3.1-ready architecture
-========================= */
-
-const V3_CONFIG = {
-  REQUEST_HOURS: 24,
-  DICE_HOURS: 12
-};
-
-function getPlayer() {
-  let player = JSON.parse(localStorage.getItem("v3_player"));
-  if (!player) {
-    const name = prompt("Bitte Spielernamen eingeben:");
-    if (!name) return null;
-    player = {
-      id: "p_" + Math.random().toString(36).slice(2, 9),
-      name,
-      createdAt: Date.now(),
-      stats: { itemsWon: 0, itemsDonated: 0, rolls: 0, trust: 0 },
-      flags: { softDupe: false }
-    };
-    localStorage.setItem("v3_player", JSON.stringify(player));
-  }
-  return player;
-}
-
-function getPhase(item) {
-  if (!item.phase) {
-    item.phase = {
-      current: "request",
-      startedAt: Date.now(),
-      endsAt: Date.now() + V3_CONFIG.REQUEST_HOURS * 3600000,
-      rolls: []
-    };
-  }
-  const now = Date.now();
-  if (item.phase.current === "request" && now > item.phase.endsAt) {
-    item.phase.current = "dice";
-    item.phase.startedAt = now;
-    item.phase.endsAt = now + V3_CONFIG.DICE_HOURS * 3600000;
-  }
-  if (item.phase.current === "dice" && now > item.phase.endsAt) {
-    item.phase.current = "finished";
-  }
-  return item.phase.current;
-}
-
-function rollDice(item) {
-  const player = getPlayer();
-  if (!player) return alert("Kein Spieler aktiv");
-  const phase = getPhase(item);
-  if (phase !== "dice") return alert("Keine Würfelphase aktiv");
-
-  if (item.phase.rolls.find(r => r.playerId === player.id)) {
-    return alert("Du hast bereits gewürfelt");
-  }
-
-  const value = Math.floor(Math.random() * 100) + 1;
-  item.phase.rolls.push({
-    playerId: player.id,
-    playerName: player.name,
-    value,
-    time: Date.now()
-  });
-  player.stats.rolls++;
-  localStorage.setItem("v3_player", JSON.stringify(player));
-  saveItems();
-  alert("Du hast eine " + value + " gewürfelt!");
-}
-
-function getWinner(item) {
-  if (!item.phase || item.phase.rolls.length === 0) return null;
-  return item.phase.rolls.reduce((a, b) => a.value > b.value ? a : b);
-}
-
-/* =========================
-   END V3 CORE
-========================= */
-
-
-/* =========================
-   PROFILE LOGIC (V3 STEP 3)
-========================= */
-
-function loadProfile() {
-  return JSON.parse(localStorage.getItem("v3_player"));
-}
-
-function requireProfile() {
-  const p = loadProfile();
-  if (!p) {
-    alert("Bitte erst ein Profil erstellen.");
-    return false;
-  }
-  return true;
-}
-
-function updateProfileBar() {
-  const p = loadProfile();
-  const status = document.getElementById("profileStatus");
-  const btn = document.getElementById("profileBtn");
-  if (p) {
-    status.textContent = "👤 Profil: " + p.name;
-    btn.textContent = "Mein Profil";
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("profileBtn").onclick = () => {
-    document.getElementById("profileModal").style.display = "block";
-  };
-  document.getElementById("saveProfileBtn").onclick = () => {
-    const name = document.getElementById("profileNameInput").value.trim();
-    if (!name) return alert("Name fehlt");
-    const player = {
-      id: "p_" + Math.random().toString(36).slice(2,9),
-      name,
-      createdAt: Date.now(),
-      stats: { itemsWon:0, itemsDonated:0, rolls:0, trust:0 },
-      flags: { softDupe:false }
-    };
-    localStorage.setItem("v3_player", JSON.stringify(player));
-    document.getElementById("profileModal").style.display = "none";
-    updateProfileBar();
-  };
-  updateProfileBar();
-});
-
 </script>
-
-<!-- =========================
-     PROFILE VIEW (V3 STEP 4)
-========================= -->
-<div id="profileViewModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;">
-  <div style="background:#1b1b1b;color:#eee;max-width:360px;margin:10% auto;padding:18px;border-radius:8px;">
-    <h3>👤 Spielerprofil</h3>
-    <div id="profileViewContent" style="font-size:14px;line-height:1.6;"></div>
-    <button id="closeProfileView" style="margin-top:12px;">Schließen</button>
-  </div>
-</div>
-
 </body>
 </html>
