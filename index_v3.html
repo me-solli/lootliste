@@ -709,6 +709,76 @@ if(savedUser){
 }
 </script>
 
+
+<!-- ===== AUTH (FINAL / LOCAL BACKEND) ===== -->
+<script>
+const API = "http://localhost:3000";
+
+const authState = document.getElementById("authState");
+const authModal = document.getElementById("authModal");
+const authTitle = document.getElementById("authTitle");
+const authName = document.getElementById("authName");
+const authPass = document.getElementById("authPass");
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const authSubmit = document.getElementById("authSubmit");
+const authClose = document.getElementById("authClose");
+
+loginBtn.onclick = () => {
+  authTitle.textContent = "Login";
+  authModal.style.display = "block";
+};
+
+registerBtn.onclick = () => {
+  authTitle.textContent = "Registrieren";
+  authModal.style.display = "block";
+};
+
+authClose.onclick = () => authModal.style.display = "none";
+
+authSubmit.onclick = async () => {
+  const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
+  const username = authName.value.trim();
+  const password = authPass.value.trim();
+
+  if (!username || !password) {
+    alert("Bitte Benutzername und Passwort eingeben");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/${mode}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "Fehler");
+      return;
+    }
+
+    localStorage.setItem("loot_user", JSON.stringify(data.user));
+    authState.textContent = "👤 " + data.user.username;
+    authModal.style.display = "none";
+    authName.value = "";
+    authPass.value = "";
+  } catch {
+    alert("Backend nicht erreichbar");
+  }
+};
+
+// Auto-Login
+const saved = localStorage.getItem("loot_user");
+if (saved) {
+  try {
+    const u = JSON.parse(saved);
+    authState.textContent = "👤 " + u.username;
+  } catch {}
+}
+</script>
+
 </body>
 
 <script>
