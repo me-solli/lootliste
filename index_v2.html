@@ -318,6 +318,64 @@ footer{
   font-size:13px;
 }
 footer a{color:var(--gold);margin-right:18px;text-decoration:none}
+
+/* ===== AUTH BOX ===== */
+.hero{ position:relative; }
+
+.auth-box{
+  position:absolute;
+  top:22px;
+  right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
+  font-size:13px;
+  z-index:5;
+}
+.auth-box button{
+  padding:6px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#151515;
+  color:#fff;
+  cursor:pointer;
+}
+.auth-box button:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+
+/* ===== AUTH MODAL ===== */
+.auth-modal{
+  max-width:360px;
+}
+#authModal .backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  z-index:200;
+}
+#authModal .modal{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:#121212;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  width:90%;
+  z-index:201;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
 </style>
 </head>
 
@@ -326,6 +384,13 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 <header class="hero">
   <div class="hero-inner">
+
+  <div id="authBox" class="auth-box">
+    <span id="authState">👤 Nicht eingeloggt</span>
+    <button id="loginBtn">Login</button>
+    <button id="registerBtn">Registrieren</button>
+  </div>
+
     <h1>🎁 <span>FREE LOOTLISTE</span></h1>
     <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
 
@@ -559,5 +624,203 @@ statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
 </script>
+
+<!-- ===== AUTH MODAL ===== -->
+<div id="authModal" style="display:none">
+  <div class="backdrop"></div>
+  <div class="modal auth-modal">
+    <h3 id="authTitle">Login</h3>
+    <input id="authName" placeholder="Username">
+    <input id="authPass" type="password" placeholder="Passwort">
+    <div class="modal-actions">
+      <button id="authSubmit">Bestätigen</button>
+      <button id="authClose">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== AUTH LOGIN WIRING ===== -->
+<script>
+const authBox = document.getElementById("authBox");
+const authState = document.getElementById("authState");
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+
+const authModal = document.getElementById("authModal");
+const authTitle = document.getElementById("authTitle");
+const authName = document.getElementById("authName");
+const authPass = document.getElementById("authPass");
+const authSubmit = document.getElementById("authSubmit");
+const authClose = document.getElementById("authClose");
+
+loginBtn.onclick = () => {
+  authTitle.textContent = "Login";
+  authModal.style.display = "block";
+};
+
+registerBtn.onclick = () => {
+  authTitle.textContent = "Registrieren";
+  authModal.style.display = "block";
+};
+
+authClose.onclick = () => authModal.style.display = "none";
+
+authSubmit.onclick = async () => {
+  const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
+  const username = authName.value.trim();
+  const password = authPass.value.trim();
+
+  if(!username || !password){
+    alert("Bitte Benutzername und Passwort eingeben");
+    return;
+  }
+
+  try{
+    const res = await fetch("http://localhost:3000/api/" + mode, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+    if(!res.ok){
+      alert(data.error || "Login fehlgeschlagen");
+      return;
+    }
+
+    localStorage.setItem("loot_user", JSON.stringify(data.user));
+    authState.textContent = "👤 " + data.user.username;
+    authModal.style.display = "none";
+    authName.value = "";
+    authPass.value = "";
+  }catch(err){
+    alert("Backend nicht erreichbar");
+  }
+};
+
+// Auto-Login aus localStorage
+const savedUser = localStorage.getItem("loot_user");
+if(savedUser){
+  try{
+    const u = JSON.parse(savedUser);
+    authState.textContent = "👤 " + u.username;
+  }catch{}
+}
+</script>
+
+
+<!-- ===== AUTH (FINAL / LOCAL BACKEND) ===== -->
+<script>
+const API = "http://localhost:3000";
+
+const authState = document.getElementById("authState");
+const authModal = document.getElementById("authModal");
+const authTitle = document.getElementById("authTitle");
+const authName = document.getElementById("authName");
+const authPass = document.getElementById("authPass");
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const authSubmit = document.getElementById("authSubmit");
+const authClose = document.getElementById("authClose");
+
+loginBtn.onclick = () => {
+  authTitle.textContent = "Login";
+  authModal.style.display = "block";
+};
+
+registerBtn.onclick = () => {
+  authTitle.textContent = "Registrieren";
+  authModal.style.display = "block";
+};
+
+authClose.onclick = () => authModal.style.display = "none";
+
+authSubmit.onclick = async () => {
+  const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
+  const username = authName.value.trim();
+  const password = authPass.value.trim();
+
+  if (!username || !password) {
+    alert("Bitte Benutzername und Passwort eingeben");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/${mode}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "Fehler");
+      return;
+    }
+
+    localStorage.setItem("loot_user", JSON.stringify(data.user));
+    authState.textContent = "👤 " + data.user.username;
+    authModal.style.display = "none";
+    authName.value = "";
+    authPass.value = "";
+  } catch {
+    alert("Backend nicht erreichbar");
+  }
+};
+
+// Auto-Login
+const saved = localStorage.getItem("loot_user");
+if (saved) {
+  try {
+    const u = JSON.parse(saved);
+    authState.textContent = "👤 " + u.username;
+  } catch {}
+}
+</script>
+
 </body>
+
+<script>
+const authModal=document.getElementById("authModal");
+const authTitle=document.getElementById("authTitle");
+const authClose=document.getElementById("authClose");
+
+document.getElementById("loginBtn").onclick=()=>{
+  authTitle.textContent="Login";
+  authModal.style.display="block";
+};
+document.getElementById("registerBtn").onclick=()=>{
+  authTitle.textContent="Registrieren";
+  authModal.style.display="block";
+};
+authClose.onclick=()=>authModal.style.display="none";
+</script>
+
+
+<script>
+/* ===== AUTH BACKEND WIRING (STEP 3A) ===== */
+const authSubmit=document.getElementById("authSubmit");
+const authState=document.getElementById("authState");
+
+authSubmit.onclick=async ()=>{
+  const mode=document.getElementById("authTitle").textContent==="Registrieren"?"register":"login";
+  const username=document.getElementById("authName").value;
+  const password=document.getElementById("authPass").value;
+  if(!username||!password){ alert("Bitte ausfüllen"); return; }
+
+  const res=await fetch(`/api/${mode}`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({username,password})
+  });
+
+  const data=await res.json();
+  if(!res.ok){ alert(data.error||"Fehler"); return; }
+
+  authState.textContent="👤 "+data.user.username;
+  document.getElementById("authModal").style.display="none";
+};
+</script>
+
 </html>
