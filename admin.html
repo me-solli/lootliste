@@ -124,6 +124,15 @@ th{color:var(--gold)}
   <h1>🛠 Lootliste – Admin</h1>
   <p>Items anlegen · bearbeiten · löschen · Export</p>
 </header>
+<div style="margin:0 26px 20px">
+  <label><strong>Workflow:</strong></label>
+  <select id="workflowFilter" onchange="renderItems()">
+    <option value="approved">Freigegeben</option>
+    <option value="submitted">Eingereicht</option>
+    <option value="rejected">Abgelehnt</option>
+  </select>
+</div>
+
 
 <div id="feedback" class="feedback"></div>
 
@@ -340,3 +349,41 @@ updatePreview();
 </script>
 </body>
 </html>
+
+<!-- WORKFLOW EXTENSION (approved / submitted / rejected) -->
+<script>
+// --- Workflow helpers (non-breaking) ---
+function ensureWorkflow(item){
+  if(!item.workflow) item.workflow = "approved";
+  if(!item.submitted_by_name) item.submitted_by_name = "";
+  if(!item.submitted_by_contact) item.submitted_by_contact = "";
+  if(!item.submitted_at) item.submitted_at = "";
+  return item;
+}
+
+function setWorkflow(id, state){
+  const it = items.find(i => i.id === id);
+  if(!it) return;
+  it.workflow = state;
+  if(state !== "approved" && !it.submitted_at){
+    it.submitted_at = new Date().toISOString();
+  }
+  saveItems();
+  renderItems();
+}
+
+const _origLoadItems = loadItems;
+loadItems = function(){
+  _origLoadItems();
+  items = items.map(ensureWorkflow);
+}
+
+const _origRenderItems = renderItems;
+renderItems = function(){
+  const filter = document.getElementById("workflowFilter")?.value || "approved";
+  const old = items.slice();
+  items = old.filter(i => (i.workflow || "approved") === filter);
+  _origRenderItems();
+  items = old;
+}
+</script>
