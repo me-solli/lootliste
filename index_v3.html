@@ -654,19 +654,19 @@ const authPass = document.getElementById("authPass");
 const authSubmit = document.getElementById("authSubmit");
 const authClose = document.getElementById("authClose");
 
-loginBtn.onclick = () => {
+loginBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
   authTitle.textContent = "Login";
   authModal.style.display = "block";
 };
 
-registerBtn.onclick = () => {
+registerBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
   authTitle.textContent = "Registrieren";
   authModal.style.display = "block";
 };
 
 authClose.onclick = () => authModal.style.display = "none";
 
-authSubmit.onclick = async () => {
+authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
   const username = authName.value.trim();
   const password = authPass.value.trim();
@@ -724,19 +724,19 @@ const registerBtn = document.getElementById("registerBtn");
 const authSubmit = document.getElementById("authSubmit");
 const authClose = document.getElementById("authClose");
 
-loginBtn.onclick = () => {
+loginBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
   authTitle.textContent = "Login";
   authModal.style.display = "block";
 };
 
-registerBtn.onclick = () => {
+registerBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
   authTitle.textContent = "Registrieren";
   authModal.style.display = "block";
 };
 
 authClose.onclick = () => authModal.style.display = "none";
 
-authSubmit.onclick = async () => {
+authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
   const username = authName.value.trim();
   const password = authPass.value.trim();
@@ -803,7 +803,7 @@ authClose.onclick=()=>authModal.style.display="none";
 const authSubmit=document.getElementById("authSubmit");
 const authState=document.getElementById("authState");
 
-authSubmit.onclick=async ()=>{
+authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   const mode=document.getElementById("authTitle").textContent==="Registrieren"?"register":"login";
   const username=document.getElementById("authName").value;
   const password=document.getElementById("authPass").value;
