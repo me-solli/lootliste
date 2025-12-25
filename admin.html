@@ -274,6 +274,9 @@ const $=id=>document.getElementById(id);
 const fb=$("feedback");
 
 let items=[...itemsData];
+
+let selectedSubmission = null;
+
 let editIndex=null;
 
 function feedback(msg,err=false){
@@ -337,7 +340,12 @@ function saveItem(){
     stars:$("stars").value,
     roll:$("roll").value||"—",
     contact:"me_solli",
-    workflow: $("workflow")?.value || "approved"
+    workflow: $("workflow")?.value || "approved",
+    internal: selectedSubmission ? {
+      screenshot: selectedSubmission.screenshot,
+      submittedBy: selectedSubmission.submittedBy,
+      submittedAt: selectedSubmission.submittedAt
+    } : undefined
   };
 
   editIndex!==null ? items[editIndex]=obj : items.push(obj);
@@ -401,7 +409,7 @@ function renderSubmitted(){
       <td>${it.submittedBy?.username || "?"}</td>
       <td>${new Date(it.submittedAt).toLocaleString()}</td>
       <td>
-        <button class="edit" onclick="editSubmitted(${idx})">✏️ Bearbeiten</button>
+        <button class="edit" onclick="selectSubmitted(${idx})">✏️ Bearbeiten</button>
         <button class="del" onclick="rejectSubmitted(${idx})">❌ Ablehnen</button>
       </td>
     `;
@@ -423,6 +431,13 @@ function editSubmitted(i){
     "Bearbeiten gestartet.\n\n" +
     "Der Screenshot bleibt unter 'Eingereicht', bis du das Item speicherst."
   );
+}
+
+
+function selectSubmitted(i){
+  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+  selectedSubmission = data[i];
+  feedback("Screenshot zur Bearbeitung ausgewählt");
 }
 
 function rejectSubmitted(i){
