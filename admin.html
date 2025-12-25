@@ -140,6 +140,33 @@ th{color:var(--gold)}
 
 <div class="container">
 
+<!-- ===== SCREENSHOT EINREICHUNGEN (NEU) ===== -->
+<section class="panel">
+  <h2>📥 Eingereichte Screenshots</h2>
+  <p class="small" id="demoHint" style="display:none">
+    Noch keine Einreichungen vorhanden.
+    <button onclick="createDemoSubmission()">🧪 Demo-Screenshot erzeugen</button>
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Vorschau</th>
+        <th>Spieler</th>
+        <th>Datum</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody id="submissionTable"></tbody>
+  </table>
+</section>
+
+<section class="panel" id="activeSubmissionPanel" style="display:none">
+  <h2>📸 Aktiver Screenshot</h2>
+  <p class="small">Dieser Screenshot ist aktuell zur Bearbeitung ausgewählt.</p>
+  <img id="activeSubmissionImg" style="max-width:260px;border:1px solid #333;border-radius:10px;background:#000">
+</section>
+
+
 <!-- ITEM FORM -->
 <div class="panel">
 <h2>➕ / ✏️ Item</h2>
@@ -215,17 +242,6 @@ th{color:var(--gold)}
 </div>
 </div>
 
-
-<!-- ACTIVE SUBMISSION PREVIEW -->
-<div class="panel" id="activeSubmissionPanel" style="display:none">
-  <h2>📸 Aktiver Screenshot (Einreichung)</h2>
-  <p style="opacity:.8;font-size:13px">
-    Dieser Screenshot ist aktuell zur Bearbeitung ausgewählt.
-  </p>
-  <img id="activeSubmissionImg" style="max-width:200px;border:1px solid #333;border-radius:8px;background:#000">
-</div>
-
-
 <!-- PREVIEW -->
 <div class="panel">
 <h2>👁 Live-Vorschau</h2>
@@ -254,25 +270,6 @@ th{color:var(--gold)}
 <h2>📄 items.js Export</h2>
 <button class="copy" onclick="copyExport()">📋 Kopieren</button>
 <textarea id="output" readonly></textarea>
-
-<!-- SUBMISSIONS PANEL -->
-<div class="panel">
-<h2>📥 Eingereichte Items (Screenshots)</h2>
-<p style="opacity:.8;font-size:13px">
-Bleiben hier, bis sie <b>bearbeitet & freigegeben</b> oder <b>abgelehnt</b> werden.
-</p>
-<table>
-<thead>
-<tr>
-  <th>Vorschau</th>
-  <th>Spieler</th>
-  <th>Datum</th>
-  <th>Aktion</th>
-</tr>
-</thead>
-<tbody id="submittedTable"></tbody>
-</table>
-</div>
 </div>
 
 </div>
@@ -285,9 +282,6 @@ const $=id=>document.getElementById(id);
 const fb=$("feedback");
 
 let items=[...itemsData];
-
-let selectedSubmission = null;
-
 let editIndex=null;
 
 function feedback(msg,err=false){
@@ -351,12 +345,7 @@ function saveItem(){
     stars:$("stars").value,
     roll:$("roll").value||"—",
     contact:"me_solli",
-    workflow: $("workflow")?.value || "approved",
-    internal: selectedSubmission ? {
-      screenshot: selectedSubmission.screenshot,
-      submittedBy: selectedSubmission.submittedBy,
-      submittedAt: selectedSubmission.submittedAt
-    } : undefined
+    workflow: $("workflow")?.value || "approved"
   };
 
   editIndex!==null ? items[editIndex]=obj : items.push(obj);
@@ -398,93 +387,93 @@ window.copyExport=copyExport;
 render();
 updatePreview();
 
-/* ===============================
-   SUBMITTED ITEMS (INTEGRATED)
-================================ */
-function renderSubmitted(){
-  const table = document.getElementById("submittedTable");
-  if(!table) return;
+/* ===== SCREENSHOT WORKFLOW ===== */
+let selectedSubmission = null;
 
-  table.innerHTML = "";
+function renderSubmissions(){
   const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+  const body = document.getElementById("submissionTable");
+  const demo = document.getElementById("demoHint");
+  if(!body) return;
+
+  body.innerHTML = "";
 
   if(data.length === 0){
-    table.innerHTML = '<tr><td colspan="4" style="color:#777">Keine Einreichungen vorhanden</td></tr>';
+    demo.style.display = "block";
+    body.innerHTML = '<tr><td colspan="4" style="opacity:.6">Keine Einreichungen</td></tr>';
     return;
   }
 
-  data.forEach((it, idx) => {
+  demo.style.display = "none";
+
+  data.forEach((it,i)=>{
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td><img src="${it.screenshot}" style="width:48px;height:48px;object-fit:contain"></td>
+      <td><img src="${it.screenshot}" style="width:56px;height:56px;object-fit:contain;background:#000;border:1px solid #333;border-radius:8px"></td>
       <td>${it.submittedBy?.username || "?"}</td>
       <td>${new Date(it.submittedAt).toLocaleString()}</td>
       <td>
-        <button class="edit" onclick="selectSubmitted(${idx})">✏️ Bearbeiten</button>
-        <button class="del" onclick="rejectSubmitted(${idx})">❌ Ablehnen</button>
+        <button onclick="selectSubmission(${i})">✏️ Bearbeiten</button>
+        <button onclick="rejectSubmission(${i})">❌ Ablehnen</button>
       </td>
     `;
-    table.appendChild(tr);
+    body.appendChild(tr);
   });
 }
 
-function editSubmitted(i){
+function selectSubmission(i){
   const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
-  const it = data[i];
-  if(!it) return;
-
-  // prefill minimal fields, workflow stays submitted
-  document.getElementById("name").value = "";
-  document.getElementById("workflow").value = "submitted";
-  updatePreview();
-
-  alert(
-    "Bearbeiten gestartet.\n\n" +
-    "Der Screenshot bleibt unter 'Eingereicht', bis du das Item speicherst."
-  );
+  selectedSubmission = data[i];
+  document.getElementById("activeSubmissionImg").src = selectedSubmission.screenshot;
+  document.getElementById("activeSubmissionPanel").style.display = "block";
 }
 
+function rejectSubmission(i){
+  if(!confirm("Einreichung ablehnen?")) return;
+  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+  data.splice(i,1);
+  localStorage.setItem("submittedItems", JSON.stringify(data));
+  selectedSubmission = null;
+  document.getElementById("activeSubmissionPanel").style.display = "none";
+  renderSubmissions();
+}
 
-
-function addDemoSubmitted(){
+function createDemoSubmission(){
   const demo = {
-    screenshot: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=",
+    screenshot: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAFklEQVR4nO3BMQEAAADCoPdPbQ8HFAAAAAAAAAAAwD4GAAEJqZkAAAAASUVORK5CYII=",
     submittedBy: { username: "demoUser" },
     submittedAt: new Date().toISOString()
   };
   const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
   data.push(demo);
   localStorage.setItem("submittedItems", JSON.stringify(data));
-  renderSubmitted();
-  feedback("Demo-Screenshot angelegt");
+  renderSubmissions();
 }
 
-const activePanel = document.getElementById("activeSubmissionPanel");
-const activeImg = document.getElementById("activeSubmissionImg");
+/* Hook into saveItem */
+const originalSaveItem = saveItem;
+saveItem = function(){
+  if(selectedSubmission){
+    window.__internalScreenshot = {
+      screenshot: selectedSubmission.screenshot,
+      submittedBy: selectedSubmission.submittedBy,
+      submittedAt: selectedSubmission.submittedAt
+    };
+  }
+  originalSaveItem();
+};
 
-function selectSubmitted(i){
-  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
-  selectedSubmission = data[i];
-  activeImg.src = selectedSubmission.screenshot;
-  activePanel.style.display = "block";
-  feedback("Screenshot zur Bearbeitung ausgewählt");
-}
+/* Attach internal screenshot inside original save */
+const originalBuildItem = buildItemObject;
+buildItemObject = function(){
+  const item = originalBuildItem();
+  if(window.__internalScreenshot){
+    item.internal = window.__internalScreenshot;
+  }
+  return item;
+};
 
-function selectSubmitted(i){
-  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
-  selectedSubmission = data[i];
-  feedback("Screenshot zur Bearbeitung ausgewählt");
-}
-
-function rejectSubmitted(i){
-  if(!confirm("Eintrag wirklich ablehnen?")) return;
-  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
-  data.splice(i,1);
-  localStorage.setItem("submittedItems", JSON.stringify(data));
-  renderSubmitted();
-}
-
-renderSubmitted();
+document.addEventListener("DOMContentLoaded", renderSubmissions);
 
 </script>
 </body>
