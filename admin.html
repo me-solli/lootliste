@@ -185,6 +185,15 @@ th{color:var(--gold)}
   </div>
 
   <div>
+    <label>Workflow</label>
+    <select id="workflow">
+      <option value="approved">Freigegeben</option>
+      <option value="submitted">Eingereicht</option>
+      <option value="rejected">Abgelehnt</option>
+    </select>
+  </div>
+
+  <div>
     <label>Sterne-Rating</label>
     <select id="stars">
       <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ (5/5)</option>
@@ -273,7 +282,8 @@ function updatePreview(){
 
 function render(){
   $("itemTable").innerHTML="";
-  items.forEach((i,idx)=>{
+  const wf = document.getElementById("workflowFilter")?.value || "approved";
+  items.filter(i => (i.workflow || "approved") === wf).forEach((i,idx)=>{
     $("itemTable").innerHTML+=`
       <tr>
         <td>${i.name}</td>
@@ -305,7 +315,8 @@ function saveItem(){
     status:$("status").value,
     stars:$("stars").value,
     roll:$("roll").value||"—",
-    contact:"me_solli"
+    contact:"me_solli",
+    workflow: $("workflow")?.value || "approved"
   };
 
   editIndex!==null ? items[editIndex]=obj : items.push(obj);
