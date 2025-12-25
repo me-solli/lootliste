@@ -243,6 +243,25 @@ th{color:var(--gold)}
 <h2>📄 items.js Export</h2>
 <button class="copy" onclick="copyExport()">📋 Kopieren</button>
 <textarea id="output" readonly></textarea>
+
+<!-- SUBMISSIONS PANEL -->
+<div class="panel">
+<h2>📥 Eingereichte Items (Screenshots)</h2>
+<p style="opacity:.8;font-size:13px">
+Bleiben hier, bis sie <b>bearbeitet & freigegeben</b> oder <b>abgelehnt</b> werden.
+</p>
+<table>
+<thead>
+<tr>
+  <th>Vorschau</th>
+  <th>Spieler</th>
+  <th>Datum</th>
+  <th>Aktion</th>
+</tr>
+</thead>
+<tbody id="submittedTable"></tbody>
+</table>
+</div>
 </div>
 
 </div>
@@ -359,6 +378,63 @@ window.copyExport=copyExport;
 
 render();
 updatePreview();
+
+/* ===============================
+   SUBMITTED ITEMS (INTEGRATED)
+================================ */
+function renderSubmitted(){
+  const table = document.getElementById("submittedTable");
+  if(!table) return;
+
+  table.innerHTML = "";
+  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+
+  if(data.length === 0){
+    table.innerHTML = '<tr><td colspan="4" style="color:#777">Keine Einreichungen vorhanden</td></tr>';
+    return;
+  }
+
+  data.forEach((it, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><img src="${it.screenshot}" style="width:48px;height:48px;object-fit:contain"></td>
+      <td>${it.submittedBy?.username || "?"}</td>
+      <td>${new Date(it.submittedAt).toLocaleString()}</td>
+      <td>
+        <button class="edit" onclick="editSubmitted(${idx})">✏️ Bearbeiten</button>
+        <button class="del" onclick="rejectSubmitted(${idx})">❌ Ablehnen</button>
+      </td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+function editSubmitted(i){
+  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+  const it = data[i];
+  if(!it) return;
+
+  // prefill minimal fields, workflow stays submitted
+  document.getElementById("name").value = "";
+  document.getElementById("workflow").value = "submitted";
+  updatePreview();
+
+  alert(
+    "Bearbeiten gestartet.\n\n" +
+    "Der Screenshot bleibt unter 'Eingereicht', bis du das Item speicherst."
+  );
+}
+
+function rejectSubmitted(i){
+  if(!confirm("Eintrag wirklich ablehnen?")) return;
+  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+  data.splice(i,1);
+  localStorage.setItem("submittedItems", JSON.stringify(data));
+  renderSubmitted();
+}
+
+renderSubmitted();
+
 </script>
 </body>
 
