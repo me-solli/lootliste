@@ -387,3 +387,29 @@ renderItems = function(){
   items = old;
 }
 </script>
+
+<script>
+// --- DEMO: Muster-Item (eingereicht) ---
+(function addDemoSubmittedItem(){
+  if (!Array.isArray(items)) return;
+  const hasSubmitted = items.some(i => i.workflow === "submitted");
+  if (hasSubmitted) return;
+
+  items.push({
+    id: "demo-submitted-1",
+    name: "Musteritem – Eingereicht",
+    category: "waffe",
+    type: "Schwert",
+    status: "verfügbar",
+    stars: 0,
+    roll: "+80% def, 15% ias",
+    contact: "",
+    workflow: "submitted",
+    submitted_by_name: "PlayerXY",
+    submitted_by_contact: "Discord: playerxy",
+    submitted_at: new Date().toISOString()
+  });
+
+  saveItems();
+})();
+</script>
