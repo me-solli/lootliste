@@ -131,6 +131,8 @@ th{color:var(--gold)}
     <option value="submitted">Eingereicht</option>
     <option value="rejected">Abgelehnt</option>
   </select>
+<button onclick="addDemoSubmitted()" style="margin-left:12px">🧪 Demo-Eingereichtes Item</button>
+
 </div>
 
 
@@ -423,4 +425,22 @@ renderItems = function(){
 
   saveItems();
 })();
+</script>
+
+<script>
+function addDemoSubmitted(){
+  items.push({
+    name: "Demo – Eingereichtes Item",
+    type: "Waffe",
+    category: "Unique",
+    status: "Verfügbar",
+    stars: "★★★☆☆",
+    roll: "+80% ed, +20 str",
+    contact: "PlayerXY",
+    workflow: "submitted"
+  });
+  saveItems();
+  document.getElementById("workflowFilter").value="submitted";
+  render();
+}
 </script>
