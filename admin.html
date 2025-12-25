@@ -360,6 +360,37 @@ window.copyExport=copyExport;
 render();
 updatePreview();
 </script>
+
+<!-- === Punkt 2 Clean Injection: Demo Submitted Item === -->
+<script>
+(function(){
+  if (typeof items === "undefined") return;
+
+  const hasDemo = items.some(i => i.__demo === true);
+  if (hasDemo) return;
+
+  items.unshift({
+    id: Date.now(),
+    __demo: true,
+    name: "Bartucs Halsabschneider",
+    category: "waffe",
+    type: "klaue",
+    roll: "+180% ed",
+    stars: 4,
+    status: "Verfügbar",
+    workflow: "submitted",
+    contact: "DemoUser",
+    notes: "Demo-Einreichung – editierbar",
+    created: new Date().toISOString()
+  });
+
+  if (typeof renderItems === "function") {
+    renderItems();
+  }
+})();
+</script>
+<!-- === Ende Punkt 2 === -->
+
 </body>
 </html>
 
