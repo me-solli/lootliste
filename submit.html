@@ -14,6 +14,7 @@
   --text:#eaeaea;
   --muted:#999;
   --green:#4cff4c;
+  --red:#ff5c5c;
 }
 
 *{box-sizing:border-box}
@@ -55,7 +56,6 @@ label{
   font-size:14px;
 }
 
-input[type="text"],
 input[type="file"]{
   width:100%;
   padding:10px;
@@ -76,57 +76,84 @@ button{
   cursor:pointer;
 }
 
-.success{
-  margin-top:16px;
-  color:var(--green);
-  display:none;
+.notice{
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:16px;
+  font-size:14px;
 }
+
+.notice.error{
+  background:#1a0f0f;
+  border:1px solid #3a1a1a;
+  color:var(--red);
+}
+
+.notice.success{
+  background:#0f1a0f;
+  border:1px solid #1a3a1a;
+  color:var(--green);
+}
+
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
   <div class="panel">
+
     <h1>Item einreichen</h1>
-    <p>Screenshot hochladen. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin-Bereich.</p>
+    <p>Nur eingeloggte Spieler können Items einreichen. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin-Bereich.</p>
 
-    <form id="submitForm">
-      <label for="player">Spielername (optional)</label>
-      <input type="text" id="player" placeholder="z. B. MeSolli">
+    <div id="loginError" class="notice error hidden">
+      🔒 Du musst eingeloggt sein, um ein Item einzureichen.
+    </div>
 
+    <form id="submitForm" class="hidden">
       <label for="screenshot">Item-Screenshot *</label>
       <input type="file" id="screenshot" accept="image/*" required>
 
       <button type="submit">Item einreichen</button>
     </form>
 
-    <div class="success" id="successMsg">
+    <div id="successMsg" class="notice success hidden">
       ✔ Item wurde erfolgreich eingereicht.
     </div>
+
   </div>
 </div>
 
 <script>
+const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+
 const form = document.getElementById("submitForm");
+const loginError = document.getElementById("loginError");
 const successMsg = document.getElementById("successMsg");
 
-form.addEventListener("submit", function(e){
+if(!currentUser){
+  loginError.classList.remove("hidden");
+}else{
+  form.classList.remove("hidden");
+}
+
+form?.addEventListener("submit", function(e){
   e.preventDefault();
 
-  const player = document.getElementById("player").value.trim();
-  const fileInput = document.getElementById("screenshot");
-  const file = fileInput.files[0];
-
+  const file = document.getElementById("screenshot").files[0];
   if(!file) return;
 
   const reader = new FileReader();
   reader.onload = function(){
     const item = {
       id: Date.now(),
-      player: player || "unbekannt",
-      screenshot: reader.result,
       status: "eingereicht",
-      submittedAt: new Date().toISOString()
+      submittedAt: new Date().toISOString(),
+      submittedBy: {
+        id: currentUser.id,
+        username: currentUser.username
+      },
+      screenshot: reader.result
     };
 
     const existing = JSON.parse(localStorage.getItem("submittedItems") || "[]");
@@ -134,7 +161,7 @@ form.addEventListener("submit", function(e){
     localStorage.setItem("submittedItems", JSON.stringify(existing));
 
     form.reset();
-    successMsg.style.display = "block";
+    successMsg.classList.remove("hidden");
   };
 
   reader.readAsDataURL(file);
