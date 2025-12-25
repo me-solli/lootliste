@@ -215,6 +215,17 @@ th{color:var(--gold)}
 </div>
 </div>
 
+
+<!-- ACTIVE SUBMISSION PREVIEW -->
+<div class="panel" id="activeSubmissionPanel" style="display:none">
+  <h2>📸 Aktiver Screenshot (Einreichung)</h2>
+  <p style="opacity:.8;font-size:13px">
+    Dieser Screenshot ist aktuell zur Bearbeitung ausgewählt.
+  </p>
+  <img id="activeSubmissionImg" style="max-width:200px;border:1px solid #333;border-radius:8px;background:#000">
+</div>
+
+
 <!-- PREVIEW -->
 <div class="panel">
 <h2>👁 Live-Vorschau</h2>
@@ -433,6 +444,31 @@ function editSubmitted(i){
   );
 }
 
+
+
+function addDemoSubmitted(){
+  const demo = {
+    screenshot: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=",
+    submittedBy: { username: "demoUser" },
+    submittedAt: new Date().toISOString()
+  };
+  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+  data.push(demo);
+  localStorage.setItem("submittedItems", JSON.stringify(data));
+  renderSubmitted();
+  feedback("Demo-Screenshot angelegt");
+}
+
+const activePanel = document.getElementById("activeSubmissionPanel");
+const activeImg = document.getElementById("activeSubmissionImg");
+
+function selectSubmitted(i){
+  const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+  selectedSubmission = data[i];
+  activeImg.src = selectedSubmission.screenshot;
+  activePanel.style.display = "block";
+  feedback("Screenshot zur Bearbeitung ausgewählt");
+}
 
 function selectSubmitted(i){
   const data = JSON.parse(localStorage.getItem("submittedItems") || "[]");
