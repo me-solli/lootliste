@@ -601,6 +601,52 @@ function confirmActiveSubmission(){
 })();
 </script>
 
+
+<script>
+// === LOCK EDIT BUTTON AFTER CONFIRMATION ===
+function lockSubmissionRow(row){
+  if(!row) return;
+  const btn = row.querySelector('button, a');
+  if(!btn) return;
+
+  btn.setAttribute('disabled','disabled');
+  btn.classList.add('disabled');
+  btn.style.opacity = '0.45';
+  btn.style.cursor = 'not-allowed';
+  btn.innerHTML = '✔ bestätigt';
+}
+
+// extend confirmation to also lock button
+const _oldConfirm = window.confirmActiveSubmission;
+window.confirmActiveSubmission = function(){
+  if(_oldConfirm) _oldConfirm();
+  const row = window._activeSubmissionRow;
+  if(row){
+    lockSubmissionRow(row);
+  }
+};
+</script>
+
+
+<script>
+// === HIDE ACTIVE SCREENSHOT AFTER CONFIRMATION ===
+function hideActiveScreenshotPanel(){
+  const panel = document.querySelector('.active-screenshot, #activeScreenshot, .panel.active-screenshot');
+  if(panel){
+    panel.style.display = 'none';
+  }
+}
+
+// extend confirmation again to hide active screenshot
+(function(){
+  const orig = window.confirmActiveSubmission;
+  window.confirmActiveSubmission = function(){
+    if(orig) orig();
+    hideActiveScreenshotPanel();
+  };
+})();
+</script>
+
 </body>
 
 </html>
