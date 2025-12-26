@@ -529,6 +529,34 @@ updatePreview();
 })();
 
 </script>
+
+<script>
+// === AUTO SCREENSHOT CONFIRMATION (Variant A) ===
+function autoConfirmScreenshot(){
+  if(typeof currentItemId === 'undefined') return;
+  const row = document.querySelector('#submissionTable tr[data-item-id="'+currentItemId+'"]');
+  if(!row) return;
+
+  row.dataset.status = 'done';
+  const statusCell = row.querySelector('[data-role="status"]') || row.querySelector('td:nth-child(3)');
+  if(statusCell){
+    statusCell.innerHTML = '✅ bestätigt';
+    statusCell.style.color = 'var(--ok)';
+  }
+}
+
+// observe feedback success
+const fb = document.getElementById('feedback');
+if(fb){
+  const obs = new MutationObserver(()=>{
+    if(fb.classList.contains('ok') && fb.style.display !== 'none'){
+      autoConfirmScreenshot();
+    }
+  });
+  obs.observe(fb,{attributes:true,childList:true,subtree:true});
+}
+</script>
+
 </body>
 
 </html>
