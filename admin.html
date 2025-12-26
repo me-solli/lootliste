@@ -629,7 +629,7 @@ window.confirmActiveSubmission = function(){
 
 
 <script>
-// === HIDE ACTIVE SCREENSHOT AFTER CONFIRMATION ===
+// === REMOVED_OLD_HIDE_LOGIC ===
 function hideActiveScreenshotPanel(){
   const panel = document.querySelector('.active-screenshot, #activeScreenshot, .panel.active-screenshot');
   if(panel){
@@ -643,6 +643,30 @@ function hideActiveScreenshotPanel(){
   window.confirmActiveSubmission = function(){
     if(orig) orig();
     hideActiveScreenshotPanel();
+  };
+})();
+</script>
+
+
+<script>
+// === ROBUST HIDE: Aktiver Screenshot Panel ===
+function hideActiveScreenshotPanelRobust(){
+  // find panel by heading text
+  const headings = Array.from(document.querySelectorAll('.panel h2'));
+  const h = headings.find(el => el.textContent.includes('Aktiver Screenshot'));
+  if(!h) return;
+  const panel = h.closest('.panel');
+  if(panel){
+    panel.style.display = 'none';
+  }
+}
+
+// hook into confirmation
+(function(){
+  const orig = window.confirmActiveSubmission;
+  window.confirmActiveSubmission = function(){
+    if(orig) orig();
+    hideActiveScreenshotPanelRobust();
   };
 })();
 </script>
