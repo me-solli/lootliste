@@ -223,12 +223,7 @@ th{color:var(--gold)}
   </div>
 
   <div>
-    <label>Workflow</label>
-    <select id="workflow">
-      <option value="approved">Freigegeben</option>
-      <option value="submitted">Eingereicht</option>
-      <option value="rejected">Abgelehnt</option>
-    </select>
+    
   </div>
 
   <div>
@@ -667,6 +662,35 @@ function hideActiveScreenshotPanelRobust(){
   window.confirmActiveSubmission = function(){
     if(orig) orig();
     hideActiveScreenshotPanelRobust();
+  };
+})();
+</script>
+
+
+<script>
+// === RESET ITEM FORM AFTER SAVE ===
+function resetItemForm(){
+  const form = document.querySelector('form');
+  if(!form) return;
+
+  form.reset();
+
+  // clear previews if any
+  const previews = document.querySelectorAll('.preview img');
+  previews.forEach(img => img.src = '');
+
+  // clear internal edit state if present
+  if(typeof currentItemId !== 'undefined'){
+    currentItemId = null;
+  }
+}
+
+// hook into confirmation
+(function(){
+  const orig = window.confirmActiveSubmission;
+  window.confirmActiveSubmission = function(){
+    if(orig) orig();
+    resetItemForm();
   };
 })();
 </script>
