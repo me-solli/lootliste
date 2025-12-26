@@ -445,6 +445,32 @@ updatePreview();
   }
 })();
 
+
+/* ===== STEP 1: Eingang nach Speichern aufräumen ===== */
+(function(){
+  if(typeof saveItem !== "function") return;
+
+  const __save = saveItem;
+  saveItem = function(){
+    const hadSubmission = typeof selectedSubmission !== "undefined" && selectedSubmission;
+
+    __save();
+
+    if(hadSubmission){
+      // remove screenshot from Eingang (local test case)
+      try{
+        const table = document.querySelector("section.panel table tbody");
+        if(table){
+          table.innerHTML = '<tr><td colspan="4" style="opacity:.6">Keine offenen Einreichungen</td></tr>';
+        }
+        const active = document.getElementById("activeSubmissionPanel");
+        if(active) active.style.display = "none";
+        selectedSubmission = null;
+      }catch(e){}
+    }
+  };
+})();
+
 </script>
 </body>
 
