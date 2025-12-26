@@ -95,16 +95,43 @@ button{
   color:var(--green);
 }
 
+.userinfo{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+
 .hidden{display:none}
+
+.testlogin{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  padding:10px 14px;
+  border-radius:10px;
+  background:#1a1a1a;
+  color:var(--gold);
+  border:1px solid #333;
+  font-weight:bold;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
+
+<button class="testlogin" onclick="testLogin()">🔐 Test-Login (Admin)</button>
+
 <div class="wrapper">
   <div class="panel">
 
     <h1>Item einreichen</h1>
-    <p>Nur eingeloggte Spieler können Items einreichen. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin-Bereich.</p>
+    <p>
+      Nur eingeloggte Spieler können Items einreichen.
+      Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin-Bereich.
+    </p>
+
+    <div id="userInfo" class="userinfo hidden"></div>
 
     <div id="loginError" class="notice error hidden">
       🔒 Du musst eingeloggt sein, um ein Item einzureichen.
@@ -125,16 +152,28 @@ button{
 </div>
 
 <script>
+function testLogin(){
+  localStorage.setItem("currentUser", JSON.stringify({
+    id: "admin-test",
+    username: "Admin (Test)",
+    role: "admin"
+  }));
+  location.reload();
+}
+
 const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
 
 const form = document.getElementById("submitForm");
 const loginError = document.getElementById("loginError");
 const successMsg = document.getElementById("successMsg");
+const userInfo = document.getElementById("userInfo");
 
 if(!currentUser){
   loginError.classList.remove("hidden");
 }else{
   form.classList.remove("hidden");
+  userInfo.classList.remove("hidden");
+  userInfo.textContent = `Eingeloggt als: ${currentUser.username}`;
 }
 
 form?.addEventListener("submit", function(e){
