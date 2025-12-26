@@ -557,6 +557,50 @@ if(fb){
 }
 </script>
 
+
+<script>
+// === FIX: Link save confirmation to the ACTIVE submission row ===
+window._activeSubmissionRow = null;
+
+// Capture clicks on "Zum Item bearbeiten" and remember the row
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('button, a');
+  if(!btn) return;
+  if(btn.textContent && btn.textContent.includes('Zum Item bearbeiten')){
+    const row = btn.closest('tr');
+    if(row){
+      window._activeSubmissionRow = row;
+    }
+  }
+});
+
+function confirmActiveSubmission(){
+  const row = window._activeSubmissionRow;
+  if(!row) return;
+
+  row.dataset.status = 'done';
+
+  // Status cell is the 3rd column
+  const statusCell = row.querySelector('td:nth-child(3)');
+  if(statusCell){
+    statusCell.innerHTML = '✅ bestätigt';
+    statusCell.style.color = 'var(--ok)';
+  }
+}
+
+// Observe success feedback and confirm the active submission
+(function(){
+  const fb = document.getElementById('feedback');
+  if(!fb) return;
+  const obs = new MutationObserver(()=>{
+    if(fb.classList.contains('ok') && fb.style.display !== 'none'){
+      confirmActiveSubmission();
+    }
+  });
+  obs.observe(fb,{attributes:true,childList:true,subtree:true});
+})();
+</script>
+
 </body>
 
 </html>
