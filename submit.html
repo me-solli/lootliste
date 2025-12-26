@@ -103,10 +103,12 @@ button{
 
 .hidden{display:none}
 
+/* FIX: Testlogin immer sichtbar */
 .testlogin{
   position:fixed;
   bottom:20px;
   right:20px;
+  z-index:9999;
   padding:10px 14px;
   border-radius:10px;
   background:#1a1a1a;
@@ -206,5 +208,6 @@ form?.addEventListener("submit", function(e){
   reader.readAsDataURL(file);
 });
 </script>
+
 </body>
 </html>
