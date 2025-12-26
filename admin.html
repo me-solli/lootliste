@@ -131,7 +131,7 @@ th{color:var(--gold)}
     <option value="submitted">Eingereicht</option>
     <option value="rejected">Abgelehnt</option>
   </select>
-<button onclick="addDemoSubmitted()" style="margin-left:12px">🧪 Demo-Eingereichtes Item</button>
+<button onclick="addDemoSubmitted()" style="margin-left:12px">🧪 </button>
 
 </div>
 
@@ -430,6 +430,21 @@ if(typeof buildItemObject === "function"){
 }
 
 </script>
+
+<script>
+/* === FIX: Aktiver Screenshot sichtbar machen === */
+(function(){
+  const activePanel = document.getElementById("activeSubmissionPanel");
+  const activeImg = document.getElementById("activeSubmissionImg");
+  window.selectSubmission = function(){
+    if(!activePanel || !activeImg || !window.testSubmission) return;
+    activeImg.src = window.testSubmission.screenshot;
+    activePanel.style.display = "block";
+    window.selectedSubmission = window.testSubmission;
+  };
+})();
+</script>
+
 </body>
 
 </html>
