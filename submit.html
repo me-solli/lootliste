@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Item einreichen – Community Lootliste</title>
+<title>Item einreichen – Community Lootliste (DEV)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -44,6 +44,12 @@ h1{
   color:var(--gold);
 }
 
+.dev{
+  font-size:12px;
+  color:#ff9c00;
+  margin-bottom:10px;
+}
+
 p{
   margin:0 0 20px;
   color:var(--muted);
@@ -83,70 +89,30 @@ button{
   font-size:14px;
 }
 
-.notice.error{
-  background:#1a0f0f;
-  border:1px solid #3a1a1a;
-  color:var(--red);
-}
-
 .notice.success{
   background:#0f1a0f;
   border:1px solid #1a3a1a;
   color:var(--green);
 }
-
-.userinfo{
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:12px;
-}
-
-.hidden{display:none}
-
-/* FIX: Testlogin immer sichtbar */
-.testlogin{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  z-index:9999;
-  padding:10px 14px;
-  border-radius:10px;
-  background:#1a1a1a;
-  color:var(--gold);
-  border:1px solid #333;
-  font-weight:bold;
-  cursor:pointer;
-}
 </style>
 </head>
 
 <body>
-
-<button class="testlogin" onclick="testLogin()">🔐 Test-Login (Admin)</button>
-
 <div class="wrapper">
   <div class="panel">
 
     <h1>Item einreichen</h1>
-    <p>
-      Nur eingeloggte Spieler können Items einreichen.
-      Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin-Bereich.
-    </p>
+    <div class="dev">DEV‑Modus aktiv (Auto‑Login)</div>
+    <p>Screenshot hochladen. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin‑Bereich.</p>
 
-    <div id="userInfo" class="userinfo hidden"></div>
-
-    <div id="loginError" class="notice error hidden">
-      🔒 Du musst eingeloggt sein, um ein Item einzureichen.
-    </div>
-
-    <form id="submitForm" class="hidden">
-      <label for="screenshot">Item-Screenshot *</label>
+    <form id="submitForm">
+      <label for="screenshot">Item‑Screenshot *</label>
       <input type="file" id="screenshot" accept="image/*" required>
 
       <button type="submit">Item einreichen</button>
     </form>
 
-    <div id="successMsg" class="notice success hidden">
+    <div id="successMsg" class="notice success" style="display:none">
       ✔ Item wurde erfolgreich eingereicht.
     </div>
 
@@ -154,31 +120,23 @@ button{
 </div>
 
 <script>
-function testLogin(){
+/* ===============================
+   DEV ONLY – Auto‑Login
+   Wird später vollständig entfernt
+================================ */
+if(!localStorage.getItem("currentUser")){
   localStorage.setItem("currentUser", JSON.stringify({
-    id: "admin-test",
-    username: "Admin (Test)",
-    role: "admin"
+    id: "452ceabf-be35-4752-9c69-adfc3def51d5",
+    username: "daniel"
   }));
-  location.reload();
 }
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 const form = document.getElementById("submitForm");
-const loginError = document.getElementById("loginError");
 const successMsg = document.getElementById("successMsg");
-const userInfo = document.getElementById("userInfo");
 
-if(!currentUser){
-  loginError.classList.remove("hidden");
-}else{
-  form.classList.remove("hidden");
-  userInfo.classList.remove("hidden");
-  userInfo.textContent = `Eingeloggt als: ${currentUser.username}`;
-}
-
-form?.addEventListener("submit", function(e){
+form.addEventListener("submit", function(e){
   e.preventDefault();
 
   const file = document.getElementById("screenshot").files[0];
@@ -202,12 +160,11 @@ form?.addEventListener("submit", function(e){
     localStorage.setItem("submittedItems", JSON.stringify(existing));
 
     form.reset();
-    successMsg.classList.remove("hidden");
+    successMsg.style.display = "block";
   };
 
   reader.readAsDataURL(file);
 });
 </script>
-
 </body>
 </html>
