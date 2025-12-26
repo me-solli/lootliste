@@ -114,6 +114,20 @@ th{color:var(--gold)}
   height:64px;
   object-fit:contain;
 }
+
+/* === Archivierte Screenshots (bestätigt) === */
+tr[data-status="done"]{
+  opacity:.45;
+}
+tr[data-status="done"] img{
+  filter:grayscale(60%);
+}
+tr[data-status="done"] button{
+  pointer-events:none;
+  cursor:default;
+  opacity:.8;
+}
+
 </style>
 </head>
 
