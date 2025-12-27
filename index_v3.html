@@ -398,9 +398,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     <div class="hero-stats" id="heroStats"></div>
 
     <div class="hero-right">
-      <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
-        ▶ Twitch: me_solli
-      </a>
+      
       <div id="visitorCounter">👁 Besucher gesamt: …</div>
     </div>
   </div>
@@ -552,12 +550,9 @@ function render(){
           <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
           <div class="roll">${item.roll||"—"}</div>
           ${count?`<div style="font-size:12px;opacity:.8">📬 ${count} Anfrage(n)</div>`:""}
-          <div class="player">
-            Spieler:
-            <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
-          </div>
+          <div class="player">Spieler: ${item.contact}</div>
           
-          <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">Über Twitch anfragen</a>
+          
           <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
         </div>
       </div>`;
