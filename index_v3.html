@@ -2,97 +2,74 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (V3 Test)</title>
+<title>🎁 D2R Lootliste – V3 Test Phase 2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
   --gold:#f5c451;
-  --bg:#0b0b0b;
-  --panel:#121212;
   --border:#2a2a2a;
-  --soft:#1a1a1a;
   --green:#4cff4c;
   --yellow:#ffd24c;
-  --red:#ff5c5c;
+  --panel:#121212;
 }
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  background:#0b0b0b;
   color:#eaeaea;
 }
-.wrapper{max-width:1500px;margin:0 auto}
+.wrapper{max-width:1200px;margin:0 auto}
 
-/* ===== HERO ===== */
-.hero{
-  background:url("img/banner_diablo.png") center top / cover no-repeat;
-  border-radius:0 0 26px 26px;
-  overflow:hidden;
-  min-height:260px;
+/* ===== HEADER ===== */
+header{
+  padding:30px;
+  background:linear-gradient(180deg,#1a1a1a,#0b0b0b);
+  border-bottom:1px solid #222;
   position:relative;
 }
-.hero-inner{
-  padding:44px 36px;
-  background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85));
-}
-.hero-logo img{
-  max-width:420px;
-  width:100%;
-  filter:brightness(.82) contrast(1.05);
-}
-.hero p{opacity:.9}
+header h1{margin:0;color:var(--gold)}
+header p{margin:6px 0 0;opacity:.85}
 
-/* ===== AUTH BOX ===== */
+/* ===== AUTH ===== */
 .auth-box{
   position:absolute;
-  top:22px;
+  top:24px;
   right:24px;
   display:flex;
-  gap:10px;
+  gap:8px;
   align-items:center;
-  padding:10px 14px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:rgba(0,0,0,.55);
   font-size:13px;
 }
 .auth-box button{
   padding:6px 12px;
-  border-radius:10px;
-  border:1px solid var(--border);
   background:#151515;
+  border:1px solid var(--border);
+  border-radius:10px;
   color:#fff;
   cursor:pointer;
 }
 .auth-box button:hover{border-color:var(--gold);color:var(--gold)}
 
 .container{padding:30px}
+
+/* ===== CARDS ===== */
 .cards{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(2,1fr);
   gap:22px;
 }
-@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.cards{grid-template-columns:1fr}}
+@media(max-width:700px){.cards{grid-template-columns:1fr}}
 
 .card{
   background:linear-gradient(180deg,#191919,#0f0f0f);
   border:1px solid var(--border);
-  border-radius:20px;
+  border-radius:18px;
   padding:16px;
   position:relative;
 }
-.card .cta{
-  margin-top:10px;
-  padding:8px;
-  text-align:center;
-  border:1px solid var(--border);
-  border-radius:12px;
-  cursor:pointer;
-}
-.card .cta:hover{border-color:var(--gold);color:var(--gold)}
+
 .status{
   position:absolute;
   top:12px;
@@ -102,7 +79,28 @@ body{
   border-radius:999px;
 }
 .verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
-.reserviert{background:rgba(255,210,76,.15);color:var(--yellow)}
+.bedarf{background:rgba(255,210,76,.15);color:var(--yellow)}
+
+.cta{
+  margin-top:10px;
+  padding:8px;
+  text-align:center;
+  border:1px solid var(--border);
+  border-radius:12px;
+  cursor:pointer;
+}
+.cta:hover{border-color:var(--gold);color:var(--gold)}
+
+.owner-box{
+  margin-top:12px;
+  padding:10px;
+  border:1px dashed #333;
+  border-radius:12px;
+  font-size:13px;
+  background:#111;
+}
+.owner-box b{color:var(--gold)}
+.owner-entry{margin-top:6px;opacity:.9}
 
 footer{
   margin-top:50px;
@@ -110,27 +108,21 @@ footer{
   border-top:1px solid #222;
   font-size:13px;
 }
-footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
 
-<header class="hero">
-  <div class="hero-inner">
-    <div class="auth-box">
-      <span id="authState">👤 nicht eingeloggt</span>
-      <button id="loginA">Login Tester_A</button>
-      <button id="loginB">Login Tester_B</button>
-      <button id="logoutBtn">Logout</button>
-    </div>
-
-    <h1 class="hero-logo">
-      <img src="img/logo_d2r.png" alt="Lootliste Logo">
-    </h1>
-    <p>Community Lootliste · D2R · V3 Testbetrieb (Inline)</p>
+<header>
+  <div class="auth-box">
+    <span id="authState">👤 nicht eingeloggt</span>
+    <button id="loginA">Tester_A</button>
+    <button id="loginB">Tester_B</button>
+    <button id="logout">Logout</button>
   </div>
+  <h1>D2R Lootliste</h1>
+  <p>V3 · Testbetrieb · Phase 2 (Owner-Sichtbarkeit)</p>
 </header>
 
 <div class="container">
@@ -138,79 +130,81 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </div>
 
 <footer>
-  <a href="#">Impressum</a>
-  <a href="#">Datenschutz</a>
+  Testdatei · nichts hiervon ist final
 </footer>
 
 </div>
 
 <script>
-/* =========================================================
-   TEST-ACCOUNTS (INLINE AUTH)
-========================================================= */
-const USERS = {
-  A: { id:"u1", name:"Tester_A" },
-  B: { id:"u2", name:"Tester_B" }
+/* =====================================================
+   AUTH (lokale Test-Accounts)
+===================================================== */
+const USERS={
+  A:{id:"u1",name:"Tester_A"},
+  B:{id:"u2",name:"Tester_B"}
 };
 
 function setUser(u){
-  localStorage.setItem("v3_user", JSON.stringify(u));
+  localStorage.setItem("v3_user",JSON.stringify(u));
   renderAuth();
+  renderItems();
 }
 function getUser(){
-  try{ return JSON.parse(localStorage.getItem("v3_user")); }
-  catch{ return null; }
+  try{return JSON.parse(localStorage.getItem("v3_user"))}
+  catch{return null}
 }
 function logout(){
   localStorage.removeItem("v3_user");
   renderAuth();
+  renderItems();
 }
 
-document.getElementById("loginA").onclick=()=>setUser(USERS.A);
-document.getElementById("loginB").onclick=()=>setUser(USERS.B);
-document.getElementById("logoutBtn").onclick=logout;
+loginA.onclick=()=>setUser(USERS.A);
+loginB.onclick=()=>setUser(USERS.B);
+logout.onclick=logout;
 
 function renderAuth(){
   const u=getUser();
-  document.getElementById("authState").textContent =
-    u ? "👤 "+u.name : "👤 nicht eingeloggt";
+  authState.textContent=u?"👤 "+u.name:"👤 nicht eingeloggt";
 }
 renderAuth();
 
-/* =========================================================
-   ITEMS + DEMAND (INLINE BACKEND)
-========================================================= */
-const STORAGE_KEY="v3_items";
+/* =====================================================
+   ITEMS + DEMAND
+===================================================== */
+const KEY="v3_items_phase2";
 
 function loadItems(){
-  const d=localStorage.getItem(STORAGE_KEY);
+  const d=localStorage.getItem(KEY);
   if(d) return JSON.parse(d);
   const seed=[
     {id:"i1",name:"Shako",owner:"u1",status:"Verfügbar",demand:[]},
     {id:"i2",name:"Der Himmelsriss",owner:"u2",status:"Verfügbar",demand:[]}
   ];
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(seed));
+  localStorage.setItem(KEY,JSON.stringify(seed));
   return seed;
 }
 function saveItems(items){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
+  localStorage.setItem(KEY,JSON.stringify(items));
 }
 
-function requestItem(itemId){
+function requestItem(id){
   const u=getUser();
-  if(!u){ alert("Bitte einloggen"); return; }
-
+  if(!u){alert("Bitte einloggen");return;}
   const items=loadItems();
-  const item=items.find(i=>i.id===itemId);
+  const item=items.find(i=>i.id===id);
+
   if(item.owner===u.id){
-    alert("Du kannst dein eigenes Item nicht anfragen.");
+    alert("Eigenes Item kann nicht angefragt werden.");
     return;
   }
   if(item.demand.find(d=>d.by===u.id)){
-    alert("Du hast bereits Bedarf angemeldet.");
+    alert("Du hast bereits Bedarf gemeldet.");
     return;
   }
+
   item.demand.push({by:u.id,name:u.name,time:Date.now()});
+  item.status="Bedarf vorhanden";
   saveItems(items);
   renderItems();
 }
@@ -218,23 +212,44 @@ function requestItem(itemId){
 function renderItems(){
   const items=loadItems();
   const u=getUser();
-  const cards=document.getElementById("cards");
   cards.innerHTML="";
 
-  items.forEach(i=>{
+  items.forEach(item=>{
     const div=document.createElement("div");
+    const isOwner=u && u.id===item.owner;
+
     div.className="card";
     div.innerHTML=`
-      <span class="status ${i.status==="Verfügbar"?"verfuegbar":"reserviert"}">${i.status}</span>
-      <strong>${i.name}</strong><br>
-      <small>Owner: ${i.owner}</small><br>
-      <small>📬 Anfragen: ${i.demand.length}</small>
+      <span class="status ${item.status==="Verfügbar"?"verfuegbar":"bedarf"}">
+        ${item.status}
+      </span>
+
+      <strong>${item.name}</strong><br>
+      <small>Owner: ${item.owner}</small><br>
+      <small>📬 Anfragen: ${item.demand.length}</small>
+
       <div class="cta">Item anfragen</div>
+
+      ${isOwner && item.demand.length ? `
+        <div class="owner-box">
+          <b>Anfragen:</b>
+          ${item.demand.map(d=>`
+            <div class="owner-entry">
+              • ${d.name}
+              <span style="opacity:.6">
+                (${new Date(d.time).toLocaleString("de-DE")})
+              </span>
+            </div>
+          `).join("")}
+        </div>
+      `:""}
     `;
-    div.querySelector(".cta").onclick=()=>requestItem(i.id);
+
+    div.querySelector(".cta").onclick=()=>requestItem(item.id);
     cards.appendChild(div);
   });
 }
+
 renderItems();
 </script>
 
