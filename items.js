@@ -196,7 +196,7 @@ const items = [
     roll: "+10 energy",
     status: "Verfügbar",
     contact: "me_solli"
-  }
+  },
   {
   name: "Test Item",
   type: "Waffe",
