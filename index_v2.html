@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (v2.1)</title>
+<title> Free Lootliste – Community Items | D2R Non-Ladder (v2.1)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -22,7 +22,7 @@
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
 
@@ -38,7 +38,7 @@ body{
 
 .hero-inner{
   padding:44px 36px;
-  background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.92));
+  background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85));
 }
 
 .hero h1{margin:0;font-size:42px;letter-spacing:1px}
@@ -376,6 +376,15 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   gap:10px;
 }
 
+
+
+.hero-logo img{
+  max-width:420px;
+  width:100%;
+  height:auto;
+  filter:brightness(0.82) contrast(1.05) drop-shadow(0 0 10px rgba(0,0,0,.6));
+}
+
 </style>
 </head>
 
@@ -391,15 +400,13 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     <button id="registerBtn">Registrieren</button>
   </div>
 
-    <h1>🎁 <span>FREE LOOTLISTE</span></h1>
-    <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
+    <h1 class="hero-logo"><img src="img/logo_d2r.png" alt="D2R Lootliste Logo"></h1>
+    <p>Community Lootliste · Diablo II Resurrected · Non-Ladder</p>
 
     <div class="hero-stats" id="heroStats"></div>
 
     <div class="hero-right">
-      <a class="twitch" href="https://www.twitch.tv/me_solli" target="_blank">
-        ▶ Twitch: me_solli
-      </a>
+      
       <div id="visitorCounter">👁 Besucher gesamt: …</div>
     </div>
   </div>
@@ -438,6 +445,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 <footer>
   <a href="impressum.html">Impressum</a>
   <a href="datenschutz.html">Datenschutz</a>
+  <a href="stream.html">Über das Projekt</a>
 </footer>
 
 </div>
@@ -543,18 +551,16 @@ function render(){
     cards.innerHTML+=`
       <div class="card">
         <span class="status-badge ${s}">${item.status}</span>
-        <img src="img/icons/${ICONS[item.type]||"default"}.png">
+        <img src="img/icons/${ICONS[item.type]||"default"}.png" data-screenshot="${item.screenshot || ""}">
         <div class="card-body">
           <div class="item-name">${item.name}</div>
           <div class="category">${item.category} · ${item.type}</div>
           <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
           <div class="roll">${item.roll||"—"}</div>
           ${count?`<div style="font-size:12px;opacity:.8">📬 ${count} Anfrage(n)</div>`:""}
-          <div class="player">
-            Spieler:
-            <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
-          </div>
-          <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">Über Twitch anfragen</a>
+          <div class="player">Spieler: ${item.contact}</div>
+          
+          
           <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
         </div>
       </div>`;
@@ -623,90 +629,9 @@ search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
-</script>
-
-<!-- ===== AUTH MODAL ===== -->
-<div id="authModal" style="display:none">
-  <div class="backdrop"></div>
-  <div class="modal auth-modal">
-    <h3 id="authTitle">Login</h3>
-    <input id="authName" placeholder="Username">
-    <input id="authPass" type="password" placeholder="Passwort">
-    <div class="modal-actions">
-      <button id="authSubmit">Bestätigen</button>
-      <button id="authClose">Abbrechen</button>
-    </div>
-  </div>
-</div>
 
 
-<!-- ===== AUTH LOGIN WIRING ===== -->
-<script>
-const authBox = document.getElementById("authBox");
-const authState = document.getElementById("authState");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
 
-const authModal = document.getElementById("authModal");
-const authTitle = document.getElementById("authTitle");
-const authName = document.getElementById("authName");
-const authPass = document.getElementById("authPass");
-const authSubmit = document.getElementById("authSubmit");
-const authClose = document.getElementById("authClose");
-
-loginBtn.onclick = () => {
-  authTitle.textContent = "Login";
-  authModal.style.display = "block";
-};
-
-registerBtn.onclick = () => {
-  authTitle.textContent = "Registrieren";
-  authModal.style.display = "block";
-};
-
-authClose.onclick = () => authModal.style.display = "none";
-
-authSubmit.onclick = async () => {
-  const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
-  const username = authName.value.trim();
-  const password = authPass.value.trim();
-
-  if(!username || !password){
-    alert("Bitte Benutzername und Passwort eingeben");
-    return;
-  }
-
-  try{
-    const res = await fetch("http://localhost:3000/api/" + mode, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
-
-    const data = await res.json();
-    if(!res.ok){
-      alert(data.error || "Login fehlgeschlagen");
-      return;
-    }
-
-    localStorage.setItem("loot_user", JSON.stringify(data.user));
-    authState.textContent = "👤 " + data.user.username;
-    authModal.style.display = "none";
-    authName.value = "";
-    authPass.value = "";
-  }catch(err){
-    alert("Backend nicht erreichbar");
-  }
-};
-
-// Auto-Login aus localStorage
-const savedUser = localStorage.getItem("loot_user");
-if(savedUser){
-  try{
-    const u = JSON.parse(savedUser);
-    authState.textContent = "👤 " + u.username;
-  }catch{}
-}
 </script>
 
 
@@ -724,19 +649,19 @@ const registerBtn = document.getElementById("registerBtn");
 const authSubmit = document.getElementById("authSubmit");
 const authClose = document.getElementById("authClose");
 
-loginBtn.onclick = () => {
+loginBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
   authTitle.textContent = "Login";
   authModal.style.display = "block";
 };
 
-registerBtn.onclick = () => {
+registerBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
   authTitle.textContent = "Registrieren";
   authModal.style.display = "block";
 };
 
 authClose.onclick = () => authModal.style.display = "none";
 
-authSubmit.onclick = async () => {
+authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
   const username = authName.value.trim();
   const password = authPass.value.trim();
@@ -779,6 +704,9 @@ if (saved) {
 }
 </script>
 
+
+
+
 </body>
 
 <script>
@@ -803,7 +731,7 @@ authClose.onclick=()=>authModal.style.display="none";
 const authSubmit=document.getElementById("authSubmit");
 const authState=document.getElementById("authState");
 
-authSubmit.onclick=async ()=>{
+authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   const mode=document.getElementById("authTitle").textContent==="Registrieren"?"register":"login";
   const username=document.getElementById("authName").value;
   const password=document.getElementById("authPass").value;
