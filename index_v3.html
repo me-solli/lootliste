@@ -544,7 +544,7 @@ function render(){
     cards.innerHTML+=`
       <div class="card">
         <span class="status-badge ${s}">${item.status}</span>
-        <img src="img/icons/${ICONS[item.type]||"default"}.png">
+        <img src="img/icons/${ICONS[item.type]||"default"}.png" data-screenshot="${item.screenshot || ""}">
         <div class="card-body">
           <div class="item-name">${item.name}</div>
           <div class="category">${item.category} · ${item.type}</div>
@@ -624,6 +624,21 @@ search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
+
+// ===== SCREENSHOT MODAL =====
+const screenshotModal = document.getElementById("screenshotModal");
+const screenshotImg = document.getElementById("screenshotImg");
+const closeScreenshot = document.getElementById("closeScreenshot");
+
+document.addEventListener("click", e => {
+  if(e.target.matches(".card img[data-screenshot]")){
+    screenshotImg.src = e.target.dataset.screenshot;
+    screenshotModal.style.display = "block";
+  }
+});
+
+closeScreenshot.onclick = () => screenshotModal.style.display = "none";
+
 </script>
 
 <!-- ===== AUTH MODAL ===== -->
@@ -779,6 +794,16 @@ if (saved) {
   } catch {}
 }
 </script>
+
+
+<!-- ===== SCREENSHOT MODAL ===== -->
+<div id="screenshotModal" style="display:none">
+  <div class="backdrop"></div>
+  <div class="modal">
+    <img id="screenshotImg" src="" alt="Item Screenshot" style="width:100%;border-radius:12px">
+    <button id="closeScreenshot" style="margin-top:12px;padding:10px;border-radius:10px;border:1px solid #2a2a2a;background:#151515;color:#fff;cursor:pointer">Schließen</button>
+  </div>
+</div>
 
 </body>
 
