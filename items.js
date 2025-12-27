@@ -197,6 +197,16 @@ const items = [
     status: "Verfügbar",
     contact: "me_solli"
   }
+  {
+  name: "Test Item",
+  type: "Waffe",
+  category: "Schwert",
+  stars: "★★★★☆",
+  status: "Verfügbar",
+  roll: "+80% ed",
+  contact: "me_solli",
+  screenshot: "https://via.placeholder.com/800x600.png?text=Test+Screenshot"
+}
 ];
 
 export default items;
