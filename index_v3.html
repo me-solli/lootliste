@@ -377,43 +377,28 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 }
 
 
-/* ===== SCREENSHOT MODAL CLEAN ===== */
+/* ===== SCREENSHOT MODAL FIX ===== */
 #screenshotModal{
   position:fixed;
   inset:0;
-  z-index:9999;
+  z-index:300;
 }
-#screenshotBackdrop{
+#screenshotModal .backdrop{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.85);
+  background:rgba(0,0,0,.8);
 }
-#screenshotBox{
+#screenshotModal .modal{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  background:#111;
-  border:1px solid #333;
-  border-radius:16px;
-  padding:16px;
-  max-width:90vw;
-  max-height:90vh;
-}
-#screenshotBox img{
-  max-width:100%;
-  max-height:70vh;
-  display:block;
-  margin-bottom:12px;
-}
-#closeScreenshot{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  background:#1a1a1a;
-  border:1px solid #333;
-  color:#fff;
-  cursor:pointer;
+  max-width:90%;
+  max-height:90%;
+  background:#121212;
+  border:1px solid #2a2a2a;
+  border-radius:18px;
+  padding:18px;
 }
 
 </style>
@@ -692,30 +677,6 @@ document.addEventListener("click", e => {
 });
 
 
-
-// ===== SCREENSHOT MODAL LOGIC (CLEAN) =====
-const modal = document.getElementById("screenshotModal");
-const img = document.getElementById("screenshotImg");
-const closeBtn = document.getElementById("closeScreenshot");
-const backdrop = document.getElementById("screenshotBackdrop");
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest(".screenshot-btn");
-  if(btn){
-    const src = btn.dataset.screenshot || "img/test_screenshot.png";
-    img.src = src;
-    modal.style.display = "block";
-  }
-});
-
-function closeModal(){
-  modal.style.display = "none";
-  img.src = "";
-}
-
-closeBtn.onclick = closeModal;
-backdrop.onclick = closeModal;
-
 </script>
 
 <!-- ===== AUTH MODAL ===== -->
@@ -800,30 +761,6 @@ if(savedUser){
     authState.textContent = "👤 " + u.username;
   }catch{}
 }
-
-// ===== SCREENSHOT MODAL LOGIC (CLEAN) =====
-const modal = document.getElementById("screenshotModal");
-const img = document.getElementById("screenshotImg");
-const closeBtn = document.getElementById("closeScreenshot");
-const backdrop = document.getElementById("screenshotBackdrop");
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest(".screenshot-btn");
-  if(btn){
-    const src = btn.dataset.screenshot || "img/test_screenshot.png";
-    img.src = src;
-    modal.style.display = "block";
-  }
-});
-
-function closeModal(){
-  modal.style.display = "none";
-  img.src = "";
-}
-
-closeBtn.onclick = closeModal;
-backdrop.onclick = closeModal;
-
 </script>
 
 
@@ -894,30 +831,6 @@ if (saved) {
     authState.textContent = "👤 " + u.username;
   } catch {}
 }
-
-// ===== SCREENSHOT MODAL LOGIC (CLEAN) =====
-const modal = document.getElementById("screenshotModal");
-const img = document.getElementById("screenshotImg");
-const closeBtn = document.getElementById("closeScreenshot");
-const backdrop = document.getElementById("screenshotBackdrop");
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest(".screenshot-btn");
-  if(btn){
-    const src = btn.dataset.screenshot || "img/test_screenshot.png";
-    img.src = src;
-    modal.style.display = "block";
-  }
-});
-
-function closeModal(){
-  modal.style.display = "none";
-  img.src = "";
-}
-
-closeBtn.onclick = closeModal;
-backdrop.onclick = closeModal;
-
 </script>
 
 
@@ -927,16 +840,6 @@ backdrop.onclick = closeModal;
   <div class="modal">
     <img id="screenshotImg" src="" alt="Item Screenshot" style="width:100%;border-radius:12px">
     <button id="closeScreenshot" style="margin-top:12px;padding:10px;border-radius:10px;border:1px solid #2a2a2a;background:#151515;color:#fff;cursor:pointer">Schließen</button>
-  </div>
-</div>
-
-
-<!-- ===== SCREENSHOT MODAL ===== -->
-<div id="screenshotModal" style="display:none;">
-  <div id="screenshotBackdrop"></div>
-  <div id="screenshotBox">
-    <img id="screenshotImg" src="" alt="Item Screenshot">
-    <button id="closeScreenshot">Schließen</button>
   </div>
 </div>
 
@@ -956,30 +859,6 @@ document.getElementById("registerBtn").onclick=()=>{
   authModal.style.display="block";
 };
 authClose.onclick=()=>authModal.style.display="none";
-
-// ===== SCREENSHOT MODAL LOGIC (CLEAN) =====
-const modal = document.getElementById("screenshotModal");
-const img = document.getElementById("screenshotImg");
-const closeBtn = document.getElementById("closeScreenshot");
-const backdrop = document.getElementById("screenshotBackdrop");
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest(".screenshot-btn");
-  if(btn){
-    const src = btn.dataset.screenshot || "img/test_screenshot.png";
-    img.src = src;
-    modal.style.display = "block";
-  }
-});
-
-function closeModal(){
-  modal.style.display = "none";
-  img.src = "";
-}
-
-closeBtn.onclick = closeModal;
-backdrop.onclick = closeModal;
-
 </script>
 
 
@@ -1006,30 +885,6 @@ authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   authState.textContent="👤 "+data.user.username;
   document.getElementById("authModal").style.display="none";
 };
-
-// ===== SCREENSHOT MODAL LOGIC (CLEAN) =====
-const modal = document.getElementById("screenshotModal");
-const img = document.getElementById("screenshotImg");
-const closeBtn = document.getElementById("closeScreenshot");
-const backdrop = document.getElementById("screenshotBackdrop");
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest(".screenshot-btn");
-  if(btn){
-    const src = btn.dataset.screenshot || "img/test_screenshot.png";
-    img.src = src;
-    modal.style.display = "block";
-  }
-});
-
-function closeModal(){
-  modal.style.display = "none";
-  img.src = "";
-}
-
-closeBtn.onclick = closeModal;
-backdrop.onclick = closeModal;
-
 </script>
 
 </html>
