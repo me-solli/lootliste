@@ -738,7 +738,7 @@ authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   const data=await res.json();
   if(!res.ok){ alert(data.error||"Fehler"); return; }
 
-  authState.textContent="👤 "+data.user.usernamee;
+  authState.textContent="👤 "+data.user.username;
   document.getElementById("authModal").style.display="none";
 };
 </script>
