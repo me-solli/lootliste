@@ -555,6 +555,7 @@ function render(){
             Spieler:
             <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
           </div>
+          ${item.screenshot ? `<div class="cta screenshot-btn" data-screenshot="${item.screenshot}">📸 Screenshot anzeigen</div>` : ""}
           <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">Über Twitch anfragen</a>
           <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
         </div>
@@ -638,6 +639,18 @@ document.addEventListener("click", e => {
 });
 
 closeScreenshot.onclick = () => screenshotModal.style.display = "none";
+
+// Screenshot button handler
+document.addEventListener("click", e => {
+  if(e.target.classList.contains("screenshot-btn")){
+    const url = e.target.dataset.screenshot;
+    if(url){
+      screenshotImg.src = url;
+      screenshotModal.style.display = "block";
+    }
+  }
+});
+
 
 </script>
 
