@@ -376,6 +376,31 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   gap:10px;
 }
 
+
+/* ===== SCREENSHOT MODAL FIX ===== */
+#screenshotModal{
+  position:fixed;
+  inset:0;
+  z-index:300;
+}
+#screenshotModal .backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.8);
+}
+#screenshotModal .modal{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  max-width:90%;
+  max-height:90%;
+  background:#121212;
+  border:1px solid #2a2a2a;
+  border-radius:18px;
+  padding:18px;
+}
+
 </style>
 </head>
 
