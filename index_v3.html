@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title> Free Lootliste – Community Items | D2R Non-Ladder (v2.1)</title>
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder (V3 Test)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -16,16 +16,13 @@
   --yellow:#ffd24c;
   --red:#ff5c5c;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
-
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* ===== HERO ===== */
@@ -34,294 +31,20 @@ body{
   border-radius:0 0 26px 26px;
   overflow:hidden;
   min-height:260px;
+  position:relative;
 }
-
 .hero-inner{
   padding:44px 36px;
   background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85));
 }
-
-.hero h1{margin:0;font-size:42px;letter-spacing:1px}
-.hero h1 span{color:var(--gold)}
-.hero p{margin:10px 0 18px;opacity:.9}
-
-.hero-stats{
-  display:flex;
-  gap:18px;
-  flex-wrap:wrap;
-  font-size:14px;
-}
-
-.hero-stats div{
-  padding:8px 14px;
-  background:rgba(0,0,0,.4);
-  border:1px solid var(--border);
-  border-radius:999px;
-}
-
-.hero-right{
-  margin-top:18px;
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-.twitch{
-  background:#9146FF;
-  color:#fff;
-  padding:12px 18px;
-  border-radius:14px;
-  font-weight:bold;
-  text-decoration:none;
-}
-.twitch:hover{opacity:.85}
-
-#visitorCounter{font-size:13px;opacity:.85}
-
-/* ===== ICON BAR ===== */
-.icon-bar{
-  display:flex;
-  gap:14px;
-  padding:20px 24px;
-  overflow-x:auto;
-  background:linear-gradient(180deg,#141414,#0d0d0d);
-  border-bottom:1px solid #222;
-}
-
-.icon-btn{
-  min-width:96px;
-  text-align:center;
-  cursor:pointer;
-  padding:12px 6px;
-  border-radius:16px;
-  border:1px solid transparent;
-  transition:.25s;
-}
-
-.icon-btn img{
-  width:42px;
-  height:42px;
-  filter:drop-shadow(0 0 8px rgba(245,196,81,.35));
-}
-
-.icon-btn span{
-  display:block;
-  margin-top:6px;
-  font-size:12px;
-  opacity:.85;
-}
-
-.icon-btn:hover{
-  border-color:var(--gold);
-  box-shadow:0 0 18px rgba(245,196,81,.25);
-}
-
-.icon-btn.active{
-  border-color:var(--gold);
-  background:rgba(245,196,81,.08);
-  box-shadow:0 0 22px rgba(245,196,81,.45);
-}
-
-/* ===== CONTENT ===== */
-.container{padding:30px}
-
-/* ===== META BAR ===== */
-.meta-bar{
-  display:flex;
-  gap:18px;
-  flex-wrap:wrap;
-  margin-bottom:18px;
-  font-size:13px;
-  opacity:.9;
-}
-
-/* ===== FILTER ===== */
-.filter-panel{
-  background:linear-gradient(180deg,#171717,#0f0f0f);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:18px;
-}
-
-.filter-panel input,
-.filter-panel select{
-  padding:10px 12px;
-  background:#111;
-  border:1px solid #333;
-  color:#fff;
-  border-radius:10px;
-}
-
-/* ===== REQUEST FEED ===== */
-.request-feed{
-  background:linear-gradient(180deg,#171717,#0f0f0f);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:16px;
-  margin-bottom:22px;
-}
-
-.request-feed h3{
-  margin:0 0 10px;
-  font-size:15px;
-  color:var(--gold);
-}
-
-.request-entry{
-  font-size:13px;
-  padding:6px 0;
-  border-bottom:1px solid #222;
-  opacity:.9;
-}
-.request-entry:last-child{border-bottom:none}
-
-/* ===== CARDS ===== */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:22px;
-}
-
-@media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.cards{grid-template-columns:1fr}}
-
-.card{
-  display:flex;
-  background:linear-gradient(180deg,#191919,#0f0f0f);
-  border:1px solid var(--border);
-  border-radius:20px;
-  overflow:hidden;
-  transition:.25s;
-  position:relative;
-}
-
-.card:hover{
-  transform:translateY(-4px);
-  border-color:var(--gold);
-  box-shadow:0 10px 28px rgba(0,0,0,.6);
-}
-
-.card img{
-  width:120px;
-  background:radial-gradient(circle at top,#1f1f1f,#0b0b0b);
-  object-fit:contain;
-  padding:18px;
-}
-
-.card-body{
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  flex:1;
-}
-
-.item-name{font-weight:bold;font-size:16px}
-.category{font-size:12px;opacity:.7}
-.stars{color:var(--gold)}
-.roll{font-size:13px;color:#cfcfcf}
-
-.status-badge{
-  position:absolute;
-  top:12px;
-  right:12px;
-  font-size:12px;
-  padding:4px 10px;
-  border-radius:999px;
-  font-weight:bold;
-}
-
-.verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
-.reserviert{background:rgba(255,210,76,.15);color:var(--yellow)}
-.vergeben{background:rgba(255,92,92,.15);color:var(--red)}
-
-.player{font-size:13px;opacity:.85}
-.player a{color:var(--gold);text-decoration:none}
-
-.cta{
-  margin-top:8px;
-  padding:9px;
-  text-align:center;
-  font-size:13px;
-  background:#151515;
-  border:1px solid var(--border);
-  border-radius:12px;
-  color:#fff;
-  cursor:pointer;
-}
-.cta:hover{border-color:var(--gold);color:var(--gold)}
-
-/* ===== MODAL ===== */
-#requestModal{display:none}
-
-#requestModal .backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  z-index:100;
-}
-
-#requestModal .modal{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:#121212;
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:22px;
-  width:90%;
+.hero-logo img{
   max-width:420px;
-  z-index:101;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  width:100%;
+  filter:brightness(.82) contrast(1.05);
 }
-
-#requestModal input,
-#requestModal textarea{
-  padding:10px;
-  background:#111;
-  border:1px solid #333;
-  border-radius:10px;
-  color:#fff;
-}
-
-.modal-actions{
-  display:flex;
-  gap:10px;
-}
-
-.modal-actions button{
-  flex:1;
-  padding:10px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#151515;
-  color:#fff;
-  cursor:pointer;
-}
-
-.modal-actions button:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
-
-footer{
-  margin-top:50px;
-  padding:22px;
-  border-top:1px solid #222;
-  font-size:13px;
-}
-footer a{color:var(--gold);margin-right:18px;text-decoration:none}
+.hero p{opacity:.9}
 
 /* ===== AUTH BOX ===== */
-.hero{ position:relative; }
-
 .auth-box{
   position:absolute;
   top:22px;
@@ -334,7 +57,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   border-radius:14px;
   background:rgba(0,0,0,.55);
   font-size:13px;
-  z-index:5;
 }
 .auth-box button{
   padding:6px 12px;
@@ -344,47 +66,51 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   color:#fff;
   cursor:pointer;
 }
-.auth-box button:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
+.auth-box button:hover{border-color:var(--gold);color:var(--gold)}
 
+.container{padding:30px}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cards{grid-template-columns:1fr}}
 
-/* ===== AUTH MODAL ===== */
-.auth-modal{
-  max-width:360px;
-}
-#authModal .backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  z-index:200;
-}
-#authModal .modal{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:#121212;
+.card{
+  background:linear-gradient(180deg,#191919,#0f0f0f);
   border:1px solid var(--border);
-  border-radius:18px;
+  border-radius:20px;
+  padding:16px;
+  position:relative;
+}
+.card .cta{
+  margin-top:10px;
+  padding:8px;
+  text-align:center;
+  border:1px solid var(--border);
+  border-radius:12px;
+  cursor:pointer;
+}
+.card .cta:hover{border-color:var(--gold);color:var(--gold)}
+.status{
+  position:absolute;
+  top:12px;
+  right:12px;
+  font-size:12px;
+  padding:4px 10px;
+  border-radius:999px;
+}
+.verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
+.reserviert{background:rgba(255,210,76,.15);color:var(--yellow)}
+
+footer{
+  margin-top:50px;
   padding:22px;
-  width:90%;
-  z-index:201;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  border-top:1px solid #222;
+  font-size:13px;
 }
-
-
-
-.hero-logo img{
-  max-width:420px;
-  width:100%;
-  height:auto;
-  filter:brightness(0.82) contrast(1.05) drop-shadow(0 0 10px rgba(0,0,0,.6));
-}
-
+footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </style>
 </head>
 
@@ -393,362 +119,124 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 <header class="hero">
   <div class="hero-inner">
-
-  <div id="authBox" class="auth-box">
-    <span id="authState">👤 Nicht eingeloggt</span>
-    <button id="loginBtn">Login</button>
-    <button id="registerBtn">Registrieren</button>
-  </div>
-
-    <h1 class="hero-logo"><img src="img/logo_d2r.png" alt="D2R Lootliste Logo"></h1>
-    <p>Community Lootliste · Diablo II Resurrected · Non-Ladder</p>
-
-    <div class="hero-stats" id="heroStats"></div>
-
-    <div class="hero-right">
-      
-      <div id="visitorCounter">👁 Besucher gesamt: …</div>
+    <div class="auth-box">
+      <span id="authState">👤 nicht eingeloggt</span>
+      <button id="loginA">Login Tester_A</button>
+      <button id="loginB">Login Tester_B</button>
+      <button id="logoutBtn">Logout</button>
     </div>
+
+    <h1 class="hero-logo">
+      <img src="img/logo_d2r.png" alt="Lootliste Logo">
+    </h1>
+    <p>Community Lootliste · D2R · V3 Testbetrieb (Inline)</p>
   </div>
 </header>
 
-<div class="icon-bar" id="iconBar"></div>
-
 <div class="container">
-
-<div class="meta-bar" id="metaBar"></div>
-
-<div class="filter-panel">
-  <input id="search" placeholder="Item suchen…">
-
-  <select id="statusFilter">
-    <option value="">Alle Status</option>
-    <option>Verfügbar</option>
-    <option>Reserviert</option>
-    <option>Vergeben</option>
-  </select>
-
-  <select id="sortRating">
-    <option value="desc">Rating ↓</option>
-    <option value="asc">Rating ↑</option>
-  </select>
-</div>
-
-<div class="request-feed">
-  <h3>📬 Letzte Anfragen</h3>
-  <div id="requestFeed"></div>
-</div>
-
-<div class="cards" id="cards"></div>
+  <div class="cards" id="cards"></div>
 </div>
 
 <footer>
-  <a href="impressum.html">Impressum</a>
-  <a href="datenschutz.html">Datenschutz</a>
-  <a href="stream.html">Über das Projekt</a>
+  <a href="#">Impressum</a>
+  <a href="#">Datenschutz</a>
 </footer>
 
 </div>
 
-<!-- ===== REQUEST MODAL ===== -->
-<div id="requestModal">
-  <div class="backdrop"></div>
-  <div class="modal">
-    <strong id="modalItem"></strong>
-    <input id="reqName" placeholder="Dein Nickname *">
-    <input id="reqContact" placeholder="Kontakt (Mail oder Discord) *">
-    <textarea id="reqMsg" placeholder="Nachricht (optional)"></textarea>
-    <div class="modal-actions">
-      <button id="sendReq">Anfrage senden</button>
-      <button id="closeReq">Abbrechen</button>
-    </div>
-  </div>
-</div>
-
-<script type="module">
-import items from "./items.js";
-
-/* ===== ICON MAPPING ===== */
-const ICONS={
-  "Waffe":"waffe","Helm":"helm","Rüstung":"ruestung","Schild":"schild",
-  "Gürtel":"guertel","Handschuhe":"handschuhe","Amulett":"amulett",
-  "Ring":"ring","Charm":"charm","Rune":"rune","Sonstiges":"sonstiges"
+<script>
+/* =========================================================
+   TEST-ACCOUNTS (INLINE AUTH)
+========================================================= */
+const USERS = {
+  A: { id:"u1", name:"Tester_A" },
+  B: { id:"u2", name:"Tester_B" }
 };
 
-/* ===== DOM ===== */
-const iconBar=document.getElementById("iconBar");
-const cards=document.getElementById("cards");
-const search=document.getElementById("search");
-const statusFilter=document.getElementById("statusFilter");
-const sortRating=document.getElementById("sortRating");
-const metaBar=document.getElementById("metaBar");
-const heroStats=document.getElementById("heroStats");
-const visitorCounter=document.getElementById("visitorCounter");
-const requestFeed=document.getElementById("requestFeed");
+function setUser(u){
+  localStorage.setItem("v3_user", JSON.stringify(u));
+  renderAuth();
+}
+function getUser(){
+  try{ return JSON.parse(localStorage.getItem("v3_user")); }
+  catch{ return null; }
+}
+function logout(){
+  localStorage.removeItem("v3_user");
+  renderAuth();
+}
 
-const modal=document.getElementById("requestModal");
-const modalItem=document.getElementById("modalItem");
-const reqName=document.getElementById("reqName");
-const reqContact=document.getElementById("reqContact");
-const reqMsg=document.getElementById("reqMsg");
+document.getElementById("loginA").onclick=()=>setUser(USERS.A);
+document.getElementById("loginB").onclick=()=>setUser(USERS.B);
+document.getElementById("logoutBtn").onclick=logout;
 
-let activeType="";
-let currentItem="";
+function renderAuth(){
+  const u=getUser();
+  document.getElementById("authState").textContent =
+    u ? "👤 "+u.name : "👤 nicht eingeloggt";
+}
+renderAuth();
 
-/* ===== ICON BAR BUILD ===== */
-Object.keys(ICONS).forEach(type=>{
-  const btn=document.createElement("div");
-  btn.className="icon-btn";
-  btn.innerHTML=`<img src="img/icons/${ICONS[type]}.png"><span>${type}</span>`;
-  btn.onclick=()=>{
-    document.querySelectorAll(".icon-btn").forEach(b=>b.classList.remove("active"));
-    if(activeType===type){activeType="";}
-    else{activeType=type;btn.classList.add("active");}
-    render();
-  };
-  iconBar.appendChild(btn);
-});
+/* =========================================================
+   ITEMS + DEMAND (INLINE BACKEND)
+========================================================= */
+const STORAGE_KEY="v3_items";
 
-/* ===== HELPERS ===== */
-function ratingValue(s){return (s?.match(/★/g)||[]).length}
+function loadItems(){
+  const d=localStorage.getItem(STORAGE_KEY);
+  if(d) return JSON.parse(d);
+  const seed=[
+    {id:"i1",name:"Shako",owner:"u1",status:"Verfügbar",demand:[]},
+    {id:"i2",name:"Der Himmelsriss",owner:"u2",status:"Verfügbar",demand:[]}
+  ];
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(seed));
+  return seed;
+}
+function saveItems(items){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
+}
 
-/* ===== RENDER ===== */
-function render(){
+function requestItem(itemId){
+  const u=getUser();
+  if(!u){ alert("Bitte einloggen"); return; }
+
+  const items=loadItems();
+  const item=items.find(i=>i.id===itemId);
+  if(item.owner===u.id){
+    alert("Du kannst dein eigenes Item nicht anfragen.");
+    return;
+  }
+  if(item.demand.find(d=>d.by===u.id)){
+    alert("Du hast bereits Bedarf angemeldet.");
+    return;
+  }
+  item.demand.push({by:u.id,name:u.name,time:Date.now()});
+  saveItems(items);
+  renderItems();
+}
+
+function renderItems(){
+  const items=loadItems();
+  const u=getUser();
+  const cards=document.getElementById("cards");
   cards.innerHTML="";
 
-  const filtered=items.filter(i=>{
-    const q=search.value.toLowerCase();
-    return(
-      (!activeType||i.type===activeType) &&
-      (!statusFilter.value||i.status===statusFilter.value) &&
-      (i.name.toLowerCase().includes(q)||i.category.toLowerCase().includes(q))
-    );
-  }).sort((a,b)=>{
-    const d=ratingValue(b.stars)-ratingValue(a.stars);
-    return sortRating.value==="desc"?d:-d;
+  items.forEach(i=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`
+      <span class="status ${i.status==="Verfügbar"?"verfuegbar":"reserviert"}">${i.status}</span>
+      <strong>${i.name}</strong><br>
+      <small>Owner: ${i.owner}</small><br>
+      <small>📬 Anfragen: ${i.demand.length}</small>
+      <div class="cta">Item anfragen</div>
+    `;
+    div.querySelector(".cta").onclick=()=>requestItem(i.id);
+    cards.appendChild(div);
   });
-
-  const total=items.length;
-  const frei=items.filter(i=>i.status==="Verfügbar").length;
-  const res=items.filter(i=>i.status==="Reserviert").length;
-  const weg=items.filter(i=>i.status==="Vergeben").length;
-
-  heroStats.innerHTML=`
-    <div>📦 ${total} Items</div>
-    <div style="color:var(--green)">🟢 ${frei} verfügbar</div>
-    <div style="color:var(--yellow)">🟡 ${res} reserviert</div>
-    <div style="color:var(--red)">🔴 ${weg} vergeben</div>
-  `;
-
-  metaBar.innerHTML=`📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
-
-  const requests=JSON.parse(localStorage.getItem("loot_requests")||"[]");
-
-  filtered.forEach(item=>{
-    const s=item.status==="Reserviert"?"reserviert":item.status==="Vergeben"?"vergeben":"verfuegbar";
-    const count=requests.filter(r=>r.item===item.name).length;
-
-    cards.innerHTML+=`
-      <div class="card">
-        <span class="status-badge ${s}">${item.status}</span>
-        <img src="img/icons/${ICONS[item.type]||"default"}.png" data-screenshot="${item.screenshot || ""}">
-        <div class="card-body">
-          <div class="item-name">${item.name}</div>
-          <div class="category">${item.category} · ${item.type}</div>
-          <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
-          <div class="roll">${item.roll||"—"}</div>
-          ${count?`<div style="font-size:12px;opacity:.8">📬 ${count} Anfrage(n)</div>`:""}
-          <div class="player">Spieler: ${item.contact}</div>
-          
-          
-          <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
-        </div>
-      </div>`;
-  });
-
-  renderRequestFeed();
 }
-
-/* ===== REQUEST FEED ===== */
-function renderRequestFeed(){
-  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]")
-    .slice(-5).reverse();
-
-  requestFeed.innerHTML=data.length
-    ? data.map(r=>`
-      <div class="request-entry">
-        📨 <b>${r.name}</b> → <i>${r.item}</i><br>
-        <span style="opacity:.6">${new Date(r.time).toLocaleString("de-DE")}</span>
-      </div>`).join("")
-    : `<div class="request-entry">Noch keine Anfragen</div>`;
-}
-
-/* ===== REQUEST MODAL ===== */
-document.addEventListener("click",e=>{
-  if(e.target.classList.contains("request-btn")){
-    currentItem=e.target.dataset.item;
-    modalItem.textContent="Item: "+currentItem;
-    modal.style.display="block";
-  }
-});
-
-document.getElementById("closeReq").onclick=()=>modal.style.display="none";
-
-document.getElementById("sendReq").onclick=()=>{
-  if(!reqName.value||!reqContact.value){
-    alert("Bitte Pflichtfelder ausfüllen");
-    return;
-  }
-
-  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]");
-  data.push({
-    item:currentItem,
-    name:reqName.value,
-    contact:reqContact.value,
-    msg:reqMsg.value,
-    time:new Date().toISOString()
-  });
-
-  localStorage.setItem("loot_requests",JSON.stringify(data));
-  reqName.value=reqContact.value=reqMsg.value="";
-  modal.style.display="none";
-  render();
-};
-
-/* ===== VISITOR COUNTER ===== */
-const K="lootliste_visitors",D="lootliste_last_visit";
-const today=new Date().toDateString();
-if(localStorage.getItem(D)!==today){
-  localStorage.setItem(K,(+localStorage.getItem(K)||0)+1);
-  localStorage.setItem(D,today);
-}
-visitorCounter.innerHTML=`👁 Besucher gesamt: <b>${localStorage.getItem(K)}</b>`;
-
-/* ===== INIT ===== */
-search.oninput=render;
-statusFilter.onchange=render;
-sortRating.onchange=render;
-render();
-
-
-
+renderItems();
 </script>
-
-
-<!-- ===== AUTH (FINAL / LOCAL BACKEND) ===== -->
-<script>
-const API = "http://localhost:3000";
-
-const authState = document.getElementById("authState");
-const authModal = document.getElementById("authModal");
-const authTitle = document.getElementById("authTitle");
-const authName = document.getElementById("authName");
-const authPass = document.getElementById("authPass");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-const authSubmit = document.getElementById("authSubmit");
-const authClose = document.getElementById("authClose");
-
-loginBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
-  authTitle.textContent = "Login";
-  authModal.style.display = "block";
-};
-
-registerBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
-  authTitle.textContent = "Registrieren";
-  authModal.style.display = "block";
-};
-
-authClose.onclick = () => authModal.style.display = "none";
-
-authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
-  const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
-  const username = authName.value.trim();
-  const password = authPass.value.trim();
-
-  if (!username || !password) {
-    alert("Bitte Benutzername und Passwort eingeben");
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API}/${mode}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      alert(data.error || "Fehler");
-      return;
-    }
-
-    localStorage.setItem("loot_user", JSON.stringify(data.user));
-    authState.textContent = "👤 " + data.user.username;
-    authModal.style.display = "none";
-    authName.value = "";
-    authPass.value = "";
-  } catch {
-    alert("Backend nicht erreichbar");
-  }
-};
-
-// Auto-Login
-const saved = localStorage.getItem("loot_user");
-if (saved) {
-  try {
-    const u = JSON.parse(saved);
-    authState.textContent = "👤 " + u.username;
-  } catch {}
-}
-</script>
-
-
-
 
 </body>
-
-<script>
-const authModal=document.getElementById("authModal");
-const authTitle=document.getElementById("authTitle");
-const authClose=document.getElementById("authClose");
-
-document.getElementById("loginBtn").onclick=()=>{
-  authTitle.textContent="Login";
-  authModal.style.display="block";
-};
-document.getElementById("registerBtn").onclick=()=>{
-  authTitle.textContent="Registrieren";
-  authModal.style.display="block";
-};
-authClose.onclick=()=>authModal.style.display="none";
-</script>
-
-
-<script>
-/* ===== AUTH BACKEND WIRING (STEP 3A) ===== */
-const authSubmit=document.getElementById("authSubmit");
-const authState=document.getElementById("authState");
-
-authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
-  const mode=document.getElementById("authTitle").textContent==="Registrieren"?"register":"login";
-  const username=document.getElementById("authName").value;
-  const password=document.getElementById("authPass").value;
-  if(!username||!password){ alert("Bitte ausfüllen"); return; }
-
-  const res=await fetch(`/api/${mode}`,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({username,password})
-  });
-
-  const data=await res.json();
-  if(!res.ok){ alert(data.error||"Fehler"); return; }
-
-  authState.textContent="👤 "+data.user.username;
-  document.getElementById("authModal").style.display="none";
-};
-</script>
-
 </html>
