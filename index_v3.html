@@ -377,30 +377,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 }
 
 
-/* ===== SCREENSHOT MODAL FIX ===== */
-#screenshotModal{
-  position:fixed;
-  inset:0;
-  z-index:300;
-}
-#screenshotModal .backdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.8);
-}
-#screenshotModal .modal{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  max-width:90%;
-  max-height:90%;
-  background:#121212;
-  border:1px solid #2a2a2a;
-  border-radius:18px;
-  padding:18px;
-}
-
 </style>
 </head>
 
@@ -580,7 +556,7 @@ function render(){
             Spieler:
             <a href="https://twitch.tv/${item.contact}" target="_blank">${item.contact}</a>
           </div>
-          ${item.screenshot ? `<div class="cta screenshot-btn" data-screenshot="${item.screenshot}">📸 Screenshot anzeigen</div>` : ""}
+          
           <a class="cta" href="https://twitch.tv/${item.contact}" target="_blank">Über Twitch anfragen</a>
           <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
         </div>
@@ -651,116 +627,8 @@ statusFilter.onchange=render;
 sortRating.onchange=render;
 render();
 
-// ===== SCREENSHOT MODAL =====
-const screenshotModal = document.getElementById("screenshotModal");
-const screenshotImg = document.getElementById("screenshotImg");
-const closeScreenshot = document.getElementById("closeScreenshot");
-
-document.addEventListener("click", e => {
-  if(e.target.matches(".card img[data-screenshot]")){
-    screenshotImg.src = e.target.dataset.screenshot;
-    screenshotModal.style.display = "block";
-  }
-});
-
-closeScreenshot.onclick = () => screenshotModal.style.display = "none";
-
-// Screenshot button handler
-document.addEventListener("click", e => {
-  if(e.target.classList.contains("screenshot-btn")){
-    const url = e.target.dataset.screenshot;
-    if(url){
-      screenshotImg.src = url;
-      screenshotModal.style.display = "block";
-    }
-  }
-});
 
 
-</script>
-
-<!-- ===== AUTH MODAL ===== -->
-<div id="authModal" style="display:none">
-  <div class="backdrop"></div>
-  <div class="modal auth-modal">
-    <h3 id="authTitle">Login</h3>
-    <input id="authName" placeholder="Username">
-    <input id="authPass" type="password" placeholder="Passwort">
-    <div class="modal-actions">
-      <button id="authSubmit">Bestätigen</button>
-      <button id="authClose">Abbrechen</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- ===== AUTH LOGIN WIRING ===== -->
-<script>
-const authBox = document.getElementById("authBox");
-const authState = document.getElementById("authState");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-
-const authModal = document.getElementById("authModal");
-const authTitle = document.getElementById("authTitle");
-const authName = document.getElementById("authName");
-const authPass = document.getElementById("authPass");
-const authSubmit = document.getElementById("authSubmit");
-const authClose = document.getElementById("authClose");
-
-loginBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
-  authTitle.textContent = "Login";
-  authModal.style.display = "block";
-};
-
-registerBtn.onclick = () => { return; /* AUTH INAKTIV – Backend folgt */
-  authTitle.textContent = "Registrieren";
-  authModal.style.display = "block";
-};
-
-authClose.onclick = () => authModal.style.display = "none";
-
-authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
-  const mode = authTitle.textContent === "Registrieren" ? "register" : "login";
-  const username = authName.value.trim();
-  const password = authPass.value.trim();
-
-  if(!username || !password){
-    alert("Bitte Benutzername und Passwort eingeben");
-    return;
-  }
-
-  try{
-    const res = await fetch("http://localhost:3000/api/" + mode, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
-
-    const data = await res.json();
-    if(!res.ok){
-      alert(data.error || "Login fehlgeschlagen");
-      return;
-    }
-
-    localStorage.setItem("loot_user", JSON.stringify(data.user));
-    authState.textContent = "👤 " + data.user.username;
-    authModal.style.display = "none";
-    authName.value = "";
-    authPass.value = "";
-  }catch(err){
-    alert("Backend nicht erreichbar");
-  }
-};
-
-// Auto-Login aus localStorage
-const savedUser = localStorage.getItem("loot_user");
-if(savedUser){
-  try{
-    const u = JSON.parse(savedUser);
-    authState.textContent = "👤 " + u.username;
-  }catch{}
-}
 </script>
 
 
@@ -834,14 +702,7 @@ if (saved) {
 </script>
 
 
-<!-- ===== SCREENSHOT MODAL ===== -->
-<div id="screenshotModal" style="display:none">
-  <div class="backdrop"></div>
-  <div class="modal">
-    <img id="screenshotImg" src="" alt="Item Screenshot" style="width:100%;border-radius:12px">
-    <button id="closeScreenshot" style="margin-top:12px;padding:10px;border-radius:10px;border:1px solid #2a2a2a;background:#151515;color:#fff;cursor:pointer">Schließen</button>
-  </div>
-</div>
+
 
 </body>
 
