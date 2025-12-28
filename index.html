@@ -486,19 +486,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </div>
 
 <script type="module">
-// ===== BACKEND ITEMS =====
-let items = [];
-
-async function loadItems() {
-  try {
-    const res = await fetch("https://content-connection-production-ea07.up.railway.app/api/items");
-    if (!res.ok) throw new Error("API error");
-    items = await res.json();
-  } catch (e) {
-    console.error("Items konnten nicht geladen werden", e);
-    items = [];
-  }
-}
 
 
 /* ===== ICON MAPPING ===== */
@@ -537,8 +524,9 @@ Object.keys(ICONS).forEach(type=>{
     document.querySelectorAll(".icon-btn").forEach(b=>b.classList.remove("active"));
     if(activeType===type){activeType="";}
     else{activeType=type;btn.classList.add("active");}
-    await loadItems();
-render();
+    loadItems().then(() => {
+  render();
+});
   };
   iconBar.appendChild(btn);
 });
@@ -547,6 +535,22 @@ render();
 function ratingValue(s){return (s?.match(/★/g)||[]).length}
 
 /* ===== RENDER ===== */
+
+// ===== BACKEND ITEMS =====
+let items = [];
+
+async function loadItems() {
+  try {
+    const res = await fetch("https://content-connection-production-ea07.up.railway.app/api/items");
+    const data = await res.json();
+    console.log("Backend Items:", data);
+    items = Array.isArray(data) ? data : [];
+  } catch (e) {
+    console.error("Items konnten nicht geladen werden", e);
+    items = [];
+  }
+}
+
 function render(){
   cards.innerHTML="";
 
@@ -646,8 +650,9 @@ document.getElementById("sendReq").onclick=()=>{
   localStorage.setItem("loot_requests",JSON.stringify(data));
   reqName.value=reqContact.value=reqMsg.value="";
   modal.style.display="none";
-  await loadItems();
-render();
+  loadItems().then(() => {
+  render();
+});
 };
 
 /* ===== VISITOR COUNTER ===== */
@@ -663,8 +668,9 @@ visitorCounter.innerHTML=`👁 Besucher gesamt: <b>${localStorage.getItem(K)}</b
 search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
-await loadItems();
-render();
+loadItems().then(() => {
+  render();
+});
 
 
 
