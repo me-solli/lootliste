@@ -1,27 +1,10 @@
 [
   {
-    "id": "efb0bd77-65f9-4ba3-86e3-e64e7e40840c",
-    "username": "testuser",
-    "password": "$2b$10$pC1CkrulogLgi3NyvfHAPu1.PVkjpKcMbcu0FPEdhjcvDiD5TCSqe",
-    "created": "2025-12-23T22:53:21.253Z"
-  },
-  {
-    "id": "452ceabf-be35-4752-9c69-adfc3def51d5",
-    "username": "daniel",
+    "id": "admin-1",
+    "username": "me_solli",
     "password": "$2b$10$xhruK6D4dqjIr2WNItwxcub6kYlv7DuplJqyXjyKELXeogpRl6/mG",
-    "createdAt": "2025-12-23T23:09:42.275Z"
-  },
-  {
-    "id": "2f6bce84-893b-4c17-8502-ee157a3f73c2",
-    "username": "test123",
-    "password": "$2b$10$xJKFO4oWD34aqsY6xqO5W.a/b4XA.VLYZiB41fVU487yQPC9ampte",
-    "createdAt": "2025-12-24T00:20:46.920Z"
-  },
-  {
-    "id": "34e9b567-4808-482b-83b4-98661449de04",
-    "username": "test_v3_v2",
-    "password": "$2b$10$oPWTiAyw8RJII2SAv1mNh.YEEa2xKrsA687mpoUX0z27ulVAvjhMe",
-    "createdAt": "2025-12-27T23:24:52.519Z",
+    "role": "admin",
+    "createdAt": "2025-12-23T23:09:42.275Z",
     "xp": 0,
     "level": 1,
     "itemsGiven": 0,
