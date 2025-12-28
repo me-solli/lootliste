@@ -263,6 +263,8 @@ app.get("/api/items/:id/requests/count", requireAuth, (req, res) => {
 app.use("/api/items", requireAuth, itemRoutes);
 
 // ===== SERVER START =====
-app.listen(PORT, () => {
+const PORT = process.env.PORT;
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server läuft auf Port ${PORT}`);
 });
