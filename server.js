@@ -1,95 +1,165 @@
-const sqlite3 = require("sqlite3").verbose();
+console.log("SERVER.JS (root) wird geladen");
+
+// ================================
+// ===== IMPORTS =====
+// ================================
+const express = require("express");
+const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 
-// ===== DB PFAD (PERSISTENT) =====
-const DB_PATH = path.join(__dirname, "lootliste.db");
+// ================================
+// ===== DB =====
+// ================================
+const db = require("./db");
 
-// ===== DB VERBINDUNG =====
-console.log("SQLite DB verbunden:", DB_PATH);
+// ================================
+// ===== ROUTES =====
+// ================================
+const itemRoutes = require("./routes/items");
+console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 
-const db = new sqlite3.Database(DB_PATH, (err) => {
-  if (err) {
-    console.error("❌ DB Verbindung fehlgeschlagen:", err);
+// ================================
+// ===== APP =====
+// ================================
+const app = express();
+
+// ================================
+// ===== PORT (RAILWAY) =====
+// ================================
+const PORT = process.env.PORT;
+if (!PORT) {
+  console.error("❌ PORT ist nicht gesetzt");
+  process.exit(1);
+}
+
+// ================================
+// ===== KONFIG =====
+// ================================
+const SESSION_DURATION_MINUTES = 60;
+const USERS_FILE = path.join(__dirname, "users.json");
+
+// ================================
+// ===== MIDDLEWARE =====
+// ================================
+app.use(express.json());
+
+// ================================
+// ===== IN-MEMORY SESSIONS =====
+// ================================
+const sessions = {};
+
+// ================================
+// ===== HELPER =====
+// ================================
+function loadUsers() {
+  if (!fs.existsSync(USERS_FILE)) return [];
+  return JSON.parse(fs.readFileSync(USERS_FILE, "utf-8"));
+}
+
+function saveUsers(users) {
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+}
+
+function getSession(loginId) {
+  if (!loginId) return null;
+  const session = sessions[loginId];
+  if (!session) return null;
+
+  if (Date.now() > session.expiresAt) {
+    delete sessions[loginId];
+    return null;
   }
+  return session;
+}
+
+// ================================
+// ===== AUTH MIDDLEWARE =====
+// ================================
+function requireAuth(req, res, next) {
+  const loginId = req.headers["x-login-id"];
+  const session = getSession(loginId);
+
+  if (!session) {
+    return res.status(401).json({ error: "Nicht eingeloggt" });
+  }
+
+  req.session = session;
+  req.user = { id: session.userId };
+  next();
+}
+
+// ================================
+// ===== HEALTH =====
+// ================================
+app.get("/", (req, res) => {
+  res.send("Backend läuft 👌");
 });
 
-// ===== TABELLEN INITIALISIEREN (NUR EINMAL) =====
-db.serialize(() => {
-  // ITEMS
-  db.run(`
-    CREATE TABLE IF NOT EXISTS items (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      owner_user_id TEXT NOT NULL,
-      title TEXT NOT NULL,
-      type TEXT NOT NULL,
-      weapon_type TEXT,
-      rating INTEGER DEFAULT 0,
-      visibility TEXT DEFAULT 'public',
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+// ================================
+// ===== REGISTER =====
+// ================================
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username & Passwort nötig" });
+  }
 
-  // ITEM STATUS
-  db.run(`
-    CREATE TABLE IF NOT EXISTS item_status (
-      item_id INTEGER PRIMARY KEY,
-      status TEXT NOT NULL DEFAULT 'available',
-      status_since DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+  const users = loadUsers();
+  if (users.find(u => u.username === username)) {
+    return res.status(400).json({ error: "Username existiert bereits" });
+  }
 
-  // ITEM REQUESTS (BEDARF)
-  db.run(`
-    CREATE TABLE IF NOT EXISTS item_requests (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      item_id INTEGER NOT NULL,
-      user_id TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      UNIQUE(item_id, user_id)
-    )
-  `);
+  const hashed = await bcrypt.hash(password, 10);
 
-  // ACTION LOGS
-  db.run(`
-    CREATE TABLE IF NOT EXISTS action_logs (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      actor_user_id TEXT,
-      target_type TEXT NOT NULL,
-      target_id INTEGER NOT NULL,
-      action TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+  const user = {
+    id: crypto.randomUUID(),
+    username,
+    password: hashed,
+    createdAt: new Date().toISOString()
+  };
+
+  users.push(user);
+  saveUsers(users);
+
+  res.json({ success: true });
 });
 
-// ===== PROMISE WRAPPER (EINHEITLICH!) =====
-db.runAsync = (sql, params = []) =>
-  new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
-      if (err) reject(err);
-      else resolve(this); // this.lastID etc.
-    });
-  });
+// ================================
+// ===== LOGIN =====
+// ================================
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 
-db.getAsync = (sql, params = []) =>
-  new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
-    });
-  });
+  const users = loadUsers();
+  const user = users.find(u => u.username === username);
+  if (!user) {
+    return res.status(401).json({ error: "User nicht gefunden" });
+  }
 
-db.allAsync = (sql, params = []) =>
-  new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows);
-    });
-  });
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) {
+    return res.status(401).json({ error: "Passwort falsch" });
+  }
 
-// ===== EXPORT (EINE INSTANZ) =====
-module.exports = {
-  run: db.runAsync,
-  get: db.getAsync,
-  all: db.allAsync
-};
+  const loginId = crypto.randomUUID();
+  sessions[loginId] = {
+    userId: user.id,
+    expiresAt: Date.now() + SESSION_DURATION_MINUTES * 60 * 1000
+  };
+
+  res.json({ loginId });
+});
+
+// ================================
+// ===== API ROUTES =====
+// ================================
+app.use("/api/items", requireAuth, itemRoutes);
+
+// ================================
+// ===== START =====
+// ================================
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Backend läuft auf Port ${PORT}`);
+});
