@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
 
+const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const multer = require("multer");
 
 /* =========================
    Upload-Ordner sicherstellen
@@ -15,141 +14,35 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 /* =========================
-   Multer Config
+   Multer (minimal, stabil)
 ========================= */
-const storage = multer.diskStorage({
-  destination: uploadDir,
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const name =
-      "item_" + Date.now() + "_" + Math.random().toString(36).slice(2) + ext;
-    cb(null, name);
-  }
-});
-
 const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
-  fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("image/")) {
-      return cb(new Error("Nur Bilddateien erlaubt"));
+  storage: multer.diskStorage({
+    destination: uploadDir,
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      cb(null, "test_" + Date.now() + ext);
     }
-    cb(null, true);
-  }
-});
-
-/* =========================
-   GET /api/items
-   Öffentliche Lootliste
-========================= */
-router.get("/", async (req, res) => {
-  try {
-    const rows = await db.all(`
-      SELECT 
-        i.id,
-        i.title,
-        i.type,
-        i.weapon_type,
-        i.owner_user_id,
-        i.visibility,
-        IFNULL(s.status, 'available') AS status,
-        i.screenshot
-      FROM items i
-      LEFT JOIN item_status s ON s.item_id = i.id
-      WHERE (i.visibility IS NULL OR i.visibility = 'public')
-      ORDER BY i.id DESC
-    `);
-
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to load items" });
-  }
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 /* =========================
    POST /api/items
-   Screenshot-only (STEP 1)
+   FINALER PROOF (kein DB)
 ========================= */
-router.post("/", upload.single("screenshot"), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "Screenshot fehlt" });
-    }
-
-    const userId = req.user?.id || "admin-1";
-    const screenshotPath = "/uploads/" + req.file.filename;
-
-    await db.run("BEGIN");
-
-    const result = await db.run(
-      `
-      INSERT INTO items (
-        owner_user_id,
-        screenshot,
-        visibility
-      )
-      VALUES (?, ?, 'private')
-      `,
-      [userId, screenshotPath]
-    );
-
-    const itemId = result.lastID;
-
-    await db.run(
-      `
-      INSERT INTO item_status (item_id, status)
-      VALUES (?, 'eingereicht')
-      `,
-      [itemId]
-    );
-
-    await db.run("COMMIT");
-
-    console.log("📦 Item eingereicht:", {
-      itemId,
-      screenshot: screenshotPath,
-      userId
-    });
-
-    res.json({ success: true, item_id: itemId });
-  } catch (err) {
-    await db.run("ROLLBACK");
-    console.error(err);
-    res.status(500).json({ error: "Item submit failed" });
+router.post("/", upload.single("screenshot"), (req, res) => {
+  if (!req.file) {
+    console.error("❌ Kein File empfangen");
+    return res.status(400).json({ error: "Kein Screenshot empfangen" });
   }
-});
 
-/* =========================
-   GET /api/items/mine
-========================= */
-router.get("/mine", async (req, res) => {
-  const userId = req.user?.id || "admin-1";
+  console.log("📸 TEST UPLOAD OK:", req.file.filename);
 
-  try {
-    const rows = await db.all(
-      `
-      SELECT
-        i.id,
-        i.title,
-        i.type,
-        i.weapon_type,
-        i.visibility,
-        IFNULL(s.status, 'available') AS status,
-        i.screenshot
-      FROM items i
-      LEFT JOIN item_status s ON s.item_id = i.id
-      WHERE i.owner_user_id = ?
-      ORDER BY i.id DESC
-      `,
-      [userId]
-    );
-
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to load own items" });
-  }
+  res.json({
+    success: true,
+    file: "/uploads/" + req.file.filename
+  });
 });
 
 module.exports = router;
