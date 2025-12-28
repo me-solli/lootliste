@@ -26,13 +26,9 @@ console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 const app = express();
 
 // ================================
-// PORT (Railway)
+// PORT (Railway-sicher)
 // ================================
-const PORT = process.env.PORT;
-if (!PORT) {
-  console.error("❌ PORT ist nicht gesetzt");
-  process.exit(1);
-}
+const PORT = process.env.PORT || 8080;
 
 // ================================
 // CONFIG
@@ -78,15 +74,17 @@ function getSession(loginId) {
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
   const session = getSession(loginId);
+
   if (!session) {
     return res.status(401).json({ error: "Nicht eingeloggt" });
   }
+
   req.user = { id: session.userId };
   next();
 }
 
 // ================================
-// HEALTH
+// HEALTH / ROOT
 // ================================
 app.get("/", (req, res) => {
   res.send("Backend läuft 👌");
@@ -120,12 +118,17 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
+
   const users = loadUsers();
   const user = users.find(u => u.username === username);
-  if (!user) return res.status(401).json({ error: "User nicht gefunden" });
+  if (!user) {
+    return res.status(401).json({ error: "User nicht gefunden" });
+  }
 
   const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return res.status(401).json({ error: "Passwort falsch" });
+  if (!ok) {
+    return res.status(401).json({ error: "Passwort falsch" });
+  }
 
   const loginId = crypto.randomUUID();
   sessions[loginId] = {
@@ -142,7 +145,7 @@ app.post("/login", async (req, res) => {
 app.use("/api/items", requireAuth, itemRoutes);
 
 // ================================
-// START
+// START SERVER
 // ================================
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Backend läuft auf Port ${PORT}`);
