@@ -1,4 +1,4 @@
-console.log("SERVER.JS AUS lootliste-backend WIRD GELADEN");
+console.log("SERVER.JS AUS backend WIRD GELADEN");
 
 const express = require("express");
 const fs = require("fs");
@@ -6,26 +6,24 @@ const path = require("path");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 
-// 👉 DB initialisieren (SQLite)
+// ===== DB (SQLite) =====
 const db = require("./db");
 
-// 👉 Routes
+// ===== ROUTES =====
 const itemRoutes = require("./routes/items");
 console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 
 const app = express();
 
-// 🔑 WICHTIG: Railway-kompatibler Port
+// ===== RAILWAY PORT =====
 const PORT = process.env.PORT || 3000;
 
-// ===== SESSION KONFIG =====
-const SESSION_DURATION_MINUTES = 60; // 1 Stunde
+// ===== KONFIG =====
+const SESSION_DURATION_MINUTES = 60;
+const USERS_FILE = path.join(__dirname, "users.json");
 
 // ===== MIDDLEWARE =====
 app.use(express.json());
-
-// ===== DATEIEN =====
-const USERS_FILE = path.join(__dirname, "users.json");
 
 // ===== IN-MEMORY SESSIONS =====
 const sessions = {};
@@ -75,7 +73,7 @@ app.get("/", (req, res) => {
   res.send("Backend läuft 👌");
 });
 
-// ===== DEBUG (DB DIREKT) =====
+// ===== DEBUG =====
 app.get("/__debug/items", async (req, res) => {
   try {
     const rows = await db.all("SELECT * FROM items");
