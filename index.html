@@ -678,6 +678,7 @@ loadItems().then(() => {
 
 
 <!-- ===== AUTH (FINAL / LOCAL BACKEND) ===== -->
+<!-- DISABLED AUTH BLOCK (DEV MODE) 
 <script>
 const API = "http://localhost:3000";
 
@@ -745,12 +746,14 @@ if (saved) {
   } catch {}
 }
 </script>
+END DISABLED AUTH BLOCK -->
 
 
 
 
 </body>
 
+<!-- DISABLED AUTH BLOCK (DEV MODE) 
 <script>
 const authModal=document.getElementById("authModal");
 const authTitle=document.getElementById("authTitle");
@@ -766,8 +769,10 @@ document.getElementById("registerBtn").onclick=()=>{
 };
 authClose.onclick=()=>authModal.style.display="none";
 </script>
+END DISABLED AUTH BLOCK -->
 
 
+<!-- DISABLED AUTH BLOCK (DEV MODE) 
 <script>
 /* ===== AUTH BACKEND WIRING (STEP 3A) ===== */
 const authSubmit=document.getElementById("authSubmit");
@@ -791,6 +796,50 @@ authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   authState.textContent="👤 "+data.user.username;
   document.getElementById("authModal").style.display="none";
 };
+</script>
+END DISABLED AUTH BLOCK -->
+
+
+<script>
+/* ===== DEV LOGIN (TEMP, NON-DESTRUCTIVE) ===== */
+(function(){
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+  const authState = document.getElementById("authState");
+  if(!loginBtn || !authState) return;
+
+  function update(){
+    const id = localStorage.getItem("loginId");
+    const name = localStorage.getItem("username");
+    if(id){
+      authState.textContent = "👤 " + (name || "me_solli");
+      loginBtn.textContent = "Logout";
+    } else {
+      authState.textContent = "👤 Nicht eingeloggt";
+      loginBtn.textContent = "Login";
+    }
+  }
+
+  loginBtn.onclick = () => {
+    if(localStorage.getItem("loginId")){
+      localStorage.removeItem("loginId");
+      localStorage.removeItem("username");
+      update();
+      alert("Logout (DEV)");
+    } else {
+      localStorage.setItem("loginId","admin-1");
+      localStorage.setItem("username","me_solli");
+      update();
+      alert("Login erfolgreich (DEV)");
+    }
+  };
+
+  if(registerBtn){
+    registerBtn.onclick = () => alert("Registrierung folgt – DEV-Modus aktiv");
+  }
+
+  update();
+})();
 </script>
 
 </html>
