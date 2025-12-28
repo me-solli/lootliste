@@ -1,4 +1,4 @@
-console.log("SERVER.JS AUS backend WIR GELADEN");
+console.log("SERVER.JS AUS backend WIRD GELADEN");
 
 const express = require("express");
 const fs = require("fs");
