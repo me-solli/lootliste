@@ -122,19 +122,22 @@ button{
 </div>
 
 <script>
+/* ===== CONFIG ===== */
 const API_BASE = "https://content-connection-production-ea07.up.railway.app";
 const loginId = localStorage.getItem("loginId");
 
+/* ===== LOGIN GUARD ===== */
 if(!loginId){
   alert("Bitte zuerst einloggen.");
   window.location.href = "index.html";
 }
 
+/* ===== SUBMIT ===== */
 const form = document.getElementById("submitForm");
 const msgSuccess = document.getElementById("msgSuccess");
 const msgError = document.getElementById("msgError");
 
-form.addEventListener("submit", async function(e){
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
   msgSuccess.style.display = "none";
   msgError.style.display = "none";
@@ -148,9 +151,7 @@ form.addEventListener("submit", async function(e){
   try{
     const res = await fetch(API_BASE + "/api/items", {
       method: "POST",
-      headers: {
-        "x-login-id": loginId
-      },
+      headers: { "x-login-id": loginId },
       body: data
     });
 
