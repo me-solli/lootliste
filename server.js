@@ -1,7 +1,7 @@
-console.log("SERVER.JS (root) wird geladen");
+console.log("SERVER.JS wird geladen");
 
 // ================================
-// ===== IMPORTS =====
+// IMPORTS
 // ================================
 const express = require("express");
 const fs = require("fs");
@@ -10,23 +10,23 @@ const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 
 // ================================
-// ===== DB =====
+// DB
 // ================================
 const db = require("./db");
 
 // ================================
-// ===== ROUTES =====
+// ROUTES
 // ================================
 const itemRoutes = require("./routes/items");
 console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 
 // ================================
-// ===== APP =====
+// APP
 // ================================
 const app = express();
 
 // ================================
-// ===== PORT (RAILWAY) =====
+// PORT (Railway)
 // ================================
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -35,23 +35,23 @@ if (!PORT) {
 }
 
 // ================================
-// ===== KONFIG =====
+// CONFIG
 // ================================
-const SESSION_DURATION_MINUTES = 60;
 const USERS_FILE = path.join(__dirname, "users.json");
+const SESSION_DURATION_MINUTES = 60;
 
 // ================================
-// ===== MIDDLEWARE =====
+// MIDDLEWARE
 // ================================
 app.use(express.json());
 
 // ================================
-// ===== IN-MEMORY SESSIONS =====
+// SESSIONS (IN-MEMORY)
 // ================================
 const sessions = {};
 
 // ================================
-// ===== HELPER =====
+// HELPERS
 // ================================
 function loadUsers() {
   if (!fs.existsSync(USERS_FILE)) return [];
@@ -63,85 +63,69 @@ function saveUsers(users) {
 }
 
 function getSession(loginId) {
-  if (!loginId) return null;
-  const session = sessions[loginId];
-  if (!session) return null;
-
-  if (Date.now() > session.expiresAt) {
+  const s = sessions[loginId];
+  if (!s) return null;
+  if (Date.now() > s.expiresAt) {
     delete sessions[loginId];
     return null;
   }
-  return session;
+  return s;
 }
 
 // ================================
-// ===== AUTH MIDDLEWARE =====
+// AUTH MIDDLEWARE
 // ================================
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
   const session = getSession(loginId);
-
   if (!session) {
     return res.status(401).json({ error: "Nicht eingeloggt" });
   }
-
-  req.session = session;
   req.user = { id: session.userId };
   next();
 }
 
 // ================================
-// ===== HEALTH =====
+// HEALTH
 // ================================
 app.get("/", (req, res) => {
   res.send("Backend läuft 👌");
 });
 
 // ================================
-// ===== REGISTER =====
+// AUTH ROUTES
 // ================================
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    return res.status(400).json({ error: "Username & Passwort nötig" });
+    return res.status(400).json({ error: "Fehlende Daten" });
   }
 
   const users = loadUsers();
   if (users.find(u => u.username === username)) {
-    return res.status(400).json({ error: "Username existiert bereits" });
+    return res.status(400).json({ error: "User existiert bereits" });
   }
 
-  const hashed = await bcrypt.hash(password, 10);
-
-  const user = {
+  const hash = await bcrypt.hash(password, 10);
+  users.push({
     id: crypto.randomUUID(),
     username,
-    password: hashed,
+    password: hash,
     createdAt: new Date().toISOString()
-  };
+  });
 
-  users.push(user);
   saveUsers(users);
-
   res.json({ success: true });
 });
 
-// ================================
-// ===== LOGIN =====
-// ================================
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-
   const users = loadUsers();
   const user = users.find(u => u.username === username);
-  if (!user) {
-    return res.status(401).json({ error: "User nicht gefunden" });
-  }
+  if (!user) return res.status(401).json({ error: "User nicht gefunden" });
 
   const ok = await bcrypt.compare(password, user.password);
-  if (!ok) {
-    return res.status(401).json({ error: "Passwort falsch" });
-  }
+  if (!ok) return res.status(401).json({ error: "Passwort falsch" });
 
   const loginId = crypto.randomUUID();
   sessions[loginId] = {
@@ -153,12 +137,12 @@ app.post("/login", async (req, res) => {
 });
 
 // ================================
-// ===== API ROUTES =====
+// API ROUTES
 // ================================
 app.use("/api/items", requireAuth, itemRoutes);
 
 // ================================
-// ===== START =====
+// START
 // ================================
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Backend läuft auf Port ${PORT}`);
