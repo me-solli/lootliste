@@ -7,7 +7,7 @@ const path = require("path");
 const fs = require("fs");
 
 /* =========================
-   Upload-Ordner
+   UPLOAD-ORDNER
 ========================= */
 const uploadDir = path.join(__dirname, "..", "uploads");
 if (!fs.existsSync(uploadDir)) {
@@ -15,14 +15,14 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 /* =========================
-   Multer
+   MULTER
 ========================= */
 const upload = multer({
   storage: multer.diskStorage({
     destination: uploadDir,
     filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname);
-      cb(null, "item_" + Date.now() + ext);
+      const ext = path.extname(file.originalname || "");
+      cb(null, `item_${Date.now()}${ext}`);
     }
   }),
   limits: { fileSize: 5 * 1024 * 1024 }
@@ -37,22 +37,19 @@ router.get("/", async (req, res) => {
     const rows = await db.all(`
       SELECT
         i.id,
-        i.title,
-        i.type,
-        i.weapon_type,
         i.owner_user_id,
-        i.visibility,
         i.screenshot,
+        i.created_at,
         IFNULL(s.status, 'available') AS status
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
-      ORDER BY i.id DESC
+      ORDER BY i.created_at DESC
     `);
 
     res.json(rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to load items" });
+    console.error("GET /api/items Fehler:", err);
+    res.status(500).json({ error: "Items konnten nicht geladen werden" });
   }
 });
 
@@ -63,6 +60,7 @@ router.get("/", async (req, res) => {
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
+    // Login kommt aus server.js (x-login-id)
     if (!req.user || !req.user.id) {
       return res.status(401).json({ error: "Nicht eingeloggt" });
     }
@@ -71,8 +69,8 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       return res.status(400).json({ error: "Kein Screenshot empfangen" });
     }
 
-    const userId = req.user.id;
-    const screenshotPath = "/uploads/" + req.file.filename;
+    const ownerUserId = req.user.id;
+    const screenshotPath = `/uploads/${req.file.filename}`;
 
     await db.run("BEGIN");
 
@@ -81,7 +79,7 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       INSERT INTO items (owner_user_id, screenshot)
       VALUES (?, ?)
       `,
-      [userId, screenshotPath]
+      [ownerUserId, screenshotPath]
     );
 
     const itemId = result.lastID;
@@ -99,13 +97,13 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
     res.json({
       success: true,
       itemId,
-      status: "eingereicht"
+      status: "eingereicht",
+      screenshot: screenshotPath
     });
-
   } catch (err) {
     await db.run("ROLLBACK");
-    console.error("❌ Screenshot-Upload Fehler:", err);
-    res.status(500).json({ error: "Upload fehlgeschlagen" });
+    console.error("POST /api/items Fehler:", err);
+    res.status(500).json({ error: "Item konnte nicht eingereicht werden" });
   }
 });
 
