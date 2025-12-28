@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Item einreichen – Community Lootliste (DEV)</title>
+<title>Item einreichen – Community Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -44,12 +44,6 @@ h1{
   color:var(--gold);
 }
 
-.dev{
-  font-size:12px;
-  color:#ff9c00;
-  margin-bottom:10px;
-}
-
 p{
   margin:0 0 20px;
   color:var(--muted);
@@ -85,7 +79,7 @@ button{
 .notice{
   padding:12px;
   border-radius:8px;
-  margin-bottom:16px;
+  margin-top:16px;
   font-size:14px;
 }
 
@@ -93,6 +87,12 @@ button{
   background:#0f1a0f;
   border:1px solid #1a3a1a;
   color:var(--green);
+}
+
+.notice.error{
+  background:#1a0f0f;
+  border:1px solid #3a1a1a;
+  color:var(--red);
 }
 </style>
 </head>
@@ -102,8 +102,7 @@ button{
   <div class="panel">
 
     <h1>Item einreichen</h1>
-    <div class="dev">DEV‑Modus aktiv (Auto‑Login)</div>
-    <p>Screenshot hochladen. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin‑Bereich.</p>
+    <p>Du musst eingeloggt sein. Screenshot ist Pflicht. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin‑Bereich.</p>
 
     <form id="submitForm">
       <label for="screenshot">Item‑Screenshot *</label>
@@ -112,58 +111,56 @@ button{
       <button type="submit">Item einreichen</button>
     </form>
 
-    <div id="successMsg" class="notice success" style="display:none">
+    <div id="msgSuccess" class="notice success" style="display:none">
       ✔ Item wurde erfolgreich eingereicht.
+    </div>
+    <div id="msgError" class="notice error" style="display:none">
+      ✖ Fehler beim Einreichen.
     </div>
 
   </div>
 </div>
 
 <script>
-/* ===============================
-   DEV ONLY – Auto‑Login
-   Wird später vollständig entfernt
-================================ */
-if(!localStorage.getItem("currentUser")){
-  localStorage.setItem("currentUser", JSON.stringify({
-    id: "452ceabf-be35-4752-9c69-adfc3def51d5",
-    username: "daniel"
-  }));
+const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+const loginId = localStorage.getItem("loginId");
+
+if(!loginId){
+  alert("Bitte zuerst einloggen.");
+  window.location.href = "index.html";
 }
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
 const form = document.getElementById("submitForm");
-const successMsg = document.getElementById("successMsg");
+const msgSuccess = document.getElementById("msgSuccess");
+const msgError = document.getElementById("msgError");
 
-form.addEventListener("submit", function(e){
+form.addEventListener("submit", async function(e){
   e.preventDefault();
+  msgSuccess.style.display = "none";
+  msgError.style.display = "none";
 
   const file = document.getElementById("screenshot").files[0];
   if(!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function(){
-    const item = {
-      id: Date.now(),
-      status: "eingereicht",
-      submittedAt: new Date().toISOString(),
-      submittedBy: {
-        id: currentUser.id,
-        username: currentUser.username
-      },
-      screenshot: reader.result
-    };
+  const data = new FormData();
+  data.append("screenshot", file);
 
-    const existing = JSON.parse(localStorage.getItem("submittedItems") || "[]");
-    existing.push(item);
-    localStorage.setItem("submittedItems", JSON.stringify(existing));
+  try{
+    const res = await fetch(API_BASE + "/api/items", {
+      method: "POST",
+      headers: {
+        "x-login-id": loginId
+      },
+      body: data
+    });
+
+    if(!res.ok) throw new Error();
 
     form.reset();
-    successMsg.style.display = "block";
-  };
-
-  reader.readAsDataURL(file);
+    msgSuccess.style.display = "block";
+  }catch{
+    msgError.style.display = "block";
+  }
 });
 </script>
 </body>
