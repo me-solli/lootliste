@@ -2,11 +2,9 @@
   "name": "lootliste-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "Lootliste Backend API (Express + SQLite)",
-  "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js"
+    "start": "node backend/server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
