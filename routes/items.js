@@ -4,8 +4,8 @@ const db = require("../db");
 
 /**
  * GET /api/items
- * Öffentliche Lootliste (ALLE Items, V2-kompatibel)
- * ⚠️ Bewusst NICHT eingeschränkt, um bestehendes Frontend nicht zu brechen
+ * Öffentliche Lootliste
+ * + TEMP: 1 festes Test-Item, wenn DB leer ist
  */
 router.get("/", async (req, res) => {
   try {
@@ -17,11 +17,29 @@ router.get("/", async (req, res) => {
         i.weapon_type,
         i.owner_user_id,
         i.visibility,
-        IFNULL(s.status, 'available') AS status
+        IFNULL(s.status, 'available') AS status,
+        i.screenshot
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
+      WHERE i.visibility IS NULL OR i.visibility = 'public'
       ORDER BY i.id DESC
     `);
+
+    // 👉 TEMP TEST-ITEM (nur wenn DB leer)
+    if (rows.length === 0) {
+      return res.json([
+        {
+          id: "test-item-1",
+          title: "Test-Item (Backend)",
+          type: "sonstiges",
+          weapon_type: null,
+          owner_user_id: "system",
+          visibility: "public",
+          status: "available",
+          screenshot: "https://via.placeholder.com/300x300?text=TEST+ITEM"
+        }
+      ]);
+    }
 
     res.json(rows);
   } catch (err) {
@@ -33,6 +51,7 @@ router.get("/", async (req, res) => {
 /**
  * POST /api/items
  * Neues Item anlegen (Owner = eingeloggter User)
+ * (Screenshot kommt im nächsten Schritt)
  */
 router.post("/", async (req, res) => {
   const userId = req.user.id;
@@ -47,15 +66,14 @@ router.post("/", async (req, res) => {
 
     const result = await db.run(
       `
-      INSERT INTO items (owner_user_id, title, type, weapon_type)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO items (owner_user_id, title, type, weapon_type, visibility)
+      VALUES (?, ?, ?, ?, 'public')
       `,
       [userId, title, type, weapon_type || null]
     );
 
     const itemId = result.lastID;
 
-    // Status immer erzwingen
     await db.run(
       `
       INSERT OR IGNORE INTO item_status (item_id, status)
@@ -79,8 +97,7 @@ router.post("/", async (req, res) => {
 
 /**
  * GET /api/items/mine
- * Eigene Items des eingeloggten Users (inkl. hidden)
- * 👉 Grundlage für "Mein Bereich"
+ * Eigene Items des eingeloggten Users
  */
 router.get("/mine", async (req, res) => {
   const userId = req.user.id;
@@ -94,7 +111,8 @@ router.get("/mine", async (req, res) => {
         i.type,
         i.weapon_type,
         i.visibility,
-        IFNULL(s.status, 'available') AS status
+        IFNULL(s.status, 'available') AS status,
+        i.screenshot
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
       WHERE i.owner_user_id = ?
@@ -107,42 +125,6 @@ router.get("/mine", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to load own items" });
-  }
-});
-
-/**
- * PATCH /api/items/:id/visibility
- * Sichtbarkeit ändern (NUR Owner erlaubt)
- */
-router.patch("/:id/visibility", async (req, res) => {
-  const userId = req.user.id;
-  const itemId = req.params.id;
-  const { visibility } = req.body;
-
-  if (!["public", "hidden"].includes(visibility)) {
-    return res.status(400).json({ error: "Invalid visibility" });
-  }
-
-  try {
-    const result = await db.run(
-      `
-      UPDATE items
-      SET visibility = ?
-      WHERE id = ? AND owner_user_id = ?
-      `,
-      [visibility, itemId, userId]
-    );
-
-    if (result.changes === 0) {
-      return res
-        .status(403)
-        .json({ error: "Not allowed or item not found" });
-    }
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to update visibility" });
   }
 });
 
