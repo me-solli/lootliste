@@ -15,9 +15,6 @@ console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 
 const app = express();
 
-// ===== RAILWAY PORT =====
-const PORT = process.env.PORT;
-
 // ===== KONFIG =====
 const SESSION_DURATION_MINUTES = 60;
 const USERS_FILE = path.join(__dirname, "users.json");
@@ -262,7 +259,7 @@ app.get("/api/items/:id/requests/count", requireAuth, (req, res) => {
 // ================================
 app.use("/api/items", requireAuth, itemRoutes);
 
-// ===== SERVER START =====
+// ===== SERVER START (RAILWAY KONFORM) =====
 const PORT = process.env.PORT;
 
 app.listen(PORT, "0.0.0.0", () => {
