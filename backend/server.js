@@ -1,31 +1,58 @@
-console.log("SERVER.JS AUS backend WIRD GELADEN");
+console.log("SERVER.JS (backend) wird geladen");
 
+// =====================================
+// ===== IMPORTS =====
+// =====================================
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 
-// ===== DB (SQLite) =====
+// =====================================
+// ===== DB =====
+// =====================================
 const db = require("./db");
 
+// =====================================
 // ===== ROUTES =====
+// =====================================
 const itemRoutes = require("./routes/items");
 console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 
+// =====================================
+// ===== APP =====
+// =====================================
 const app = express();
 
+// =====================================
+// ===== PORT (RAILWAY ONLY) =====
+// =====================================
+const PORT = process.env.PORT;
+if (!PORT) {
+  console.error("❌ PORT ist nicht gesetzt (Railway erwartet process.env.PORT)");
+  process.exit(1);
+}
+
+// =====================================
 // ===== KONFIG =====
+// =====================================
 const SESSION_DURATION_MINUTES = 60;
 const USERS_FILE = path.join(__dirname, "users.json");
 
+// =====================================
 // ===== MIDDLEWARE =====
+// =====================================
 app.use(express.json());
 
+// =====================================
 // ===== IN-MEMORY SESSIONS =====
+// =====================================
 const sessions = {};
 
-// ===== HILFSFUNKTIONEN =====
+// =====================================
+// ===== HELPER =====
+// =====================================
 function loadUsers() {
   if (!fs.existsSync(USERS_FILE)) return [];
   return JSON.parse(fs.readFileSync(USERS_FILE, "utf-8"));
@@ -49,7 +76,9 @@ function getSession(loginId) {
   return session;
 }
 
+// =====================================
 // ===== AUTH MIDDLEWARE =====
+// =====================================
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
   const session = getSession(loginId);
@@ -65,12 +94,16 @@ function requireAuth(req, res, next) {
   next();
 }
 
+// =====================================
 // ===== HEALTH =====
+// =====================================
 app.get("/", (req, res) => {
   res.send("Backend läuft 👌");
 });
 
+// =====================================
 // ===== DEBUG =====
+// =====================================
 app.get("/__debug/items", async (req, res) => {
   try {
     const rows = await db.all("SELECT * FROM items");
@@ -81,7 +114,9 @@ app.get("/__debug/items", async (req, res) => {
   }
 });
 
+// =====================================
 // ===== REGISTER =====
+// =====================================
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
@@ -123,7 +158,9 @@ app.post("/register", async (req, res) => {
   });
 });
 
+// =====================================
 // ===== LOGIN =====
+// =====================================
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -162,7 +199,9 @@ app.post("/login", async (req, res) => {
   });
 });
 
+// =====================================
 // ===== PROFIL =====
+// =====================================
 app.get("/me", requireAuth, (req, res) => {
   const users = loadUsers();
   const user = users.find(u => u.id === req.session.userId);
@@ -182,14 +221,16 @@ app.get("/me", requireAuth, (req, res) => {
   });
 });
 
+// =====================================
 // ===== LOGOUT =====
+// =====================================
 app.post("/logout", requireAuth, (req, res) => {
   delete sessions[req.loginId];
   res.json({ message: "Logout ok" });
 });
 
 // =====================================
-// ===== STEP 4 – ITEM BEDARF =====
+// ===== ITEM REQUESTS (STEP 4) =====
 // =====================================
 db.run(`
   CREATE TABLE IF NOT EXISTS item_requests (
@@ -254,14 +295,14 @@ app.get("/api/items/:id/requests/count", requireAuth, (req, res) => {
   );
 });
 
-// ================================
-// ===== API ROUTES (V3) =====
-// ================================
+// =====================================
+// ===== API ROUTES =====
+// =====================================
 app.use("/api/items", requireAuth, itemRoutes);
 
-// ===== SERVER START (RAILWAY KONFORM) =====
-const PORT = process.env.PORT;
-
+// =====================================
+// ===== SERVER START (EXAKT EINMAL) =====
+// =====================================
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server läuft auf Port ${PORT}`);
+  console.log(`🚀 Backend läuft auf Port ${PORT}`);
 });
