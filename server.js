@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const cors = require("cors");
 
 // ================================
 // DB
@@ -39,7 +40,21 @@ const SESSION_DURATION_MINUTES = 60;
 // ================================
 // MIDDLEWARE
 // ================================
+
+// 👉 CORS (WICHTIG für GitHub Pages → Railway)
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "x-login-id"]
+  })
+);
+
+// JSON Body
 app.use(express.json());
+
+// 👉 Upload-Ordner statisch freigeben
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ================================
 // SESSIONS (IN-MEMORY)
