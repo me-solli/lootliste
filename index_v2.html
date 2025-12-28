@@ -575,7 +575,7 @@ function render(){
         <div class="card-body">
           <div class="item-name">${item.name}</div>
           <div class="category">${item.category} · ${item.type}</div>
-          <div class="stars">${item.stars} (${ratingValue(item.stars)}/5) <span class="rating-info-icon" title="KI-gestützte Einschätzung zur Orientierung. Kein Marktwert · keine Garantie.">ⓘ</span></div>
+          <div class="stars">${item.stars} (${ratingValue(item.stars)}/5) <span class="rating-info-icon" title="KI-gestützte Einschätzung zur Orientierung.">ⓘ</span></div>
           <div class="roll">${item.roll||"—"}</div>
           ${count?`<div style="font-size:12px;opacity:.8">📬 ${count} Anfrage(n)</div>`:""}
           <div class="player">Spieler: ${item.contact}</div>
