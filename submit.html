@@ -102,10 +102,10 @@ button{
   <div class="panel">
 
     <h1>Item einreichen</h1>
-    <p>Du musst eingeloggt sein. Screenshot ist Pflicht. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin‑Bereich.</p>
+    <p>Du musst eingeloggt sein. Screenshot ist Pflicht. Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin-Bereich.</p>
 
     <form id="submitForm">
-      <label for="screenshot">Item‑Screenshot *</label>
+      <label for="screenshot">Item-Screenshot *</label>
       <input type="file" id="screenshot" accept="image/*" required>
 
       <button type="submit">Item einreichen</button>
@@ -127,7 +127,7 @@ const API_BASE = "https://content-connection-production-ea07.up.railway.app";
 const loginId = localStorage.getItem("loginId");
 
 /* ===== LOGIN GUARD ===== */
-if(!loginId){
+if (!loginId) {
   alert("Bitte zuerst einloggen.");
   window.location.href = "index.html";
 }
@@ -143,23 +143,25 @@ form.addEventListener("submit", async (e) => {
   msgError.style.display = "none";
 
   const file = document.getElementById("screenshot").files[0];
-  if(!file) return;
+  if (!file) return;
 
   const data = new FormData();
   data.append("screenshot", file);
 
-  try{
+  try {
     const res = await fetch(API_BASE + "/api/items", {
       method: "POST",
-      headers: { "x-login-id": loginId },
+      headers: {
+        "x-login-id": loginId
+      },
       body: data
     });
 
-    if(!res.ok) throw new Error();
+    if (!res.ok) throw new Error();
 
     form.reset();
     msgSuccess.style.display = "block";
-  }catch{
+  } catch {
     msgError.style.display = "block";
   }
 });
