@@ -11,7 +11,7 @@ const multer = require("multer");
 ========================= */
 const uploadDir = path.join(__dirname, "..", "uploads");
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 /* =========================
@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
     const name =
-      Date.now() + "-" + Math.random().toString(36).slice(2) + ext;
+      "item_" + Date.now() + "_" + Math.random().toString(36).slice(2) + ext;
     cb(null, name);
   }
 });
@@ -57,7 +57,6 @@ router.get("/", async (req, res) => {
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
       WHERE (i.visibility IS NULL OR i.visibility = 'public')
-        AND IFNULL(s.status, 'available') = 'available'
       ORDER BY i.id DESC
     `);
 
@@ -70,7 +69,7 @@ router.get("/", async (req, res) => {
 
 /* =========================
    POST /api/items
-   Item + Screenshot einreichen
+   Screenshot-only (STEP 1)
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
@@ -78,13 +77,7 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       return res.status(400).json({ error: "Screenshot fehlt" });
     }
 
-    const userId = req.user?.id || "admin-1"; // DEV-Fallback
-    const { title, type, weapon_type } = req.body;
-
-    if (!title || !type) {
-      return res.status(400).json({ error: "Pflichtfelder fehlen" });
-    }
-
+    const userId = req.user?.id || "admin-1";
     const screenshotPath = "/uploads/" + req.file.filename;
 
     await db.run("BEGIN");
@@ -93,21 +86,12 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       `
       INSERT INTO items (
         owner_user_id,
-        title,
-        type,
-        weapon_type,
         screenshot,
         visibility
       )
-      VALUES (?, ?, ?, ?, ?, 'public')
+      VALUES (?, ?, 'private')
       `,
-      [
-        userId,
-        title,
-        type,
-        weapon_type || null,
-        screenshotPath
-      ]
+      [userId, screenshotPath]
     );
 
     const itemId = result.lastID;
@@ -122,10 +106,13 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 
     await db.run("COMMIT");
 
-    res.json({
-      success: true,
-      item_id: itemId
+    console.log("📦 Item eingereicht:", {
+      itemId,
+      screenshot: screenshotPath,
+      userId
     });
+
+    res.json({ success: true, item_id: itemId });
   } catch (err) {
     await db.run("ROLLBACK");
     console.error(err);
@@ -135,7 +122,6 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 
 /* =========================
    GET /api/items/mine
-   Eigene Items
 ========================= */
 router.get("/mine", async (req, res) => {
   const userId = req.user?.id || "admin-1";
