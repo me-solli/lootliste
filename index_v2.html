@@ -385,6 +385,23 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   filter:brightness(0.82) contrast(1.05) drop-shadow(0 0 10px rgba(0,0,0,.6));
 }
 
+
+/* ===== RATING INFO BLOCK ===== */
+.rating-info{
+  margin-top:40px;
+  padding:22px;
+  background:linear-gradient(180deg,#161616,#0e0e0e);
+  border:1px solid var(--border);
+  border-radius:18px;
+  font-size:14px;
+  line-height:1.6;
+}
+.rating-info h3{
+  margin-top:0;
+  color:var(--gold);
+  font-size:16px;
+}
+
 </style>
 </head>
 
@@ -441,6 +458,30 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 <div class="cards" id="cards"></div>
 </div>
+
+
+<div class="rating-info">
+  <h3>ⓘ Hinweis zur Item-Bewertung</h3>
+  <p>
+    Die Bewertung der Items erfolgt <b>KI-gestützt (ChatGPT)</b> und dient ausschließlich
+    als <b>orientierende Einschätzung</b>, um einen einheitlichen roten Faden innerhalb der Lootliste zu gewährleisten.
+  </p>
+  <p>
+    Bewertet werden unter anderem Nutzungshäufigkeit in Builds, Relevanz im Spielkontext,
+    Roll-Stärke sowie der Vergleich mit ähnlichen Items.
+    Die Bewertung stellt <b>keinen Marktwert</b> dar und ist keine Garantie für Nachfrage.
+  </p>
+  <p>
+    Ziel ist es, offensichtlich <b>minderwertige oder spielerisch irrelevante („tote“) Items</b>
+    frühzeitig auszufiltern, damit die Lootliste übersichtlich und attraktiv bleibt.
+  </p>
+  <p>
+    Solltest du mit der Bewertung eines Items nicht einverstanden sein,
+    kannst du das Item jederzeit erneut einreichen – gerne mit einem kurzen Hinweis oder Kontext.
+    Langfristig reguliert sich das System durch die Community selbst.
+  </p>
+</div>
+
 
 <footer>
   <a href="impressum.html">Impressum</a>
@@ -555,7 +596,7 @@ function render(){
         <div class="card-body">
           <div class="item-name">${item.name}</div>
           <div class="category">${item.category} · ${item.type}</div>
-          <div class="stars">${item.stars} (${ratingValue(item.stars)}/5)</div>
+          <div class="stars" title="KI-gestützte Einschätzung zur Orientierung. Kein Marktwert, keine Garantie.">${item.stars} (${ratingValue(item.stars)}/5)</div>
           <div class="roll">${item.roll||"—"}</div>
           ${count?`<div style="font-size:12px;opacity:.8">📬 ${count} Anfrage(n)</div>`:""}
           <div class="player">Spieler: ${item.contact}</div>
