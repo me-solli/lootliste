@@ -2,136 +2,128 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🎁 D2R Lootliste – V3 Test Phase 3</title>
+<title>🎁 Free Lootliste – Community Items | D2R Non-Ladder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== THEME ===== */
 :root{
   --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
   --border:#2a2a2a;
   --green:#4cff4c;
   --yellow:#ffd24c;
+  --red:#ff5c5c;
 }
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:#0b0b0b;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
-.wrapper{max-width:1200px;margin:0 auto}
+.wrapper{max-width:1500px;margin:0 auto}
 
-/* ===== HEADER ===== */
-header{
-  padding:26px 30px;
-  background:linear-gradient(180deg,#1a1a1a,#0b0b0b);
-  border-bottom:1px solid #222;
-  position:relative;
+/* ===== HERO ===== */
+.hero{
+  background:url("img/banner_diablo.png") center / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
 }
-header h1{margin:0;color:var(--gold)}
-header p{margin:6px 0 0;opacity:.85}
+.hero-inner{
+  padding:40px 36px;
+  background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85));
+}
+.hero h1{margin:0;font-size:40px}
+.hero p{opacity:.9}
 
-/* ===== AUTH BAR ===== */
+/* ===== AUTH BOX ===== */
 .auth-box{
   position:absolute;
   top:22px;
   right:24px;
   display:flex;
-  gap:8px;
+  gap:10px;
   align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
   font-size:13px;
 }
 .auth-box button{
   padding:6px 12px;
-  background:#151515;
-  border:1px solid var(--border);
   border-radius:10px;
+  border:1px solid var(--border);
+  background:#151515;
   color:#fff;
   cursor:pointer;
 }
-.auth-box button:hover{border-color:var(--gold);color:var(--gold)}
-.auth-box .me{
+.auth-box button:hover{
   border-color:var(--gold);
   color:var(--gold);
 }
 
-/* ===== MAIN ===== */
+/* ===== CONTENT ===== */
 .container{padding:30px}
 .cards{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:22px;
 }
-@media(max-width:700px){.cards{grid-template-columns:1fr}}
+@media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.cards{grid-template-columns:1fr}}
 
 .card{
   background:linear-gradient(180deg,#191919,#0f0f0f);
   border:1px solid var(--border);
-  border-radius:18px;
+  border-radius:20px;
   padding:16px;
-  position:relative;
 }
-.status{
-  position:absolute;
-  top:12px;
-  right:12px;
-  font-size:12px;
-  padding:4px 10px;
-  border-radius:999px;
+.item-name{font-weight:bold;font-size:16px}
+.stars{color:var(--gold)}
+.status{font-size:12px;margin-top:4px}
+
+/* ===== MODAL ===== */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
 }
-.verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
-.bedarf{background:rgba(255,210,76,.15);color:var(--yellow)}
-.cta{
-  margin-top:10px;
-  padding:8px;
-  text-align:center;
+.modal{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:#121212;
   border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  width:90%;
+  max-width:360px;
+  display:none;
+}
+.modal input{
+  width:100%;
+  margin-bottom:10px;
+  padding:10px;
+  background:#111;
+  border:1px solid #333;
+  border-radius:10px;
+  color:#fff;
+}
+.modal button{
+  width:100%;
+  padding:10px;
   border-radius:12px;
+  border:1px solid var(--border);
+  background:#151515;
+  color:#fff;
   cursor:pointer;
 }
-.cta:hover{border-color:var(--gold);color:var(--gold)}
-
-.owner-box{
-  margin-top:12px;
-  padding:10px;
-  border:1px dashed #333;
-  border-radius:12px;
-  font-size:13px;
-  background:#111;
-}
-.owner-box b{color:var(--gold)}
-.owner-entry{margin-top:6px;opacity:.9}
-
-/* ===== MEIN BEREICH ===== */
-#mePanel{
-  display:none;
-  margin-bottom:30px;
-  padding:18px;
-  border:1px solid var(--border);
-  border-radius:18px;
-  background:linear-gradient(180deg,#161616,#0e0e0e);
-}
-#mePanel h3{
-  margin:0 0 14px;
+.modal button:hover{
+  border-color:var(--gold);
   color:var(--gold);
-}
-.me-section{
-  margin-bottom:14px;
-  font-size:14px;
-}
-.me-item{
-  padding:6px 0;
-  border-bottom:1px solid #222;
-  opacity:.9;
-}
-.me-item:last-child{border-bottom:none}
-
-footer{
-  margin-top:50px;
-  padding:22px;
-  border-top:1px solid #222;
-  font-size:13px;
-  opacity:.6;
 }
 </style>
 </head>
@@ -139,191 +131,124 @@ footer{
 <body>
 <div class="wrapper">
 
-<header>
-  <div class="auth-box">
-    <span id="authState">👤 nicht eingeloggt</span>
-    <button id="btnMe" class="me">Mein Bereich</button>
-    <button id="loginA">Tester_A</button>
-    <button id="loginB">Tester_B</button>
-    <button id="logout">Logout</button>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="auth-box">
+      <span id="authState">👤 Nicht eingeloggt</span>
+      <button onclick="openAuth('login')">Login</button>
+      <button onclick="openAuth('register')">Registrieren</button>
+    </div>
+
+    <h1><span style="color:var(--gold)">🎁</span> Free Lootliste</h1>
+    <p>Community Items · Diablo II Resurrected · Non-Ladder</p>
   </div>
-  <h1>D2R Lootliste</h1>
-  <p>V3 · Testbetrieb · Phase 3 (Mein Bereich)</p>
 </header>
 
 <div class="container">
-
-  <!-- MEIN BEREICH -->
-  <div id="mePanel">
-    <h3>👤 Mein Bereich</h3>
-
-    <div class="me-section">
-      <b>📦 Meine Items</b>
-      <div id="meItems"></div>
-    </div>
-
-    <div class="me-section">
-      <b>📬 Anfragen zu meinen Items</b>
-      <div id="meRequests"></div>
-    </div>
-
-    <div class="me-section">
-      <b>🙋 Meine Anfragen</b>
-      <div id="meDemands"></div>
-    </div>
+  <div class="cards" id="cards">
+    <div>⏳ Lade Items…</div>
   </div>
-
-  <!-- ÖFFENTLICHE LISTE -->
-  <div class="cards" id="cards"></div>
+</div>
 
 </div>
 
-<footer>
-  Testdatei · nichts hiervon ist final
-</footer>
-
+<!-- AUTH MODAL -->
+<div class="modal-backdrop" id="authBg"></div>
+<div class="modal" id="authModal">
+  <h3 id="authTitle"></h3>
+  <input id="authName" placeholder="Username">
+  <input id="authPass" type="password" placeholder="Passwort">
+  <button onclick="submitAuth()">Absenden</button>
 </div>
 
 <script>
-/* =====================================================
-   AUTH (lokale Test-Accounts)
-===================================================== */
-const USERS={
-  A:{id:"u1",name:"Tester_A"},
-  B:{id:"u2",name:"Tester_B"}
+/* ===== CONFIG ===== */
+const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+
+/* ===== AUTH ===== */
+const authState = document.getElementById("authState");
+const authModal = document.getElementById("authModal");
+const authBg = document.getElementById("authBg");
+let authMode = "login";
+
+function openAuth(mode){
+  authMode = mode;
+  document.getElementById("authTitle").textContent =
+    mode === "login" ? "Login" : "Registrieren";
+  authModal.style.display = authBg.style.display = "block";
+}
+
+authBg.onclick = () => {
+  authModal.style.display = authBg.style.display = "none";
 };
 
-function setUser(u){
-  localStorage.setItem("v3_user",JSON.stringify(u));
-  renderAuth();
-  renderAll();
-}
-function getUser(){
-  try{return JSON.parse(localStorage.getItem("v3_user"))}
-  catch{return null}
-}
-function logout(){
-  localStorage.removeItem("v3_user");
-  renderAuth();
-  renderAll();
-}
-
-loginA.onclick=()=>setUser(USERS.A);
-loginB.onclick=()=>setUser(USERS.B);
-logout.onclick=logout;
-
-function renderAuth(){
-  const u=getUser();
-  authState.textContent=u?"👤 "+u.name:"👤 nicht eingeloggt";
-}
-renderAuth();
-
-/* =====================================================
-   ITEMS
-===================================================== */
-const KEY="v3_items_phase3";
-
-function loadItems(){
-  const d=localStorage.getItem(KEY);
-  if(d) return JSON.parse(d);
-  const seed=[
-    {id:"i1",name:"Shako",owner:"u1",status:"Verfügbar",demand:[]},
-    {id:"i2",name:"Der Himmelsriss",owner:"u2",status:"Verfügbar",demand:[]}
-  ];
-  localStorage.setItem(KEY,JSON.stringify(seed));
-  return seed;
-}
-function saveItems(items){
-  localStorage.setItem(KEY,JSON.stringify(items));
-}
-
-function requestItem(id){
-  const u=getUser();
-  if(!u){alert("Bitte einloggen");return;}
-  const items=loadItems();
-  const item=items.find(i=>i.id===id);
-
-  if(item.owner===u.id){
-    alert("Eigenes Item kann nicht angefragt werden.");
-    return;
-  }
-  if(item.demand.find(d=>d.by===u.id)){
-    alert("Du hast bereits Bedarf gemeldet.");
+async function submitAuth(){
+  const username = authName.value.trim();
+  const password = authPass.value.trim();
+  if(!username || !password){
+    alert("Bitte ausfüllen");
     return;
   }
 
-  item.demand.push({by:u.id,name:u.name,time:Date.now()});
-  item.status="Bedarf vorhanden";
-  saveItems(items);
-  renderAll();
-}
+  const res = await fetch(API_BASE + "/" + authMode, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ username, password })
+  });
 
-/* =====================================================
-   RENDER
-===================================================== */
-btnMe.onclick=()=>{
-  mePanel.style.display=mePanel.style.display==="none"?"block":"none";
-};
-
-function renderMe(items,u){
-  meItems.innerHTML="";
-  meRequests.innerHTML="";
-  meDemands.innerHTML="";
-
-  if(!u){
-    meItems.innerHTML="<i>Bitte einloggen</i>";
+  const data = await res.json();
+  if(!res.ok){
+    alert(data.error || "Fehler");
     return;
   }
 
-  items.filter(i=>i.owner===u.id)
-    .forEach(i=>{
-      meItems.innerHTML+=`<div class="me-item">• ${i.name} (${i.status})</div>`;
-      i.demand.forEach(d=>{
-        meRequests.innerHTML+=`<div class="me-item">• ${d.name} → ${i.name}</div>`;
-      });
-    });
-
-  items.filter(i=>i.demand.some(d=>d.by===u.id))
-    .forEach(i=>{
-      meDemands.innerHTML+=`<div class="me-item">• ${i.name}</div>`;
-    });
-
-  if(!meItems.innerHTML) meItems.innerHTML="<i>keine Items</i>";
-  if(!meRequests.innerHTML) meRequests.innerHTML="<i>keine Anfragen</i>";
-  if(!meDemands.innerHTML) meDemands.innerHTML="<i>keine Anfragen</i>";
+  if(authMode === "login"){
+    localStorage.setItem("loginId", data.loginId);
+    authState.textContent = "👤 Eingeloggt";
+    authModal.style.display = authBg.style.display = "none";
+    loadItems();
+  } else {
+    alert("Registriert ✔ Jetzt einloggen");
+  }
 }
 
-function renderItems(items,u){
-  cards.innerHTML="";
-  items.forEach(item=>{
-    const isOwner=u && u.id===item.owner;
-    const div=document.createElement("div");
-    div.className="card";
-    div.innerHTML=`
-      <span class="status ${item.status==="Verfügbar"?"verfuegbar":"bedarf"}">${item.status}</span>
-      <strong>${item.name}</strong><br>
-      <small>Owner: ${item.owner}</small><br>
-      <small>📬 Anfragen: ${item.demand.length}</small>
-      <div class="cta">Item anfragen</div>
-      ${isOwner && item.demand.length?`
-        <div class="owner-box">
-          <b>Anfragen:</b>
-          ${item.demand.map(d=>`<div class="owner-entry">• ${d.name}</div>`).join("")}
-        </div>`:""}
-    `;
-    div.querySelector(".cta").onclick=()=>requestItem(item.id);
-    cards.appendChild(div);
+/* ===== ITEMS ===== */
+async function loadItems(){
+  const cards = document.getElementById("cards");
+  cards.innerHTML = "⏳ Lade Items…";
+
+  const loginId = localStorage.getItem("loginId");
+  if(!loginId){
+    cards.innerHTML = "🔒 Bitte einloggen";
+    return;
+  }
+
+  const res = await fetch(API_BASE + "/api/items", {
+    headers:{ "x-login-id": loginId }
+  });
+
+  const items = await res.json();
+  if(!Array.isArray(items)){
+    cards.innerHTML = "⚠️ Keine Items";
+    return;
+  }
+
+  cards.innerHTML = "";
+  items.forEach(i=>{
+    cards.innerHTML += `
+      <div class="card">
+        <div class="item-name">${i.name}</div>
+        <div class="stars">${i.stars || ""}</div>
+        <div class="status">${i.status}</div>
+      </div>`;
   });
 }
 
-function renderAll(){
-  const items=loadItems();
-  const u=getUser();
-  renderMe(items,u);
-  renderItems(items,u);
+/* ===== INIT ===== */
+if(localStorage.getItem("loginId")){
+  authState.textContent = "👤 Eingeloggt";
+  loadItems();
 }
-
-renderAll();
 </script>
 
 </body>
