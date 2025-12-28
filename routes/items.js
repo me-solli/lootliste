@@ -2,11 +2,46 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-/**
- * GET /api/items
- * Öffentliche Lootliste
- * + TEMP: 1 festes Test-Item, wenn DB leer ist
- */
+const path = require("path");
+const fs = require("fs");
+const multer = require("multer");
+
+/* =========================
+   Upload-Ordner sicherstellen
+========================= */
+const uploadDir = path.join(__dirname, "..", "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+/* =========================
+   Multer Config
+========================= */
+const storage = multer.diskStorage({
+  destination: uploadDir,
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const name =
+      Date.now() + "-" + Math.random().toString(36).slice(2) + ext;
+    cb(null, name);
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Nur Bilddateien erlaubt"));
+    }
+    cb(null, true);
+  }
+});
+
+/* =========================
+   GET /api/items
+   Öffentliche Lootliste
+========================= */
 router.get("/", async (req, res) => {
   try {
     const rows = await db.all(`
@@ -21,25 +56,10 @@ router.get("/", async (req, res) => {
         i.screenshot
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
-      WHERE i.visibility IS NULL OR i.visibility = 'public'
+      WHERE (i.visibility IS NULL OR i.visibility = 'public')
+        AND IFNULL(s.status, 'available') = 'available'
       ORDER BY i.id DESC
     `);
-
-    // 👉 TEMP TEST-ITEM (nur wenn DB leer)
-    if (rows.length === 0) {
-      return res.json([
-        {
-          id: "test-item-1",
-          title: "Test-Item (Backend)",
-          type: "sonstiges",
-          weapon_type: null,
-          owner_user_id: "system",
-          visibility: "public",
-          status: "available",
-          screenshot: "https://via.placeholder.com/300x300?text=TEST+ITEM"
-        }
-      ]);
-    }
 
     res.json(rows);
   } catch (err) {
@@ -48,36 +68,54 @@ router.get("/", async (req, res) => {
   }
 });
 
-/**
- * POST /api/items
- * Neues Item anlegen (Owner = eingeloggter User)
- * (Screenshot kommt im nächsten Schritt)
- */
-router.post("/", async (req, res) => {
-  const userId = req.user.id;
-  const { title, type, weapon_type } = req.body;
-
-  if (!title || !type) {
-    return res.status(400).json({ error: "Missing required fields" });
-  }
-
+/* =========================
+   POST /api/items
+   Item + Screenshot einreichen
+========================= */
+router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Screenshot fehlt" });
+    }
+
+    const userId = req.user?.id || "admin-1"; // DEV-Fallback
+    const { title, type, weapon_type } = req.body;
+
+    if (!title || !type) {
+      return res.status(400).json({ error: "Pflichtfelder fehlen" });
+    }
+
+    const screenshotPath = "/uploads/" + req.file.filename;
+
     await db.run("BEGIN");
 
     const result = await db.run(
       `
-      INSERT INTO items (owner_user_id, title, type, weapon_type, visibility)
-      VALUES (?, ?, ?, ?, 'public')
+      INSERT INTO items (
+        owner_user_id,
+        title,
+        type,
+        weapon_type,
+        screenshot,
+        visibility
+      )
+      VALUES (?, ?, ?, ?, ?, 'public')
       `,
-      [userId, title, type, weapon_type || null]
+      [
+        userId,
+        title,
+        type,
+        weapon_type || null,
+        screenshotPath
+      ]
     );
 
     const itemId = result.lastID;
 
     await db.run(
       `
-      INSERT OR IGNORE INTO item_status (item_id, status)
-      VALUES (?, 'available')
+      INSERT INTO item_status (item_id, status)
+      VALUES (?, 'eingereicht')
       `,
       [itemId]
     );
@@ -91,16 +129,16 @@ router.post("/", async (req, res) => {
   } catch (err) {
     await db.run("ROLLBACK");
     console.error(err);
-    res.status(500).json({ error: "Item creation failed" });
+    res.status(500).json({ error: "Item submit failed" });
   }
 });
 
-/**
- * GET /api/items/mine
- * Eigene Items des eingeloggten Users
- */
+/* =========================
+   GET /api/items/mine
+   Eigene Items
+========================= */
 router.get("/mine", async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user?.id || "admin-1";
 
   try {
     const rows = await db.all(
