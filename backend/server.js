@@ -16,7 +16,7 @@ console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 const app = express();
 
 // ===== RAILWAY PORT =====
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // ===== KONFIG =====
 const SESSION_DURATION_MINUTES = 60;
