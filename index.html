@@ -486,7 +486,20 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </div>
 
 <script type="module">
-import items from "./items.js";
+// ===== BACKEND ITEMS =====
+let items = [];
+
+async function loadItems() {
+  try {
+    const res = await fetch("https://content-connection-production-ea07.up.railway.app/api/items");
+    if (!res.ok) throw new Error("API error");
+    items = await res.json();
+  } catch (e) {
+    console.error("Items konnten nicht geladen werden", e);
+    items = [];
+  }
+}
+
 
 /* ===== ICON MAPPING ===== */
 const ICONS={
@@ -524,7 +537,8 @@ Object.keys(ICONS).forEach(type=>{
     document.querySelectorAll(".icon-btn").forEach(b=>b.classList.remove("active"));
     if(activeType===type){activeType="";}
     else{activeType=type;btn.classList.add("active");}
-    render();
+    await loadItems();
+render();
   };
   iconBar.appendChild(btn);
 });
@@ -632,7 +646,8 @@ document.getElementById("sendReq").onclick=()=>{
   localStorage.setItem("loot_requests",JSON.stringify(data));
   reqName.value=reqContact.value=reqMsg.value="";
   modal.style.display="none";
-  render();
+  await loadItems();
+render();
 };
 
 /* ===== VISITOR COUNTER ===== */
@@ -648,6 +663,7 @@ visitorCounter.innerHTML=`👁 Besucher gesamt: <b>${localStorage.getItem(K)}</b
 search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
+await loadItems();
 render();
 
 
