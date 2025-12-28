@@ -4,6 +4,7 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const db = require("../db");
 
 /* =========================
    Upload-Ordner sicherstellen
@@ -14,7 +15,7 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 /* =========================
-   Multer (minimal, stabil)
+   Multer (stabil, Railway-tauglich)
 ========================= */
 const upload = multer({
   storage: multer.diskStorage({
@@ -29,20 +30,50 @@ const upload = multer({
 
 /* =========================
    POST /api/items
-   FINALER PROOF (kein DB)
+   STEP 2A: Screenshot + DB
 ========================= */
-router.post("/", upload.single("screenshot"), (req, res) => {
-  if (!req.file) {
-    console.error("❌ Kein File empfangen");
-    return res.status(400).json({ error: "Kein Screenshot empfangen" });
+router.post("/", upload.single("screenshot"), async (req, res) => {
+  try {
+    if (!req.file) {
+      console.error("❌ Kein File empfangen");
+      return res.status(400).json({ error: "Kein Screenshot empfangen" });
+    }
+
+    const screenshotPath = "/uploads/" + req.file.filename;
+
+    // 1️⃣ Item anlegen
+    const itemResult = await db.run(
+      `
+      INSERT INTO items (screenshot)
+      VALUES (?)
+      `,
+      [screenshotPath]
+    );
+
+    const itemId = itemResult.lastID;
+
+    // 2️⃣ Status setzen
+    await db.run(
+      `
+      INSERT INTO item_status (item_id, status)
+      VALUES (?, 'eingereicht')
+      `,
+      [itemId]
+    );
+
+    console.log("✅ Item eingereicht:", itemId);
+
+    res.json({
+      success: true,
+      itemId,
+      status: "eingereicht",
+      screenshot: screenshotPath
+    });
+
+  } catch (err) {
+    console.error("❌ Fehler beim Item-Upload:", err);
+    res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
   }
-
-  console.log("📸 TEST UPLOAD OK:", req.file.filename);
-
-  res.json({
-    success: true,
-    file: "/uploads/" + req.file.filename
-  });
 });
 
 module.exports = router;
