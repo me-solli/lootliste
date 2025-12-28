@@ -41,7 +41,7 @@ const SESSION_DURATION_MINUTES = 60;
 // MIDDLEWARE
 // ================================
 
-// 👉 CORS (WICHTIG für GitHub Pages → Railway)
+// 👉 CORS (GitHub Pages → Railway)
 app.use(
   cors({
     origin: "*",
@@ -57,7 +57,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ================================
-// SESSIONS (IN-MEMORY)
+// SESSIONS (IN-MEMORY, später ersetzbar)
 // ================================
 const sessions = {};
 
@@ -84,7 +84,7 @@ function getSession(loginId) {
 }
 
 // ================================
-// AUTH MIDDLEWARE
+// AUTH (echte Sessions – später)
 // ================================
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
@@ -106,7 +106,7 @@ app.get("/", (req, res) => {
 });
 
 // ================================
-// AUTH ROUTES
+// AUTH ROUTES (derzeit ungenutzt)
 // ================================
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -156,8 +156,20 @@ app.post("/login", async (req, res) => {
 
 // ================================
 // API ROUTES
+// 👉 DEV-BYPASS: x-login-id reicht
 // ================================
-app.use("/api/items", requireAuth, itemRoutes);
+app.use(
+  "/api/items",
+  (req, res, next) => {
+    const loginId = req.headers["x-login-id"];
+    if (loginId) {
+      req.user = { id: loginId };
+      return next();
+    }
+    return res.status(401).json({ error: "Nicht eingeloggt" });
+  },
+  itemRoutes
+);
 
 // ================================
 // START SERVER
