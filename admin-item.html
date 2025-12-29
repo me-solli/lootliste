@@ -1,133 +1,137 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin – Item freigeben</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>Admin – Item freigeben</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: #eee;
-    }
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:#0f0f0f;
+  color:#eee;
+}
 
-    header {
-      background: #141414;
-      padding: 16px;
-      font-size: 18px;
-      font-weight: bold;
-      border-bottom: 1px solid #222;
-    }
+header{
+  background:#141414;
+  padding:16px;
+  font-size:18px;
+  font-weight:bold;
+  border-bottom:1px solid #222;
+}
 
-    main {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
+main{
+  max-width:900px;
+  margin:30px auto;
+  padding:0 20px;
+}
 
-    .card {
-      background: #181818;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
+.card{
+  background:#181818;
+  border:1px solid #2a2a2a;
+  border-radius:10px;
+  padding:22px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+}
 
-    .screenshot {
-      background: #000;
-      border: 1px solid #333;
-      border-radius: 6px;
-      padding: 10px;
-      text-align: center;
-    }
+.screenshot{
+  background:#000;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:10px;
+  text-align:center;
+}
 
-    .screenshot img {
-      max-width: 100%;
-      border-radius: 4px;
-    }
+.screenshot img{
+  max-width:100%;
+  border-radius:6px;
+}
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 14px;
-    }
+.form-group{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:14px;
+}
 
-    label {
-      font-size: 13px;
-      margin-bottom: 4px;
-      color: #aaa;
-    }
+label{
+  font-size:13px;
+  margin-bottom:4px;
+  color:#aaa;
+}
 
-    input, select {
-      background: #101010;
-      border: 1px solid #333;
-      border-radius: 4px;
-      padding: 8px;
-      color: #eee;
-    }
+input, select{
+  background:#101010;
+  border:1px solid #333;
+  border-radius:6px;
+  padding:9px;
+  color:#eee;
+}
 
-    input:focus, select:focus {
-      outline: none;
-      border-color: #666;
-    }
+input:focus, select:focus{
+  outline:none;
+  border-color:#666;
+}
 
-    .stars {
-      display: flex;
-      gap: 6px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+.stars{
+  display:flex;
+  gap:6px;
+  font-size:22px;
+  cursor:pointer;
+}
 
-    .stars span {
-      color: #444;
-    }
+.stars span{
+  color:#444;
+}
 
-    .stars span.active {
-      color: gold;
-    }
+.stars span.active{
+  color:gold;
+}
 
-    .actions {
-      margin-top: 20px;
-    }
+.actions{
+  margin-top:22px;
+}
 
-    button {
-      background: #2e7d32;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 15px;
-      cursor: pointer;
-    }
+button{
+  background:#2e7d32;
+  border:none;
+  padding:12px 20px;
+  border-radius:8px;
+  color:#fff;
+  font-size:15px;
+  cursor:pointer;
+}
 
-    button:hover {
-      background: #388e3c;
-    }
+button:hover{
+  background:#388e3c;
+}
 
-    @media (max-width: 800px) {
-      .card {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+.notice{
+  margin-top:14px;
+  font-size:14px;
+}
+
+.error{ color:#ff5c5c; }
+.success{ color:#4cff4c; }
+
+@media (max-width:800px){
+  .card{ grid-template-columns:1fr; }
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  🛠️ Admin – Item freigeben
-</header>
+<header>🛠️ Admin – Item freigeben</header>
 
 <main>
   <div class="card">
 
     <!-- Screenshot -->
     <div class="screenshot">
-      <img src="uploads/example-screenshot.jpg" alt="Item Screenshot">
+      <img id="screenshotImg" src="" alt="Item Screenshot">
     </div>
 
     <!-- Formular -->
@@ -182,6 +186,7 @@
 
       <div class="actions">
         <button id="approveBtn">Item freigeben</button>
+        <div id="msg" class="notice"></div>
       </div>
     </div>
 
@@ -189,29 +194,100 @@
 </main>
 
 <script>
-  let selectedStars = 0;
+/* ================= CONFIG ================= */
+const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+const loginId = localStorage.getItem("loginId");
+const msg = document.getElementById("msg");
 
-  document.querySelectorAll("#stars span").forEach(star => {
-    star.addEventListener("click", () => {
-      selectedStars = Number(star.dataset.value);
-      document.querySelectorAll("#stars span").forEach(s => {
-        s.classList.toggle("active", Number(s.dataset.value) <= selectedStars);
-      });
+/* ================= LOGIN CHECK ================= */
+if (!loginId) {
+  alert("Bitte zuerst einloggen.");
+  window.location.href = "admin-login.html";
+}
+
+/* ================= ITEM-ID AUS URL ================= */
+const params = new URLSearchParams(window.location.search);
+const itemId = params.get("id");
+
+if (!itemId) {
+  msg.textContent = "❌ Keine Item-ID übergeben.";
+  msg.className = "notice error";
+  throw new Error("No item id");
+}
+
+/* ================= STERNE ================= */
+let selectedStars = 0;
+document.querySelectorAll("#stars span").forEach(star => {
+  star.addEventListener("click", () => {
+    selectedStars = Number(star.dataset.value);
+    document.querySelectorAll("#stars span").forEach(s => {
+      s.classList.toggle("active", Number(s.dataset.value) <= selectedStars);
     });
   });
+});
 
-  document.getElementById("approveBtn").addEventListener("click", () => {
-    const data = {
-      name: document.getElementById("name").value,
-      quality: document.getElementById("quality").value,
-      type: document.getElementById("type").value,
-      roll: document.getElementById("roll").value,
-      stars: selectedStars
-    };
+/* ================= ITEM LADEN ================= */
+async function loadItem(){
+  try{
+    const res = await fetch(`${API_BASE}/api/admin/items/${itemId}`, {
+      headers:{ "x-login-id": loginId }
+    });
 
-    console.log("Freigabe-Daten:", data);
-    alert("Item freigeben (Backend folgt)");
-  });
+    if (!res.ok) throw new Error();
+
+    const item = await res.json();
+    document.getElementById("screenshotImg").src = API_BASE + item.screenshot;
+
+  }catch{
+    msg.textContent = "❌ Item konnte nicht geladen werden.";
+    msg.className = "notice error";
+  }
+}
+
+loadItem();
+
+/* ================= FREIGABE ================= */
+document.getElementById("approveBtn").addEventListener("click", async () => {
+  msg.textContent = "";
+
+  const payload = {
+    name: document.getElementById("name").value.trim(),
+    quality: document.getElementById("quality").value,
+    type: document.getElementById("type").value,
+    roll: document.getElementById("roll").value.trim(),
+    stars: selectedStars
+  };
+
+  if (!payload.name || !payload.quality || !payload.type || !payload.stars) {
+    msg.textContent = "❌ Bitte alle Pflichtfelder ausfüllen.";
+    msg.className = "notice error";
+    return;
+  }
+
+  try{
+    const res = await fetch(`${API_BASE}/api/admin/items/${itemId}/approve`, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "x-login-id":loginId
+      },
+      body:JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error();
+
+    msg.textContent = "✔ Item wurde freigegeben.";
+    msg.className = "notice success";
+
+    setTimeout(() => {
+      window.location.href = "admin.html";
+    }, 1200);
+
+  }catch{
+    msg.textContent = "❌ Fehler beim Freigeben.";
+    msg.className = "notice error";
+  }
+});
 </script>
 
 </body>
