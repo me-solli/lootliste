@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>🔐 Admin Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#0b0b0b;
+  --panel:#141414;
+  --border:#2a2a2a;
+  --gold:#f5c451;
+  --err:#ff5c5c;
+  --ok:#4cff4c;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
+  color:#eaeaea;
+}
+
+.wrapper{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.panel{
+  width:100%;
+  max-width:420px;
+  background:linear-gradient(180deg,#161616,#0e0e0e);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+}
+
+h1{
+  margin:0 0 18px;
+  color:var(--gold);
+  text-align:center;
+}
+
+label{
+  display:block;
+  font-size:14px;
+  margin:14px 0 6px;
+}
+
+input{
+  width:100%;
+  padding:10px 12px;
+  background:#0b0b0b;
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:#eaeaea;
+  font-size:14px;
+}
+
+button{
+  width:100%;
+  margin-top:18px;
+  padding:12px;
+  background:linear-gradient(180deg,#f5c451,#d6a93f);
+  border:none;
+  border-radius:10px;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button:hover{
+  filter:brightness(1.05);
+}
+
+.msg{
+  margin-top:14px;
+  text-align:center;
+  font-size:14px;
+}
+
+.error{color:var(--err)}
+.success{color:var(--ok)}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <div class="panel">
+    <h1>Admin Login</h1>
+
+    <label for="username">Benutzername</label>
+    <input id="username" autocomplete="username">
+
+    <label for="password">Passwort</label>
+    <input id="password" type="password" autocomplete="current-password">
+
+    <button id="loginBtn">Einloggen</button>
+
+    <div id="msg" class="msg"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+const msg = document.getElementById("msg");
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  msg.textContent = "";
+  msg.className = "msg";
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!username || !password) {
+    msg.textContent = "Bitte Benutzername und Passwort eingeben.";
+    msg.classList.add("error");
+    return;
+  }
+
+  try {
+    const res = await fetch(API_BASE + "/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.loginId) {
+      msg.textContent = data.error || "Login fehlgeschlagen.";
+      msg.classList.add("error");
+      return;
+    }
+
+    // 🔐 Session speichern
+    localStorage.setItem("loginId", data.loginId);
+
+    msg.textContent = "Login erfolgreich. Weiterleitung…";
+    msg.classList.add("success");
+
+    // 👉 ab zur Admin-Übersicht
+    setTimeout(() => {
+      window.location.href = "admin.html";
+    }, 600);
+
+  } catch (err) {
+    console.error(err);
+    msg.textContent = "Server nicht erreichbar.";
+    msg.classList.add("error");
+  }
+});
+</script>
+</body>
+</html>
