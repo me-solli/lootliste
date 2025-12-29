@@ -541,10 +541,17 @@ let items = [];
 
 async function loadItems() {
   try {
-    const res = await fetch("https://content-connection-production-ea07.up.railway.app/api/items");
+    const res = await fetch("https://content-connection-production-ea07.up.railway.app/api/items/public");
     const data = await res.json();
     console.log("Backend Items:", data);
-    items = Array.isArray(data) ? data : [];
+    items = Array.isArray(data) ? data.map(i => ({
+      ...i,
+      status:
+        i.status === "verfügbar" ? "Verfügbar" :
+        i.status === "reserviert" ? "Reserviert" :
+        i.status === "vergeben"   ? "Vergeben"   :
+        i.status
+    })) : [];
   } catch (e) {
     console.error("Items konnten nicht geladen werden", e);
     items = [];
