@@ -14,6 +14,7 @@
   --ok:#4cff4c;
   --err:#ff5c5c;
   --muted:#888;
+  --btn:#2e7d32;
 }
 
 *{box-sizing:border-box}
@@ -54,7 +55,7 @@ h1{
 .item:last-child{border-bottom:none}
 
 .thumb{
-  width:160px;
+  width:180px;
   flex-shrink:0;
 }
 
@@ -63,6 +64,22 @@ h1{
   border-radius:10px;
   border:1px solid var(--border);
   background:#000;
+  margin-bottom:10px;
+}
+
+.thumb button{
+  width:100%;
+  padding:8px;
+  background:var(--btn);
+  border:none;
+  border-radius:8px;
+  color:#fff;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.thumb button:hover{
+  background:#388e3c;
 }
 
 .meta{
@@ -122,6 +139,13 @@ if (!loginId) {
 }
 
 /* ================================
+   NAVIGATION
+================================ */
+function openApproveItem(id){
+  window.location.href = `admin-item.html?id=${id}`;
+}
+
+/* ================================
    LOAD ADMIN ITEMS
 ================================ */
 async function loadItems() {
@@ -157,6 +181,9 @@ async function loadItems() {
       <div class="item">
         <div class="thumb">
           <img src="${API_BASE}${item.screenshot}" alt="Screenshot">
+          <button onclick="openApproveItem('${item.id}')">
+            Item freigeben
+          </button>
         </div>
         <div class="meta">
           <div><b>ID:</b> ${item.id}</div>
