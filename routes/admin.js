@@ -42,6 +42,90 @@ router.get("/items", async (req, res) => {
 });
 
 /* =====================================================
+   POST /api/admin/items/:id/approve
+   Freigabe eines eingereichten Items
+===================================================== */
+router.post("/items/:id/approve", async (req, res) => {
+  const itemId = req.params.id;
+  const { name, quality, type, roll, stars } = req.body;
+
+  try {
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({ error: "Kein Admin-Zugriff" });
+    }
+
+    if (!name || !quality || !type) {
+      return res.status(400).json({
+        error: "Pflichtfelder fehlen (name, quality, type)"
+      });
+    }
+
+    const item = await db.get(
+      `
+      SELECT i.id, s.status
+      FROM items i
+      JOIN item_status s ON s.item_id = i.id
+      WHERE i.id = ?
+      `,
+      [itemId]
+    );
+
+    if (!item) {
+      return res.status(404).json({ error: "Item nicht gefunden" });
+    }
+
+    if (item.status !== "eingereicht") {
+      return res.status(400).json({
+        error: "Item ist nicht im Status 'eingereicht'"
+      });
+    }
+
+    await db.run("BEGIN");
+
+    // Item-Felder setzen
+    await db.run(
+      `
+      UPDATE items SET
+        title = ?,
+        type = ?,
+        rating = ?
+      WHERE id = ?
+      `,
+      [
+        name,
+        type,
+        typeof stars === "number" ? stars : 0,
+        itemId
+      ]
+    );
+
+    // Status wechseln
+    await db.run(
+      `
+      UPDATE item_status SET
+        status = 'verfügbar',
+        status_since = datetime('now')
+      WHERE item_id = ?
+      `,
+      [itemId]
+    );
+
+    await db.run("COMMIT");
+
+    res.json({
+      success: true,
+      id: itemId,
+      status: "verfügbar"
+    });
+
+  } catch (err) {
+    await db.run("ROLLBACK");
+    console.error("ADMIN APPROVE FEHLER:", err);
+    res.status(500).json({ error: "Item konnte nicht freigegeben werden" });
+  }
+});
+
+/* =====================================================
    DEV: POST /api/admin/dev-seed
    Legt EIN Test-Item mit status=eingereicht an
    (NUR für Entwicklung)
