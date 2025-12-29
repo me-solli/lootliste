@@ -7,6 +7,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 
 const db = require("./db");
 
@@ -17,7 +18,25 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 /* ================================
-   MIDDLEWARE
+   CORS (GitHub Pages → Railway)
+================================ */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://me-solli.github.io");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, x-login-id"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
+/* ================================
+   BODY PARSER
 ================================ */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -54,7 +73,7 @@ function getSession(loginId) {
 }
 
 /* ================================
-   AUTH MIDDLEWARE (FIXED)
+   AUTH MIDDLEWARE (MIT ROLE)
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
@@ -71,7 +90,6 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: "User nicht gefunden" });
   }
 
-  // WICHTIG: role wird jetzt gesetzt
   req.user = {
     id: user.id,
     username: user.username,
@@ -82,7 +100,7 @@ function requireAuth(req, res, next) {
 }
 
 /* ================================
-   LOGIN ROUTE
+   LOGIN
 ================================ */
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -93,9 +111,7 @@ app.post("/login", (req, res) => {
     return res.status(401).json({ error: "User nicht gefunden" });
   }
 
-  const bcrypt = require("bcryptjs");
   const ok = bcrypt.compareSync(password, user.password);
-
   if (!ok) {
     return res.status(401).json({ error: "Passwort falsch" });
   }
@@ -119,10 +135,10 @@ app.post("/login", (req, res) => {
 const itemRoutes = require("./routes/items");
 const adminRoutes = require("./routes/admin");
 
-// Public / User
+// User / Submit
 app.use("/api/items", requireAuth, itemRoutes);
 
-// Admin (AUTH **MUSS** davor!)
+// Admin (AUTH MUSS DAVOR!)
 app.use("/api/admin", requireAuth, adminRoutes);
 
 /* ================================
