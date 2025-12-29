@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin – Item freigeben</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #eee;
+    }
+
+    header {
+      background: #141414;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      border-bottom: 1px solid #222;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: #181818;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .screenshot {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .screenshot img {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #aaa;
+    }
+
+    input, select {
+      background: #101010;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 8px;
+      color: #eee;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #666;
+    }
+
+    .stars {
+      display: flex;
+      gap: 6px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .stars span {
+      color: #444;
+    }
+
+    .stars span.active {
+      color: gold;
+    }
+
+    .actions {
+      margin-top: 20px;
+    }
+
+    button {
+      background: #2e7d32;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #388e3c;
+    }
+
+    @media (max-width: 800px) {
+      .card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  🛠️ Admin – Item freigeben
+</header>
+
+<main>
+  <div class="card">
+
+    <!-- Screenshot -->
+    <div class="screenshot">
+      <img src="uploads/example-screenshot.jpg" alt="Item Screenshot">
+    </div>
+
+    <!-- Formular -->
+    <div>
+      <div class="form-group">
+        <label>Item-Name</label>
+        <input type="text" id="name" placeholder="z. B. Shako">
+      </div>
+
+      <div class="form-group">
+        <label>Qualität</label>
+        <select id="quality">
+          <option value="">Bitte wählen</option>
+          <option>Unique</option>
+          <option>Set</option>
+          <option>Rare</option>
+          <option>Magic</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Typ</label>
+        <select id="type">
+          <option value="">Bitte wählen</option>
+          <option value="waffe">Waffe</option>
+          <option value="rüstung">Rüstung</option>
+          <option value="helm">Helm</option>
+          <option value="schild">Schild</option>
+          <option value="ring">Ring</option>
+          <option value="amulett">Amulett</option>
+          <option value="charm">Charm</option>
+          <option value="rune">Rune</option>
+          <option value="sonstiges">Sonstiges</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Roll / Werte</label>
+        <input type="text" id="roll" placeholder="+2 skills, 141 def">
+      </div>
+
+      <div class="form-group">
+        <label>Sterne-Bewertung</label>
+        <div class="stars" id="stars">
+          <span data-value="1">★</span>
+          <span data-value="2">★</span>
+          <span data-value="3">★</span>
+          <span data-value="4">★</span>
+          <span data-value="5">★</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="approveBtn">Item freigeben</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  let selectedStars = 0;
+
+  document.querySelectorAll("#stars span").forEach(star => {
+    star.addEventListener("click", () => {
+      selectedStars = Number(star.dataset.value);
+      document.querySelectorAll("#stars span").forEach(s => {
+        s.classList.toggle("active", Number(s.dataset.value) <= selectedStars);
+      });
+    });
+  });
+
+  document.getElementById("approveBtn").addEventListener("click", () => {
+    const data = {
+      name: document.getElementById("name").value,
+      quality: document.getElementById("quality").value,
+      type: document.getElementById("type").value,
+      roll: document.getElementById("roll").value,
+      stars: selectedStars
+    };
+
+    console.log("Freigabe-Daten:", data);
+    alert("Item freigeben (Backend folgt)");
+  });
+</script>
+
+</body>
+</html>
