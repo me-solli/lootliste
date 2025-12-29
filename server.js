@@ -124,7 +124,7 @@ app.post("/login", (req, res) => {
 
   const loginId = createSession(user.id);
 
-  // ✅ Cookie setzen
+  // ✅ Cookie setzen (für Backend / API)
   res.cookie("loginId", loginId, {
     httpOnly: true,
     secure: true,
@@ -132,8 +132,10 @@ app.post("/login", (req, res) => {
     maxAge: 1000 * 60 * 60 * 24
   });
 
+  // ✅ loginId zusätzlich zurückgeben (Frontend-Kompatibilität)
   res.json({
     success: true,
+    loginId,
     user: {
       id: user.id,
       username: user.username,
