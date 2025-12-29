@@ -30,7 +30,8 @@ const upload = multer({
 
 /* =========================
    GET /api/items
-   Öffentliche Liste
+   Öffentliche Liste (ALLE Items)
+   ⚠️ Wird intern/Admin genutzt
 ========================= */
 router.get("/", async (req, res) => {
   try {
@@ -50,6 +51,33 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error("GET /api/items Fehler:", err);
     res.status(500).json({ error: "Items konnten nicht geladen werden" });
+  }
+});
+
+/* =========================
+   GET /api/items/public
+   NUR verfügbare Items
+   ✅ Für GitHub Pages / Public Index
+========================= */
+router.get("/public", async (req, res) => {
+  try {
+    const rows = await db.all(`
+      SELECT
+        i.id,
+        i.owner_user_id,
+        i.screenshot,
+        i.created_at,
+        s.status
+      FROM items i
+      JOIN item_status s ON s.item_id = i.id
+      WHERE s.status = 'verfügbar'
+      ORDER BY i.created_at DESC
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    console.error("GET /api/items/public Fehler:", err);
+    res.status(500).json({ error: "Öffentliche Items konnten nicht geladen werden" });
   }
 });
 
