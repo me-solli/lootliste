@@ -145,10 +145,10 @@ button:hover{
         <label>Qualität</label>
         <select id="quality">
           <option value="">Bitte wählen</option>
-          <option>Unique</option>
-          <option>Set</option>
-          <option>Rare</option>
-          <option>Magic</option>
+          <option value="unique">Unique</option>
+          <option value="set">Set</option>
+          <option value="rare">Rare</option>
+          <option value="magic">Magic</option>
         </select>
       </div>
 
@@ -196,14 +196,7 @@ button:hover{
 <script>
 /* ================= CONFIG ================= */
 const API_BASE = "https://content-connection-production-ea07.up.railway.app";
-const loginId = localStorage.getItem("loginId");
 const msg = document.getElementById("msg");
-
-/* ================= LOGIN CHECK ================= */
-if (!loginId) {
-  alert("Bitte zuerst einloggen.");
-  window.location.href = "admin-login.html";
-}
 
 /* ================= ITEM-ID AUS URL ================= */
 const params = new URLSearchParams(window.location.search);
@@ -226,25 +219,24 @@ document.querySelectorAll("#stars span").forEach(star => {
   });
 });
 
-/* ================= ITEM LADEN ================= */
-async function loadItem(){
-  try{
-    const res = await fetch(`${API_BASE}/api/admin/items/${itemId}`, {
-      headers:{ "x-login-id": loginId }
-    });
-
-    if (!res.ok) throw new Error();
-
-    const item = await res.json();
+/* ================= SCREENSHOT LADEN =================
+   Wir laden den Screenshot über die Admin-Liste,
+   da es (bewusst) keinen Einzel-GET-Endpoint gibt.
+==================================================== */
+fetch(`${API_BASE}/api/admin/items`)
+  .then(r => {
+    if (!r.ok) throw new Error();
+    return r.json();
+  })
+  .then(items => {
+    const item = items.find(i => String(i.id) === String(itemId));
+    if (!item) throw new Error();
     document.getElementById("screenshotImg").src = API_BASE + item.screenshot;
-
-  }catch{
+  })
+  .catch(() => {
     msg.textContent = "❌ Item konnte nicht geladen werden.";
     msg.className = "notice error";
-  }
-}
-
-loadItem();
+  });
 
 /* ================= FREIGABE ================= */
 document.getElementById("approveBtn").addEventListener("click", async () => {
@@ -264,14 +256,13 @@ document.getElementById("approveBtn").addEventListener("click", async () => {
     return;
   }
 
-  try{
+  try {
     const res = await fetch(`${API_BASE}/api/admin/items/${itemId}/approve`, {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "x-login-id":loginId
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
       },
-      body:JSON.stringify(payload)
+      body: JSON.stringify(payload)
     });
 
     if (!res.ok) throw new Error();
@@ -281,9 +272,9 @@ document.getElementById("approveBtn").addEventListener("click", async () => {
 
     setTimeout(() => {
       window.location.href = "admin.html";
-    }, 1200);
+    }, 1000);
 
-  }catch{
+  } catch {
     msg.textContent = "❌ Fehler beim Freigeben.";
     msg.className = "notice error";
   }
