@@ -19,9 +19,13 @@ router.get("/items", async (req, res) => {
       SELECT
         i.id,
         i.owner_user_id,
+        i.title,
+        i.type,
+        i.rating,
         i.screenshot,
         i.created_at,
-        s.status
+        s.status,
+        s.status_since
       FROM items i
       JOIN item_status s ON s.item_id = i.id
       WHERE s.status = ?
@@ -44,7 +48,6 @@ router.get("/items", async (req, res) => {
 ===================================================== */
 router.post("/dev-seed", async (req, res) => {
   try {
-    // Admin-Check
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ error: "Kein Admin-Zugriff" });
     }
