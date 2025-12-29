@@ -2,713 +2,152 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🛠 Lootliste – Admin</title>
+<title>Admin – Eingereichte Items</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --gold:#f5c451;
   --bg:#0b0b0b;
-  --panel:#111;
+  --panel:#141414;
   --border:#2a2a2a;
-  --ok:#4cff4c;
-  --err:#ff5c5c;
+  --gold:#f5c451;
+  --text:#eaeaea;
+  --muted:#999;
 }
+
+*{box-sizing:border-box}
 
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:radial-gradient(ellipse at top,#1a1a1a 0%,#0b0b0b 60%);
-  color:#eaeaea;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
+  color:var(--text);
 }
 
-.wrapper{max-width:1400px;margin:0 auto}
-header{padding:26px}
-header h1{margin:0;font-size:28px}
-header p{margin:6px 0 0;font-size:14px;opacity:.85}
-
-.feedback{
-  display:none;
-  margin:0 26px;
-  padding:14px 18px;
-  border-radius:14px;
-  font-weight:bold;
-}
-.feedback.ok{border:1px solid var(--ok);color:var(--ok)}
-.feedback.err{border:1px solid var(--err);color:var(--err)}
-
-.container{
-  padding:26px;
-  display:grid;
-  gap:26px;
+.wrapper{
+  max-width:900px;
+  margin:40px auto;
+  padding:20px;
 }
 
 .panel{
-  background:linear-gradient(180deg,#161616,#0e0e0e);
+  background:var(--panel);
   border:1px solid var(--border);
-  border-radius:18px;
-  padding:22px;
-}
-
-.panel h2{margin:0 0 16px;color:var(--gold)}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
-}
-
-label{
-  font-size:13px;
-  font-weight:bold;
-  opacity:.85;
-}
-
-input,select,textarea{
-  width:100%;
-  padding:11px 12px;
-  background:#0f0f0f;
-  border:1px solid #333;
-  border-radius:10px;
-  color:#fff;
-}
-
-textarea{height:90px;resize:vertical}
-
-.actions{
-  display:flex;
-  gap:12px;
-  margin-top:18px;
-}
-
-button{
-  padding:10px 18px;
   border-radius:12px;
-  border:1px solid var(--border);
-  background:#151515;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
+  padding:24px;
 }
-.save{border-color:var(--gold);color:var(--gold)}
-.edit{border-color:#5cc8ff;color:#5cc8ff}
-.del{border-color:var(--err);color:var(--err)}
-.copy{border-color:#9cff9c;color:#9cff9c}
-button:hover{opacity:.85}
 
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:10px;border-bottom:1px solid #222;text-align:left}
-th{color:var(--gold)}
+h1{
+  margin:0 0 20px;
+  color:var(--gold);
+}
 
-.preview{
+.item{
   display:flex;
   gap:16px;
-  align-items:center;
-  background:#0f0f0f;
-  border:1px solid #333;
-  border-radius:14px;
-  padding:14px;
-}
-.preview img{
-  width:64px;
-  height:64px;
-  object-fit:contain;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
 }
 
-/* === Archivierte Screenshots (bestätigt) === */
-tr[data-status="done"]{
-  opacity:.45;
-}
-tr[data-status="done"] img{
-  filter:grayscale(60%);
-}
-tr[data-status="done"] button{
-  pointer-events:none;
-  cursor:default;
-  opacity:.8;
+.item:last-child{
+  border-bottom:none;
 }
 
+.thumb{
+  width:140px;
+  flex-shrink:0;
+}
+
+.thumb img{
+  width:100%;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#000;
+}
+
+.meta{
+  flex:1;
+}
+
+.meta div{
+  margin-bottom:6px;
+  font-size:14px;
+}
+
+.status{
+  color:#4cff4c;
+  font-weight:600;
+}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  padding:30px;
+}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
-
-<header>
-  <h1>🛠 Lootliste – Admin</h1>
-  <p>Items anlegen · bearbeiten · löschen · Export</p>
-</header>
-<div id="feedback" class="feedback"></div>
-
-<div class="container">
-
-<section class="panel">
-  <h2>📥 Eingereichte Screenshots</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Vorschau</th>
-        <th>Spieler</th>
-        <th>Status</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody id="submissionTable">
-      <tr data-status="open">
-        <td>
-          <img src="img/test_screenshot.png" alt="Test Screenshot">
-        </td>
-        <td>MeSolli_Test</td>
-        <td class="statusCell">⏳ Offen</td>
-        <td class="actionCell">
-          <button id="btnUseScreenshot">📸 Zum Item bearbeiten</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-
-
-<!-- ===== EINGEREICHTE SCREENSHOTS (STATUS) ===== -->
-
-
-<section class="panel" id="activeSubmissionPanel" style="display:none">
-  <h2>📸 Aktiver Screenshot</h2>
-  <img id="activeSubmissionImg"
-       style="max-width:320px;border:1px solid #333;border-radius:10px;background:#000">
-</section>
-
-
-<!-- ===== EINGEREICHTE SCREENSHOTS (FIXED) ===== -->
-
-
-<section class="panel" id="activeSubmissionPanel" style="display:none">
-  <h2>📸 Aktiver Screenshot</h2>
-  <p class="small">Dieser Screenshot ist aktuell zur Bearbeitung ausgewählt.</p>
-  <img id="activeSubmissionImg"
-       style="max-width:300px;border:1px solid #333;border-radius:10px;background:#000">
-</section>
-
-
-<!-- ITEM FORM -->
-<div class="panel">
-<h2>➕ / ✏️ Item</h2>
-
-<div class="form-grid">
-  <div>
-    <label>Name</label>
-    <input id="name">
-  </div>
-
-  <div>
-    <label>Kategorie</label>
-    <select id="category">
-      <option>Unique</option>
-      <option>Set</option>
-      <option>Runeword</option>
-      <option>Rare</option>
-      <option>Magic</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Typ</label>
-    <select id="type">
-      <option>Waffe</option>
-      <option>Helm</option>
-      <option>Rüstung</option>
-      <option>Schild</option>
-      <option>Gürtel</option>
-      <option>Amulett</option>
-      <option>Ring</option>
-      <option>Charm</option>
-      <option>Rune</option>
-      <option>Sonstiges</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Status</label>
-    <select id="status">
-      <option>Verfügbar</option>
-      <option>Reserviert</option>
-      <option>Vergeben</option>
-    </select>
-  </div>
-
-  <div>
-    
-  </div>
-
-  <div>
-    <label>Sterne-Rating</label>
-    <select id="stars">
-      <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ (5/5)</option>
-      <option value="⭐⭐⭐⭐☆">⭐⭐⭐⭐☆ (4/5)</option>
-      <option value="⭐⭐⭐☆☆">⭐⭐⭐☆☆ (3/5)</option>
-      <option value="⭐⭐☆☆☆">⭐⭐☆☆☆ (2/5)</option>
-      <option value="⭐☆☆☆☆">⭐☆☆☆☆ (1/5)</option>
-    </select>
+  <div class="panel">
+    <h1>Admin – Eingereichte Items</h1>
+    <div id="list"></div>
   </div>
 </div>
 
-<label style="margin-top:14px">Roll / Werte</label>
-<textarea id="roll" placeholder="+80% ed, +20 str"></textarea>
+<script>
+/* ===== CONFIG ===== */
+const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+const loginId = localStorage.getItem("loginId");
+const list = document.getElementById("list");
 
-<div class="actions">
-  <button class="save" onclick="saveItem()">Speichern</button>
-</div>
-</div>
-
-<!-- PREVIEW -->
-<div class="panel">
-<h2>👁 Live-Vorschau</h2>
-<div id="preview"></div>
-</div>
-
-<!-- TABLE -->
-<div class="panel">
-<h2>📋 Items</h2>
-<table>
-<thead>
-<tr>
-  <th>Name</th>
-  <th>Typ</th>
-  <th>Rating</th>
-  <th>Status</th>
-  <th></th>
-</tr>
-</thead>
-<tbody id="itemTable"></tbody>
-</table>
-</div>
-
-<!-- EXPORT -->
-<div class="panel">
-<h2>📄 items.js Export</h2>
-<button class="copy" onclick="copyExport()">📋 Kopieren</button>
-<textarea id="output" readonly></textarea>
-</div>
-
-</div>
-</div>
-
-<script type="module">
-import itemsData from "./items.js";
-
-const $=id=>document.getElementById(id);
-const fb=$("feedback");
-
-let items=[...itemsData];
-let editIndex=null;
-
-function feedback(msg,err=false){
-  fb.textContent=msg;
-  fb.className="feedback "+(err?"err":"ok");
-  fb.style.display="block";
-  setTimeout(()=>fb.style.display="none",2500);
+/* ===== LOGIN CHECK ===== */
+if (!loginId) {
+  alert("Nicht eingeloggt.");
+  window.location.href = "index.html";
 }
 
-["name","category","type","status","stars","roll"].forEach(id=>{
-  $(id).oninput=updatePreview;
-});
-
-function updatePreview(){
-  $("preview").innerHTML=`
-    <div class="preview">
-      <img src="img/icons/${$("type").value.toLowerCase()}.png">
-      <div>
-        <strong>${$("name").value||"Itemname"}</strong><br>
-        ${$("stars").value}<br>
-        ${$("roll").value||"—"}<br>
-        ${$("category").value} · ${$("type").value}<br>
-        ${$("status").value}
-      </div>
-    </div>`;
-}
-
-function render(){
-  $("itemTable").innerHTML="";
-  const wf = document.getElementById("workflowFilter")?.value || "approved";
-  items.filter(i => (i.workflow || "approved") === wf).forEach((i,idx)=>{
-    $("itemTable").innerHTML+=`
-      <tr>
-        <td>${i.name}</td>
-        <td>${i.type}</td>
-        <td>${i.stars}</td>
-        <td>${i.status}</td>
-        <td>
-          <button class="edit" onclick="editItem(${idx})">✏️</button>
-          <button class="del" onclick="delItem(${idx})">🗑</button>
-        </td>
-      </tr>`;
-  });
-
-  $("output").value =
-`const items = ${JSON.stringify(items.filter(i => (i.workflow || "approved") === "approved"),null,2)};
-export default items;`;
-}
-
-function saveItem(){
-  if(!$("name").value){
-    feedback("Name fehlt",true);
-    return;
-  }
-
-  const obj={
-    name:$("name").value,
-    category:$("category").value,
-    type:$("type").value,
-    status:$("status").value,
-    stars:$("stars").value,
-    roll:$("roll").value||"—",
-    contact:"me_solli",
-    workflow: $("workflow")?.value || "approved"
-  };
-
-  editIndex!==null ? items[editIndex]=obj : items.push(obj);
-  editIndex=null;
-  render();
-  feedback("Item gespeichert");
-}
-
-function editItem(i){
-  const it=items[i];
-  $("name").value=it.name;
-  $("category").value=it.category;
-  $("type").value=it.type;
-  $("status").value=it.status;
-  $("stars").value=it.stars;
-  $("roll").value=it.roll;
-  editIndex=i;
-  updatePreview();
-}
-
-function delItem(i){
-  if(confirm("Item löschen?")){
-    items.splice(i,1);
-    render();
-    feedback("Item gelöscht");
-  }
-}
-
-function copyExport(){
-  navigator.clipboard.writeText($("output").value);
-  feedback("items.js kopiert");
-}
-
-window.editItem=editItem;
-window.delItem=delItem;
-window.saveItem=saveItem;
-window.copyExport=copyExport;
-
-render();
-updatePreview();
-
-/* ===== FIXED TEST SCREENSHOT WORKFLOW ===== */
-(function(){
-  const submission = {
-    screenshot: "img/test_screenshot.png",
-    submittedBy: { username: "MeSolli_Test" },
-    submittedAt: new Date().toISOString()
-  };
-
-  let selectedSubmission = null;
-
-  const btn = document.getElementById("btnEditSubmission");
-  const panel = document.getElementById("activeSubmissionPanel");
-  const img = document.getElementById("activeSubmissionImg");
-
-  if(btn){
-    btn.addEventListener("click", function(){
-      selectedSubmission = submission;
-      img.src = submission.screenshot;
-      panel.style.display = "block";
-      panel.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
-
-  /* Hook existing saveItem WITHOUT overriding logic */
-  if(typeof saveItem === "function"){
-    const _save = saveItem;
-    saveItem = function(){
-      if(selectedSubmission){
-        window.__internalScreenshot = {
-          screenshot: selectedSubmission.screenshot,
-          submittedBy: selectedSubmission.submittedBy,
-          submittedAt: selectedSubmission.submittedAt
-        };
-      }
-      _save();
-    };
-  }
-
-  if(typeof buildItemObject === "function"){
-    const _build = buildItemObject;
-    buildItemObject = function(){
-      const item = _build();
-      if(window.__internalScreenshot){
-        item.internal = window.__internalScreenshot;
-      }
-      return item;
-    };
-  }
-})();
-
-
-/* ===== STEP 1: Eingang nach Speichern aufräumen ===== */
-(function(){
-  if(typeof saveItem !== "function") return;
-
-  const __save = saveItem;
-  saveItem = function(){
-    const hadSubmission = typeof selectedSubmission !== "undefined" && selectedSubmission;
-
-    __save();
-
-    if(hadSubmission){
-      // remove screenshot from Eingang (local test case)
-      try{
-        const table = document.querySelector("section.panel table tbody");
-        if(table){
-          table.innerHTML = '<tr><td colspan="4" style="opacity:.6">Keine offenen Einreichungen</td></tr>';
+/* ===== LOAD ITEMS ===== */
+async function loadItems() {
+  try {
+    const res = await fetch(
+      API_BASE + "/api/admin/items?status=eingereicht",
+      {
+        headers: {
+          "x-login-id": loginId
         }
-        const active = document.getElementById("activeSubmissionPanel");
-        if(active) active.style.display = "none";
-        selectedSubmission = null;
-      }catch(e){}
-    }
-  };
-})();
-
-
-/* ===== STEP 2b.1: Screenshot erledigt-Status ===== */
-(function(){
-  const submission = {
-    screenshot: "img/test_screenshot.png",
-    submittedBy: { username: "MeSolli_Test" },
-    status: "open"
-  };
-
-  let selected = null;
-
-  const btn = document.getElementById("btnUseScreenshot");
-  const panel = document.getElementById("activeSubmissionPanel");
-  const img = document.getElementById("activeSubmissionImg");
-  const row = document.querySelector('#submissionTable tr');
-  const statusCell = document.querySelector('.statusCell');
-  const actionCell = document.querySelector('.actionCell');
-
-  if(btn){
-    btn.addEventListener("click", () => {
-      selected = submission;
-      img.src = submission.screenshot;
-      panel.style.display = "block";
-      panel.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
-
-  if(typeof saveItem === "function"){
-    const _save = saveItem;
-    saveItem = function(){
-      _save();
-      if(selected && submission.status === "open"){
-        submission.status = "done";
-        statusCell.innerHTML = '🟢 <strong>Erledigt</strong>';
-        actionCell.innerHTML = '<span style="opacity:.6">—</span>';
-        panel.style.display = "none";
-        selected = null;
       }
-    };
-  }
+    );
 
-  if(typeof buildItemObject === "function"){
-    const _build = buildItemObject;
-    buildItemObject = function(){
-      const item = _build();
-      if(submission.status === "done"){
-        item.internal = {
-          screenshot: submission.screenshot,
-          submittedBy: submission.submittedBy
-        };
-      }
-      return item;
-    };
-  }
-})();
+    if (!res.ok) throw new Error();
 
-</script>
+    const items = await res.json();
 
-<script>
-// === AUTO SCREENSHOT CONFIRMATION (Variant A) ===
-function autoConfirmScreenshot(){
-  if(typeof currentItemId === 'undefined') return;
-  const row = document.querySelector('#submissionTable tr[data-item-id="'+currentItemId+'"]');
-  if(!row) return;
-
-  row.dataset.status = 'done';
-  const statusCell = row.querySelector('[data-role="status"]') || row.querySelector('td:nth-child(3)');
-  if(statusCell){
-    statusCell.innerHTML = '✅ bestätigt';
-    statusCell.style.color = 'var(--ok)';
-  }
-}
-
-// observe feedback success
-const fb = document.getElementById('feedback');
-if(fb){
-  const obs = new MutationObserver(()=>{
-    if(fb.classList.contains('ok') && fb.style.display !== 'none'){
-      autoConfirmScreenshot();
+    if (!items.length) {
+      list.innerHTML = `<div class="empty">Keine eingereichten Items.</div>`;
+      return;
     }
-  });
-  obs.observe(fb,{attributes:true,childList:true,subtree:true});
-}
-</script>
 
+    list.innerHTML = items.map(item => `
+      <div class="item">
+        <div class="thumb">
+          <img src="${API_BASE}${item.screenshot}" alt="Screenshot">
+        </div>
+        <div class="meta">
+          <div><b>ID:</b> ${item.id}</div>
+          <div><b>Status:</b> <span class="status">${item.status}</span></div>
+          <div><b>Erstellt:</b> ${new Date(item.created_at).toLocaleString()}</div>
+          <div><b>User:</b> ${item.owner_user_id}</div>
+        </div>
+      </div>
+    `).join("");
 
-<script>
-// === FIX: Link save confirmation to the ACTIVE submission row ===
-window._activeSubmissionRow = null;
-
-// Capture clicks on "Zum Item bearbeiten" and remember the row
-document.addEventListener('click', function(e){
-  const btn = e.target.closest('button, a');
-  if(!btn) return;
-  if(btn.textContent && btn.textContent.includes('Zum Item bearbeiten')){
-    const row = btn.closest('tr');
-    if(row){
-      window._activeSubmissionRow = row;
-    }
-  }
-});
-
-function confirmActiveSubmission(){
-  const row = window._activeSubmissionRow;
-  if(!row) return;
-
-  row.dataset.status = 'done';
-
-  // Status cell is the 3rd column
-  const statusCell = row.querySelector('td:nth-child(3)');
-  if(statusCell){
-    statusCell.innerHTML = '✅ bestätigt';
-    statusCell.style.color = 'var(--ok)';
+  } catch (err) {
+    list.innerHTML = `<div class="empty">Fehler beim Laden.</div>`;
   }
 }
 
-// Observe success feedback and confirm the active submission
-(function(){
-  const fb = document.getElementById('feedback');
-  if(!fb) return;
-  const obs = new MutationObserver(()=>{
-    if(fb.classList.contains('ok') && fb.style.display !== 'none'){
-      confirmActiveSubmission();
-    }
-  });
-  obs.observe(fb,{attributes:true,childList:true,subtree:true});
-})();
+loadItems();
 </script>
-
-
-<script>
-// === LOCK EDIT BUTTON AFTER CONFIRMATION ===
-function lockSubmissionRow(row){
-  if(!row) return;
-  const btn = row.querySelector('button, a');
-  if(!btn) return;
-
-  btn.setAttribute('disabled','disabled');
-  btn.classList.add('disabled');
-  btn.style.opacity = '0.45';
-  btn.style.cursor = 'not-allowed';
-  btn.innerHTML = '✔ bestätigt';
-}
-
-// extend confirmation to also lock button
-const _oldConfirm = window.confirmActiveSubmission;
-window.confirmActiveSubmission = function(){
-  if(_oldConfirm) _oldConfirm();
-  const row = window._activeSubmissionRow;
-  if(row){
-    lockSubmissionRow(row);
-  }
-};
-</script>
-
-
-<script>
-// === REMOVED_OLD_HIDE_LOGIC ===
-function hideActiveScreenshotPanel(){
-  const panel = document.querySelector('.active-screenshot, #activeScreenshot, .panel.active-screenshot');
-  if(panel){
-    panel.style.display = 'none';
-  }
-}
-
-// extend confirmation again to hide active screenshot
-(function(){
-  const orig = window.confirmActiveSubmission;
-  window.confirmActiveSubmission = function(){
-    if(orig) orig();
-    hideActiveScreenshotPanel();
-  };
-})();
-</script>
-
-
-<script>
-// === ROBUST HIDE: Aktiver Screenshot Panel ===
-function hideActiveScreenshotPanelRobust(){
-  // find panel by heading text
-  const headings = Array.from(document.querySelectorAll('.panel h2'));
-  const h = headings.find(el => el.textContent.includes('Aktiver Screenshot'));
-  if(!h) return;
-  const panel = h.closest('.panel');
-  if(panel){
-    panel.style.display = 'none';
-  }
-}
-
-// hook into confirmation
-(function(){
-  const orig = window.confirmActiveSubmission;
-  window.confirmActiveSubmission = function(){
-    if(orig) orig();
-    hideActiveScreenshotPanelRobust();
-  };
-})();
-</script>
-
-
-<script>
-// === RESET ITEM FORM AFTER SAVE ===
-function resetItemForm(){
-  const form = document.querySelector('form');
-  if(!form) return;
-
-  form.reset();
-
-  // clear previews if any
-  const previews = document.querySelectorAll('.preview img');
-  previews.forEach(img => img.src = '');
-
-  // clear internal edit state if present
-  if(typeof currentItemId !== 'undefined'){
-    currentItemId = null;
-  }
-}
-
-// hook into confirmation
-(function(){
-  const orig = window.confirmActiveSubmission;
-  window.confirmActiveSubmission = function(){
-    if(orig) orig();
-    resetItemForm();
-  };
-})();
-</script>
-
 </body>
-
 </html>
