@@ -2,17 +2,18 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Admin – Eingereichte Items</title>
+<title>🛠 Admin – Eingereichte Items</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
   --bg:#0b0b0b;
-  --panel:#141414;
+  --panel:#121212;
   --border:#2a2a2a;
   --gold:#f5c451;
-  --text:#eaeaea;
-  --muted:#999;
+  --ok:#4cff4c;
+  --err:#ff5c5c;
+  --muted:#888;
 }
 
 *{box-sizing:border-box}
@@ -21,66 +22,71 @@ body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
-  color:var(--text);
+  color:#eaeaea;
 }
 
 .wrapper{
-  max-width:900px;
+  max-width:1100px;
   margin:40px auto;
   padding:20px;
 }
 
 .panel{
-  background:var(--panel);
+  background:linear-gradient(180deg,#161616,#0e0e0e);
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:24px;
+  border-radius:16px;
+  padding:22px;
 }
 
 h1{
-  margin:0 0 20px;
+  margin:0 0 18px;
   color:var(--gold);
+  font-size:26px;
 }
 
 .item{
   display:flex;
-  gap:16px;
-  padding:14px 0;
+  gap:18px;
+  padding:16px 0;
   border-bottom:1px solid var(--border);
 }
 
-.item:last-child{
-  border-bottom:none;
-}
+.item:last-child{border-bottom:none}
 
 .thumb{
-  width:140px;
+  width:160px;
   flex-shrink:0;
 }
 
 .thumb img{
   width:100%;
-  border-radius:8px;
+  border-radius:10px;
   border:1px solid var(--border);
   background:#000;
 }
 
 .meta{
   flex:1;
+  font-size:14px;
 }
 
 .meta div{
   margin-bottom:6px;
-  font-size:14px;
 }
 
 .status{
-  color:#4cff4c;
-  font-weight:600;
+  color:var(--ok);
+  font-weight:bold;
 }
 
 .empty{
+  text-align:center;
   color:var(--muted);
+  padding:30px;
+}
+
+.error{
+  color:var(--err);
   text-align:center;
   padding:30px;
 }
@@ -96,30 +102,49 @@ h1{
 </div>
 
 <script>
-/* ===== CONFIG ===== */
+/* ================================
+   CONFIG
+================================ */
 const API_BASE = "https://content-connection-production-ea07.up.railway.app";
-const loginId = localStorage.getItem("loginId");
 const list = document.getElementById("list");
+const loginId = localStorage.getItem("loginId");
 
-/* ===== LOGIN CHECK ===== */
+/* ================================
+   LOGIN CHECK
+================================ */
 if (!loginId) {
-  alert("Nicht eingeloggt.");
-  window.location.href = "index.html";
+  list.innerHTML = `
+    <div class="error">
+      ❌ Nicht eingeloggt.<br>
+      Bitte zuerst einloggen.
+    </div>`;
+  throw new Error("Not logged in");
 }
 
-/* ===== LOAD ITEMS ===== */
+/* ================================
+   LOAD ADMIN ITEMS
+================================ */
 async function loadItems() {
   try {
     const res = await fetch(
       API_BASE + "/api/admin/items?status=eingereicht",
       {
-        headers: {
-          "x-login-id": loginId
-        }
+        headers: { "x-login-id": loginId }
       }
     );
 
-    if (!res.ok) throw new Error();
+    if (res.status === 401) {
+      list.innerHTML = `
+        <div class="error">
+          🔒 Session ungültig.<br>
+          Bitte neu einloggen.
+        </div>`;
+      return;
+    }
+
+    if (!res.ok) {
+      throw new Error("Serverfehler");
+    }
 
     const items = await res.json();
 
@@ -137,13 +162,18 @@ async function loadItems() {
           <div><b>ID:</b> ${item.id}</div>
           <div><b>Status:</b> <span class="status">${item.status}</span></div>
           <div><b>Erstellt:</b> ${new Date(item.created_at).toLocaleString()}</div>
-          <div><b>User:</b> ${item.owner_user_id}</div>
+          <div><b>User-ID:</b> ${item.owner_user_id}</div>
         </div>
       </div>
     `).join("");
 
   } catch (err) {
-    list.innerHTML = `<div class="empty">Fehler beim Laden.</div>`;
+    console.error(err);
+    list.innerHTML = `
+      <div class="error">
+        ⚠️ Fehler beim Laden.<br>
+        Siehe Browser-Konsole.
+      </div>`;
   }
 }
 
