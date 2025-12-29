@@ -76,7 +76,7 @@ function getSession(loginId) {
 }
 
 /* ================================
-   AUTH MIDDLEWARE (COOKIE ODER HEADER)
+   AUTH MIDDLEWARE
 ================================ */
 function requireAuth(req, res, next) {
   const loginId =
@@ -124,7 +124,6 @@ app.post("/login", (req, res) => {
 
   const loginId = createSession(user.id);
 
-  // ✅ Cookie setzen (für Backend / API)
   res.cookie("loginId", loginId, {
     httpOnly: true,
     secure: true,
@@ -132,7 +131,6 @@ app.post("/login", (req, res) => {
     maxAge: 1000 * 60 * 60 * 24
   });
 
-  // ✅ loginId zusätzlich zurückgeben (Frontend-Kompatibilität)
   res.json({
     success: true,
     loginId,
@@ -150,10 +148,20 @@ app.post("/login", (req, res) => {
 const itemRoutes = require("./routes/items");
 const adminRoutes = require("./routes/admin");
 
-// User / Submit
+/* ================================
+   PUBLIC ITEMS (OHNE LOGIN)
+   ⚠️ MUSS VOR requireAuth KOMMEN
+================================ */
+app.use("/api/items/public", itemRoutes);
+
+/* ================================
+   PROTECTED ITEMS
+================================ */
 app.use("/api/items", requireAuth, itemRoutes);
 
-// Admin
+/* ================================
+   ADMIN
+================================ */
 app.use("/api/admin", requireAuth, adminRoutes);
 
 /* ================================
