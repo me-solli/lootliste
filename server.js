@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const cookieParser = require("cookie-parser");
 
 const db = require("./db");
 
@@ -22,6 +23,7 @@ const PORT = process.env.PORT || 3000;
 ================================ */
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://me-solli.github.io");
+  res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, x-login-id"
@@ -40,6 +42,7 @@ app.use((req, res, next) => {
 ================================ */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 /* ================================
    STATIC FILES
@@ -73,10 +76,13 @@ function getSession(loginId) {
 }
 
 /* ================================
-   AUTH MIDDLEWARE (MIT ROLE)
+   AUTH MIDDLEWARE (COOKIE ODER HEADER)
 ================================ */
 function requireAuth(req, res, next) {
-  const loginId = req.headers["x-login-id"];
+  const loginId =
+    req.headers["x-login-id"] ||
+    req.cookies.loginId;
+
   const session = getSession(loginId);
 
   if (!session) {
@@ -118,9 +124,16 @@ app.post("/login", (req, res) => {
 
   const loginId = createSession(user.id);
 
+  // ✅ Cookie setzen
+  res.cookie("loginId", loginId, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24
+  });
+
   res.json({
     success: true,
-    loginId,
     user: {
       id: user.id,
       username: user.username,
@@ -138,7 +151,7 @@ const adminRoutes = require("./routes/admin");
 // User / Submit
 app.use("/api/items", requireAuth, itemRoutes);
 
-// Admin (AUTH MUSS DAVOR!)
+// Admin
 app.use("/api/admin", requireAuth, adminRoutes);
 
 /* ================================
