@@ -205,6 +205,15 @@ async function loadItems() {
 }
 
 loadItems();
+<script>
+const params = new URLSearchParams(window.location.search);
+const itemId = params.get("id");
+
+if (!itemId) {
+  alert("❌ Keine Item-ID übergeben.");
+} else {
+  console.log("Item-ID:", itemId);
+}
 </script>
 </body>
 </html>
