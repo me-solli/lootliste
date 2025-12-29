@@ -151,7 +151,7 @@ function openApproveItem(id){
 async function loadItems() {
   try {
     const res = await fetch(
-      API_BASE + "/api/admin/items?status=eingereicht",
+      API_BASE + "/api/admin/items",
       {
         headers: { "x-login-id": loginId }
       }
