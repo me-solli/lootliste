@@ -19,7 +19,10 @@ const db = require("./db");
 // ROUTES
 // ================================
 const itemRoutes = require("./routes/items");
+const adminRoutes = require("./routes/admin");
+
 console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
+console.log("ADMIN ROUTES GELADEN:", typeof adminRoutes);
 
 // ================================
 // APP
@@ -27,7 +30,7 @@ console.log("ITEM ROUTES GELADEN:", typeof itemRoutes);
 const app = express();
 
 // ================================
-// PORT (Railway-sicher)
+// PORT (Railway)
 // ================================
 const PORT = process.env.PORT || 8080;
 
@@ -40,8 +43,6 @@ const SESSION_DURATION_MINUTES = 60;
 // ================================
 // MIDDLEWARE
 // ================================
-
-// 👉 CORS (GitHub Pages → Railway)
 app.use(
   cors({
     origin: "*",
@@ -50,14 +51,13 @@ app.use(
   })
 );
 
-// JSON Body
 app.use(express.json());
 
-// 👉 Upload-Ordner statisch freigeben
+// 👉 Uploads öffentlich erreichbar
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ================================
-// SESSIONS (IN-MEMORY, später ersetzbar)
+// SESSIONS (IN-MEMORY)
 // ================================
 const sessions = {};
 
@@ -84,7 +84,7 @@ function getSession(loginId) {
 }
 
 // ================================
-// AUTH (echte Sessions – später)
+// AUTH MIDDLEWARE
 // ================================
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
@@ -99,14 +99,14 @@ function requireAuth(req, res, next) {
 }
 
 // ================================
-// HEALTH / ROOT
+// ROOT / HEALTH
 // ================================
 app.get("/", (req, res) => {
   res.send("Backend läuft 👌");
 });
 
 // ================================
-// AUTH ROUTES (derzeit ungenutzt)
+// AUTH ROUTES
 // ================================
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -156,8 +156,9 @@ app.post("/login", async (req, res) => {
 
 // ================================
 // API ROUTES
-// 👉 DEV-BYPASS: x-login-id reicht
 // ================================
+
+// 🔐 ITEMS → Login Pflicht
 app.use(
   "/api/items",
   (req, res, next) => {
@@ -170,6 +171,9 @@ app.use(
   },
   itemRoutes
 );
+
+// 🔐 ADMIN → Login Pflicht
+app.use("/api/admin", requireAuth, adminRoutes);
 
 // ================================
 // START SERVER
