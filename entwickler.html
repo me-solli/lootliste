@@ -55,12 +55,6 @@ body{
   flex:1;
 }
 
-.dev-text h1{
-  margin:0 0 18px;
-  font-size:26px;
-  letter-spacing:.4px;
-}
-
 .dev-text p{
   font-size:15px;
   line-height:1.55;
@@ -69,13 +63,52 @@ body{
   max-width:720px;
 }
 
-/* ===== PIXEL CHAR ===== */
+/* ===== PIXEL CHAR (KUHKÖNIG EASTER EGG) ===== */
+.dev-pixel-wrap{
+  position:relative;
+  align-self:flex-end;
+}
+
 .dev-pixel{
   width:220px;
-  flex-shrink:0;
-  opacity:.95;
   image-rendering:pixelated;
-  align-self:flex-end;
+  opacity:.95;
+  display:block;
+}
+
+/* Mini-Kuhkrone (immer sichtbar, sehr dezent) */
+.dev-pixel-wrap::after{
+  content:"👑";
+  position:absolute;
+  top:-8px;
+  left:38%;
+  font-size:18px;
+  transform:rotate(-8deg);
+  opacity:.35;
+  pointer-events:none;
+}
+
+/* Hover-Gag */
+.dev-pixel-wrap:hover::after{
+  opacity:.75;
+  transform:rotate(-4deg) scale(1.05);
+}
+
+/* Tooltip */
+.dev-pixel-wrap:hover::before{
+  content:"Kein Kuhkönig. Versprochen.";
+  position:absolute;
+  bottom:100%;
+  left:50%;
+  transform:translateX(-50%);
+  margin-bottom:8px;
+  background:#111;
+  border:1px solid var(--border);
+  color:#ccc;
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:8px;
+  white-space:nowrap;
 }
 
 /* ===== FOOTER ===== */
@@ -94,18 +127,17 @@ footer a{
 /* ===== MOBILE ===== */
 @media(max-width:720px){
   .dev-content{
-  margin-top:34px;
-  display:flex;
-  gap:32px;
-  align-items:flex-end;
-}
+    flex-direction:column;
+    align-items:center;
+    text-align:left;
+  }
   .dev-pixel{
-  width:220px;
-  flex-shrink:0;
-  opacity:.95;
-  image-rendering:pixelated;
-  align-self:flex-end;
-}
+    width:160px;
+    margin-top:10px;
+  }
+  .dev-pixel-wrap::after{
+    left:42%;
+  }
 }
 </style>
 </head>
@@ -120,29 +152,62 @@ footer a{
 
   <div class="dev-content">
     <div class="dev-text">
-      <h1>Über den Entwickler</h1>
-
       <p>
-        Die D2R-Lootliste ist kein kommerzielles Projekt,<br>
-        sondern ein Community-Tool aus eigener Motivation.
+        Dieses Projekt ist kein Produkt, kein Start-up<br>
+        und ganz sicher kein Versuch, irgendwem etwas zu verkaufen.
       </p>
 
       <p>
-        Ziel war nie „mehr Klicks“, sondern mehr Fairness, Übersicht<br>
-        und Transparenz beim Teilen von Items.
+        Es ist entstanden aus Neugier, Lernwillen<br>
+        und der Lust, etwas Sinnvolles für eine Community zu bauen,<br>
+        die mich seit Diablo II: Lord of Destruction begleitet.
       </p>
 
       <p>
-        Die Lootliste wächst Schritt für Schritt –<br>
-        ruhig, nachvollziehbar und ohne unnötigen Ballast.
+        Angefangen hat alles sehr unspektakulär –<br>
+        mit einer einfachen Tabelle und der Frage:<br>
+        <em>Geht das nicht besser?</em>
       </p>
 
       <p>
-        Feedback, Ideen und Kritik sind jederzeit willkommen.
+        Irgendwann wurde aus der Tabelle ein System.<br>
+        Aus einer Idee ein Projekt.<br>
+        Und aus „mal schauen“ ein echtes Frontend mit Backend,<br>
+        Lernkurve inklusive (ja, auch mit Hilfe von ChatGPT).
+      </p>
+
+      <p>
+        In D2R Non-Ladder liegen unzählige Items ungenutzt herum.<br>
+        Volle Truhen, volle Mules – und am Ende wird fast alles zu Runen.
+      </p>
+
+      <p>
+        Runen sind Handelsware.<br>
+        Items sind eigentlich Identität.
+      </p>
+
+      <p>
+        Diese Lootliste soll Items wieder zu dem machen,<br>
+        wofür sie gedacht sind:<br>
+        neue Builds ermöglichen, neue Charaktere starten,<br>
+        alte Twinks verbessern – ganz ohne Trading-Stress.
+      </p>
+
+      <p>
+        Free heißt hier wirklich free.<br>
+        Entweder es passt – oder eben nicht.
+      </p>
+
+      <p>
+        Ohne Ranglisten.<br>
+        Ohne Machtspielchen.<br>
+        Und ohne Kuhkönig.
       </p>
     </div>
 
-    <img src="img/pixel-char.png" alt="" class="dev-pixel">
+    <div class="dev-pixel-wrap">
+      <img src="img/pixel-char.png" alt="" class="dev-pixel">
+    </div>
   </div>
 
   <footer>
