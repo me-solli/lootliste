@@ -77,13 +77,8 @@ input, select{
   cursor:pointer;
 }
 
-.stars span{
-  color:#444;
-}
-
-.stars span.active{
-  color:gold;
-}
+.stars span{ color:#444; }
+.stars span.active{ color:gold; }
 
 .visibility{
   margin:16px 0;
@@ -99,20 +94,13 @@ input, select{
   color:#eee;
 }
 
-.visibility button.active{
-  background:#2e7d32;
-}
-
+.visibility button.active{ background:#2e7d32; }
 .visibility button.disabled{
   opacity:0.4;
   cursor:not-allowed;
 }
 
-.notice{
-  margin-top:14px;
-  font-size:14px;
-}
-
+.notice{ margin-top:14px; font-size:14px; }
 .error{ color:#ff5c5c; }
 .success{ color:#4cff4c; }
 </style>
@@ -125,12 +113,10 @@ input, select{
 <main>
   <div class="card">
 
-    <!-- Screenshot -->
     <div class="screenshot">
       <img id="screenshotImg" src="" alt="Item Screenshot">
     </div>
 
-    <!-- Formular -->
     <div>
 
       <div class="visibility">
@@ -199,12 +185,13 @@ const API_BASE = "https://content-connection-production-ea07.up.railway.app";
 const params = new URLSearchParams(window.location.search);
 const itemId = params.get("id");
 const msg = document.getElementById("msg");
+const loginId = localStorage.getItem("loginId");
 
 let itemStatus = "";
 let isPublic = 0;
+let selectedStars = 0;
 
 /* Sterne */
-let selectedStars = 0;
 document.querySelectorAll("#stars span").forEach(star => {
   star.onclick = () => {
     selectedStars = Number(star.dataset.value);
@@ -214,22 +201,24 @@ document.querySelectorAll("#stars span").forEach(star => {
 });
 
 /* Item laden */
-fetch(`${API_BASE}/api/admin/items`)
-  .then(r => r.json())
-  .then(items => {
-    const item = items.find(i => String(i.id) === String(itemId));
-    if (!item) throw new Error();
+fetch(`${API_BASE}/api/admin/items`,{
+  headers:{ "x-login-id": loginId }
+})
+.then(r => r.json())
+.then(items => {
+  const item = items.find(i => String(i.id) === String(itemId));
+  if (!item) throw new Error();
 
-    document.getElementById("screenshotImg").src = API_BASE + item.screenshot;
-    isPublic = item.is_public;
-    itemStatus = item.status;
+  document.getElementById("screenshotImg").src = API_BASE + item.screenshot;
+  isPublic = item.is_public;
+  itemStatus = item.status;
 
-    updateVisibilityUI();
-  })
-  .catch(() => {
-    msg.textContent = "❌ Item konnte nicht geladen werden.";
-    msg.className = "notice error";
-  });
+  updateVisibilityUI();
+})
+.catch(() => {
+  msg.textContent = "❌ Item konnte nicht geladen werden.";
+  msg.className = "notice error";
+});
 
 /* Sichtbarkeit UI */
 function updateVisibilityUI(){
@@ -256,7 +245,10 @@ async function setVisibility(value){
       `${API_BASE}/api/admin/items/${itemId}/visibility`,
       {
         method:"PATCH",
-        headers:{ "Content-Type":"application/json" },
+        headers:{
+          "Content-Type":"application/json",
+          "x-login-id": loginId
+        },
         body:JSON.stringify({ is_public:value })
       }
     );
@@ -279,7 +271,10 @@ document.getElementById("approveBtn").onclick = async () => {
 
   const res = await fetch(`${API_BASE}/api/admin/items/${itemId}/approve`,{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    headers:{
+      "Content-Type":"application/json",
+      "x-login-id": loginId
+    },
     body:JSON.stringify({
       name:name.value,
       quality:quality.value,
