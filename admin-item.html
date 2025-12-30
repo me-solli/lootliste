@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
-<title>Admin – Item freigeben</title>
+<title>Admin – Item verwalten</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
@@ -70,11 +70,6 @@ input, select{
   color:#eee;
 }
 
-input:focus, select:focus{
-  outline:none;
-  border-color:#666;
-}
-
 .stars{
   display:flex;
   gap:6px;
@@ -90,22 +85,27 @@ input:focus, select:focus{
   color:gold;
 }
 
-.actions{
-  margin-top:22px;
+.visibility{
+  margin:16px 0;
 }
 
-button{
-  background:#2e7d32;
+.visibility button{
+  margin-right:10px;
+  padding:8px 14px;
+  border-radius:6px;
   border:none;
-  padding:12px 20px;
-  border-radius:8px;
-  color:#fff;
-  font-size:15px;
   cursor:pointer;
+  background:#333;
+  color:#eee;
 }
 
-button:hover{
-  background:#388e3c;
+.visibility button.active{
+  background:#2e7d32;
+}
+
+.visibility button.disabled{
+  opacity:0.4;
+  cursor:not-allowed;
 }
 
 .notice{
@@ -115,16 +115,12 @@ button:hover{
 
 .error{ color:#ff5c5c; }
 .success{ color:#4cff4c; }
-
-@media (max-width:800px){
-  .card{ grid-template-columns:1fr; }
-}
 </style>
 </head>
 
 <body>
 
-<header>🛠️ Admin – Item freigeben</header>
+<header>🛠️ Admin – Item verwalten</header>
 
 <main>
   <div class="card">
@@ -136,9 +132,16 @@ button:hover{
 
     <!-- Formular -->
     <div>
+
+      <div class="visibility">
+        <label>Sichtbarkeit</label><br>
+        <button id="btnPublic">🔓 Öffentlich</button>
+        <button id="btnPrivate">🔒 Intern</button>
+      </div>
+
       <div class="form-group">
         <label>Item-Name</label>
-        <input type="text" id="name" placeholder="z. B. Shako">
+        <input type="text" id="name">
       </div>
 
       <div class="form-group">
@@ -170,7 +173,7 @@ button:hover{
 
       <div class="form-group">
         <label>Roll / Werte</label>
-        <input type="text" id="roll" placeholder="+2 skills, 141 def">
+        <input type="text" id="roll">
       </div>
 
       <div class="form-group">
@@ -184,101 +187,117 @@ button:hover{
         </div>
       </div>
 
-      <div class="actions">
-        <button id="approveBtn">Item freigeben</button>
-        <div id="msg" class="notice"></div>
-      </div>
+      <button id="approveBtn">Item freigeben</button>
+      <div id="msg" class="notice"></div>
     </div>
 
   </div>
 </main>
 
 <script>
-/* ================= CONFIG ================= */
 const API_BASE = "https://content-connection-production-ea07.up.railway.app";
-const msg = document.getElementById("msg");
-
-/* ================= ITEM-ID AUS URL ================= */
 const params = new URLSearchParams(window.location.search);
 const itemId = params.get("id");
+const msg = document.getElementById("msg");
 
-if (!itemId) {
-  msg.textContent = "❌ Keine Item-ID übergeben.";
-  msg.className = "notice error";
-  throw new Error("No item id");
-}
+let itemStatus = "";
+let isPublic = 0;
 
-/* ================= STERNE ================= */
+/* Sterne */
 let selectedStars = 0;
 document.querySelectorAll("#stars span").forEach(star => {
-  star.addEventListener("click", () => {
+  star.onclick = () => {
     selectedStars = Number(star.dataset.value);
-    document.querySelectorAll("#stars span").forEach(s => {
-      s.classList.toggle("active", Number(s.dataset.value) <= selectedStars);
-    });
-  });
+    document.querySelectorAll("#stars span")
+      .forEach(s => s.classList.toggle("active", s.dataset.value <= selectedStars));
+  };
 });
 
-/* ================= SCREENSHOT LADEN =================
-   Wir laden den Screenshot über die Admin-Liste,
-   da es (bewusst) keinen Einzel-GET-Endpoint gibt.
-==================================================== */
+/* Item laden */
 fetch(`${API_BASE}/api/admin/items`)
-  .then(r => {
-    if (!r.ok) throw new Error();
-    return r.json();
-  })
+  .then(r => r.json())
   .then(items => {
     const item = items.find(i => String(i.id) === String(itemId));
     if (!item) throw new Error();
+
     document.getElementById("screenshotImg").src = API_BASE + item.screenshot;
+    isPublic = item.is_public;
+    itemStatus = item.status;
+
+    updateVisibilityUI();
   })
   .catch(() => {
     msg.textContent = "❌ Item konnte nicht geladen werden.";
     msg.className = "notice error";
   });
 
-/* ================= FREIGABE ================= */
-document.getElementById("approveBtn").addEventListener("click", async () => {
-  msg.textContent = "";
+/* Sichtbarkeit UI */
+function updateVisibilityUI(){
+  const btnPublic = document.getElementById("btnPublic");
+  const btnPrivate = document.getElementById("btnPrivate");
 
-  const payload = {
-    name: document.getElementById("name").value.trim(),
-    quality: document.getElementById("quality").value,
-    type: document.getElementById("type").value,
-    roll: document.getElementById("roll").value.trim(),
-    stars: selectedStars
-  };
+  btnPublic.classList.toggle("active", isPublic === 1);
+  btnPrivate.classList.toggle("active", isPublic === 0);
 
-  if (!payload.name || !payload.quality || !payload.type || !payload.stars) {
-    msg.textContent = "❌ Bitte alle Pflichtfelder ausfüllen.";
+  if (itemStatus !== "freigegeben") {
+    btnPublic.classList.add("disabled");
+    btnPrivate.classList.add("disabled");
+    return;
+  }
+
+  btnPublic.onclick = () => setVisibility(1);
+  btnPrivate.onclick = () => setVisibility(0);
+}
+
+/* Sichtbarkeit setzen */
+async function setVisibility(value){
+  try{
+    const res = await fetch(
+      `${API_BASE}/api/admin/items/${itemId}/visibility`,
+      {
+        method:"PATCH",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ is_public:value })
+      }
+    );
+    if(!res.ok) throw new Error();
+    isPublic = value;
+    updateVisibilityUI();
+  }catch{
+    msg.textContent = "❌ Sichtbarkeit konnte nicht geändert werden.";
+    msg.className = "notice error";
+  }
+}
+
+/* Freigabe */
+document.getElementById("approveBtn").onclick = async () => {
+  if(!selectedStars){
+    msg.textContent = "❌ Sterne vergeben.";
     msg.className = "notice error";
     return;
   }
 
-  try {
-    const res = await fetch(`${API_BASE}/api/admin/items/${itemId}/approve`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
+  const res = await fetch(`${API_BASE}/api/admin/items/${itemId}/approve`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      name:name.value,
+      quality:quality.value,
+      type:type.value,
+      roll:roll.value,
+      stars:selectedStars
+    })
+  });
 
-    if (!res.ok) throw new Error();
-
-    msg.textContent = "✔ Item wurde freigegeben.";
+  if(res.ok){
+    msg.textContent = "✔ Item freigegeben.";
     msg.className = "notice success";
-
-    setTimeout(() => {
-      window.location.href = "admin.html";
-    }, 1000);
-
-  } catch {
+    setTimeout(()=>location.href="admin.html",800);
+  }else{
     msg.textContent = "❌ Fehler beim Freigeben.";
     msg.className = "notice error";
   }
-});
+};
 </script>
 
 </body>
