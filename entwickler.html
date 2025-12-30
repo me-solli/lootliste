@@ -30,34 +30,52 @@ body{
 /* ===== HEADER ===== */
 .dev-header{
   margin-top:30px;
-  border-radius:18px;
+  border-radius:16px;
   overflow:hidden;
   border:1px solid var(--border);
+  max-height:180px;
 }
 
 .dev-header img{
   width:100%;
-  height:auto;
+  height:180px;
+  object-fit:cover;
   display:block;
 }
 
 /* ===== CONTENT ===== */
 .dev-content{
   margin-top:34px;
+  display:flex;
+  gap:32px;
+  align-items:flex-start;
 }
 
-.dev-content h1{
+.dev-text{
+  flex:1;
+}
+
+.dev-text h1{
   margin:0 0 18px;
-  font-size:28px;
-  letter-spacing:.5px;
+  font-size:26px;
+  letter-spacing:.4px;
 }
 
-.dev-content p{
+.dev-text p{
   font-size:15px;
   line-height:1.55;
   color:#cfcfcf;
   margin:0 0 14px;
   max-width:720px;
+}
+
+/* ===== PIXEL CHAR ===== */
+.dev-pixel{
+  width:120px;
+  flex-shrink:0;
+  opacity:.9;
+  image-rendering:pixelated;
+  margin-top:8px;
 }
 
 /* ===== FOOTER ===== */
@@ -72,6 +90,19 @@ footer a{
   margin-right:18px;
   text-decoration:none;
 }
+
+/* ===== MOBILE ===== */
+@media(max-width:720px){
+  .dev-content{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .dev-pixel{
+    width:96px;
+    margin-top:12px;
+  }
+}
 </style>
 </head>
 
@@ -84,26 +115,30 @@ footer a{
   </div>
 
   <div class="dev-content">
-    <h1>Über den Entwickler</h1>
+    <div class="dev-text">
+      <h1>Über den Entwickler</h1>
 
-    <p>
-      Die D2R-Lootliste ist kein kommerzielles Projekt,<br>
-      sondern ein Community-Tool aus eigener Motivation.
-    </p>
+      <p>
+        Die D2R-Lootliste ist kein kommerzielles Projekt,<br>
+        sondern ein Community-Tool aus eigener Motivation.
+      </p>
 
-    <p>
-      Ziel war nie „mehr Klicks“, sondern mehr Fairness, Übersicht<br>
-      und Transparenz beim Teilen von Items.
-    </p>
+      <p>
+        Ziel war nie „mehr Klicks“, sondern mehr Fairness, Übersicht<br>
+        und Transparenz beim Teilen von Items.
+      </p>
 
-    <p>
-      Die Lootliste wächst Schritt für Schritt –<br>
-      ruhig, nachvollziehbar und ohne unnötigen Ballast.
-    </p>
+      <p>
+        Die Lootliste wächst Schritt für Schritt –<br>
+        ruhig, nachvollziehbar und ohne unnötigen Ballast.
+      </p>
 
-    <p>
-      Feedback, Ideen und Kritik sind jederzeit willkommen.
-    </p>
+      <p>
+        Feedback, Ideen und Kritik sind jederzeit willkommen.
+      </p>
+    </div>
+
+    <img src="img/pixel-char.png" alt="" class="dev-pixel">
   </div>
 
   <footer>
