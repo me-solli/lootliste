@@ -399,6 +399,48 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   opacity:.8;
 }
 
+
+/* ===== ABOUT PROJECT (FOOTER MINI) ===== */
+.about-project{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  padding:26px 22px;
+  margin-top:40px;
+  border-top:1px solid #1e1e1e;
+  background:linear-gradient(180deg,#101010,#0b0b0b);
+}
+
+.about-project img{
+  width:96px;
+  height:auto;
+  image-rendering:pixelated;
+  opacity:.95;
+  flex-shrink:0;
+}
+
+.about-project h3{
+  margin:0 0 6px 0;
+  font-size:14px;
+  font-weight:600;
+  color:#ddd;
+}
+
+.about-project p{
+  margin:0;
+  font-size:13px;
+  line-height:1.45;
+  color:#aaa;
+  max-width:680px;
+}
+
+@media(max-width:600px){
+  .about-project{
+    flex-direction:column;
+    text-align:center;
+  }
+}
+
 </style>
 </head>
 
@@ -461,6 +503,19 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 <div class="cards" id="cards"></div>
 </div>
+
+
+<section class="about-project">
+  <img src="img/pixel-char.png" alt="">
+  <div>
+    <h3>Über dieses Projekt</h3>
+    <p>
+      Diese Lootliste ist ein Community-Projekt rund um Diablo II: Resurrected.
+      Entstanden aus Streams, zu vielen Items auf zu vielen Mules
+      und dem Wunsch nach einer fairen, transparenten Verteilung.
+    </p>
+  </div>
+</section>
 
 <footer>
   <a href="impressum.html">Impressum</a>
