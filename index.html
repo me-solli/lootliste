@@ -546,6 +546,12 @@ async function loadItems() {
     console.log("Backend Items:", data);
     items = Array.isArray(data) ? data.map(i => ({
       ...i,
+      name: i.name || "Unbenanntes Item",
+      category: i.category || "",
+      type: i.type || "Sonstiges",
+      stars: i.stars || "",
+      roll: i.roll || "",
+      contact: i.contact || "",
       status:
         i.status === "verfügbar" ? "Verfügbar" :
         i.status === "reserviert" ? "Reserviert" :
