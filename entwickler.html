@@ -168,21 +168,31 @@ footer a{
 
 
 
-/* ===== DROP CAP FOR INTRO ONLY ===== */
-.intro-line::first-letter{
-  float:left;
-  font-size:48px;
-  line-height:0.9;
-  padding-right:8px;
-  padding-top:4px;
+
+
+
+
+
+
+/* ===== FLEX INTRO (PRECISION DROP CAP) ===== */
+.intro-line{
+  display:inline-flex;
+  align-items:flex-end;
   color:var(--gold);
+  font-size:18px;
   font-weight:700;
+  margin-bottom:6px;
 }
 
+.intro-letter{
+  font-size:48px;
+  line-height:0.9;
+  margin-right:6px;
+  color:var(--gold);
+}
 
-/* ===== INTRO LINE ISOLATION ===== */
-.intro-line{
-  display:block;
+.intro-text{
+  line-height:1.2;
 }
 
 </style>
@@ -199,7 +209,10 @@ footer a{
   <div class="dev-content">
     <div class="dev-text">
       <p class="intro-gold">
-        <span class="intro-line">Vor langer, langer Zeit …</span><br>
+        <div class="intro-line">
+  <span class="intro-letter">V</span><span class="intro-text">or langer, langer Zeit …</span>
+</div>
+
         irgendwo zwischen Tristram, vollgestopften Mules<br>
         und einer viel zu langen Item-Liste.
       </p>
