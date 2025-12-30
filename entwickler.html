@@ -82,7 +82,7 @@ body{
   position:absolute;
   top:-8px;
   left:38%;
-  font-size:18px;
+  font-size:26px;
   transform:rotate(-8deg);
   opacity:.35;
   pointer-events:none;
@@ -139,6 +139,23 @@ footer a{
     left:42%;
   }
 }
+
+/* ===== GOLD INTRO ===== */
+.intro-gold{
+  color:var(--gold);
+  font-size:16px;
+  line-height:1.6;
+  margin-bottom:22px;
+  letter-spacing:.4px;
+}
+
+/* Inline crown at end */
+.crown-inline{
+  font-size:18px;
+  vertical-align:middle;
+  opacity:.9;
+}
+
 </style>
 </head>
 
@@ -152,9 +169,15 @@ footer a{
 
   <div class="dev-content">
     <div class="dev-text">
+      <p class="intro-gold">
+        Vor langer, langer Zeit …<br>
+        irgendwo zwischen Tristram, vollgestopften Mules<br>
+        und einer viel zu langen Item-Liste.
+      </p>
+
       <p>
         Dieses Projekt ist kein Produkt, kein Start-up<br>
-        und ganz sicher kein Versuch, irgendwem etwas zu verkaufen.
+        sondern ein Community-Projekt aus eigener Motivation.
       </p>
 
       <p>
@@ -201,7 +224,7 @@ footer a{
       <p>
         Ohne Ranglisten.<br>
         Ohne Machtspielchen.<br>
-        Und ohne Kuhkönig.
+        Und ohne Kuhkönig <span class="crown-inline">👑</span>.
       </p>
     </div>
 
