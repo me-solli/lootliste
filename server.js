@@ -62,6 +62,7 @@ app.use(
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
+  // DEV-BYPASS
   if (loginId === "dev-admin") {
     req.user = {
       id: "admin-1",
@@ -81,24 +82,24 @@ const itemRoutes = require("./routes/items");
 const adminRoutes = require("./routes/admin");
 
 /* ================================
-   PUBLIC ITEMS
+   PUBLIC ITEMS (OHNE LOGIN)
 ================================ */
 app.use("/api/items/public", itemRoutes);
 
 /* ================================
-   PROTECTED ITEMS
+   PROTECTED ITEMS (DEV LOGIN)
 ================================ */
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
-   ADMIN
+   ADMIN (DEV LOGIN)
 ================================ */
 app.use("/api/admin", requireAuth, adminRoutes);
 
 /* ================================
-   HTML FILE HANDLER
+   HTML FILE HANDLER (EXPRESS 5 SAFE)
 ================================ */
-app.get("/*.html", (req, res) => {
+app.get(/.*\.html$/, (req, res) => {
   const filePath = path.join(__dirname, req.path);
 
   res.sendFile(filePath, err => {
