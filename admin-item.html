@@ -1,299 +1,106 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8" />
-<title>Admin – Item verwalten</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+console.log("SERVER.JS wird geladen");
 
-<style>
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:#0f0f0f;
-  color:#eee;
-}
+/* ================================
+   IMPORTS
+================================ */
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const cookieParser = require("cookie-parser");
 
-header{
-  background:#141414;
-  padding:16px;
-  font-size:18px;
-  font-weight:bold;
-  border-bottom:1px solid #222;
-}
+const db = require("./db");
 
-main{
-  max-width:900px;
-  margin:30px auto;
-  padding:0 20px;
-}
+/* ================================
+   APP
+================================ */
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-.card{
-  background:#181818;
-  border:1px solid #2a2a2a;
-  border-radius:10px;
-  padding:22px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
-}
+/* ================================
+   CORS (GitHub Pages → Railway)
+================================ */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://me-solli.github.io");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, x-login-id"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 
-.screenshot{
-  background:#000;
-  border:1px solid #333;
-  border-radius:8px;
-  padding:10px;
-  text-align:center;
-}
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
 
-.screenshot img{
-  max-width:100%;
-  border-radius:6px;
-}
-
-.form-group{
-  display:flex;
-  flex-direction:column;
-  margin-bottom:14px;
-}
-
-label{
-  font-size:13px;
-  margin-bottom:4px;
-  color:#aaa;
-}
-
-input, select{
-  background:#101010;
-  border:1px solid #333;
-  border-radius:6px;
-  padding:9px;
-  color:#eee;
-}
-
-.stars{
-  display:flex;
-  gap:6px;
-  font-size:22px;
-  cursor:pointer;
-}
-
-.stars span{ color:#444; }
-.stars span.active{ color:gold; }
-
-.visibility{
-  margin:16px 0;
-}
-
-.visibility button{
-  margin-right:10px;
-  padding:8px 14px;
-  border-radius:6px;
-  border:none;
-  cursor:pointer;
-  background:#333;
-  color:#eee;
-}
-
-.visibility button.active{ background:#2e7d32; }
-.visibility button.disabled{
-  opacity:0.4;
-  cursor:not-allowed;
-}
-
-.notice{ margin-top:14px; font-size:14px; }
-.error{ color:#ff5c5c; }
-.success{ color:#4cff4c; }
-</style>
-</head>
-
-<body>
-
-<header>🛠️ Admin – Item verwalten</header>
-
-<main>
-  <div class="card">
-
-    <div class="screenshot">
-      <img id="screenshotImg" src="" alt="Item Screenshot">
-    </div>
-
-    <div>
-
-      <div class="visibility">
-        <label>Sichtbarkeit</label><br>
-        <button id="btnPublic">🔓 Öffentlich</button>
-        <button id="btnPrivate">🔒 Intern</button>
-      </div>
-
-      <div class="form-group">
-        <label>Item-Name</label>
-        <input type="text" id="name">
-      </div>
-
-      <div class="form-group">
-        <label>Qualität</label>
-        <select id="quality">
-          <option value="">Bitte wählen</option>
-          <option value="unique">Unique</option>
-          <option value="set">Set</option>
-          <option value="rare">Rare</option>
-          <option value="magic">Magic</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Typ</label>
-        <select id="type">
-          <option value="">Bitte wählen</option>
-          <option value="waffe">Waffe</option>
-          <option value="rüstung">Rüstung</option>
-          <option value="helm">Helm</option>
-          <option value="schild">Schild</option>
-          <option value="ring">Ring</option>
-          <option value="amulett">Amulett</option>
-          <option value="charm">Charm</option>
-          <option value="rune">Rune</option>
-          <option value="sonstiges">Sonstiges</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Roll / Werte</label>
-        <input type="text" id="roll">
-      </div>
-
-      <div class="form-group">
-        <label>Sterne-Bewertung</label>
-        <div class="stars" id="stars">
-          <span data-value="1">★</span>
-          <span data-value="2">★</span>
-          <span data-value="3">★</span>
-          <span data-value="4">★</span>
-          <span data-value="5">★</span>
-        </div>
-      </div>
-
-      <button id="approveBtn">Item freigeben</button>
-      <div id="msg" class="notice"></div>
-    </div>
-
-  </div>
-</main>
-
-<script>
-const API_BASE = "https://content-connection-production-ea07.up.railway.app";
-const params = new URLSearchParams(window.location.search);
-const itemId = params.get("id");
-const msg = document.getElementById("msg");
-const loginId = localStorage.getItem("loginId");
-
-let itemStatus = "";
-let isPublic = 0;
-let selectedStars = 0;
-
-/* Sterne */
-document.querySelectorAll("#stars span").forEach(star => {
-  star.onclick = () => {
-    selectedStars = Number(star.dataset.value);
-    document.querySelectorAll("#stars span")
-      .forEach(s => s.classList.toggle("active", s.dataset.value <= selectedStars));
-  };
+  next();
 });
 
-/* Item laden */
-fetch(`${API_BASE}/api/admin/items`,{
-  headers:{ "x-login-id": loginId }
-})
-.then(r => r.json())
-.then(items => {
-  const item = items.find(i => String(i.id) === String(itemId));
-  if (!item) throw new Error();
+/* ================================
+   BODY PARSER
+================================ */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-  document.getElementById("screenshotImg").src = API_BASE + item.screenshot;
-  isPublic = item.is_public;
-  itemStatus = item.status;
+/* ================================
+   STATIC FILES
+================================ */
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.static(__dirname));
 
-  updateVisibilityUI();
-})
-.catch(() => {
-  msg.textContent = "❌ Item konnte nicht geladen werden.";
-  msg.className = "notice error";
+/* ================================
+   DEV AUTH MIDDLEWARE
+   (kein echtes Login, fixer Admin)
+================================ */
+function requireAuth(req, res, next) {
+  const loginId = req.headers["x-login-id"];
+
+  // DEV-BYPASS
+  if (loginId === "dev-admin") {
+    req.user = {
+      id: "admin-1",
+      username: "admin",
+      role: "admin"
+    };
+    return next();
+  }
+
+  return res.status(401).json({ error: "Nicht eingeloggt (Dev-Modus)" });
+}
+
+/* ================================
+   ROUTES
+================================ */
+const itemRoutes = require("./routes/items");
+const adminRoutes = require("./routes/admin");
+
+/* ================================
+   PUBLIC ITEMS (OHNE LOGIN)
+================================ */
+app.use("/api/items/public", itemRoutes);
+
+/* ================================
+   PROTECTED ITEMS (DEV LOGIN)
+================================ */
+app.use("/api/items", requireAuth, itemRoutes);
+
+/* ================================
+   ADMIN (DEV LOGIN)
+================================ */
+app.use("/api/admin", requireAuth, adminRoutes);
+
+/* ================================
+   HEALTH
+================================ */
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
 });
 
-/* Sichtbarkeit UI */
-function updateVisibilityUI(){
-  const btnPublic = document.getElementById("btnPublic");
-  const btnPrivate = document.getElementById("btnPrivate");
-
-  btnPublic.classList.toggle("active", isPublic === 1);
-  btnPrivate.classList.toggle("active", isPublic === 0);
-
-  if (itemStatus !== "freigegeben") {
-    btnPublic.classList.add("disabled");
-    btnPrivate.classList.add("disabled");
-    return;
-  }
-
-  btnPublic.onclick = () => setVisibility(1);
-  btnPrivate.onclick = () => setVisibility(0);
-}
-
-/* Sichtbarkeit setzen */
-async function setVisibility(value){
-  try{
-    const res = await fetch(
-      `${API_BASE}/api/admin/items/${itemId}/visibility`,
-      {
-        method:"PATCH",
-        headers:{
-          "Content-Type":"application/json",
-          "x-login-id": loginId
-        },
-        body:JSON.stringify({ is_public:value })
-      }
-    );
-    if(!res.ok) throw new Error();
-    isPublic = value;
-    updateVisibilityUI();
-  }catch{
-    msg.textContent = "❌ Sichtbarkeit konnte nicht geändert werden.";
-    msg.className = "notice error";
-  }
-}
-
-/* Freigabe – FIXED ENDPOINT */
-document.getElementById("approveBtn").onclick = async () => {
-  if(!selectedStars){
-    msg.textContent = "❌ Sterne vergeben.";
-    msg.className = "notice error";
-    return;
-  }
-
-  const res = await fetch(`${API_BASE}/api/items/${itemId}/approve`,{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "x-login-id": loginId
-    },
-    body:JSON.stringify({
-      name:name.value,
-      quality:quality.value,
-      type:type.value,
-      roll:roll.value,
-      stars:selectedStars
-    })
-  });
-
-  if(res.ok){
-    msg.textContent = "✔ Item freigegeben.";
-    msg.className = "notice success";
-    setTimeout(()=>location.href="admin.html",800);
-  }else{
-    msg.textContent = "❌ Fehler beim Freigeben.";
-    msg.className = "notice error";
-  }
-};
-</script>
-
-</body>
-</html>
+/* ================================
+   START SERVER
+================================ */
+app.listen(PORT, () => {
+  console.log(`✅ Server läuft auf Port ${PORT}`);
+});
