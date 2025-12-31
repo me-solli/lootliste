@@ -97,6 +97,13 @@ app.use("/api/items", requireAuth, itemRoutes);
 app.use("/api/admin", requireAuth, adminRoutes);
 
 /* ================================
+   ROOT → index.html
+================================ */
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+/* ================================
    HTML FILE HANDLER (EXPRESS 5 SAFE)
 ================================ */
 app.get(/.*\.html$/, (req, res) => {
