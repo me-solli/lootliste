@@ -261,7 +261,7 @@ async function setVisibility(value){
   }
 }
 
-/* Freigabe */
+/* Freigabe – FIXED ENDPOINT */
 document.getElementById("approveBtn").onclick = async () => {
   if(!selectedStars){
     msg.textContent = "❌ Sterne vergeben.";
@@ -269,7 +269,7 @@ document.getElementById("approveBtn").onclick = async () => {
     return;
   }
 
-  const res = await fetch(`${API_BASE}/api/admin/items/${itemId}/approve`,{
+  const res = await fetch(`${API_BASE}/api/items/${itemId}/approve`,{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
