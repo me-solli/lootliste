@@ -3,21 +3,18 @@
 const db = require("../db");
 
 /**
- * Zentrale, autoritative Status-Logik für Items
+ * Zentrale Status-Logik (Admin-only)
  *
- * GÜLTIGE STATUS:
- * - submitted  (eingereicht, nicht öffentlich)
- * - approved   (freigegeben, öffentlich sichtbar)
- * - hidden     (freigegeben, aber ausgeblendet)
- * - rejected   (abgelehnt, intern)
+ * Status:
+ * - submitted
+ * - approved
+ * - hidden
+ * - rejected
  */
 class ItemStatusService {
-  /* ================================
-     Hilfsfunktion: aktueller Status
-  ================================ */
   static async getCurrentStatus(itemId) {
     const row = await db.get(
-      `SELECT status FROM item_status WHERE item_id = ?`,
+      "SELECT status FROM item_status WHERE item_id = ?",
       [itemId]
     );
 
@@ -28,10 +25,6 @@ class ItemStatusService {
     return row.status;
   }
 
-  /* ================================
-     APPROVE
-     submitted | hidden → approved
-  ================================ */
   static async approve(itemId, { title, type, rating }) {
     const currentStatus = await this.getCurrentStatus(itemId);
 
@@ -42,21 +35,18 @@ class ItemStatusService {
     }
 
     await db.run("BEGIN");
-
     try {
-      if (title || type || typeof rating === "number") {
-        await db.run(
-          `
-          UPDATE items SET
-            title = COALESCE(?, title),
-            type = COALESCE(?, type),
-            rating = COALESCE(?, rating),
-            updated_at = datetime('now')
-          WHERE id = ?
-          `,
-          [title, type, rating, itemId]
-        );
-      }
+      await db.run(
+        `
+        UPDATE items SET
+          title = COALESCE(?, title),
+          type = COALESCE(?, type),
+          rating = COALESCE(?, rating),
+          updated_at = datetime('now')
+        WHERE id = ?
+        `,
+        [title, type, rating, itemId]
+      );
 
       await db.run(
         `
@@ -75,10 +65,6 @@ class ItemStatusService {
     }
   }
 
-  /* ================================
-     HIDE
-     approved → hidden
-  ================================ */
   static async hide(itemId) {
     const currentStatus = await this.getCurrentStatus(itemId);
 
@@ -99,10 +85,6 @@ class ItemStatusService {
     );
   }
 
-  /* ================================
-     REJECT
-     submitted → rejected
-  ================================ */
   static async reject(itemId, adminNote = null) {
     const currentStatus = await this.getCurrentStatus(itemId);
 
@@ -113,7 +95,6 @@ class ItemStatusService {
     }
 
     await db.run("BEGIN");
-
     try {
       await db.run(
         `
