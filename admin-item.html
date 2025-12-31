@@ -12,7 +12,6 @@ body{
   background:#0f0f0f;
   color:#eee;
 }
-
 header{
   background:#141414;
   padding:16px;
@@ -20,13 +19,11 @@ header{
   font-weight:bold;
   border-bottom:1px solid #222;
 }
-
 main{
   max-width:900px;
   margin:30px auto;
   padding:0 20px;
 }
-
 .card{
   background:#181818;
   border:1px solid #2a2a2a;
@@ -36,7 +33,6 @@ main{
   grid-template-columns:1fr 1fr;
   gap:24px;
 }
-
 .screenshot{
   background:#000;
   border:1px solid #333;
@@ -44,24 +40,20 @@ main{
   padding:10px;
   text-align:center;
 }
-
 .screenshot img{
   max-width:100%;
   border-radius:6px;
 }
-
 .form-group{
   display:flex;
   flex-direction:column;
   margin-bottom:14px;
 }
-
 label{
   font-size:13px;
   margin-bottom:4px;
   color:#aaa;
 }
-
 input, select{
   background:#101010;
   border:1px solid #333;
@@ -69,21 +61,17 @@ input, select{
   padding:9px;
   color:#eee;
 }
-
 .stars{
   display:flex;
   gap:6px;
   font-size:22px;
   cursor:pointer;
 }
-
 .stars span{ color:#444; }
 .stars span.active{ color:gold; }
-
 .visibility{
   margin:16px 0;
 }
-
 .visibility button{
   margin-right:10px;
   padding:8px 14px;
@@ -93,13 +81,11 @@ input, select{
   background:#333;
   color:#eee;
 }
-
 .visibility button.active{ background:#2e7d32; }
 .visibility button.disabled{
   opacity:0.4;
   cursor:not-allowed;
 }
-
 .notice{ margin-top:14px; font-size:14px; }
 .error{ color:#ff5c5c; }
 .success{ color:#4cff4c; }
@@ -173,7 +159,7 @@ input, select{
         </div>
       </div>
 
-      <!-- 🔧 FIX: type="button" verhindert Reload -->
+      <!-- Button bleibt type="button" -->
       <button id="approveBtn" type="button">Item freigeben</button>
 
       <div id="msg" class="notice"></div>
@@ -263,7 +249,7 @@ async function setVisibility(value){
   }
 }
 
-/* Item freigeben */
+/* Item freigeben – ✅ FIX: richtige Admin-Route */
 document.getElementById("approveBtn").onclick = async () => {
   if(!selectedStars){
     msg.textContent = "❌ Sterne vergeben.";
@@ -271,20 +257,23 @@ document.getElementById("approveBtn").onclick = async () => {
     return;
   }
 
-  const res = await fetch(`${API_BASE}/api/items/${itemId}/approve`,{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "x-login-id": loginId
-    },
-    body:JSON.stringify({
-      name:name.value,
-      quality:quality.value,
-      type:type.value,
-      roll:roll.value,
-      stars:selectedStars
-    })
-  });
+  const res = await fetch(
+    `${API_BASE}/api/admin/items/${itemId}/approve`,
+    {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "x-login-id": loginId
+      },
+      body:JSON.stringify({
+        name:name.value,
+        quality:quality.value,
+        type:type.value,
+        roll:roll.value,
+        stars:selectedStars
+      })
+    }
+  );
 
   if(res.ok){
     msg.textContent = "✔ Item freigegeben.";
