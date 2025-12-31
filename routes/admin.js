@@ -43,7 +43,7 @@ router.get("/items", async (req, res) => {
 
 /* =====================================================
    POST /api/admin/items/:id/approve
-   Freigabe eines eingereichten Items
+   Freigabe eines Items (DEV-freundlich)
 ===================================================== */
 router.post("/items/:id/approve", async (req, res) => {
   const itemId = req.params.id;
@@ -74,15 +74,17 @@ router.post("/items/:id/approve", async (req, res) => {
       return res.status(404).json({ error: "Item nicht gefunden" });
     }
 
-    if (item.status !== "eingereicht") {
+    /* 🔧 DEV-FIX:
+       Erlaube approve, wenn Item bereits 'verfügbar' ist */
+    if (!["eingereicht", "verfügbar"].includes(item.status)) {
       return res.status(400).json({
-        error: "Item ist nicht im Status 'eingereicht'"
+        error: `Item kann nicht freigegeben werden (Status: ${item.status})`
       });
     }
 
     await db.run("BEGIN");
 
-    // Item-Felder setzen
+    // Item-Felder aktualisieren
     await db.run(
       `
       UPDATE items SET
@@ -99,7 +101,7 @@ router.post("/items/:id/approve", async (req, res) => {
       ]
     );
 
-    // Status wechseln
+    // Status setzen (idempotent)
     await db.run(
       `
       UPDATE item_status SET
@@ -128,7 +130,6 @@ router.post("/items/:id/approve", async (req, res) => {
 /* =====================================================
    DEV: POST /api/admin/dev-seed
    Legt EIN Test-Item mit status=eingereicht an
-   (NUR für Entwicklung)
 ===================================================== */
 router.post("/dev-seed", async (req, res) => {
   try {
