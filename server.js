@@ -155,12 +155,12 @@ const adminRoutes = require("./routes/admin");
 app.use("/api/items/public", itemRoutes);
 
 /* ================================
-   PROTECTED ITEMS
+   PROTECTED ITEMS (MIT LOGIN)
 ================================ */
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
-   ADMIN
+   ADMIN (MIT LOGIN)
 ================================ */
 app.use("/api/admin", requireAuth, adminRoutes);
 
