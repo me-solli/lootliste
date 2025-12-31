@@ -187,18 +187,24 @@ document.querySelectorAll("#stars span").forEach(star => {
   };
 });
 
-/* Item laden */
-fetch(`${API_BASE}/api/admin/items`,{
-  headers:{ "x-login-id": loginId }
-})
-.then(r => r.json())
-.then(items => {
-  const item = items.find(i => String(i.id) === String(itemId));
-  if (!item) throw new Error();
+/* Item laden mit Fallback */
+async function loadItem() {
+  const headers = { "x-login-id": loginId };
+
+  const tryLoad = async (status) => {
+    const r = await fetch(`${API_BASE}/api/admin/items?status=${status}`, { headers });
+    const items = await r.json();
+    return items.find(i => String(i.id) === String(itemId));
+  };
+
+  let item = await tryLoad("eingereicht");
+  if (!item) item = await tryLoad("verfügbar");
+
+  if (!item) {
+    throw new Error("Item nicht gefunden");
+  }
 
   screenshotImg.src = API_BASE + item.screenshot;
-
-  /* 🔧 PFLICHTFELDER SAUBER SETZEN */
   name.value = item.title || "";
   quality.value = item.quality || "";
   type.value = item.type || "";
@@ -208,15 +214,16 @@ fetch(`${API_BASE}/api/admin/items`,{
   itemStatus = item.status;
 
   updateVisibilityUI();
-})
-.catch(() => {
+}
+
+loadItem().catch(() => {
   msg.textContent = "❌ Item konnte nicht geladen werden.";
   msg.className = "notice error";
 });
 
 /* Sichtbarkeit UI */
 function updateVisibilityUI(){
-  const btnPublic = btnPublicEl = document.getElementById("btnPublic");
+  const btnPublic = document.getElementById("btnPublic");
   const btnPrivate = document.getElementById("btnPrivate");
 
   btnPublic.classList.toggle("active", isPublic === 1);
