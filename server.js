@@ -57,23 +57,25 @@ app.use(
 );
 
 /* ================================
-   DEV AUTH MIDDLEWARE
-   (nur für normale User-Routen)
+   AUTH MIDDLEWARE
+   DEV-BYPASS für Submit & Tests
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
-  // DEV-BYPASS
-  if (loginId === "dev-admin") {
+  // DEV-BYPASS:
+  // - erlaubt Submit über GitHub Pages
+  // - erlaubt lokale Tests
+  if (loginId === "dev-admin" || process.env.NODE_ENV !== "production") {
     req.user = {
-      id: "admin-1",
-      username: "admin",
-      role: "admin"
+      id: "dev-user",
+      username: "dev",
+      role: "user"
     };
     return next();
   }
 
-  return res.status(401).json({ error: "Nicht eingeloggt (Dev-Modus)" });
+  return res.status(401).json({ error: "Nicht eingeloggt" });
 }
 
 /* ================================
@@ -88,12 +90,13 @@ const adminRoutes = require("./routes/admin");
 app.use("/api/items/public", itemRoutes);
 
 /* ================================
-   PROTECTED ITEMS (DEV LOGIN)
+   PROTECTED ITEMS (SUBMIT etc.)
 ================================ */
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
-   ADMIN API (EIGENE AUTH IN admin.js)
+   ADMIN API
+   (Auth NUR über x-admin-token in admin.js)
 ================================ */
 app.use("/api/admin", adminRoutes);
 
@@ -105,7 +108,7 @@ app.get("/", (req, res) => {
 });
 
 /* ================================
-   HTML FILE HANDLER (EXPRESS 5 SAFE)
+   HTML FILE HANDLER
 ================================ */
 app.get(/.*\.html$/, (req, res) => {
   const filePath = path.join(__dirname, req.path);
