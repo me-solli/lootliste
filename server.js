@@ -26,7 +26,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, x-login-id"
+    "Origin, X-Requested-With, Content-Type, Accept, x-login-id, x-admin-token"
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 
@@ -58,6 +58,7 @@ app.use(
 
 /* ================================
    DEV AUTH MIDDLEWARE
+   (nur für normale User-Routen)
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
@@ -92,9 +93,9 @@ app.use("/api/items/public", itemRoutes);
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
-   ADMIN (DEV LOGIN)
+   ADMIN API (EIGENE AUTH IN admin.js)
 ================================ */
-app.use("/api/admin", requireAuth, adminRoutes);
+app.use("/api/admin", adminRoutes);
 
 /* ================================
    ROOT → index.html
