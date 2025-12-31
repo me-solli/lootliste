@@ -1,66 +1,147 @@
 // services/ItemStatusService.js
 
-const db = require('../db');
-const ActionLogger = require('../utils/ActionLogger');
+const db = require("../db");
 
-const ALLOWED_TRANSITIONS = {
-  available: ['requested'],
-  requested: ['reserved'],
-  reserved: ['given'],
-  given: ['confirmed'],
-  confirmed: [],
-  flagged_dupe: []
-};
-
+/**
+ * Zentrale, autoritative Status-Logik für Items
+ *
+ * GÜLTIGE STATUS:
+ * - submitted  (eingereicht, nicht öffentlich)
+ * - approved   (freigegeben, öffentlich sichtbar)
+ * - hidden     (freigegeben, aber ausgeblendet)
+ * - rejected   (abgelehnt, intern)
+ */
 class ItemStatusService {
+  /* ================================
+     Hilfsfunktion: aktueller Status
+  ================================ */
   static async getCurrentStatus(itemId) {
     const row = await db.get(
       `SELECT status FROM item_status WHERE item_id = ?`,
       [itemId]
     );
-    if (!row) throw new Error('Item status not found');
+
+    if (!row) {
+      throw new Error("Item status not found");
+    }
+
     return row.status;
   }
 
-  static async setStatus({
-    itemId,
-    newStatus,
-    actorUserId = null,
-    isAdmin = false
-  }) {
+  /* ================================
+     APPROVE
+     submitted | hidden → approved
+  ================================ */
+  static async approve(itemId, { title, type, rating }) {
     const currentStatus = await this.getCurrentStatus(itemId);
 
-    // Admin Sonderregel: Dupe-Flag
-    if (newStatus === 'flagged_dupe') {
-      if (!isAdmin) {
-        throw new Error('Only admin can flag dupes');
-      }
-    } else {
-      const allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
-      if (!allowed.includes(newStatus)) {
-        throw new Error(
-          `Invalid status transition: ${currentStatus} → ${newStatus}`
+    if (!["submitted", "hidden"].includes(currentStatus)) {
+      throw new Error(
+        `Cannot approve item from status '${currentStatus}'`
+      );
+    }
+
+    await db.run("BEGIN");
+
+    try {
+      if (title || type || typeof rating === "number") {
+        await db.run(
+          `
+          UPDATE items SET
+            title = COALESCE(?, title),
+            type = COALESCE(?, type),
+            rating = COALESCE(?, rating),
+            updated_at = datetime('now')
+          WHERE id = ?
+          `,
+          [title, type, rating, itemId]
         );
       }
+
+      await db.run(
+        `
+        UPDATE item_status SET
+          status = 'approved',
+          status_since = datetime('now')
+        WHERE item_id = ?
+        `,
+        [itemId]
+      );
+
+      await db.run("COMMIT");
+    } catch (err) {
+      await db.run("ROLLBACK");
+      throw err;
+    }
+  }
+
+  /* ================================
+     HIDE
+     approved → hidden
+  ================================ */
+  static async hide(itemId) {
+    const currentStatus = await this.getCurrentStatus(itemId);
+
+    if (currentStatus !== "approved") {
+      throw new Error(
+        `Cannot hide item from status '${currentStatus}'`
+      );
     }
 
     await db.run(
       `
-      UPDATE item_status
-      SET status = ?, status_since = CURRENT_TIMESTAMP
+      UPDATE item_status SET
+        status = 'hidden',
+        status_since = datetime('now')
       WHERE item_id = ?
       `,
-      [newStatus, itemId]
+      [itemId]
     );
+  }
 
-    await ActionLogger.log({
-      actorUserId,
-      targetType: 'item',
-      targetId: itemId,
-      action: `status_${currentStatus}_to_${newStatus}`
-    });
+  /* ================================
+     REJECT
+     submitted → rejected
+  ================================ */
+  static async reject(itemId, adminNote = null) {
+    const currentStatus = await this.getCurrentStatus(itemId);
 
-    return true;
+    if (currentStatus !== "submitted") {
+      throw new Error(
+        `Cannot reject item from status '${currentStatus}'`
+      );
+    }
+
+    await db.run("BEGIN");
+
+    try {
+      await db.run(
+        `
+        UPDATE item_status SET
+          status = 'rejected',
+          status_since = datetime('now')
+        WHERE item_id = ?
+        `,
+        [itemId]
+      );
+
+      if (adminNote) {
+        await db.run(
+          `
+          UPDATE items SET
+            admin_note = ?,
+            updated_at = datetime('now')
+          WHERE id = ?
+          `,
+          [adminNote, itemId]
+        );
+      }
+
+      await db.run("COMMIT");
+    } catch (err) {
+      await db.run("ROLLBACK");
+      throw err;
+    }
   }
 }
 
