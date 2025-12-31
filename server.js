@@ -45,14 +45,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /* ================================
-   STATIC FILES
+   STATIC FILES (FIXED)
 ================================ */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(express.static(__dirname));
+
+app.use(
+  express.static(__dirname, {
+    index: false,
+    extensions: ["html"]
+  })
+);
 
 /* ================================
    DEV AUTH MIDDLEWARE
-   (kein echtes Login, fixer Admin)
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
@@ -90,6 +95,26 @@ app.use("/api/items", requireAuth, itemRoutes);
    ADMIN (DEV LOGIN)
 ================================ */
 app.use("/api/admin", requireAuth, adminRoutes);
+
+/* ================================
+   HTML FILE HANDLER (WICHTIG)
+================================ */
+app.get("/*.html", (req, res) => {
+  const filePath = path.join(__dirname, req.path);
+
+  res.sendFile(filePath, err => {
+    if (err) {
+      res.status(404).send("HTML nicht gefunden");
+    }
+  });
+});
+
+/* ================================
+   BLOCK JS SOURCE ACCESS (OPTIONAL, EMPFOHLEN)
+================================ */
+app.get("/*.js", (req, res) => {
+  res.status(403).send("Zugriff verweigert");
+});
 
 /* ================================
    HEALTH
