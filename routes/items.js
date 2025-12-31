@@ -30,7 +30,7 @@ const upload = multer({
 
 /* =========================
    GET /api/items
-   Alle Items (intern/Admin)
+   (intern / debug)
 ========================= */
 router.get("/", async (req, res) => {
   try {
@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
         i.owner_user_id,
         i.screenshot,
         i.created_at,
-        IFNULL(s.status, 'eingereicht') AS status
+        s.status
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
       ORDER BY i.created_at DESC
@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
 
 /* =========================
    GET /api/items/public
-   Öffentliche Items (später is_public)
+   (nur freigegebene Items)
 ========================= */
 router.get("/public", async (req, res) => {
   try {
@@ -64,11 +64,10 @@ router.get("/public", async (req, res) => {
         i.id,
         i.owner_user_id,
         i.screenshot,
-        i.created_at,
-        s.status
+        i.created_at
       FROM items i
       JOIN item_status s ON s.item_id = i.id
-      WHERE s.status = 'freigegeben'
+      WHERE s.status = 'approved'
       ORDER BY i.created_at DESC
     `);
 
@@ -81,7 +80,7 @@ router.get("/public", async (req, res) => {
 
 /* =========================
    POST /api/items
-   Screenshot einreichen
+   Item einreichen (Submit)
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
@@ -98,6 +97,7 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 
     await db.run("BEGIN");
 
+    // Item anlegen
     const result = await db.run(
       `
       INSERT INTO items (owner_user_id, screenshot)
@@ -108,10 +108,11 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 
     const itemId = result.lastID;
 
+    // ⭐ WICHTIG: Status anlegen
     await db.run(
       `
-      INSERT INTO item_status (item_id, status)
-      VALUES (?, 'eingereicht')
+      INSERT INTO item_status (item_id, status, status_since)
+      VALUES (?, 'submitted', datetime('now'))
       `,
       [itemId]
     );
@@ -121,66 +122,13 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
     res.json({
       success: true,
       itemId,
-      status: "eingereicht",
+      status: "submitted",
       screenshot: screenshotPath
     });
   } catch (err) {
     await db.run("ROLLBACK");
     console.error("POST /api/items Fehler:", err);
     res.status(500).json({ error: "Item konnte nicht eingereicht werden" });
-  }
-});
-
-/* =========================
-   POST /api/items/:id/approve
-   Item freigeben (ADMIN)
-========================= */
-router.post("/:id/approve", async (req, res) => {
-  try {
-    // ✅ KORREKTER Admin-Check (passt zu deinem System)
-    if (!req.user || req.user.id !== "admin-1") {
-      return res.status(403).json({ error: "Kein Admin-Zugriff" });
-    }
-
-    const { id } = req.params;
-    const { name, quality, type, roll, stars } = req.body;
-
-    if (!name || !quality || !type || !stars) {
-      return res.status(400).json({ error: "Pflichtfelder fehlen" });
-    }
-
-    await db.run("BEGIN");
-
-    await db.run(
-      `
-      UPDATE items
-      SET
-        name = ?,
-        quality = ?,
-        type = ?,
-        roll = ?,
-        stars = ?
-      WHERE id = ?
-      `,
-      [name, quality, type, roll || "", stars, id]
-    );
-
-    await db.run(
-      `
-      UPDATE item_status
-      SET status = 'freigegeben'
-      WHERE item_id = ?
-      `,
-      [id]
-    );
-
-    await db.run("COMMIT");
-
-    res.json({ success: true });
-  } catch (err) {
-    await db.run("ROLLBACK");
-    console.error("POST /api/items/:id/approve Fehler:", err);
-    res.status(500).json({ error: "Item konnte nicht freigegeben werden" });
   }
 });
 
