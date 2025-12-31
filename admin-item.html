@@ -159,7 +159,6 @@ input, select{
         </div>
       </div>
 
-      <!-- Button bleibt type="button" -->
       <button id="approveBtn" type="button">Item freigeben</button>
 
       <div id="msg" class="notice"></div>
@@ -197,7 +196,14 @@ fetch(`${API_BASE}/api/admin/items`,{
   const item = items.find(i => String(i.id) === String(itemId));
   if (!item) throw new Error();
 
-  document.getElementById("screenshotImg").src = API_BASE + item.screenshot;
+  screenshotImg.src = API_BASE + item.screenshot;
+
+  /* 🔧 PFLICHTFELDER SAUBER SETZEN */
+  name.value = item.title || "";
+  quality.value = item.quality || "";
+  type.value = item.type || "";
+  roll.value = item.roll || "";
+
   isPublic = item.is_public;
   itemStatus = item.status;
 
@@ -210,7 +216,7 @@ fetch(`${API_BASE}/api/admin/items`,{
 
 /* Sichtbarkeit UI */
 function updateVisibilityUI(){
-  const btnPublic = document.getElementById("btnPublic");
+  const btnPublic = btnPublicEl = document.getElementById("btnPublic");
   const btnPrivate = document.getElementById("btnPrivate");
 
   btnPublic.classList.toggle("active", isPublic === 1);
@@ -249,8 +255,8 @@ async function setVisibility(value){
   }
 }
 
-/* Item freigeben – ✅ FIX: richtige Admin-Route */
-document.getElementById("approveBtn").onclick = async () => {
+/* Item freigeben */
+approveBtn.onclick = async () => {
   if(!selectedStars){
     msg.textContent = "❌ Sterne vergeben.";
     msg.className = "notice error";
@@ -266,11 +272,11 @@ document.getElementById("approveBtn").onclick = async () => {
         "x-login-id": loginId
       },
       body:JSON.stringify({
-        name:name.value,
-        quality:quality.value,
-        type:type.value,
-        roll:roll.value,
-        stars:selectedStars
+        name: name.value,
+        quality: quality.value,
+        type: type.value,
+        roll: roll.value,
+        stars: selectedStars
       })
     }
   );
