@@ -54,7 +54,7 @@ router.post("/items/:id/approve", async (req, res) => {
       return res.status(403).json({ error: "Kein Admin-Zugriff" });
     }
 
-    if (!name || !quality || !type) {
+    if (!name || !type) {
       return res.status(400).json({
         error: "Pflichtfelder fehlen (name, quality, type)"
       });
