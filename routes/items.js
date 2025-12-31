@@ -30,8 +30,7 @@ const upload = multer({
 
 /* =========================
    GET /api/items
-   Öffentliche Liste (ALLE Items)
-   ⚠️ Wird intern/Admin genutzt
+   Alle Items (intern/Admin)
 ========================= */
 router.get("/", async (req, res) => {
   try {
@@ -41,7 +40,7 @@ router.get("/", async (req, res) => {
         i.owner_user_id,
         i.screenshot,
         i.created_at,
-        IFNULL(s.status, 'available') AS status
+        IFNULL(s.status, 'eingereicht') AS status
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
       ORDER BY i.created_at DESC
@@ -56,8 +55,7 @@ router.get("/", async (req, res) => {
 
 /* =========================
    GET /api/items/public
-   NUR verfügbare Items
-   (später zusätzlich is_public)
+   Öffentliche Items (später is_public)
 ========================= */
 router.get("/public", async (req, res) => {
   try {
@@ -70,7 +68,7 @@ router.get("/public", async (req, res) => {
         s.status
       FROM items i
       JOIN item_status s ON s.item_id = i.id
-      WHERE s.status = 'verfügbar'
+      WHERE s.status = 'freigegeben'
       ORDER BY i.created_at DESC
     `);
 
@@ -84,7 +82,6 @@ router.get("/public", async (req, res) => {
 /* =========================
    POST /api/items
    Screenshot einreichen
-   (LOGIN ERFORDERLICH)
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
@@ -140,8 +137,8 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 ========================= */
 router.post("/:id/approve", async (req, res) => {
   try {
-    // 🔒 Admin-Check
-    if (!req.user || req.user.username !== "admin") {
+    // ✅ KORREKTER Admin-Check (passt zu deinem System)
+    if (!req.user || req.user.id !== "admin-1") {
       return res.status(403).json({ error: "Kein Admin-Zugriff" });
     }
 
@@ -154,7 +151,6 @@ router.post("/:id/approve", async (req, res) => {
 
     await db.run("BEGIN");
 
-    // Item-Daten speichern
     await db.run(
       `
       UPDATE items
@@ -169,7 +165,6 @@ router.post("/:id/approve", async (req, res) => {
       [name, quality, type, roll || "", stars, id]
     );
 
-    // Status auf "freigegeben" setzen
     await db.run(
       `
       UPDATE item_status
