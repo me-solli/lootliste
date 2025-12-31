@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /* ================================
-   STATIC FILES (FIXED)
+   STATIC FILES
 ================================ */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -62,7 +62,6 @@ app.use(
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
-  // DEV-BYPASS
   if (loginId === "dev-admin") {
     req.user = {
       id: "admin-1",
@@ -82,22 +81,22 @@ const itemRoutes = require("./routes/items");
 const adminRoutes = require("./routes/admin");
 
 /* ================================
-   PUBLIC ITEMS (OHNE LOGIN)
+   PUBLIC ITEMS
 ================================ */
 app.use("/api/items/public", itemRoutes);
 
 /* ================================
-   PROTECTED ITEMS (DEV LOGIN)
+   PROTECTED ITEMS
 ================================ */
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
-   ADMIN (DEV LOGIN)
+   ADMIN
 ================================ */
 app.use("/api/admin", requireAuth, adminRoutes);
 
 /* ================================
-   HTML FILE HANDLER (WICHTIG)
+   HTML FILE HANDLER
 ================================ */
 app.get("/*.html", (req, res) => {
   const filePath = path.join(__dirname, req.path);
@@ -107,13 +106,6 @@ app.get("/*.html", (req, res) => {
       res.status(404).send("HTML nicht gefunden");
     }
   });
-});
-
-/* ================================
-   BLOCK JS SOURCE ACCESS (OPTIONAL, EMPFOHLEN)
-================================ */
-app.get("/*.js", (req, res) => {
-  res.status(403).send("Zugriff verweigert");
 });
 
 /* ================================
