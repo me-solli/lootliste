@@ -1,24 +1,32 @@
+// routes/admin.js
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const ItemStatusService = require("../services/ItemStatusService");
+
+/* =====================================================
+   Admin Auth (minimal & stabil)
+===================================================== */
+function requireAdmin(req, res, next) {
+  const token = req.headers["x-admin-token"];
+  if (!token || token !== process.env.ADMIN_TOKEN) {
+    return res.status(403).json({ error: "Admin only" });
+  }
+  next();
+}
 
 /* =====================================================
    GET /api/admin/items
-   Liste der Items (standard: status=eingereicht)
+   ?status=submitted|approved|hidden|rejected
 ===================================================== */
-router.get("/items", async (req, res) => {
+router.get("/items", requireAdmin, async (req, res) => {
   try {
-    if (!req.user || !req.user.id) {
-      return res.status(401).json({ error: "Nicht eingeloggt" });
-    }
-
-    const status = req.query.status || "eingereicht";
+    const status = req.query.status || "submitted";
 
     const rows = await db.all(
       `
       SELECT
         i.id,
-        i.owner_user_id,
         i.title,
         i.type,
         i.rating,
@@ -36,143 +44,86 @@ router.get("/items", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error("ADMIN ITEMS FEHLER:", err);
-    res.status(500).json({ error: "Admin Items konnten nicht geladen werden" });
+    console.error("ADMIN GET ITEMS ERROR:", err);
+    res.status(500).json({ error: "Admin items load failed" });
   }
 });
 
 /* =====================================================
    POST /api/admin/items/:id/approve
-   Freigabe eines Items (DEV-freundlich)
 ===================================================== */
-router.post("/items/:id/approve", async (req, res) => {
-  const itemId = req.params.id;
-  const { name, quality, type, roll, stars } = req.body;
-
+router.post("/items/:id/approve", requireAdmin, async (req, res) => {
   try {
-    if (!req.user || req.user.role !== "admin") {
-      return res.status(403).json({ error: "Kein Admin-Zugriff" });
-    }
+    const itemId = req.params.id;
+    const { title, type, rating } = req.body;
 
-    if (!name || !type) {
-      return res.status(400).json({
-        error: "Pflichtfelder fehlen (name, quality, type)"
-      });
-    }
+    await ItemStatusService.approve(itemId, {
+      title,
+      type,
+      rating
+    });
 
-    const item = await db.get(
-      `
-      SELECT i.id, s.status
-      FROM items i
-      JOIN item_status s ON s.item_id = i.id
-      WHERE i.id = ?
-      `,
-      [itemId]
-    );
+    res.json({ success: true, status: "approved" });
+  } catch (err) {
+    console.error("ADMIN APPROVE ERROR:", err);
+    res.status(400).json({ error: err.message });
+  }
+});
 
-    if (!item) {
-      return res.status(404).json({ error: "Item nicht gefunden" });
-    }
+/* =====================================================
+   POST /api/admin/items/:id/hide
+===================================================== */
+router.post("/items/:id/hide", requireAdmin, async (req, res) => {
+  try {
+    const itemId = req.params.id;
+    await ItemStatusService.hide(itemId);
+    res.json({ success: true, status: "hidden" });
+  } catch (err) {
+    console.error("ADMIN HIDE ERROR:", err);
+    res.status(400).json({ error: err.message });
+  }
+});
 
-    /* 🔧 DEV-FIX:
-       Erlaube approve, wenn Item bereits 'verfügbar' ist */
-    if (!["eingereicht", "verfügbar"].includes(item.status)) {
-      return res.status(400).json({
-        error: `Item kann nicht freigegeben werden (Status: ${item.status})`
-      });
-    }
+/* =====================================================
+   POST /api/admin/items/:id/reject
+===================================================== */
+router.post("/items/:id/reject", requireAdmin, async (req, res) => {
+  try {
+    const itemId = req.params.id;
+    const { admin_note } = req.body || {};
+    await ItemStatusService.reject(itemId, admin_note);
+    res.json({ success: true, status: "rejected" });
+  } catch (err) {
+    console.error("ADMIN REJECT ERROR:", err);
+    res.status(400).json({ error: err.message });
+  }
+});
 
-    await db.run("BEGIN");
+/* =====================================================
+   PUT /api/admin/items/:id
+   Admin-Override (Edit)
+===================================================== */
+router.put("/items/:id", requireAdmin, async (req, res) => {
+  try {
+    const itemId = req.params.id;
+    const { title, type, rating } = req.body;
 
-    // Item-Felder aktualisieren
     await db.run(
       `
       UPDATE items SET
         title = ?,
         type = ?,
-        rating = ?
+        rating = ?,
+        updated_at = datetime('now')
       WHERE id = ?
       `,
-      [
-        name,
-        type,
-        typeof stars === "number" ? stars : 0,
-        itemId
-      ]
+      [title, type, rating, itemId]
     );
 
-    // Status setzen (idempotent)
-    await db.run(
-      `
-      UPDATE item_status SET
-        status = 'verfügbar',
-        status_since = datetime('now')
-      WHERE item_id = ?
-      `,
-      [itemId]
-    );
-
-    await db.run("COMMIT");
-
-    res.json({
-      success: true,
-      id: itemId,
-      status: "verfügbar"
-    });
-
+    res.json({ success: true });
   } catch (err) {
-    await db.run("ROLLBACK");
-    console.error("ADMIN APPROVE FEHLER:", err);
-    res.status(500).json({ error: "Item konnte nicht freigegeben werden" });
-  }
-});
-
-/* =====================================================
-   DEV: POST /api/admin/dev-seed
-   Legt EIN Test-Item mit status=eingereicht an
-===================================================== */
-router.post("/dev-seed", async (req, res) => {
-  try {
-    if (!req.user || req.user.role !== "admin") {
-      return res.status(403).json({ error: "Kein Admin-Zugriff" });
-    }
-
-    const ownerUserId = req.user.id;
-    const screenshotPath = "/uploads/dev-seed.png";
-
-    await db.run("BEGIN");
-
-    const result = await db.run(
-      `
-      INSERT INTO items (owner_user_id, screenshot)
-      VALUES (?, ?)
-      `,
-      [ownerUserId, screenshotPath]
-    );
-
-    const itemId = result.lastID;
-
-    await db.run(
-      `
-      INSERT INTO item_status (item_id, status)
-      VALUES (?, 'eingereicht')
-      `,
-      [itemId]
-    );
-
-    await db.run("COMMIT");
-
-    res.json({
-      success: true,
-      message: "Dev-Test-Item angelegt",
-      itemId,
-      status: "eingereicht"
-    });
-
-  } catch (err) {
-    await db.run("ROLLBACK");
-    console.error("DEV-SEED FEHLER:", err);
-    res.status(500).json({ error: "Dev-Seed fehlgeschlagen" });
+    console.error("ADMIN UPDATE ERROR:", err);
+    res.status(500).json({ error: "Update failed" });
   }
 });
 
