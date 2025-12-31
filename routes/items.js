@@ -57,7 +57,7 @@ router.get("/", async (req, res) => {
 /* =========================
    GET /api/items/public
    NUR verfügbare Items
-   ✅ Für GitHub Pages / Public Index
+   (später zusätzlich is_public)
 ========================= */
 router.get("/public", async (req, res) => {
   try {
@@ -88,7 +88,6 @@ router.get("/public", async (req, res) => {
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
-    // Login kommt aus server.js (x-login-id)
     if (!req.user || !req.user.id) {
       return res.status(401).json({ error: "Nicht eingeloggt" });
     }
@@ -132,6 +131,61 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
     await db.run("ROLLBACK");
     console.error("POST /api/items Fehler:", err);
     res.status(500).json({ error: "Item konnte nicht eingereicht werden" });
+  }
+});
+
+/* =========================
+   POST /api/items/:id/approve
+   Item freigeben (ADMIN)
+========================= */
+router.post("/:id/approve", async (req, res) => {
+  try {
+    // 🔒 Admin-Check
+    if (!req.user || req.user.username !== "admin") {
+      return res.status(403).json({ error: "Kein Admin-Zugriff" });
+    }
+
+    const { id } = req.params;
+    const { name, quality, type, roll, stars } = req.body;
+
+    if (!name || !quality || !type || !stars) {
+      return res.status(400).json({ error: "Pflichtfelder fehlen" });
+    }
+
+    await db.run("BEGIN");
+
+    // Item-Daten speichern
+    await db.run(
+      `
+      UPDATE items
+      SET
+        name = ?,
+        quality = ?,
+        type = ?,
+        roll = ?,
+        stars = ?
+      WHERE id = ?
+      `,
+      [name, quality, type, roll || "", stars, id]
+    );
+
+    // Status auf "freigegeben" setzen
+    await db.run(
+      `
+      UPDATE item_status
+      SET status = 'freigegeben'
+      WHERE item_id = ?
+      `,
+      [id]
+    );
+
+    await db.run("COMMIT");
+
+    res.json({ success: true });
+  } catch (err) {
+    await db.run("ROLLBACK");
+    console.error("POST /api/items/:id/approve Fehler:", err);
+    res.status(500).json({ error: "Item konnte nicht freigegeben werden" });
   }
 });
 
