@@ -51,96 +51,24 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.static(__dirname));
 
 /* ================================
-   USER / SESSION HELPERS
-================================ */
-const USERS_FILE = path.join(__dirname, "users.json");
-const sessions = new Map();
-
-function loadUsers() {
-  if (!fs.existsSync(USERS_FILE)) return [];
-  return JSON.parse(fs.readFileSync(USERS_FILE, "utf8"));
-}
-
-function createSession(userId) {
-  const loginId = crypto.randomUUID();
-  sessions.set(loginId, {
-    userId,
-    createdAt: Date.now()
-  });
-  return loginId;
-}
-
-function getSession(loginId) {
-  if (!loginId) return null;
-  return sessions.get(loginId);
-}
-
-/* ================================
-   AUTH MIDDLEWARE
+   DEV AUTH MIDDLEWARE
+   (kein echtes Login, fixer Admin)
 ================================ */
 function requireAuth(req, res, next) {
-  const loginId =
-    req.headers["x-login-id"] ||
-    req.cookies.loginId;
+  const loginId = req.headers["x-login-id"];
 
-  const session = getSession(loginId);
-
-  if (!session) {
-    return res.status(401).json({ error: "Nicht eingeloggt" });
+  // DEV-BYPASS
+  if (loginId === "dev-admin") {
+    req.user = {
+      id: "admin-1",
+      username: "admin",
+      role: "admin"
+    };
+    return next();
   }
 
-  const users = loadUsers();
-  const user = users.find(u => u.id === session.userId);
-
-  if (!user) {
-    return res.status(401).json({ error: "User nicht gefunden" });
-  }
-
-  req.user = {
-    id: user.id,
-    username: user.username,
-    role: user.role || "user"
-  };
-
-  next();
+  return res.status(401).json({ error: "Nicht eingeloggt (Dev-Modus)" });
 }
-
-/* ================================
-   LOGIN
-================================ */
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  const users = loadUsers();
-
-  const user = users.find(u => u.username === username);
-  if (!user) {
-    return res.status(401).json({ error: "User nicht gefunden" });
-  }
-
-  const ok = bcrypt.compareSync(password, user.password);
-  if (!ok) {
-    return res.status(401).json({ error: "Passwort falsch" });
-  }
-
-  const loginId = createSession(user.id);
-
-  res.cookie("loginId", loginId, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24
-  });
-
-  res.json({
-    success: true,
-    loginId,
-    user: {
-      id: user.id,
-      username: user.username,
-      role: user.role
-    }
-  });
-});
 
 /* ================================
    ROUTES
@@ -150,17 +78,16 @@ const adminRoutes = require("./routes/admin");
 
 /* ================================
    PUBLIC ITEMS (OHNE LOGIN)
-   ⚠️ MUSS VOR requireAuth KOMMEN
 ================================ */
 app.use("/api/items/public", itemRoutes);
 
 /* ================================
-   PROTECTED ITEMS (MIT LOGIN)
+   PROTECTED ITEMS (DEV LOGIN)
 ================================ */
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
-   ADMIN (MIT LOGIN)
+   ADMIN (DEV LOGIN)
 ================================ */
 app.use("/api/admin", requireAuth, adminRoutes);
 
