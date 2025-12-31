@@ -12,6 +12,9 @@ const db = require("../db");
  * - rejected
  */
 class ItemStatusService {
+  /* ================================
+     Aktuellen Status holen
+  ================================ */
   static async getCurrentStatus(itemId) {
     const row = await db.get(
       "SELECT status FROM item_status WHERE item_id = ?",
@@ -25,6 +28,10 @@ class ItemStatusService {
     return row.status;
   }
 
+  /* ================================
+     APPROVE
+     submitted | hidden → approved
+  ================================ */
   static async approve(itemId, { title, type, rating }) {
     const currentStatus = await this.getCurrentStatus(itemId);
 
@@ -36,18 +43,19 @@ class ItemStatusService {
 
     await db.run("BEGIN");
     try {
+      // Item-Daten aktualisieren (NUR vorhandene Spalten)
       await db.run(
         `
         UPDATE items SET
           title = COALESCE(?, title),
           type = COALESCE(?, type),
-          rating = COALESCE(?, rating),
-          updated_at = datetime('now')
+          rating = COALESCE(?, rating)
         WHERE id = ?
         `,
         [title, type, rating, itemId]
       );
 
+      // Status setzen
       await db.run(
         `
         UPDATE item_status SET
@@ -65,6 +73,10 @@ class ItemStatusService {
     }
   }
 
+  /* ================================
+     HIDE
+     approved → hidden
+  ================================ */
   static async hide(itemId) {
     const currentStatus = await this.getCurrentStatus(itemId);
 
@@ -85,6 +97,10 @@ class ItemStatusService {
     );
   }
 
+  /* ================================
+     REJECT
+     submitted → rejected
+  ================================ */
   static async reject(itemId, adminNote = null) {
     const currentStatus = await this.getCurrentStatus(itemId);
 
@@ -110,8 +126,7 @@ class ItemStatusService {
         await db.run(
           `
           UPDATE items SET
-            admin_note = ?,
-            updated_at = datetime('now')
+            admin_note = ?
           WHERE id = ?
           `,
           [adminNote, itemId]
