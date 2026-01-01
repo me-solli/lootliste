@@ -63,9 +63,14 @@ async function loadItems(list) {
             }
           </div>
         </div>
+
         <div>
+          <!-- STATUS BADGE (STEP A3) -->
+          <div class="status-badge status-${item.status}">
+            ${item.status}
+          </div>
+
           <div><b>ID:</b> ${item.id}</div>
-          <div><b>Status:</b> ${item.status}</div>
           <div><b>Titel:</b> ${item.title || "-"}</div>
           <div><b>Typ:</b> ${item.type || "-"}</div>
           <div><b>Rating:</b> ${item.rating ?? "-"}</div>
