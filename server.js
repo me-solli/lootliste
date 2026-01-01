@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const db = require("./db");
 
 /* ================================
-   ITEM STATUS (STEP A2.1)
+   ITEM STATUS
 ================================ */
 const ITEM_STATUS = {
   SUBMITTED: "submitted",
@@ -32,15 +32,16 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://me-solli.github.io");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, x-admin-token, x-login-id"
+    "Origin, X-Requested-With, Content-Type, Accept, x-login-id, x-admin-token"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
 
+  // Preflight
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
+    return res.sendStatus(204);
   }
   next();
 });
@@ -58,27 +59,12 @@ app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* ================================
-   🔍 DB TABELLEN DEBUG (WICHTIG!)
-================================ */
-db.all(
-  "SELECT name FROM sqlite_master WHERE type='table'",
-  [],
-  (err, rows) => {
-    if (err) {
-      console.error("❌ DB TABELLEN FEHLER:", err.message);
-    } else {
-      console.log("📦 DB TABELLEN:", rows);
-    }
-  }
-);
-
-/* ================================
    AUTH (USER)
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
-  // DEV-BYPASS
+  // DEV-BYPASS (nur DEV!)
   if (loginId === "dev-admin") {
     req.user = { id: "dev-user", role: "user" };
     return next();
@@ -96,7 +82,10 @@ const adminRoutes = require("./routes/admin");
 /* ================================
    ITEMS
 ================================ */
+// Öffentlich
 app.use("/api/items/public", itemRoutes);
+
+// Geschützt (Submit, intern)
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
