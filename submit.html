@@ -131,7 +131,7 @@ button{
 const API_BASE = "https://content-connection-production-ea07.up.railway.app";
 
 /* ================================
-   SUBMIT (DEV-BYPASS)
+   SUBMIT (DEV)
 ================================ */
 const form = document.getElementById("submitForm");
 const msgSuccess = document.getElementById("msgSuccess");
@@ -152,13 +152,14 @@ form.addEventListener("submit", async (e) => {
     const res = await fetch(API_BASE + "/api/items", {
       method: "POST",
       headers: {
-        // DEV-LOGIN für Backend
+        // DEV-LOGIN
         "x-login-id": "dev-admin"
       },
+      credentials: "include", // 🔴 WICHTIG für CORS + Allow-Credentials
       body: data
     });
 
-    if (!res.ok) throw new Error();
+    if (!res.ok) throw new Error("Submit fehlgeschlagen");
 
     form.reset();
     msgSuccess.style.display = "block";
