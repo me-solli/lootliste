@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require("../db");
 
 // ================================
-// Admin-Auth
+// Admin Auth
 // ================================
 function requireAdmin(req, res, next) {
   const token = req.headers["x-admin-token"];
@@ -15,72 +15,73 @@ function requireAdmin(req, res, next) {
 }
 
 // ================================
-// GET Admin Items (SAFE)
+// GET Admin Items
 // ================================
 router.get("/items", requireAdmin, (req, res) => {
   const status = req.query.status || "submitted";
 
-  try {
-    const rows = db
-      .prepare("SELECT * FROM items WHERE status = ?")
-      .all(status);
-
-    return res.json(rows);
-  } catch (err) {
-    console.error("ADMIN ITEMS ERROR:", err.message);
-    return res.status(500).json({
-      error: "DB query failed",
-      details: err.message
-    });
-  }
+  db.all(
+    "SELECT * FROM items WHERE status = ? ORDER BY id DESC",
+    [status],
+    (err, rows) => {
+      if (err) {
+        console.error("ADMIN ITEMS FEHLER:", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json(rows);
+    }
+  );
 });
 
 // ================================
 // APPROVE
 // ================================
 router.post("/items/:id/approve", requireAdmin, (req, res) => {
-  try {
-    db.prepare(
-      "UPDATE items SET status = 'approved' WHERE id = ?"
-    ).run(req.params.id);
-
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("APPROVE ERROR:", err.message);
-    res.status(500).json({ error: err.message });
-  }
+  db.run(
+    "UPDATE items SET status = 'approved' WHERE id = ?",
+    [req.params.id],
+    (err) => {
+      if (err) {
+        console.error("APPROVE FEHLER:", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ ok: true });
+    }
+  );
 });
 
 // ================================
 // HIDE
 // ================================
 router.post("/items/:id/hide", requireAdmin, (req, res) => {
-  try {
-    db.prepare(
-      "UPDATE items SET status = 'hidden' WHERE id = ?"
-    ).run(req.params.id);
-
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("HIDE ERROR:", err.message);
-    res.status(500).json({ error: err.message });
-  }
+  db.run(
+    "UPDATE items SET status = 'hidden' WHERE id = ?",
+    [req.params.id],
+    (err) => {
+      if (err) {
+        console.error("HIDE FEHLER:", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ ok: true });
+    }
+  );
 });
 
 // ================================
-// REJECT (optional note)
+// REJECT
 // ================================
 router.post("/items/:id/reject", requireAdmin, (req, res) => {
-  try {
-    db.prepare(
-      "UPDATE items SET status = 'rejected' WHERE id = ?"
-    ).run(req.params.id);
-
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("REJECT ERROR:", err.message);
-    res.status(500).json({ error: err.message });
-  }
+  db.run(
+    "UPDATE items SET status = 'rejected' WHERE id = ?",
+    [req.params.id],
+    (err) => {
+      if (err) {
+        console.error("REJECT FEHLER:", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ ok: true });
+    }
+  );
 });
 
 module.exports = router;
