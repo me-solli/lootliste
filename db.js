@@ -1,16 +1,28 @@
-const sqlite3 = require("sqlite3").verbose();
+const fs = require("fs");
 const path = require("path");
+const sqlite3 = require("sqlite3").verbose();
 
 // ================================
-// DB PFAD (PERSISTENT)
+// DB PFAD (RAILWAY PERSISTENT)
 // ================================
-const DB_PATH = path.join("/data", "lootliste.db");
-console.log("✅ SQLite DB verbunden:", DB_PATH);
+const DATA_DIR = "/data";
+const DB_PATH = path.join(DATA_DIR, "lootliste.db");
 
+// 🔒 /data sicherstellen (Railway erstellt das NICHT automatisch)
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  console.log("📁 /data Verzeichnis erstellt");
+}
+
+// ================================
+// DB INITIALISIEREN
+// ================================
 const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     console.error("❌ DB Verbindung fehlgeschlagen:", err);
+    process.exit(1); // ❗ bewusst abbrechen → klarer Fehler statt NetworkError
   }
+  console.log("✅ SQLite DB verbunden:", DB_PATH);
 });
 
 // ================================
@@ -33,7 +45,7 @@ db.serialize(() => {
     )
   `);
 
-  // ITEM STATUS (FIXED)
+  // ITEM STATUS
   db.run(`
     CREATE TABLE IF NOT EXISTS item_status (
       item_id INTEGER PRIMARY KEY,
@@ -71,6 +83,7 @@ db.allAsync = (sql, params = []) =>
     });
   });
 
+// ⚠️ Export bewusst nur EIN Interface
 module.exports = {
   run: db.runAsync,
   get: db.getAsync,
