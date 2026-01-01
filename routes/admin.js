@@ -55,19 +55,22 @@ router.get("/items", requireAdmin, async (req, res) => {
     );
 
     res.json(rows);
-  } catch {
+  } catch (err) {
+    console.error("ADMIN GET ITEMS FEHLER:", err);
     res.status(500).json({ error: "Admin Items konnten nicht geladen werden" });
   }
 });
 
 /* ================================
-   Helper
+   Helper: Status ändern
 ================================ */
 function updateStatus(itemId, status) {
   return db.run(
-    `UPDATE item_status
-     SET status = ?, status_since = datetime('now')
-     WHERE item_id = ?`,
+    `
+    UPDATE item_status
+    SET status = ?, status_since = datetime('now')
+    WHERE item_id = ?
+    `,
     [status, itemId]
   );
 }
@@ -75,16 +78,61 @@ function updateStatus(itemId, status) {
 /* ================================
    Status Actions
 ================================ */
-router.post("/items/:id/approve", requireAdmin, (req, res) =>
-  updateStatus(req.params.id, ITEM_STATUS.APPROVED).then(() => res.json({ ok: true }))
-);
+router.post("/items/:id/approve", requireAdmin, async (req, res) => {
+  try {
+    await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("APPROVE FEHLER:", err);
+    res.status(500).json({ error: "Approve fehlgeschlagen" });
+  }
+});
 
-router.post("/items/:id/hide", requireAdmin, (req, res) =>
-  updateStatus(req.params.id, ITEM_STATUS.HIDDEN).then(() => res.json({ ok: true }))
-);
+router.post("/items/:id/hide", requireAdmin, async (req, res) => {
+  try {
+    await updateStatus(req.params.id, ITEM_STATUS.HIDDEN);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("HIDE FEHLER:", err);
+    res.status(500).json({ error: "Hide fehlgeschlagen" });
+  }
+});
 
-router.post("/items/:id/reject", requireAdmin, (req, res) =>
-  updateStatus(req.params.id, ITEM_STATUS.REJECTED).then(() => res.json({ ok: true }))
+router.post("/items/:id/reject", requireAdmin, async (req, res) => {
+  try {
+    await updateStatus(req.params.id, ITEM_STATUS.REJECTED);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("REJECT FEHLER:", err);
+    res.status(500).json({ error: "Reject fehlgeschlagen" });
+  }
+});
+
+/* ================================
+   TEMP: MIGRATION
+   Fehlende item_status nachziehen
+================================ */
+router.post(
+  "/migrate/fix-missing-status",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await db.run(`
+        INSERT INTO item_status (item_id, status, status_since)
+        SELECT id, 'approved', datetime('now')
+        FROM items
+        WHERE id NOT IN (SELECT item_id FROM item_status)
+      `);
+
+      res.json({
+        ok: true,
+        migrated: result.changes
+      });
+    } catch (err) {
+      console.error("MIGRATION FEHLER:", err);
+      res.status(500).json({ error: "Migration fehlgeschlagen" });
+    }
+  }
 );
 
 module.exports = router;
