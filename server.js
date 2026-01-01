@@ -5,6 +5,7 @@ console.log("SERVER.JS wird geladen");
 ================================ */
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const cookieParser = require("cookie-parser");
 
 const db = require("./db");
@@ -13,6 +14,8 @@ const db = require("./db");
    APP
 ================================ */
 const app = express();
+
+// 🔒 WICHTIG: Railway-Port verwenden
 const PORT = process.env.PORT || 8080;
 
 /* ================================
@@ -30,7 +33,6 @@ app.use((req, res, next) => {
     "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
 
-  // Preflight
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
@@ -46,9 +48,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /* ================================
-   STATIC FILES
+   UPLOADS (RAILWAY SAFE)
 ================================ */
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+const UPLOAD_DIR = "/data/uploads";
+
+// 🔒 sicherstellen, dass Upload-Ordner existiert
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  console.log("📁 /data/uploads Verzeichnis erstellt");
+}
+
+// öffentlich ausliefern
+app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ================================
    AUTH (DEV)
