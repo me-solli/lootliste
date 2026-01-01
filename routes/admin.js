@@ -3,9 +3,19 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// ================================
-// Admin Auth
-// ================================
+/* ================================
+   ITEM STATUS (STEP A2)
+================================ */
+const ITEM_STATUS = {
+  SUBMITTED: "submitted",
+  APPROVED: "approved",
+  HIDDEN: "hidden",
+  REJECTED: "rejected"
+};
+
+/* ================================
+   Admin Auth
+================================ */
 function requireAdmin(req, res, next) {
   const token = req.headers["x-admin-token"];
   if (token !== "lootliste-admin-2025") {
@@ -14,25 +24,14 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// ================================
-// UI → DB Status Mapping
-// ================================
-const STATUS_MAP = {
-  submitted: "submitted",
-  approved: "approved",
-  hidden: "hidden",
-  rejected: "rejected"
-};
-
-// ================================
-// GET Admin Items by Status
-// ================================
+/* ================================
+   GET Admin Items by Status
+================================ */
 router.get("/items", requireAdmin, async (req, res) => {
   try {
-    const uiStatus = req.query.status || "submitted";
-    const dbStatus = STATUS_MAP[uiStatus];
+    const status = req.query.status || ITEM_STATUS.SUBMITTED;
 
-    if (!dbStatus) {
+    if (!Object.values(ITEM_STATUS).includes(status)) {
       return res.status(400).json({ error: "Invalid status" });
     }
 
@@ -55,7 +54,7 @@ router.get("/items", requireAdmin, async (req, res) => {
       WHERE s.status = ?
       ORDER BY i.created_at DESC
       `,
-      [dbStatus]
+      [status]
     );
 
     res.json(rows);
@@ -65,9 +64,9 @@ router.get("/items", requireAdmin, async (req, res) => {
   }
 });
 
-// ================================
-// Helper: Status ändern
-// ================================
+/* ================================
+   Helper: Status ändern
+================================ */
 async function updateStatus(itemId, newStatus) {
   return db.run(
     `
@@ -79,12 +78,12 @@ async function updateStatus(itemId, newStatus) {
   );
 }
 
-// ================================
-// APPROVE
-// ================================
+/* ================================
+   APPROVE
+================================ */
 router.post("/items/:id/approve", requireAdmin, async (req, res) => {
   try {
-    await updateStatus(req.params.id, "approved");
+    await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
     res.json({ ok: true });
   } catch (err) {
     console.error("APPROVE FEHLER:", err);
@@ -92,12 +91,12 @@ router.post("/items/:id/approve", requireAdmin, async (req, res) => {
   }
 });
 
-// ================================
-// HIDE
-// ================================
+/* ================================
+   HIDE
+================================ */
 router.post("/items/:id/hide", requireAdmin, async (req, res) => {
   try {
-    await updateStatus(req.params.id, "hidden");
+    await updateStatus(req.params.id, ITEM_STATUS.HIDDEN);
     res.json({ ok: true });
   } catch (err) {
     console.error("HIDE FEHLER:", err);
@@ -105,12 +104,12 @@ router.post("/items/:id/hide", requireAdmin, async (req, res) => {
   }
 });
 
-// ================================
-// REJECT
-// ================================
+/* ================================
+   REJECT
+================================ */
 router.post("/items/:id/reject", requireAdmin, async (req, res) => {
   try {
-    await updateStatus(req.params.id, "rejected");
+    await updateStatus(req.params.id, ITEM_STATUS.REJECTED);
     res.json({ ok: true });
   } catch (err) {
     console.error("REJECT FEHLER:", err);
