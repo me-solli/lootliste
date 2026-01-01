@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
 
 /* =========================
    GET /api/items/public
-   (nur freigegebene Items)
+   (freigegebene Items – erweitert)
 ========================= */
 router.get("/public", async (req, res) => {
   try {
@@ -64,7 +64,13 @@ router.get("/public", async (req, res) => {
         i.id,
         i.owner_user_id,
         i.screenshot,
-        i.created_at
+        i.created_at,
+
+        -- Vorbereitung für V3 (NULL-safe)
+        COALESCE(i.title, '')    AS title,
+        COALESCE(i.type, '')     AS type,
+        COALESCE(i.category, '') AS category
+
       FROM items i
       JOIN item_status s ON s.item_id = i.id
       WHERE s.status = 'approved'
@@ -80,7 +86,7 @@ router.get("/public", async (req, res) => {
 
 /* =========================
    POST /api/items
-   Item einreichen (Submit)
+   Item einreichen
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
@@ -97,7 +103,6 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 
     await db.run("BEGIN");
 
-    // Item anlegen
     const result = await db.run(
       `
       INSERT INTO items (owner_user_id, screenshot)
@@ -108,7 +113,6 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 
     const itemId = result.lastID;
 
-    // ⭐ WICHTIG: Status anlegen
     await db.run(
       `
       INSERT INTO item_status (item_id, status, status_since)
