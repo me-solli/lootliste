@@ -39,8 +39,7 @@ const upload = multer({
 });
 
 /* =========================
-   GET /api/items
-   (intern / debug)
+   GET /api/items (intern)
 ========================= */
 router.get("/", async (req, res) => {
   try {
@@ -58,48 +57,45 @@ router.get("/", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error("GET /api/items Fehler:", err);
     res.status(500).json({ error: "Items konnten nicht geladen werden" });
   }
 });
 
 /* =========================
    GET /api/items/public
-   (freigegebene Items)
 ========================= */
 router.get("/public", async (req, res) => {
   try {
-    const rows = await db.all(`
+    const rows = await db.all(
+      `
       SELECT
         i.id,
         i.owner_user_id,
         i.screenshot,
         i.created_at,
-
         COALESCE(i.title, '')    AS title,
         COALESCE(i.type, '')     AS type,
         COALESCE(i.category, '') AS category
-
       FROM items i
       JOIN item_status s ON s.item_id = i.id
       WHERE s.status = ?
       ORDER BY i.created_at DESC
-    `, [ITEM_STATUS.APPROVED]);
+      `,
+      [ITEM_STATUS.APPROVED]
+    );
 
     res.json(rows);
   } catch (err) {
-    console.error("GET /api/items/public Fehler:", err);
     res.status(500).json({ error: "Öffentliche Items konnten nicht geladen werden" });
   }
 });
 
 /* =========================
    POST /api/items
-   Item einreichen
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   try {
-    if (!req.user || !req.user.id) {
+    if (!req.user?.id) {
       return res.status(401).json({ error: "Nicht eingeloggt" });
     }
 
@@ -107,40 +103,28 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       return res.status(400).json({ error: "Kein Screenshot empfangen" });
     }
 
-    const ownerUserId = req.user.id;
-    const screenshotPath = `/uploads/${req.file.filename}`;
-
     await db.run("BEGIN");
 
     const result = await db.run(
-      `
-      INSERT INTO items (owner_user_id, screenshot)
-      VALUES (?, ?)
-      `,
-      [ownerUserId, screenshotPath]
+      `INSERT INTO items (owner_user_id, screenshot) VALUES (?, ?)`,
+      [req.user.id, `/uploads/${req.file.filename}`]
     );
 
-    const itemId = result.lastID;
-
     await db.run(
-      `
-      INSERT INTO item_status (item_id, status, status_since)
-      VALUES (?, ?, datetime('now'))
-      `,
-      [itemId, ITEM_STATUS.SUBMITTED]
+      `INSERT INTO item_status (item_id, status, status_since)
+       VALUES (?, ?, datetime('now'))`,
+      [result.lastID, ITEM_STATUS.SUBMITTED]
     );
 
     await db.run("COMMIT");
 
     res.json({
       success: true,
-      itemId,
-      status: ITEM_STATUS.SUBMITTED,
-      screenshot: screenshotPath
+      itemId: result.lastID,
+      status: ITEM_STATUS.SUBMITTED
     });
   } catch (err) {
     await db.run("ROLLBACK");
-    console.error("POST /api/items Fehler:", err);
     res.status(500).json({ error: "Item konnte nicht eingereicht werden" });
   }
 });
