@@ -1,4 +1,3 @@
-// routes/admin.js
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
@@ -17,15 +16,14 @@ const ITEM_STATUS = {
    Admin Auth
 ================================ */
 function requireAdmin(req, res, next) {
-  const token = req.headers["x-admin-token"];
-  if (token !== "lootliste-admin-2025") {
+  if (req.headers["x-admin-token"] !== "lootliste-admin-2025") {
     return res.status(403).json({ error: "Forbidden" });
   }
   next();
 }
 
 /* ================================
-   GET Admin Items by Status
+   GET Admin Items
 ================================ */
 router.get("/items", requireAdmin, async (req, res) => {
   try {
@@ -45,7 +43,6 @@ router.get("/items", requireAdmin, async (req, res) => {
         i.weapon_type,
         i.rating,
         i.screenshot,
-        i.visibility,
         i.created_at,
         s.status,
         s.status_since
@@ -58,63 +55,36 @@ router.get("/items", requireAdmin, async (req, res) => {
     );
 
     res.json(rows);
-  } catch (err) {
-    console.error("ADMIN GET ITEMS FEHLER:", err);
+  } catch {
     res.status(500).json({ error: "Admin Items konnten nicht geladen werden" });
   }
 });
 
 /* ================================
-   Helper: Status ändern
+   Helper
 ================================ */
-async function updateStatus(itemId, newStatus) {
+function updateStatus(itemId, status) {
   return db.run(
-    `
-    UPDATE item_status
-    SET status = ?, status_since = datetime('now')
-    WHERE item_id = ?
-    `,
-    [newStatus, itemId]
+    `UPDATE item_status
+     SET status = ?, status_since = datetime('now')
+     WHERE item_id = ?`,
+    [status, itemId]
   );
 }
 
 /* ================================
-   APPROVE
+   Status Actions
 ================================ */
-router.post("/items/:id/approve", requireAdmin, async (req, res) => {
-  try {
-    await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("APPROVE FEHLER:", err);
-    res.status(500).json({ error: "Approve fehlgeschlagen" });
-  }
-});
+router.post("/items/:id/approve", requireAdmin, (req, res) =>
+  updateStatus(req.params.id, ITEM_STATUS.APPROVED).then(() => res.json({ ok: true }))
+);
 
-/* ================================
-   HIDE
-================================ */
-router.post("/items/:id/hide", requireAdmin, async (req, res) => {
-  try {
-    await updateStatus(req.params.id, ITEM_STATUS.HIDDEN);
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("HIDE FEHLER:", err);
-    res.status(500).json({ error: "Hide fehlgeschlagen" });
-  }
-});
+router.post("/items/:id/hide", requireAdmin, (req, res) =>
+  updateStatus(req.params.id, ITEM_STATUS.HIDDEN).then(() => res.json({ ok: true }))
+);
 
-/* ================================
-   REJECT
-================================ */
-router.post("/items/:id/reject", requireAdmin, async (req, res) => {
-  try {
-    await updateStatus(req.params.id, ITEM_STATUS.REJECTED);
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("REJECT FEHLER:", err);
-    res.status(500).json({ error: "Reject fehlgeschlagen" });
-  }
-});
+router.post("/items/:id/reject", requireAdmin, (req, res) =>
+  updateStatus(req.params.id, ITEM_STATUS.REJECTED).then(() => res.json({ ok: true }))
+);
 
 module.exports = router;
