@@ -10,16 +10,6 @@ const cookieParser = require("cookie-parser");
 const db = require("./db");
 
 /* ================================
-   ITEM STATUS
-================================ */
-const ITEM_STATUS = {
-  SUBMITTED: "submitted",
-  APPROVED: "approved",
-  HIDDEN: "hidden",
-  REJECTED: "rejected"
-};
-
-/* ================================
    APP
 ================================ */
 const app = express();
@@ -30,6 +20,7 @@ const PORT = process.env.PORT || 8080;
 ================================ */
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://me-solli.github.io");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, x-login-id, x-admin-token"
@@ -43,6 +34,7 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
+
   next();
 });
 
@@ -59,14 +51,17 @@ app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* ================================
-   AUTH (USER)
+   AUTH (DEV)
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
-  // DEV-BYPASS (nur DEV!)
+  // DEV-LOGIN (nur DEV!)
   if (loginId === "dev-admin") {
-    req.user = { id: "dev-user", role: "user" };
+    req.user = {
+      id: "dev-user",
+      role: "user"
+    };
     return next();
   }
 
@@ -82,19 +77,20 @@ const adminRoutes = require("./routes/admin");
 /* ================================
    ITEMS
 ================================ */
-// Öffentlich
+
+// Public (Index)
 app.use("/api/items/public", itemRoutes);
 
-// Geschützt (Submit, intern)
+// Protected (Submit, intern)
 app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
-   ADMIN API
+   ADMIN
 ================================ */
 app.use("/api/admin", adminRoutes);
 
 /* ================================
-   HEALTH
+   HEALTHCHECK
 ================================ */
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
