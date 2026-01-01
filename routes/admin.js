@@ -15,7 +15,7 @@ function requireAdmin(req, res, next) {
 }
 
 // ================================
-// STATUS-MAPPING (Frontend → DB)
+// UI → DB Status Mapping
 // ================================
 const STATUS_MAP = {
   submitted: "abgeschickt",
@@ -36,7 +36,7 @@ router.get("/items", requireAdmin, (req, res) => {
   }
 
   db.all(
-    "SELECT * FROM elemente WHERE wo_status = ? ORDER BY id DESC",
+    'SELECT * FROM "Element" WHERE wo_status = ? ORDER BY id DESC',
     [dbStatus],
     (err, rows) => {
       if (err) {
@@ -53,8 +53,8 @@ router.get("/items", requireAdmin, (req, res) => {
 // ================================
 router.post("/items/:id/approve", requireAdmin, (req, res) => {
   db.run(
-    "UPDATE elemente SET wo_status = 'freigegeben' WHERE id = ?",
-    [req.params.id],
+    'UPDATE "Element" SET wo_status = ? WHERE id = ?',
+    ["freigegeben", req.params.id],
     err => {
       if (err) {
         console.error("APPROVE FEHLER:", err.message);
@@ -70,8 +70,8 @@ router.post("/items/:id/approve", requireAdmin, (req, res) => {
 // ================================
 router.post("/items/:id/hide", requireAdmin, (req, res) => {
   db.run(
-    "UPDATE elemente SET wo_status = 'versteckt' WHERE id = ?",
-    [req.params.id],
+    'UPDATE "Element" SET wo_status = ? WHERE id = ?',
+    ["versteckt", req.params.id],
     err => {
       if (err) {
         console.error("HIDE FEHLER:", err.message);
@@ -87,8 +87,8 @@ router.post("/items/:id/hide", requireAdmin, (req, res) => {
 // ================================
 router.post("/items/:id/reject", requireAdmin, (req, res) => {
   db.run(
-    "UPDATE elemente SET wo_status = 'abgelehnt' WHERE id = ?",
-    [req.params.id],
+    'UPDATE "Element" SET wo_status = ? WHERE id = ?',
+    ["abgelehnt", req.params.id],
     err => {
       if (err) {
         console.error("REJECT FEHLER:", err.message);
