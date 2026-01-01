@@ -6,6 +6,16 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+/* ================================
+   ITEM STATUS (STEP A2)
+================================ */
+const ITEM_STATUS = {
+  SUBMITTED: "submitted",
+  APPROVED: "approved",
+  HIDDEN: "hidden",
+  REJECTED: "rejected"
+};
+
 /* =========================
    UPLOAD-ORDNER
 ========================= */
@@ -55,7 +65,7 @@ router.get("/", async (req, res) => {
 
 /* =========================
    GET /api/items/public
-   (freigegebene Items – erweitert)
+   (freigegebene Items)
 ========================= */
 router.get("/public", async (req, res) => {
   try {
@@ -66,16 +76,15 @@ router.get("/public", async (req, res) => {
         i.screenshot,
         i.created_at,
 
-        -- Vorbereitung für V3 (NULL-safe)
         COALESCE(i.title, '')    AS title,
         COALESCE(i.type, '')     AS type,
         COALESCE(i.category, '') AS category
 
       FROM items i
       JOIN item_status s ON s.item_id = i.id
-      WHERE s.status = 'approved'
+      WHERE s.status = ?
       ORDER BY i.created_at DESC
-    `);
+    `, [ITEM_STATUS.APPROVED]);
 
     res.json(rows);
   } catch (err) {
@@ -116,9 +125,9 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
     await db.run(
       `
       INSERT INTO item_status (item_id, status, status_since)
-      VALUES (?, 'submitted', datetime('now'))
+      VALUES (?, ?, datetime('now'))
       `,
-      [itemId]
+      [itemId, ITEM_STATUS.SUBMITTED]
     );
 
     await db.run("COMMIT");
@@ -126,7 +135,7 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
     res.json({
       success: true,
       itemId,
-      status: "submitted",
+      status: ITEM_STATUS.SUBMITTED,
       screenshot: screenshotPath
     });
   } catch (err) {
