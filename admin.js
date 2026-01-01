@@ -8,12 +8,20 @@ const ADMIN_TOKEN = "lootliste-admin-2025";
    STATE
 ================================ */
 let currentStatus = "submitted";
-const list = document.getElementById("list");
 
 /* ================================
-   LOAD ITEMS
+   HELPERS
 ================================ */
-async function loadItems() {
+function resolveImageSrc(screenshot) {
+  if (!screenshot) return "";
+  if (screenshot.startsWith("http")) return screenshot;
+  return `${API_BASE}${screenshot}`;
+}
+
+/* ================================
+   LOAD & RENDER
+================================ */
+async function loadItems(list) {
   list.innerHTML = "Lade Items…";
 
   try {
@@ -26,12 +34,51 @@ async function loadItems() {
       }
     );
 
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const items = await res.json();
-    renderItems(items);
+
+    if (!items.length) {
+      list.innerHTML = `<div class="empty">Keine Items.</div>`;
+      return;
+    }
+
+    list.innerHTML = items
+      .map(
+        (item) => `
+      <div class="item">
+        <div class="thumb">
+          <img src="${resolveImageSrc(item.screenshot)}" alt="">
+          <div class="actions">
+            ${
+              currentStatus === "submitted"
+                ? `
+              <button class="approve" data-action="approve" data-id="${item.id}">Freigeben</button>
+              <button class="reject" data-action="reject" data-id="${item.id}">Ablehnen</button>
+            `
+                : ""
+            }
+            ${
+              currentStatus === "approved"
+                ? `
+              <button class="hide" data-action="hide" data-id="${item.id}">Verstecken</button>
+            `
+                : ""
+            }
+          </div>
+        </div>
+        <div class="meta">
+          <div><b>ID:</b> ${item.id}</div>
+          <div><b>Status:</b> ${item.status}</div>
+          <div><b>Titel:</b> ${item.title || "-"}</div>
+          <div><b>Typ:</b> ${item.type || "-"}</div>
+          <div><b>Rating:</b> ${item.rating ?? "-"}</div>
+          <div><b>Erstellt:</b> ${new Date(item.created_at).toLocaleString()}</div>
+        </div>
+      </div>
+    `
+      )
+      .join("");
   } catch (err) {
     console.error(err);
     list.innerHTML = `<div class="error">⚠️ Fehler beim Laden</div>`;
@@ -39,95 +86,77 @@ async function loadItems() {
 }
 
 /* ================================
-   RENDER
+   ACTIONS
 ================================ */
-function renderItems(items) {
-  if (!items.length) {
-    list.innerHTML = `<div class="empty">Keine Items.</div>`;
+async function doAction(path, body = null) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-token": ADMIN_TOKEN
+    },
+    body: body ? JSON.stringify(body) : null
+  });
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+}
+
+/* ================================
+   INIT (DOM SAFE)
+================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  const list = document.getElementById("list");
+  const tabs = document.getElementById("tabs");
+
+  if (!list || !tabs) {
+    console.error("Admin DOM-Elemente (#list, #tabs) fehlen.");
     return;
   }
 
-  list.innerHTML = items.map(item => `
-    <div class="item">
-      <div class="thumb">
-        <img src="${API_BASE}${item.screenshot || ""}" alt="">
-        <div class="actions">
-          ${currentStatus === "submitted" ? `
-            <button class="approve" onclick="approveItem(${item.id})">Freigeben</button>
-            <button class="reject" onclick="rejectItem(${item.id})">Ablehnen</button>
-          ` : ""}
-          ${currentStatus === "approved" ? `
-            <button class="hide" onclick="hideItem(${item.id})">Verstecken</button>
-          ` : ""}
-        </div>
-      </div>
-      <div class="meta">
-        <div><b>ID:</b> ${item.id}</div>
-        <div><b>Status:</b> ${item.status}</div>
-        <div><b>Titel:</b> ${item.title || "-"}</div>
-        <div><b>Typ:</b> ${item.type || "-"}</div>
-        <div><b>Rating:</b> ${item.rating ?? "-"}</div>
-        <div><b>Erstellt:</b> ${new Date(item.created_at).toLocaleString()}</div>
-      </div>
-    </div>
-  `).join("");
-}
+  // Tabs
+  tabs.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-status]");
+    if (!btn) return;
 
-/* ================================
-   ACTIONS
-================================ */
-async function action(path, body = null) {
-  try {
-    const res = await fetch(`${API_BASE}${path}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-admin-token": ADMIN_TOKEN
-      },
-      body: body ? JSON.stringify(body) : null
-    });
+    currentStatus = btn.dataset.status;
 
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
+    tabs
+      .querySelectorAll("button")
+      .forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    loadItems(list);
+  });
+
+  // Actions (Event Delegation)
+  list.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+
+    try {
+      if (action === "approve") {
+        await doAction(`/api/admin/items/${id}/approve`);
+      } else if (action === "hide") {
+        await doAction(`/api/admin/items/${id}/hide`);
+      } else if (action === "reject") {
+        const note = prompt("Ablehnungsgrund (optional):");
+        await doAction(`/api/admin/items/${id}/reject`, {
+          admin_note: note || null
+        });
+      }
+
+      loadItems(list);
+    } catch (err) {
+      console.error(err);
+      alert("Aktion fehlgeschlagen");
     }
+  });
 
-    loadItems();
-  } catch (err) {
-    console.error(err);
-    alert("Aktion fehlgeschlagen");
-  }
-}
-
-function approveItem(id) {
-  action(`/api/admin/items/${id}/approve`);
-}
-
-function hideItem(id) {
-  action(`/api/admin/items/${id}/hide`);
-}
-
-function rejectItem(id) {
-  const note = prompt("Ablehnungsgrund (optional):");
-  action(`/api/admin/items/${id}/reject`, { admin_note: note });
-}
-
-/* ================================
-   TABS
-================================ */
-document.getElementById("tabs").addEventListener("click", e => {
-  if (!e.target.dataset.status) return;
-
-  currentStatus = e.target.dataset.status;
-
-  document
-    .querySelectorAll("#tabs button")
-    .forEach(btn => btn.classList.remove("active"));
-
-  e.target.classList.add("active");
-  loadItems();
+  // Initial load
+  loadItems(list);
 });
-
-/* ================================
-   INIT
-================================ */
-document.addEventListener("DOMContentLoaded", loadItems);
