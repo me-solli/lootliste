@@ -15,18 +15,18 @@ let currentStatus = "submitted";
 function resolveImageSrc(screenshot) {
   if (!screenshot) return "";
   if (screenshot.startsWith("http")) return screenshot;
-  return `${API_BASE}${screenshot}`;
+  return API_BASE + screenshot;
 }
 
 /* ================================
-   LOAD & RENDER
+   LOAD + RENDER
 ================================ */
 async function loadItems(list) {
   list.innerHTML = "Lade Items…";
 
   try {
     const res = await fetch(
-      `${API_BASE}/api/admin/items?status=${currentStatus}`,
+      API_BASE + "/api/admin/items?status=" + currentStatus,
       {
         headers: {
           "x-admin-token": ADMIN_TOKEN
@@ -34,40 +34,36 @@ async function loadItems(list) {
       }
     );
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) {
+      throw new Error("HTTP " + res.status);
+    }
 
     const items = await res.json();
 
     if (!items.length) {
-      list.innerHTML = `<div class="empty">Keine Items.</div>`;
+      list.innerHTML = '<div class="empty">Keine Items.</div>';
       return;
     }
 
-    list.innerHTML = items
-      .map(
-        (item) => `
+    list.innerHTML = items.map(item => `
       <div class="item">
         <div class="thumb">
           <img src="${resolveImageSrc(item.screenshot)}" alt="">
           <div class="actions">
             ${
               currentStatus === "submitted"
-                ? `
-              <button class="approve" data-action="approve" data-id="${item.id}">Freigeben</button>
-              <button class="reject" data-action="reject" data-id="${item.id}">Ablehnen</button>
-            `
+                ? `<button data-action="approve" data-id="${item.id}">Freigeben</button>
+                   <button data-action="reject" data-id="${item.id}">Ablehnen</button>`
                 : ""
             }
             ${
               currentStatus === "approved"
-                ? `
-              <button class="hide" data-action="hide" data-id="${item.id}">Verstecken</button>
-            `
+                ? `<button data-action="hide" data-id="${item.id}">Verstecken</button>`
                 : ""
             }
           </div>
         </div>
-        <div class="meta">
+        <div>
           <div><b>ID:</b> ${item.id}</div>
           <div><b>Status:</b> ${item.status}</div>
           <div><b>Titel:</b> ${item.title || "-"}</div>
@@ -76,20 +72,19 @@ async function loadItems(list) {
           <div><b>Erstellt:</b> ${new Date(item.created_at).toLocaleString()}</div>
         </div>
       </div>
-    `
-      )
-      .join("");
+    `).join("");
+
   } catch (err) {
     console.error(err);
-    list.innerHTML = `<div class="error">⚠️ Fehler beim Laden</div>`;
+    list.innerHTML = '<div class="error">Fehler beim Laden</div>';
   }
 }
 
 /* ================================
    ACTIONS
 ================================ */
-async function doAction(path, body = null) {
-  const res = await fetch(`${API_BASE}${path}`, {
+async function doAction(path, body) {
+  const res = await fetch(API_BASE + path, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -99,7 +94,7 @@ async function doAction(path, body = null) {
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    throw new Error("HTTP " + res.status);
   }
 }
 
@@ -110,28 +105,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const list = document.getElementById("list");
   const tabs = document.getElementById("tabs");
 
-  if (!list || !tabs) {
-    console.error("Admin DOM-Elemente (#list, #tabs) fehlen.");
-    return;
-  }
-
   // Tabs
-  tabs.addEventListener("click", (e) => {
+  tabs.addEventListener("click", e => {
     const btn = e.target.closest("button[data-status]");
     if (!btn) return;
 
     currentStatus = btn.dataset.status;
 
-    tabs
-      .querySelectorAll("button")
-      .forEach((b) => b.classList.remove("active"));
+    tabs.querySelectorAll("button").forEach(b =>
+      b.classList.remove("active")
+    );
     btn.classList.add("active");
 
     loadItems(list);
   });
 
   // Actions (Event Delegation)
-  list.addEventListener("click", async (e) => {
+  list.addEventListener("click", async e => {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
 
@@ -140,14 +130,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       if (action === "approve") {
-        await doAction(`/api/admin/items/${id}/approve`);
-      } else if (action === "hide") {
-        await doAction(`/api/admin/items/${id}/hide`);
-      } else if (action === "reject") {
+        await doAction("/api/admin/items/" + id + "/approve");
+      }
+      if (action === "hide") {
+        await doAction("/api/admin/items/" + id + "/hide");
+      }
+      if (action === "reject") {
         const note = prompt("Ablehnungsgrund (optional):");
-        await doAction(`/api/admin/items/${id}/reject`, {
-          admin_note: note || null
-        });
+        await doAction(
+          "/api/admin/items/" + id + "/reject",
+          { admin_note: note || null }
+        );
       }
 
       loadItems(list);
