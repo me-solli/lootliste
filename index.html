@@ -860,34 +860,87 @@ END DISABLED AUTH BLOCK -->
   </div>
 </footer>
 
+  <!-- ===== SCREENSHOT OVERLAY ===== -->
+<div id="screenshotOverlay" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+">
+  <img id="overlayImage" style="
+    max-width:90%;
+    max-height:90%;
+    border-radius:12px;
+    box-shadow:0 0 40px rgba(0,0,0,.8);
+  ">
+</div>
+
+  <!-- ===== SCREENSHOT OVERLAY SCRIPT ===== -->
+<script>
+const overlay = document.getElementById("screenshotOverlay");
+const overlayImg = document.getElementById("overlayImage");
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-screenshot]");
+  if (!el) return;
+
+  const src = el.dataset.screenshot;
+  if (!src) return;
+
+  overlayImg.src =
+    "https://content-connection-production-ea07.up.railway.app" + src;
+
+  overlay.style.display = "flex";
+});
+
+overlay.addEventListener("click", () => {
+  overlay.style.display = "none";
+  overlayImg.src = "";
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    overlay.style.display = "none";
+    overlayImg.src = "";
+  }
+});
+</script>
+
+<!-- ===== DISABLED AUTH BLOCK (DEV MODE) ===== -->
+<script>
+const authModal = document.getElementById("authModal");
+const authTitle = document.getElementById("authTitle");
+const authClose = document.getElementById("authClose");
+
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+
+if (loginBtn) {
+  loginBtn.onclick = () => {
+    authTitle.textContent = "Login";
+    authModal.style.display = "block";
+  };
+}
+
+if (registerBtn) {
+  registerBtn.onclick = () => {
+    authTitle.textContent = "Registrieren";
+    authModal.style.display = "block";
+  };
+}
+
+if (authClose) {
+  authClose.onclick = () => {
+    authModal.style.display = "none";
+  };
+}
+</script>
+  
 </body>
 
-<!-- DISABLED AUTH BLOCK (DEV MODE) 
-<script>
-const authModal=document.getElementById("authModal");
-const authTitle=document.getElementById("authTitle");
-const authClose=document.getElementById("authClose");
-
-document.getElementById("loginBtn").onclick=()=>{
-  authTitle.textContent="Login";
-  authModal.style.display="block";
-};
-document.getElementById("registerBtn").onclick=()=>{
-  authTitle.textContent="Registrieren";
-  authModal.style.display="block";
-};
-authClose.onclick=()=>authModal.style.display="none";
-</script>
-END DISABLED AUTH BLOCK -->
-
-
-<!-- DISABLED AUTH BLOCK (DEV MODE) 
-<script>
-/* ===== AUTH BACKEND WIRING (STEP 3A) ===== */
-const authSubmit=document.getElementById("authSubmit");
-const authState=document.getElementById("authState");
-
-authSubmit.onclick = async () => { return; /* AUTH INAKTIV – Backend folgt */
   const mode=document.getElementById("authTitle").textContent==="Registrieren"?"register":"login";
   const username=document.getElementById("authName").value;
   const password=document.getElementById("authPass").value;
