@@ -10,6 +10,16 @@ const cookieParser = require("cookie-parser");
 const db = require("./db");
 
 /* ================================
+   ITEM STATUS (STEP A2.1)
+================================ */
+const ITEM_STATUS = {
+  SUBMITTED: "submitted",
+  APPROVED: "approved",
+  HIDDEN: "hidden",
+  REJECTED: "rejected"
+};
+
+/* ================================
    APP
 ================================ */
 const app = express();
@@ -20,8 +30,14 @@ const PORT = process.env.PORT || 8080;
 ================================ */
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://me-solli.github.io");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-admin-token, x-login-id");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, x-admin-token, x-login-id"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
