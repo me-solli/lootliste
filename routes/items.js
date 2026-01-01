@@ -25,7 +25,7 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 /* =========================
-   MULTER
+   MULTER (Screenshot Upload)
 ========================= */
 const upload = multer({
   storage: multer.diskStorage({
@@ -35,7 +35,7 @@ const upload = multer({
       cb(null, `item_${Date.now()}${ext}`);
     }
   }),
-  limits: { fileSize: 5 * 1024 * 1024 }
+  limits: { fileSize: 5 * 1024 * 1024 } // 5 MB
 });
 
 /* =========================
@@ -57,6 +57,7 @@ router.get("/", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Items konnten nicht geladen werden" });
   }
 });
@@ -86,6 +87,7 @@ router.get("/public", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Öffentliche Items konnten nicht geladen werden" });
   }
 });
@@ -94,19 +96,20 @@ router.get("/public", async (req, res) => {
    POST /api/items
 ========================= */
 router.post("/", upload.single("screenshot"), async (req, res) => {
+  if (!req.user?.id) {
+    return res.status(401).json({ error: "Nicht eingeloggt" });
+  }
+
+  if (!req.file) {
+    return res.status(400).json({ error: "Kein Screenshot empfangen" });
+  }
+
   try {
-    if (!req.user?.id) {
-      return res.status(401).json({ error: "Nicht eingeloggt" });
-    }
-
-    if (!req.file) {
-      return res.status(400).json({ error: "Kein Screenshot empfangen" });
-    }
-
     await db.run("BEGIN");
 
     const result = await db.run(
-      `INSERT INTO items (owner_user_id, screenshot) VALUES (?, ?)`,
+      `INSERT INTO items (owner_user_id, screenshot)
+       VALUES (?, ?)`,
       [req.user.id, `/uploads/${req.file.filename}`]
     );
 
@@ -124,6 +127,7 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       status: ITEM_STATUS.SUBMITTED
     });
   } catch (err) {
+    console.error(err);
     await db.run("ROLLBACK");
     res.status(500).json({ error: "Item konnte nicht eingereicht werden" });
   }
