@@ -606,28 +606,41 @@ let items = [];
 
 async function loadItems() {
   try {
-    const res = await fetch("https://content-connection-production-ea07.up.railway.app/api/items/public");
+    const res = await fetch(
+      "https://content-connection-production-ea07.up.railway.app/api/items/public"
+    );
     const data = await res.json();
-    console.log("Backend Items:", data);
-    items = Array.isArray(data) ? data.map(i => ({
-      ...i,
-      name: i.name || "Unbenanntes Item",
-      category: i.category || "",
-      type: i.type || "Sonstiges",
-      stars: i.stars || "",
-      roll: i.roll || "",
-      contact: i.contact || "",
-      status:
-        i.status === "verfügbar" ? "Verfügbar" :
-        i.status === "reserviert" ? "Reserviert" :
-        i.status === "vergeben"   ? "Vergeben"   :
-        i.status
-    })) : [];
+    console.log("Backend Items (public):", data);
+
+    items = Array.isArray(data)
+      ? data.map(i => ({
+          id: i.id,
+
+          // Backend → Frontend Mapping
+          name: i.title || "Unbenanntes Item",
+          category: i.type || "",
+          type: i.type || "Sonstiges",
+
+          // Backend liefert noch keine Bewertung / Rolls
+          stars: "",
+          roll: "",
+
+          // Kontakt & Requests bleiben lokal
+          contact: "",
+
+          // Public API = immer freigegeben
+          status: "Verfügbar",
+
+          // Screenshot vom Backend
+          screenshot: i.screenshot || ""
+        }))
+      : [];
   } catch (e) {
-    console.error("Items konnten nicht geladen werden", e);
+    console.error("Public Items konnten nicht geladen werden", e);
     items = [];
   }
 }
+
 
 function render(){
   cards.innerHTML="";
