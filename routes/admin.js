@@ -18,85 +18,104 @@ function requireAdmin(req, res, next) {
 // UI → DB Status Mapping
 // ================================
 const STATUS_MAP = {
-  submitted: "abgeschickt",
-  approved: "freigegeben",
-  hidden: "versteckt",
-  rejected: "abgelehnt"
+  submitted: "submitted",
+  approved: "approved",
+  hidden: "hidden",
+  rejected: "rejected"
 };
 
 // ================================
-// GET Admin Items
+// GET Admin Items by Status
 // ================================
-router.get("/items", requireAdmin, (req, res) => {
-  const uiStatus = req.query.status || "submitted";
-  const dbStatus = STATUS_MAP[uiStatus];
+router.get("/items", requireAdmin, async (req, res) => {
+  try {
+    const uiStatus = req.query.status || "submitted";
+    const dbStatus = STATUS_MAP[uiStatus];
 
-  if (!dbStatus) {
-    return res.status(400).json({ error: "Invalid status" });
-  }
-
-  db.all(
-    'SELECT * FROM "Element" WHERE wo_status = ? ORDER BY id DESC',
-    [dbStatus],
-    (err, rows) => {
-      if (err) {
-        console.error("ADMIN ITEMS FEHLER:", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-      res.json(rows);
+    if (!dbStatus) {
+      return res.status(400).json({ error: "Invalid status" });
     }
-  );
+
+    const rows = await db.all(
+      `
+      SELECT
+        i.id,
+        i.owner_user_id,
+        i.title,
+        i.type,
+        i.weapon_type,
+        i.rating,
+        i.screenshot,
+        i.visibility,
+        i.created_at,
+        s.status,
+        s.status_since
+      FROM items i
+      JOIN item_status s ON s.item_id = i.id
+      WHERE s.status = ?
+      ORDER BY i.created_at DESC
+      `,
+      [dbStatus]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error("ADMIN GET ITEMS FEHLER:", err);
+    res.status(500).json({ error: "Admin Items konnten nicht geladen werden" });
+  }
 });
+
+// ================================
+// Helper: Status ändern
+// ================================
+async function updateStatus(itemId, newStatus) {
+  return db.run(
+    `
+    UPDATE item_status
+    SET status = ?, status_since = datetime('now')
+    WHERE item_id = ?
+    `,
+    [newStatus, itemId]
+  );
+}
 
 // ================================
 // APPROVE
 // ================================
-router.post("/items/:id/approve", requireAdmin, (req, res) => {
-  db.run(
-    'UPDATE "Element" SET wo_status = ? WHERE id = ?',
-    ["freigegeben", req.params.id],
-    err => {
-      if (err) {
-        console.error("APPROVE FEHLER:", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ ok: true });
-    }
-  );
+router.post("/items/:id/approve", requireAdmin, async (req, res) => {
+  try {
+    await updateStatus(req.params.id, "approved");
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("APPROVE FEHLER:", err);
+    res.status(500).json({ error: "Approve fehlgeschlagen" });
+  }
 });
 
 // ================================
 // HIDE
 // ================================
-router.post("/items/:id/hide", requireAdmin, (req, res) => {
-  db.run(
-    'UPDATE "Element" SET wo_status = ? WHERE id = ?',
-    ["versteckt", req.params.id],
-    err => {
-      if (err) {
-        console.error("HIDE FEHLER:", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ ok: true });
-    }
-  );
+router.post("/items/:id/hide", requireAdmin, async (req, res) => {
+  try {
+    await updateStatus(req.params.id, "hidden");
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("HIDE FEHLER:", err);
+    res.status(500).json({ error: "Hide fehlgeschlagen" });
+  }
 });
 
 // ================================
 // REJECT
 // ================================
-router.post("/items/:id/reject", requireAdmin, (req, res) => {
-  db.run(
-    'UPDATE "Element" SET wo_status = ? WHERE id = ?',
-    ["abgelehnt", req.params.id],
-    err => {
-      if (err) {
-        console.error("REJECT FEHLER:", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ ok: true });
-    }
-  );
+router.post("/items/:id/reject", requireAdmin, async (req, res) => {
+  try {
+    await updateStatus(req.params.id, "rejected");
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("REJECT FEHLER:", err);
+    res.status(500).json({ error: "Reject fehlgeschlagen" });
+  }
 });
 
 module.exports = router;
