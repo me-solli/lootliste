@@ -2,9 +2,9 @@ const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 
 // ================================
-// DB PFAD
+// DB PFAD (PERSISTENT)
 // ================================
-const DB_PATH = path.join(__dirname, "lootliste.db");
+const DB_PATH = path.join("/data", "lootliste.db");
 console.log("✅ SQLite DB verbunden:", DB_PATH);
 
 const db = new sqlite3.Database(DB_PATH, (err) => {
@@ -18,9 +18,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 // ================================
 db.serialize(() => {
 
-  // ================================
-  // ITEMS (Screenshot-first, STEP 2A)
-  // ================================
+  // ITEMS
   db.run(`
     CREATE TABLE IF NOT EXISTS items (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,13 +33,11 @@ db.serialize(() => {
     )
   `);
 
-  // ================================
-  // ITEM STATUS (Workflow-ready)
-  // ================================
+  // ITEM STATUS (FIXED)
   db.run(`
     CREATE TABLE IF NOT EXISTS item_status (
       item_id INTEGER PRIMARY KEY,
-      status TEXT NOT NULL DEFAULT 'eingereicht',
+      status TEXT NOT NULL DEFAULT 'submitted',
       status_since DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
     )
@@ -75,9 +71,6 @@ db.allAsync = (sql, params = []) =>
     });
   });
 
-// ================================
-// EXPORT
-// ================================
 module.exports = {
   run: db.runAsync,
   get: db.getAsync,
