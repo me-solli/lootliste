@@ -15,14 +15,29 @@ function requireAdmin(req, res, next) {
 }
 
 // ================================
+// STATUS-MAPPING (Frontend → DB)
+// ================================
+const STATUS_MAP = {
+  submitted: "abgeschickt",
+  approved: "freigegeben",
+  hidden: "versteckt",
+  rejected: "abgelehnt"
+};
+
+// ================================
 // GET Admin Items
 // ================================
 router.get("/items", requireAdmin, (req, res) => {
-  const status = req.query.status || "submitted";
+  const uiStatus = req.query.status || "submitted";
+  const dbStatus = STATUS_MAP[uiStatus];
+
+  if (!dbStatus) {
+    return res.status(400).json({ error: "Invalid status" });
+  }
 
   db.all(
-    "SELECT * FROM items WHERE status = ? ORDER BY id DESC",
-    [status],
+    "SELECT * FROM elemente WHERE wo_status = ? ORDER BY id DESC",
+    [dbStatus],
     (err, rows) => {
       if (err) {
         console.error("ADMIN ITEMS FEHLER:", err.message);
@@ -38,9 +53,9 @@ router.get("/items", requireAdmin, (req, res) => {
 // ================================
 router.post("/items/:id/approve", requireAdmin, (req, res) => {
   db.run(
-    "UPDATE items SET status = 'approved' WHERE id = ?",
+    "UPDATE elemente SET wo_status = 'freigegeben' WHERE id = ?",
     [req.params.id],
-    (err) => {
+    err => {
       if (err) {
         console.error("APPROVE FEHLER:", err.message);
         return res.status(500).json({ error: err.message });
@@ -55,9 +70,9 @@ router.post("/items/:id/approve", requireAdmin, (req, res) => {
 // ================================
 router.post("/items/:id/hide", requireAdmin, (req, res) => {
   db.run(
-    "UPDATE items SET status = 'hidden' WHERE id = ?",
+    "UPDATE elemente SET wo_status = 'versteckt' WHERE id = ?",
     [req.params.id],
-    (err) => {
+    err => {
       if (err) {
         console.error("HIDE FEHLER:", err.message);
         return res.status(500).json({ error: err.message });
@@ -72,9 +87,9 @@ router.post("/items/:id/hide", requireAdmin, (req, res) => {
 // ================================
 router.post("/items/:id/reject", requireAdmin, (req, res) => {
   db.run(
-    "UPDATE items SET status = 'rejected' WHERE id = ?",
+    "UPDATE elemente SET wo_status = 'abgelehnt' WHERE id = ?",
     [req.params.id],
-    (err) => {
+    err => {
       if (err) {
         console.error("REJECT FEHLER:", err.message);
         return res.status(500).json({ error: err.message });
