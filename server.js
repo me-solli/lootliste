@@ -20,18 +20,24 @@ const PORT = process.env.PORT || 3000;
 
 /* ================================
    CORS (GitHub Pages → Railway)
+   WICHTIG: Kein Credentials, kein Cookie
 ================================ */
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://me-solli.github.io");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, x-login-id, x-admin-token"
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://me-solli.github.io"
   );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, x-admin-token"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
+    return res.sendStatus(200);
   }
 
   next();
@@ -45,27 +51,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /* ================================
-   STATIC FILES
+   STATIC FILES (Uploads only)
 ================================ */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use(
-  express.static(__dirname, {
-    index: false,
-    extensions: ["html"]
-  })
-);
-
 /* ================================
-   AUTH MIDDLEWARE
-   DEV-BYPASS für Submit & Tests
+   AUTH MIDDLEWARE (USER)
+   Nur für /api/items (Submit etc.)
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
-  // DEV-BYPASS:
-  // - erlaubt Submit über GitHub Pages
-  // - erlaubt lokale Tests
+  // DEV-BYPASS (nur für Tests / Submit)
   if (loginId === "dev-admin" || process.env.NODE_ENV !== "production") {
     req.user = {
       id: "dev-user",
@@ -96,32 +93,12 @@ app.use("/api/items", requireAuth, itemRoutes);
 
 /* ================================
    ADMIN API
-   (Auth NUR über x-admin-token in admin.js)
+   Auth NUR über x-admin-token
 ================================ */
 app.use("/api/admin", adminRoutes);
 
 /* ================================
-   ROOT → index.html
-================================ */
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
-/* ================================
-   HTML FILE HANDLER
-================================ */
-app.get(/.*\.html$/, (req, res) => {
-  const filePath = path.join(__dirname, req.path);
-
-  res.sendFile(filePath, err => {
-    if (err) {
-      res.status(404).send("HTML nicht gefunden");
-    }
-  });
-});
-
-/* ================================
-   HEALTH
+   HEALTH CHECK
 ================================ */
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
