@@ -1,130 +1,141 @@
-// routes/admin.js
-const express = require("express");
-const router = express.Router();
-const db = require("../db");
-const ItemStatusService = require("../services/ItemStatusService");
+/* ================================
+   CONFIG
+================================ */
+const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+const ADMIN_TOKEN = "lootliste-admin-2025"; // muss exakt dem ENV im Backend entsprechen
 
-/* =====================================================
-   Admin Auth (minimal & stabil)
-===================================================== */
-function requireAdmin(req, res, next) {
-  const token = req.headers["x-admin-token"];
-  if (!token || token !== process.env.ADMIN_TOKEN) {
-    return res.status(403).json({ error: "Admin only" });
+/* ================================
+   STATE
+================================ */
+let currentStatusFilter = "submitted";
+
+/* ================================
+   LOAD ADMIN ITEMS
+================================ */
+async function loadAdminItems() {
+  const container = document.getElementById("admin-items");
+  container.innerHTML = "Lade Items…";
+
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/admin/items?status=${currentStatusFilter}`,
+      {
+        headers: {
+          "x-admin-token": ADMIN_TOKEN
+        }
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    const items = await res.json();
+    renderAdminItems(items);
+  } catch (err) {
+    console.error("Admin Load Error:", err);
+    container.innerHTML =
+      "⚠️ Fehler beim Laden. Siehe Browser-Konsole.";
   }
-  next();
 }
 
-/* =====================================================
-   GET /api/admin/items
-   ?status=submitted|approved|hidden|rejected
-===================================================== */
-router.get("/items", requireAdmin, async (req, res) => {
-  try {
-    const status = req.query.status || "submitted";
+/* ================================
+   RENDER ITEMS
+================================ */
+function renderAdminItems(items) {
+  const container = document.getElementById("admin-items");
+  container.innerHTML = "";
 
-    const rows = await db.all(
-      `
-      SELECT
-        i.id,
-        i.title,
-        i.type,
-        i.rating,
-        i.screenshot,
-        i.created_at,
-        s.status,
-        s.status_since
-      FROM items i
-      JOIN item_status s ON s.item_id = i.id
-      WHERE s.status = ?
-      ORDER BY i.created_at DESC
-      `,
-      [status]
-    );
-
-    res.json(rows);
-  } catch (err) {
-    console.error("ADMIN GET ITEMS ERROR:", err);
-    res.status(500).json({ error: "Admin items load failed" });
+  if (!items.length) {
+    container.innerHTML = "<p>Keine Items vorhanden.</p>";
+    return;
   }
-});
 
-/* =====================================================
-   POST /api/admin/items/:id/approve
-===================================================== */
-router.post("/items/:id/approve", requireAdmin, async (req, res) => {
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "admin-item";
+    div.dataset.itemId = item.id;
+
+    div.innerHTML = `
+      <strong>${item.title || "Ohne Titel"}</strong><br>
+      Typ: ${item.type || "-"}<br>
+      Rating: ${item.rating ?? "-"}<br>
+      Status: <b>${item.status}</b><br>
+      Erstellt: ${new Date(item.created_at).toLocaleString("de-DE")}
+      <div class="admin-actions">
+        ${renderActions(item)}
+      </div>
+      <hr>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+/* ================================
+   ACTION BUTTONS
+================================ */
+function renderActions(item) {
+  if (item.status === "submitted") {
+    return `
+      <button onclick="approveItem(${item.id})">✅ Freigeben</button>
+      <button onclick="rejectItem(${item.id})">❌ Ablehnen</button>
+      <button onclick="hideItem(${item.id})">👁️ Verstecken</button>
+    `;
+  }
+
+  return `<em>Keine Aktionen verfügbar</em>`;
+}
+
+/* ================================
+   ACTION HANDLERS
+================================ */
+async function approveItem(id) {
+  await adminAction(`/api/admin/items/${id}/approve`);
+}
+
+async function hideItem(id) {
+  await adminAction(`/api/admin/items/${id}/hide`);
+}
+
+async function rejectItem(id) {
+  const note = prompt("Ablehnungsgrund (optional):");
+  await adminAction(`/api/admin/items/${id}/reject`, {
+    admin_note: note
+  });
+}
+
+async function adminAction(path, body = null) {
   try {
-    const itemId = req.params.id;
-    const { title, type, rating } = req.body;
-
-    await ItemStatusService.approve(itemId, {
-      title,
-      type,
-      rating
+    const res = await fetch(`${API_BASE}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-token": ADMIN_TOKEN
+      },
+      body: body ? JSON.stringify(body) : null
     });
 
-    res.json({ success: true, status: "approved" });
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    await loadAdminItems(); // Refresh ohne Reload
   } catch (err) {
-    console.error("ADMIN APPROVE ERROR:", err);
-    res.status(400).json({ error: err.message });
+    console.error("Admin Action Error:", err);
+    alert("Aktion fehlgeschlagen – siehe Konsole.");
   }
-});
+}
 
-/* =====================================================
-   POST /api/admin/items/:id/hide
-===================================================== */
-router.post("/items/:id/hide", requireAdmin, async (req, res) => {
-  try {
-    const itemId = req.params.id;
-    await ItemStatusService.hide(itemId);
-    res.json({ success: true, status: "hidden" });
-  } catch (err) {
-    console.error("ADMIN HIDE ERROR:", err);
-    res.status(400).json({ error: err.message });
-  }
-});
+/* ================================
+   FILTER (optional vorbereitet)
+================================ */
+function setStatusFilter(status) {
+  currentStatusFilter = status;
+  loadAdminItems();
+}
 
-/* =====================================================
-   POST /api/admin/items/:id/reject
-===================================================== */
-router.post("/items/:id/reject", requireAdmin, async (req, res) => {
-  try {
-    const itemId = req.params.id;
-    const { admin_note } = req.body || {};
-    await ItemStatusService.reject(itemId, admin_note);
-    res.json({ success: true, status: "rejected" });
-  } catch (err) {
-    console.error("ADMIN REJECT ERROR:", err);
-    res.status(400).json({ error: err.message });
-  }
-});
-
-/* =====================================================
-   PUT /api/admin/items/:id
-   Admin-Override (Edit)
-===================================================== */
-router.put("/items/:id", requireAdmin, async (req, res) => {
-  try {
-    const itemId = req.params.id;
-    const { title, type, rating } = req.body;
-
-    await db.run(
-      `
-      UPDATE items SET
-        title = ?,
-        type = ?,
-        rating = ?,
-        updated_at = datetime('now')
-      WHERE id = ?
-      `,
-      [title, type, rating, itemId]
-    );
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error("ADMIN UPDATE ERROR:", err);
-    res.status(500).json({ error: "Update failed" });
-  }
-});
-
-module.exports = router;
+/* ================================
+   INIT
+================================ */
+document.addEventListener("DOMContentLoaded", loadAdminItems);
