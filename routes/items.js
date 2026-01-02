@@ -47,17 +47,18 @@ router.get("/", async (req, res) => {
   try {
     const rows = await db.all(`
       SELECT
-        i.id,
-        i.owner_user_id,
-        i.screenshot,
-        i.created_at,
-        i.title        AS name,
-        i.type,
-        i.weapon_type  AS weaponType,
-        i.category,
-        i.roll,
-        i.stars,
-        s.status
+SELECT
+  i.id,
+  i.title        AS name,
+  i.type         AS type,
+  i.weapon_type  AS weaponType,
+  i.category     AS quality,
+  i.roll,
+  i.stars,
+  i.owner_user_id AS contact,
+  i.screenshot,
+  i.created_at,
+  s.status       AS status
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
       ORDER BY i.created_at DESC
