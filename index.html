@@ -715,7 +715,7 @@ const filtered = items
     const count=requests.filter(r=>r.item===item.name).length;
 
 cards.innerHTML += `
-  <div class="card">
+  <div class="card ${s}">
     <span class="status-badge ${s}">${item.status}</span>
 
 <div class="card-image" ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
