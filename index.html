@@ -655,7 +655,7 @@ const filtered = items
   })
   .sort((a,b)=>{
     const d = ratingValue(b.stars) - ratingValue(a.stars);
-    return sortRating.value === "desc" ? d : -d;
+    return d;
   });
 
   const total=items.length;
