@@ -666,7 +666,7 @@ console.log("TYPE:", Array.isArray(data), typeof data);
 
           // bestehende Features NICHT anfassen
           contact: "",
-          status: "Verfügbar",
+        status: STATUS_MAP[i.status] || "Verfügbar",
 
           screenshot: i.screenshot || ""
         }))
