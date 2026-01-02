@@ -23,7 +23,7 @@ function requireAdmin(req, res, next) {
 }
 
 /* ================================
-   GET Admin Items
+   GET Admin Items (ROBUST)
 ================================ */
 router.get("/items", requireAdmin, async (req, res) => {
   try {
@@ -44,14 +44,18 @@ router.get("/items", requireAdmin, async (req, res) => {
         i.rating,
         i.screenshot,
         i.created_at,
-        s.status,
+        COALESCE(s.status, ?) AS status,
         s.status_since
       FROM items i
-      JOIN item_status s ON s.item_id = i.id
-      WHERE s.status = ?
+      LEFT JOIN item_status s ON s.item_id = i.id
+      WHERE COALESCE(s.status, ?) = ?
       ORDER BY i.created_at DESC
       `,
-      [status]
+      [
+        ITEM_STATUS.SUBMITTED, // Default im SELECT
+        status,                // Default im WHERE
+        status
+      ]
     );
 
     res.json(rows);
@@ -143,8 +147,8 @@ router.post("/items/:id/reject", requireAdmin, async (req, res) => {
 });
 
 /* ================================
-   TEMP: MIGRATION
-   Fehlende item_status nachziehen
+   REPAIR: fehlende item_status
+   (sicher & optional)
 ================================ */
 router.post(
   "/migrate/fix-missing-status",
@@ -153,10 +157,10 @@ router.post(
     try {
       const result = await db.run(`
         INSERT INTO item_status (item_id, status, status_since)
-        SELECT id, 'approved', datetime('now')
+        SELECT id, ?, datetime('now')
         FROM items
         WHERE id NOT IN (SELECT item_id FROM item_status)
-      `);
+      `, [ITEM_STATUS.SUBMITTED]);
 
       res.json({
         ok: true,
