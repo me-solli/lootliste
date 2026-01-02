@@ -677,22 +677,56 @@ function render(){
     const s=item.status==="Reserviert"?"reserviert":item.status==="Vergeben"?"vergeben":"verfuegbar";
     const count=requests.filter(r=>r.item===item.name).length;
 
-    cards.innerHTML+=`
-      <div class="card">
-        <span class="status-badge ${s}">${item.status}</span>
-        <img src="img/icons/${ICONS[item.type]||"default"}.png" data-screenshot="${item.screenshot || ""}">
-        <div class="card-body">
-          <div class="item-name">${item.name}</div>
-          <div class="category">${item.category} · ${item.type}</div>
-          <div class="stars">${item.stars} (${ratingValue(item.stars)}/5) <span class="rating-info-icon" title="KI-gestützte Einschätzung zur Orientierung.">ⓘ</span></div>
-          <div class="roll">${item.roll||"—"}</div>
-          ${count?`<div style="font-size:12px;opacity:.8">📬 ${count} Anfrage(n)</div>`:""}
-          <div class="player">Spieler: ${item.contact}</div>
-          
-          
-          <div class="cta request-btn" data-item="${item.name}">📨 Item anfragen</div>
-        </div>
-      </div>`;
+cards.innerHTML += `
+  <div class="card">
+    <span class="status-badge ${s}">${item.status}</span>
+
+    <img
+      src="${resolveImageSrc(item.screenshot)}"
+      alt="${item.name || "Item"}"
+    >
+
+    <div class="card-body">
+      <div class="item-name">
+        ${item.name || "Unbenanntes Item"}
+      </div>
+
+      ${
+        item.rating
+          ? `<div class="stars">
+               ${"⭐".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
+               <span style="opacity:.6">(${item.rating}/5)</span>
+             </div>`
+          : ""
+      }
+
+      <div class="category">
+        ${item.quality || ""}
+      </div>
+
+      <div class="roll">
+        ${item.roll || "—"}
+      </div>
+
+      ${
+        count
+          ? `<div style="font-size:12px;opacity:.8">
+               📬 ${count} Anfrage(n)
+             </div>`
+          : ""
+      }
+
+      <div class="player">
+        Spieler: ${item.contact || "—"}
+      </div>
+
+      <div class="cta request-btn" data-item="${item.name}">
+        📨 Item anfragen
+      </div>
+    </div>
+  </div>
+`;
+
   });
 
   renderRequestFeed();
