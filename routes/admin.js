@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../db");
 
 /* ================================
-   ITEM STATUS (STEP A2)
+   ITEM STATUS
 ================================ */
 const ITEM_STATUS = {
   SUBMITTED: "submitted",
@@ -38,9 +38,9 @@ router.get("/items", requireAdmin, async (req, res) => {
       SELECT
         i.id,
         i.owner_user_id,
-        i.title,
-        i.type,
-        i.weapon_type,
+        i.name,
+        i.quality,
+        i.roll,
         i.rating,
         i.screenshot,
         i.created_at,
@@ -58,6 +58,40 @@ router.get("/items", requireAdmin, async (req, res) => {
   } catch (err) {
     console.error("ADMIN GET ITEMS FEHLER:", err);
     res.status(500).json({ error: "Admin Items konnten nicht geladen werden" });
+  }
+});
+
+/* ================================
+   UPDATE ITEM DETAILS (B1.2)
+================================ */
+router.put("/items/:id", requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { name, quality, roll, rating } = req.body;
+
+  try {
+    await db.run(
+      `
+      UPDATE items
+      SET
+        name = ?,
+        quality = ?,
+        roll = ?,
+        rating = ?
+      WHERE id = ?
+      `,
+      [
+        name || null,
+        quality || null,
+        roll || null,
+        rating || null,
+        id
+      ]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("ADMIN UPDATE ITEM FEHLER:", err);
+    res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
   }
 });
 
