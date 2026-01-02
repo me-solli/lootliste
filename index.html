@@ -641,22 +641,21 @@ async function loadItems() {
     items = [];
   }
 }
-}
-
 
 function render(){
   cards.innerHTML="";
 
-const filtered = items.filter(i=>{
-  const q = search.value.toLowerCase();
-  return (
-    i.name.toLowerCase().includes(q) ||
-    (i.category && i.category.toLowerCase().includes(q))
-  );
-});
-  }).sort((a,b)=>{
-    const d=ratingValue(b.stars)-ratingValue(a.stars);
-    return sortRating.value==="desc"?d:-d;
+const filtered = items
+  .filter(i => {
+    const q = search.value.toLowerCase();
+    return (
+      i.name.toLowerCase().includes(q) ||
+      (i.category && i.category.toLowerCase().includes(q))
+    );
+  })
+  .sort((a,b)=>{
+    const d = ratingValue(b.stars) - ratingValue(a.stars);
+    return sortRating.value === "desc" ? d : -d;
   });
 
   const total=items.length;
