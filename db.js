@@ -20,17 +20,19 @@ if (!fs.existsSync(DATA_DIR)) {
 const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     console.error("❌ DB Verbindung fehlgeschlagen:", err);
-    process.exit(1); // ❗ bewusst abbrechen → klarer Fehler statt NetworkError
+    process.exit(1);
   }
   console.log("✅ SQLite DB verbunden:", DB_PATH);
 });
 
 // ================================
-// TABELLEN
+// TABELLEN + AUTO-MIGRATION
 // ================================
 db.serialize(() => {
 
-  // ITEMS
+  // ================================
+  // ITEMS (Basis)
+  // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS items (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,14 +40,15 @@ db.serialize(() => {
       title TEXT,
       type TEXT,
       weapon_type TEXT,
-      rating INTEGER DEFAULT 0,
       screenshot TEXT NOT NULL,
       visibility TEXT DEFAULT 'private',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
+  // ================================
   // ITEM STATUS
+  // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS item_status (
       item_id INTEGER PRIMARY KEY,
@@ -54,6 +57,31 @@ db.serialize(() => {
       FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
     )
   `);
+
+  // ================================
+  // AUTO-MIGRATION: ITEM-MASKE (B1)
+  // ================================
+  db.all(`PRAGMA table_info(items)`, (err, columns) => {
+    if (err) {
+      console.error("❌ PRAGMA table_info fehlgeschlagen:", err);
+      return;
+    }
+
+    const existing = columns.map(c => c.name);
+
+    const addColumn = (name, type) => {
+      if (!existing.includes(name)) {
+        db.run(`ALTER TABLE items ADD COLUMN ${name} ${type}`);
+        console.log(`➕ Spalte '${name}' (${type}) ergänzt`);
+      }
+    };
+
+    // 🧱 Neue Item-Felder (optional, V3-ready)
+    addColumn("name", "TEXT");        // Item-Name
+    addColumn("quality", "TEXT");     // unique / set / rare / magic / rune
+    addColumn("roll", "TEXT");        // Kurzwerte
+    addColumn("rating", "INTEGER");   // ⭐ 1–5
+  });
 });
 
 // ================================
@@ -83,7 +111,9 @@ db.allAsync = (sql, params = []) =>
     });
   });
 
-// ⚠️ Export bewusst nur EIN Interface
+// ================================
+// EXPORT
+// ================================
 module.exports = {
   run: db.runAsync,
   get: db.getAsync,
