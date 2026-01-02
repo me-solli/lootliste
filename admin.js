@@ -18,6 +18,11 @@ function resolveImageSrc(screenshot) {
   return API_BASE + screenshot;
 }
 
+function ratingStars(value) {
+  if (!value) return "-";
+  return "⭐".repeat(value);
+}
+
 /* ================================
    LOAD + RENDER
 ================================ */
@@ -34,9 +39,7 @@ async function loadItems(list) {
       }
     );
 
-    if (!res.ok) {
-      throw new Error("HTTP " + res.status);
-    }
+    if (!res.ok) throw new Error("HTTP " + res.status);
 
     const items = await res.json();
 
@@ -64,17 +67,44 @@ async function loadItems(list) {
           </div>
         </div>
 
-        <div>
-          <!-- STATUS BADGE (STEP A3) -->
+        <div class="meta">
           <div class="status-badge status-${item.status}">
             ${item.status}
           </div>
 
           <div><b>ID:</b> ${item.id}</div>
-          <div><b>Titel:</b> ${item.title || "-"}</div>
-          <div><b>Typ:</b> ${item.type || "-"}</div>
-          <div><b>Rating:</b> ${item.rating ?? "-"}</div>
-          <div><b>Erstellt:</b> ${new Date(item.created_at).toLocaleString()}</div>
+          <div><b>Name:</b> ${item.name || "-"}</div>
+          <div><b>Qualität:</b> ${item.quality || "-"}</div>
+          <div><b>Roll:</b> ${item.roll || "-"}</div>
+          <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
+
+          <!-- EDIT MASKE (B1.2) -->
+          <div class="edit" data-item-id="${item.id}">
+            <input type="text" placeholder="Item-Name" data-field="name" value="${item.name || ""}">
+
+            <select data-field="quality">
+              <option value="">– Qualität –</option>
+              <option value="unique" ${item.quality === "unique" ? "selected" : ""}>Unique</option>
+              <option value="set" ${item.quality === "set" ? "selected" : ""}>Set</option>
+              <option value="rare" ${item.quality === "rare" ? "selected" : ""}>Rare</option>
+              <option value="magic" ${item.quality === "magic" ? "selected" : ""}>Magic</option>
+              <option value="rune" ${item.quality === "rune" ? "selected" : ""}>Rune</option>
+              <option value="other" ${item.quality === "other" ? "selected" : ""}>Sonstiges</option>
+            </select>
+
+            <input type="text" placeholder="Roll / Kurzwerte" data-field="roll" value="${item.roll || ""}">
+
+            <select data-field="rating">
+              <option value="">– Sterne –</option>
+              <option value="1" ${item.rating == 1 ? "selected" : ""}>⭐</option>
+              <option value="2" ${item.rating == 2 ? "selected" : ""}>⭐⭐</option>
+              <option value="3" ${item.rating == 3 ? "selected" : ""}>⭐⭐⭐</option>
+              <option value="4" ${item.rating == 4 ? "selected" : ""}>⭐⭐⭐⭐</option>
+              <option value="5" ${item.rating == 5 ? "selected" : ""}>⭐⭐⭐⭐⭐</option>
+            </select>
+
+            <button data-action="save" data-id="${item.id}">💾 Speichern</button>
+          </div>
         </div>
       </div>
     `).join("");
@@ -98,13 +128,34 @@ async function doAction(path, body) {
     body: body ? JSON.stringify(body) : null
   });
 
-  if (!res.ok) {
-    throw new Error("HTTP " + res.status);
-  }
+  if (!res.ok) throw new Error("HTTP " + res.status);
+}
+
+async function saveItem(container) {
+  const id = container.dataset.itemId;
+  const data = {};
+
+  container.querySelectorAll("[data-field]").forEach(el => {
+    data[el.dataset.field] = el.value || null;
+  });
+
+  const res = await fetch(
+    API_BASE + "/api/admin/items/" + id,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-token": ADMIN_TOKEN
+      },
+      body: JSON.stringify(data)
+    }
+  );
+
+  if (!res.ok) throw new Error("Save failed");
 }
 
 /* ================================
-   INIT (DOM SAFE)
+   INIT
 ================================ */
 document.addEventListener("DOMContentLoaded", () => {
   const list = document.getElementById("list");
@@ -125,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadItems(list);
   });
 
-  // Actions (Event Delegation)
+  // Actions (Delegation)
   list.addEventListener("click", async e => {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
@@ -147,6 +198,11 @@ document.addEventListener("DOMContentLoaded", () => {
           { admin_note: note || null }
         );
       }
+      if (action === "save") {
+        const container = btn.closest(".edit");
+        await saveItem(container);
+        alert("Item gespeichert");
+      }
 
       loadItems(list);
     } catch (err) {
@@ -155,6 +211,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Initial load
   loadItems(list);
 });
