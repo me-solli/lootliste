@@ -41,7 +41,7 @@ const upload = multer({
 });
 
 /* =========================
-   GET /api/items (admin)
+   GET /api/items (ADMIN / INTERN)
 ========================= */
 router.get("/", async (req, res) => {
   try {
@@ -72,6 +72,7 @@ router.get("/", async (req, res) => {
 
 /* =========================
    GET /api/items/public
+   (ROBUST + 500-SICHER)
 ========================= */
 router.get("/public", async (req, res) => {
   try {
@@ -85,9 +86,6 @@ router.get("/public", async (req, res) => {
         i.title        AS name,
         i.type         AS type,
         i.weapon_type  AS weaponType,
-        i.category     AS category,
-        i.roll         AS roll,
-        i.stars        AS stars,
 
         s.status       AS status
       FROM items i
@@ -101,7 +99,9 @@ router.get("/public", async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error("GET /api/items/public:", err);
-    res.status(500).json({ error: "Öffentliche Items konnten nicht geladen werden" });
+    res.status(500).json({
+      error: "Öffentliche Items konnten nicht geladen werden"
+    });
   }
 });
 
@@ -119,14 +119,18 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
 
   try {
     const result = await db.run(
-      `INSERT INTO items (owner_user_id, screenshot)
-       VALUES (?, ?)`,
+      `
+      INSERT INTO items (owner_user_id, screenshot)
+      VALUES (?, ?)
+      `,
       [req.user.id, `/uploads/${req.file.filename}`]
     );
 
     await db.run(
-      `INSERT INTO item_status (item_id, status, status_since)
-       VALUES (?, ?, datetime('now'))`,
+      `
+      INSERT INTO item_status (item_id, status, status_since)
+      VALUES (?, ?, datetime('now'))
+      `,
       [result.lastID, ITEM_STATUS.SUBMITTED]
     );
 
