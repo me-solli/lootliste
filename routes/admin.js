@@ -52,8 +52,8 @@ router.get("/items", requireAdmin, async (req, res) => {
       ORDER BY i.created_at DESC
       `,
       [
-        ITEM_STATUS.SUBMITTED, // Default im SELECT
-        status,                // Default im WHERE
+        ITEM_STATUS.SUBMITTED,
+        status,
         status
       ]
     );
@@ -148,19 +148,21 @@ router.post("/items/:id/reject", requireAdmin, async (req, res) => {
 
 /* ================================
    REPAIR: fehlende item_status
-   (sicher & optional)
 ================================ */
 router.post(
   "/migrate/fix-missing-status",
   requireAdmin,
   async (req, res) => {
     try {
-      const result = await db.run(`
+      const result = await db.run(
+        `
         INSERT INTO item_status (item_id, status, status_since)
         SELECT id, ?, datetime('now')
         FROM items
         WHERE id NOT IN (SELECT item_id FROM item_status)
-      `, [ITEM_STATUS.SUBMITTED]);
+        `,
+        [ITEM_STATUS.SUBMITTED]
+      );
 
       res.json({
         ok: true,
@@ -172,5 +174,24 @@ router.post(
     }
   }
 );
+
+/* ================================
+   DEBUG: DB ROHANSICHT (TEMP!)
+================================ */
+router.get("/debug/items-raw", requireAdmin, async (req, res) => {
+  try {
+    const items = await db.all(`SELECT * FROM items`);
+    const status = await db.all(`SELECT * FROM item_status`);
+
+    res.json({
+      items_count: items.length,
+      status_count: status.length,
+      items,
+      status
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;
