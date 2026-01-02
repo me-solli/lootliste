@@ -7,7 +7,7 @@ const path = require("path");
 const fs = require("fs");
 
 /* ================================
-   ITEM STATUS (STEP A2)
+   ITEM STATUS
 ================================ */
 const ITEM_STATUS = {
   SUBMITTED: "submitted",
@@ -17,11 +17,13 @@ const ITEM_STATUS = {
 };
 
 /* =========================
-   UPLOAD-ORDNER
+   UPLOAD-ORDNER (RAILWAY SAFE)
 ========================= */
-const uploadDir = path.join(__dirname, "..", "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+const UPLOAD_DIR = "/data/uploads";
+
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  console.log("📁 /data/uploads (items) erstellt");
 }
 
 /* =========================
@@ -29,7 +31,7 @@ if (!fs.existsSync(uploadDir)) {
 ========================= */
 const upload = multer({
   storage: multer.diskStorage({
-    destination: uploadDir,
+    destination: UPLOAD_DIR,
     filename: (req, file, cb) => {
       const ext = path.extname(file.originalname || "");
       cb(null, `item_${Date.now()}${ext}`);
@@ -39,7 +41,7 @@ const upload = multer({
 });
 
 /* =========================
-   GET /api/items (intern)
+   GET /api/items (intern / admin)
 ========================= */
 router.get("/", async (req, res) => {
   try {
@@ -57,7 +59,7 @@ router.get("/", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error(err);
+    console.error("GET /api/items:", err);
     res.status(500).json({ error: "Items konnten nicht geladen werden" });
   }
 });
@@ -74,9 +76,9 @@ router.get("/public", async (req, res) => {
         i.owner_user_id,
         i.screenshot,
         i.created_at,
-        COALESCE(i.title, '')    AS title,
-        COALESCE(i.type, '')     AS type,
-        COALESCE(i.category, '') AS category
+        COALESCE(i.title, '')        AS title,
+        COALESCE(i.type, '')         AS type,
+        COALESCE(i.weapon_type, '')  AS weapon_type
       FROM items i
       JOIN item_status s ON s.item_id = i.id
       WHERE s.status = ?
@@ -87,7 +89,7 @@ router.get("/public", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error(err);
+    console.error("GET /api/items/public:", err);
     res.status(500).json({ error: "Öffentliche Items konnten nicht geladen werden" });
   }
 });
@@ -101,12 +103,10 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
   }
 
   if (!req.file) {
-    return res.status(400).json({ error: "Kein Screenshot empfangen" });
+    return res.status(400).json({ error: "Screenshot fehlt" });
   }
 
   try {
-    await db.run("BEGIN");
-
     const result = await db.run(
       `INSERT INTO items (owner_user_id, screenshot)
        VALUES (?, ?)`,
@@ -119,17 +119,14 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       [result.lastID, ITEM_STATUS.SUBMITTED]
     );
 
-    await db.run("COMMIT");
-
-    res.json({
+    res.status(201).json({
       success: true,
-      itemId: result.lastID,
+      item_id: result.lastID,
       status: ITEM_STATUS.SUBMITTED
     });
   } catch (err) {
-    console.error(err);
-    await db.run("ROLLBACK");
-    res.status(500).json({ error: "Item konnte nicht eingereicht werden" });
+    console.error("POST /api/items:", err);
+    res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
   }
 });
 
