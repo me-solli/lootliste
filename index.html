@@ -724,9 +724,10 @@ cards.innerHTML += `
   <div class="card ${s}">
     <span class="status-badge ${s}">${item.status}</span>
 
-<div class="card-image" ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
+<div class="card-image"
+     ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}
+     title="${item.screenshot ? 'Screenshot anzeigen' : ''}">
   <img src="img/icons/${ICONS[item.type] || "default"}.png" alt="${item.name}">
-  ${item.screenshot ? `<span class="screenshot-hint">📷</span>` : ""}
 </div>
 
     <div class="card-body">
