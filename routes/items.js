@@ -37,11 +37,11 @@ const upload = multer({
       cb(null, `item_${Date.now()}${ext}`);
     }
   }),
-  limits: { fileSize: 5 * 1024 * 1024 } // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 /* =========================
-   GET /api/items (intern / admin)
+   GET /api/items (admin)
 ========================= */
 router.get("/", async (req, res) => {
   try {
@@ -51,6 +51,12 @@ router.get("/", async (req, res) => {
         i.owner_user_id,
         i.screenshot,
         i.created_at,
+        i.title        AS name,
+        i.type,
+        i.weapon_type  AS weaponType,
+        i.category,
+        i.roll,
+        i.stars,
         s.status
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
@@ -73,12 +79,17 @@ router.get("/public", async (req, res) => {
       `
       SELECT
         i.id,
-        i.owner_user_id,
         i.screenshot,
         i.created_at,
-        COALESCE(i.title, '')        AS title,
-        COALESCE(i.type, '')         AS type,
-        COALESCE(i.weapon_type, '')  AS weapon_type
+
+        i.title        AS name,
+        i.type         AS type,
+        i.weapon_type  AS weaponType,
+        i.category     AS category,
+        i.roll         AS roll,
+        i.stars        AS stars,
+
+        s.status       AS status
       FROM items i
       JOIN item_status s ON s.item_id = i.id
       WHERE s.status = ?
