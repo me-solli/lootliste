@@ -53,17 +53,28 @@ async function loadItems(list) {
         <div class="thumb">
           <img src="${resolveImageSrc(item.screenshot)}" alt="">
           <div class="actions">
+
             ${
               currentStatus === "submitted"
-                ? `<button data-action="approve" data-id="${item.id}">Freigeben</button>
-                   <button data-action="reject" data-id="${item.id}">Ablehnen</button>`
+                ? `
+                  <button data-action="approve" data-id="${item.id}">Freigeben</button>
+                  <button data-action="reject" data-id="${item.id}">Ablehnen</button>
+                `
                 : ""
             }
+
             ${
               currentStatus === "approved"
                 ? `<button data-action="hide" data-id="${item.id}">Verstecken</button>`
                 : ""
             }
+
+            ${
+              currentStatus === "hidden"
+                ? `<button data-action="unhide" data-id="${item.id}">♻️ Wieder freigeben</button>`
+                : ""
+            }
+
           </div>
         </div>
 
@@ -78,7 +89,7 @@ async function loadItems(list) {
           <div><b>Roll:</b> ${item.roll || "-"}</div>
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
 
-          <!-- EDIT MASKE (B1.2) -->
+          <!-- EDIT MASKE -->
           <div class="edit" data-item-id="${item.id}">
             <input type="text" placeholder="Item-Name" data-field="name" value="${item.name || ""}">
 
@@ -190,6 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (action === "hide") {
         await doAction("/api/admin/items/" + id + "/hide");
+      }
+      if (action === "unhide") {
+        await doAction("/api/admin/items/" + id + "/unhide");
       }
       if (action === "reject") {
         const note = prompt("Ablehnungsgrund (optional):");
