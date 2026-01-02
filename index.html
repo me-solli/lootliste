@@ -691,15 +691,15 @@ cards.innerHTML += `
       <div class="item-name">
         ${item.name || "Unbenanntes Item"}
       </div>
-
-      ${
-        item.rating
-          ? `<div class="stars">
-               ${"⭐".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
-               <span style="opacity:.6">(${item.rating}/5)</span>
-             </div>`
-          : ""
-      }
+      
+${
+  item.stars
+    ? `<div class="stars">
+         ${item.stars}${"☆".repeat(5 - item.stars.length)}
+         <span style="opacity:.6">(${item.stars.length}/5)</span>
+       </div>`
+    : ""
+}
 
       <div class="category">
         ${item.quality || ""}
