@@ -746,7 +746,11 @@ cards.innerHTML += `
 <div class="card-image"
      ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}
      title="${item.screenshot ? 'Screenshot anzeigen' : ''}">
-  <img src="img/icons/${ICONS[item.type] || "default"}.png" alt="${item.name}">
+  <img src="img/icons/${
+  WEAPON_ICONS[item.weaponType] ||
+  ICONS[item.type] ||
+  "default"
+}.png" alt="${item.name}">
 </div>
 
     <div class="card-body">
