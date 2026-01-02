@@ -66,7 +66,7 @@ router.get("/items", requireAdmin, async (req, res) => {
 });
 
 /* ================================
-   UPDATE ITEM DETAILS (B1.2)
+   UPDATE ITEM DETAILS
 ================================ */
 router.put("/items/:id", requireAdmin, async (req, res) => {
   const { id } = req.params;
@@ -133,6 +133,19 @@ router.post("/items/:id/hide", requireAdmin, async (req, res) => {
   } catch (err) {
     console.error("HIDE FEHLER:", err);
     res.status(500).json({ error: "Hide fehlgeschlagen" });
+  }
+});
+
+/* ================================
+   🔥 NEW: UNHIDE (Hidden → Approved)
+================================ */
+router.post("/items/:id/unhide", requireAdmin, async (req, res) => {
+  try {
+    await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("UNHIDE FEHLER:", err);
+    res.status(500).json({ error: "Unhide fehlgeschlagen" });
   }
 });
 
