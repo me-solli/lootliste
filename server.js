@@ -4,10 +4,8 @@ console.log("SERVER.JS wird geladen");
    IMPORTS
 ================================ */
 const express = require("express");
-const path = require("path");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
-
 const db = require("./db");
 
 /* ================================
@@ -16,14 +14,12 @@ const db = require("./db");
 const app = express();
 
 /* ================================
-   PORT (RAILWAY – FINAL)
+   PORT (RAILWAY)
 ================================ */
 const PORT = process.env.PORT;
 
-console.log("🧪 process.env.PORT =", PORT);
-
 if (!PORT) {
-  console.error("❌ FEHLER: process.env.PORT ist nicht gesetzt (Railway)!");
+  console.error("❌ FEHLER: process.env.PORT ist nicht gesetzt");
   process.exit(1);
 }
 
@@ -35,7 +31,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, x-login-id, x-admin-token"
+    "Content-Type, x-login-id, x-admin-token"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -43,7 +39,7 @@ app.use((req, res, next) => {
   );
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
+    return res.sendStatus(200); // wichtig für Firefox
   }
 
   next();
@@ -63,23 +59,19 @@ const UPLOAD_DIR = "/data/uploads";
 
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-  console.log("📁 /data/uploads Verzeichnis erstellt");
+  console.log("📁 /data/uploads erstellt");
 }
 
 app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ================================
-   AUTH (DEV)
+   DEV AUTH (TEMP)
 ================================ */
 function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
-  // DEV-LOGIN (nur DEV!)
   if (loginId === "dev-admin") {
-    req.user = {
-      id: "dev-user",
-      role: "user"
-    };
+    req.user = { id: "dev-user", role: "user" };
     return next();
   }
 
@@ -95,12 +87,12 @@ const adminRoutes = require("./routes/admin");
 /* ================================
    ITEMS
 ================================ */
+// 🔥 RICHTIG:
+// /api/items/public  → router.get("/public")
+// /api/items          → router.get("/"), router.post("/")
 
-// Public (Index)
-app.use("/api/items/public", itemRoutes);
-
-// Protected (Submit, intern)
-app.use("/api/items", requireAuth, itemRoutes);
+app.use("/api/items", itemRoutes);               // public + intern
+app.use("/api/items", requireAuth, itemRoutes);  // protected POST etc.
 
 /* ================================
    ADMIN
@@ -108,15 +100,15 @@ app.use("/api/items", requireAuth, itemRoutes);
 app.use("/api/admin", adminRoutes);
 
 /* ================================
-   HEALTHCHECK
+   HEALTH
 ================================ */
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
 /* ================================
-   START SERVER
+   START
 ================================ */
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Server läuft auf Railway-Port ${PORT}`);
+  console.log(`✅ Server läuft auf Port ${PORT}`);
 });
