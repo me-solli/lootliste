@@ -641,6 +641,13 @@ async function loadItems() {
     items = [];
   }
 }
+  
+function resolveImageSrc(src) {
+  if (!src) return "img/icons/default.png";
+  return src.startsWith("http")
+    ? src
+    : "https://content-connection-production-ea07.up.railway.app" + src;
+}
 
 function render(){
   cards.innerHTML="";
