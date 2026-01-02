@@ -689,10 +689,10 @@ cards.innerHTML += `
   <div class="card">
     <span class="status-badge ${s}">${item.status}</span>
 
-    <img
-      src="${resolveImageSrc(item.screenshot)}"
-      alt="${item.name || "Item"}"
-    >
+<div class="card-image" ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
+  <img src="img/icons/${ICONS[item.type] || "default"}.png" alt="${item.name}">
+  ${item.screenshot ? `<span class="screenshot-hint">📷</span>` : ""}
+</div>
 
     <div class="card-body">
       <div class="item-name">
