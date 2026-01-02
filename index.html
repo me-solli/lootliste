@@ -610,28 +610,29 @@ async function loadItems() {
       "https://content-connection-production-ea07.up.railway.app/api/items/public"
     );
     const data = await res.json();
-    console.log("Backend Items (public):", data);
 
     items = Array.isArray(data)
       ? data.map(i => ({
           id: i.id,
 
-          // Backend → Frontend Mapping
-          name: i.title || "Unbenanntes Item",
+          // Namen sauber
+          name: i.name || i.title || "Unbenanntes Item",
+
+          // Typ / Kategorie wie bisher
           category: i.type || "",
           type: i.type || "Sonstiges",
 
-          // Backend liefert noch keine Bewertung / Rolls
-          stars: "",
-          roll: "",
+          // ⭐ Rating → stars (wird überall genutzt)
+          stars: "★".repeat(Number(i.rating || 0)),
 
-          // Kontakt & Requests bleiben lokal
+          // Werte aus Admin
+          quality: i.quality || "",
+          roll: i.roll || "",
+
+          // bestehende Features NICHT anfassen
           contact: "",
-
-          // Public API = immer freigegeben
           status: "Verfügbar",
 
-          // Screenshot vom Backend
           screenshot: i.screenshot || ""
         }))
       : [];
@@ -639,6 +640,7 @@ async function loadItems() {
     console.error("Public Items konnten nicht geladen werden", e);
     items = [];
   }
+}
 }
 
 
