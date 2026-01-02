@@ -639,7 +639,8 @@ async function loadItems() {
       "https://content-connection-production-ea07.up.railway.app/api/items/public"
     );
     const data = await res.json();
-    console.log("PUBLIC ITEM RAW:", data[0]);
+   console.log("PUBLIC ITEMS DATA:", data);
+console.log("TYPE:", Array.isArray(data), typeof data);
 
     items = Array.isArray(data)
       ? data.map(i => ({
