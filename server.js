@@ -15,8 +15,17 @@ const db = require("./db");
 ================================ */
 const app = express();
 
-// 🔒 WICHTIG: Railway-Port verwenden
-const PORT = process.env.PORT || 8080;
+/* ================================
+   PORT (RAILWAY – FINAL)
+================================ */
+const PORT = process.env.PORT;
+
+console.log("🧪 process.env.PORT =", PORT);
+
+if (!PORT) {
+  console.error("❌ FEHLER: process.env.PORT ist nicht gesetzt (Railway)!");
+  process.exit(1);
+}
 
 /* ================================
    CORS (GitHub Pages → Railway)
@@ -52,13 +61,11 @@ app.use(cookieParser());
 ================================ */
 const UPLOAD_DIR = "/data/uploads";
 
-// 🔒 sicherstellen, dass Upload-Ordner existiert
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
   console.log("📁 /data/uploads Verzeichnis erstellt");
 }
 
-// öffentlich ausliefern
 app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ================================
@@ -110,6 +117,6 @@ app.get("/health", (req, res) => {
 /* ================================
    START SERVER
 ================================ */
-app.listen(PORT, () => {
-  console.log(`✅ Server läuft auf Port ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Server läuft auf Railway-Port ${PORT}`);
 });
