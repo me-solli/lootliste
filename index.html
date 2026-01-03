@@ -809,14 +809,19 @@ function resolveImageSrc(src) {
 
 function render(){
   cards.innerHTML="";
-
 const filtered = items
   .filter(i => {
     const q = search.value.toLowerCase();
-    return (
+    const statusValue = statusFilter.value;
+
+    const matchesSearch =
       i.name.toLowerCase().includes(q) ||
-      (i.category && i.category.toLowerCase().includes(q))
-    );
+      (i.category && i.category.toLowerCase().includes(q));
+
+    const matchesStatus =
+      !statusValue || i.status === statusValue;
+
+    return matchesSearch && matchesStatus;
   })
   .sort((a,b)=>{
     const d = ratingValue(b.stars) - ratingValue(a.stars);
