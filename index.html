@@ -780,38 +780,36 @@ async function loadItems() {
    console.log("PUBLIC ITEMS DATA:", data);
 console.log("TYPE:", Array.isArray(data), typeof data);
 
-    items = Array.isArray(data)
-      ? data.map(i => ({
-          id: i.id,
+items = Array.isArray(data)
+  ? data.map(i => {
 
-          // Namen sauber
-          name: i.name || i.title || "Unbenanntes Item",
+      const ratingValue = Number(
+        i.rating ?? i.stars ?? i.sterne ?? 0
+      );
 
-          // Typ / Kategorie wie bisher
-          category: i.type || "",
-          type: i.type || "Sonstiges",
+      return {
+        id: i.id,
+
+        name: i.name || i.title || "Unbenanntes Item",
+
+        category: i.type || "",
+        type: i.type || "Sonstiges",
         weaponType: i.weaponType || "",
 
-          // ⭐ Rating → stars (wird überall genutzt)
-          const ratingValue = Number(
-  i.rating ?? i.stars ?? i.sterne ?? 0
-);
+        // ⭐ Rating → stars
+        stars: Number.isFinite(ratingValue) && ratingValue > 0
+          ? "★".repeat(ratingValue)
+          : "",
 
-stars: Number.isFinite(ratingValue) && ratingValue > 0
-  ? "★".repeat(ratingValue)
-  : "",
-
-          // Werte aus Admin
-          quality: i.quality || "",
-          roll: i.roll || "",
-
-          // bestehende Features NICHT anfassen
-          contact: "",
+        quality: i.quality || "",
+        roll: i.roll || "",
+        contact: "",
         status: STATUS_MAP[i.status] || "Verfügbar",
+        screenshot: i.screenshot || ""
+      };
+    })
+  : [];
 
-          screenshot: i.screenshot || ""
-        }))
-      : [];
   } catch (e) {
     console.error("Public Items konnten nicht geladen werden", e);
     items = [];
