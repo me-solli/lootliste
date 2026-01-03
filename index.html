@@ -303,12 +303,7 @@ body{
   gap:6px;
   flex:1;
 }
-
-.item-name{font-weight:bold;font-size:16px}
-.category{font-size:12px;opacity:.7}
-.stars{color:var(--gold)}
-.roll{font-size:13px;color:#cfcfcf}
-
+  
 .status-badge{
   position:absolute;
   top:12px;
@@ -317,7 +312,19 @@ body{
   padding:4px 10px;
   border-radius:999px;
   font-weight:bold;
+
+  background:rgba(0,0,0,.55);
+  border:1px solid #2a2a2a;
+  color:#ddd;
+
+  text-transform:uppercase;
+  letter-spacing:.4px;
 }
+
+.item-name{font-weight:bold;font-size:16px}
+.category{font-size:12px;opacity:.7}
+.stars{color:var(--gold)}
+.roll{font-size:13px;color:#cfcfcf}
 
 .player{font-size:13px;opacity:.85}
 .player a{color:var(--gold);text-decoration:none}
