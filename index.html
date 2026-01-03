@@ -199,19 +199,39 @@ body{
   position:relative;
 }
   
-  .card.verfuegbar{
-  border-color:rgba(76,255,76,.6);
+/* ================================
+   DIABLO ITEM STATUS – METALL RAND
+   ================================ */
+
+.card{
+  border-left:3px solid #2a2a2a; /* neutral */
 }
 
+/* Verfügbar → moosig, entsättigt */
+.card.verfuegbar{
+  border-left-color:#6f7f4a;
+}
+
+/* Reserviert → dunkles Bernstein */
 .card.reserviert{
-  border-color:rgba(255,210,76,.6);
+  border-left-color:#8a6a3a;
 }
 
+/* Vergeben → dunkles Rotbraun */
 .card.vergeben{
-  border-color:rgba(255,92,92,.6);
+  border-left-color:#5a2e2e;
   opacity:.85;
 }
 
+/* Status-Badge entschärfen */
+.status-badge{
+  background:rgba(0,0,0,.55);
+  border:1px solid #2a2a2a;
+  color:#ddd;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+  
 .card:hover{
   transform:translateY(-4px);
   border-color:var(--gold);
@@ -266,10 +286,6 @@ body{
   border-radius:999px;
   font-weight:bold;
 }
-
-.verfuegbar{background:rgba(76,255,76,.15);color:var(--green)}
-.reserviert{background:rgba(255,210,76,.15);color:var(--yellow)}
-.vergeben{background:rgba(255,92,92,.15);color:var(--red)}
 
 .player{font-size:13px;opacity:.85}
 .player a{color:var(--gold);text-decoration:none}
