@@ -783,8 +783,10 @@ console.log("TYPE:", Array.isArray(data), typeof data);
 items = Array.isArray(data)
   ? data.map(i => {
 
+      // 🔍 Debug: Rohdaten aus dem Backend
       console.log("ADMIN RAW ITEM:", i);
 
+      // ⭐ Rating normalisieren
       let ratingValue = 0;
 
       if (Number.isFinite(Number(i.rating))) {
@@ -808,8 +810,26 @@ items = Array.isArray(data)
         "=> value:", ratingValue
       );
 
+      // ✅ Öffentliches Item-Objekt
       return {
-        // dein Item
+        id: i.id,
+
+        name: i.name || i.title || "Unbenanntes Item",
+
+        type: i.type || "Sonstiges",
+        category: i.type || "",
+        weaponType: i.weaponType || "",
+
+        // ⭐ Sterne für UI
+        stars: ratingValue > 0 ? "★".repeat(ratingValue) : "",
+
+        quality: i.quality || "",
+        roll: i.roll || "",
+
+        contact: i.contact || "",
+        status: STATUS_MAP[i.status] || "Verfügbar",
+
+        screenshot: i.screenshot || ""
       };
     })
   : [];
