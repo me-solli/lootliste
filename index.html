@@ -785,21 +785,8 @@ items = Array.isArray(data)
       // 🔍 Debug: Rohdaten aus dem Backend
 
       // ⭐ Rating normalisieren
-      let ratingValue = 0;
-
-      if (Number.isFinite(Number(i.rating))) {
-        ratingValue = Number(i.rating);
-      }
-      else if (typeof i.rating === "string") {
-        ratingValue = (i.rating.match(/★/g) || []).length;
-      }
-      else if (Number.isFinite(Number(i.stars))) {
-        ratingValue = Number(i.stars);
-      }
-      else if (Number.isFinite(Number(i.sterne))) {
-        ratingValue = Number(i.sterne);
-      }
- );
+    
+const ratingValue = Number(i.rating) || 0;
 
       // ✅ Öffentliches Item-Objekt
       return {
