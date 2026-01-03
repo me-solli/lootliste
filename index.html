@@ -224,13 +224,30 @@ body{
 }
 
 /* Status-Badge entschärfen */
-.status-badge{
-/* ===== STATUS BADGE – DIABLO EMBLEM ===== */
+  /* ===== STATUS BADGE ===== */
 
+.status-badge{
+  position:absolute;
+  top:12px;
+  right:12px;
+  font-size:12px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-weight:bold;
+
+  background:rgba(0,0,0,.55);
+  border:1px solid #2a2a2a;
+  color:#ddd;
+
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+
+/* ===== STATUS BADGE – NEON DIABLO ===== */
 .status-badge.verfuegbar{
   background:linear-gradient(
     180deg,
-    rgba(170,255,120,.75), /* deutlicher Neon-Touch oben */
+    rgba(170,255,120,.75),
     rgba(120,160,80,.28)
   );
   color:#f2ffd8;
@@ -243,31 +260,24 @@ body{
 .status-badge.reserviert{
   background:linear-gradient(
     180deg,
-    rgba(138,106,58,.35),
-    rgba(138,106,58,.18)
+    rgba(255,210,120,.45),
+    rgba(138,106,58,.22)
   );
-  color:#f0e3c2;
-  border:1px solid #8a6a3a;
+  color:#fff1d2;
+  border:1px solid #caa24a;
 }
 
 .status-badge.vergeben{
   background:linear-gradient(
     180deg,
-    rgba(90,46,46,.35),
-    rgba(90,46,46,.18)
+    rgba(255,120,120,.45),
+    rgba(90,46,46,.22)
   );
-  color:#e8cfcf;
-  border:1px solid #5a2e2e;
+  color:#ffdede;
+  border:1px solid #b85a5a;
 }
-  
-  background:rgba(0,0,0,.55);
-  border:1px solid #2a2a2a;
-  color:#ddd;
-  text-transform:uppercase;
-  letter-spacing:.4px;
-}
-  
-.card:hover{
+
+  .card:hover{
   transform:translateY(-4px);
   border-color:var(--gold);
   box-shadow:0 10px 28px rgba(0,0,0,.6);
