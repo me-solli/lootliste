@@ -872,9 +872,8 @@ cards.innerHTML += `
     </div>
 
     <div class="card-body">
-      <div class="item-name">
-        ${resolveItemName(item)}
-      </div>
+    
+${item.name ? `<div class="item-name">${item.name}</div>` : ""}
 
       ${item.weaponType || item.type ? `
         <div class="item-sub">
