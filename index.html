@@ -859,53 +859,39 @@ cards.innerHTML += `
   <div class="card ${s}">
     <span class="status-badge ${s}">${item.status}</span>
 
-<div class="card-image"
-     ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}
-     title="${item.screenshot ? 'Screenshot anzeigen' : ''}">
-  <img src="img/icons/${
-  WEAPON_ICONS[item.weaponType] ||
-  ICONS[item.type] ||
-  "default"
-}.png" alt="${item.name}">
-</div>
-
-</div>
-
-<div class="card-body">
-  <div class="item-name">
-    ${resolveItemName(item)}
-  </div>
-
-  ${item.weaponType || item.type ? `
-    <div class="item-sub">
-      ${item.weaponType || item.type}${item.weaponType && item.type ? " · " + item.type : ""}
+    <div class="card-image"
+      ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
+      <img src="img/icons/${
+        WEAPON_ICONS[item.weaponType] ||
+        ICONS[item.type] ||
+        "default"
+      }.png" alt="${item.name}">
     </div>
-  ` : ""}
-      
-${
-  item.stars
-    ? `<div class="stars">
-         ${item.stars}${"☆".repeat(5 - item.stars.length)}
-         <span style="opacity:.6">(${item.stars.length}/5)</span>
-       </div>`
-    : ""
-}
 
-      <div class="category">
-        ${item.quality || ""}
+    <div class="card-body">
+      <div class="item-name">
+        ${resolveItemName(item)}
       </div>
 
-      <div class="roll">
-        ${item.roll || "—"}
-      </div>
+      ${item.weaponType || item.type ? `
+        <div class="item-sub">
+          ${item.weaponType || item.type}${item.weaponType && item.type ? " · " + item.type : ""}
+        </div>
+      ` : ""}
 
-      ${
-        count
-          ? `<div style="font-size:12px;opacity:.8">
-               📬 ${count} Anfrage(n)
-             </div>`
-          : ""
-      }
+      ${item.stars ? `
+        <div class="stars">
+          ${item.stars}${"☆".repeat(5 - item.stars.length)}
+          <span style="opacity:.6">(${item.stars.length}/5)</span>
+        </div>` : ""}
+
+      <div class="category">${item.quality || ""}</div>
+      <div class="roll">${item.roll || "—"}</div>
+
+      ${count ? `
+        <div style="font-size:12px;opacity:.8">
+          📬 ${count} Anfrage(n)
+        </div>` : ""}
 
       <div class="player">
         Spieler: ${item.contact || "—"}
