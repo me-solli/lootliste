@@ -43,6 +43,7 @@ const upload = multer({
 /* =====================================================
    GET /api/items
    ADMIN / INTERN – vollständiger Datensatz
+   (DARF mehr Felder haben als Public)
 ===================================================== */
 router.get("/", async (req, res) => {
   try {
@@ -73,7 +74,8 @@ router.get("/", async (req, res) => {
 
 /* =====================================================
    GET /api/items/public
-   ÖFFENTLICH – freigegebene Items (FINAL)
+   ÖFFENTLICH – NUR SICHERE FELDER
+   ❗ KEIN i.category (existiert nicht in DB)
 ===================================================== */
 router.get("/public", async (req, res) => {
   try {
@@ -84,7 +86,6 @@ router.get("/public", async (req, res) => {
         i.title         AS name,
         i.type          AS type,
         i.weapon_type   AS weaponType,
-        i.category      AS quality,
         i.roll,
         i.stars,
         i.owner_user_id AS contact,
