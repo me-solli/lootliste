@@ -47,25 +47,26 @@ const upload = multer({
 ===================================================== */
   router.get("/public", async (req, res) => {
   try {
-    const rows = await db.all(
-      `
-      SELECT
-        i.id,
-        i.title         AS name,
-        i.type          AS type,
-        i.weapon_type   AS weaponType,
-        i.roll,
-        i.owner_user_id AS contact,
-        i.screenshot,
-        i.created_at,
-        s.status        AS status
-      FROM items i
-      JOIN item_status s ON s.item_id = i.id
-      WHERE s.status = ?
-      ORDER BY i.created_at DESC
-      `,
-      [ITEM_STATUS.APPROVED]
-    );
+const rows = await db.all(
+  `
+  SELECT
+    i.id,
+    i.title         AS name,
+    i.type          AS type,
+    i.weapon_type   AS weaponType,
+    i.roll,
+    i.owner_user_id AS contact,
+    i.screenshot,
+    i.created_at,
+    s.status        AS status,
+    i.rating        AS rating
+  FROM items i
+  JOIN item_status s ON s.item_id = i.id
+  WHERE s.status = ?
+  ORDER BY i.created_at DESC
+  `,
+  [ITEM_STATUS.APPROVED]
+);
 
     res.json(rows);
   } catch (err) {
