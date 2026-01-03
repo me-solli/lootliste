@@ -45,38 +45,7 @@ const upload = multer({
    ADMIN / INTERN – vollständiger Datensatz
    (DARF mehr Felder haben als Public)
 ===================================================== */
-router.get("/", async (req, res) => {
-  try {
-    const rows = await db.all(`
-      SELECT
-        i.id,
-        i.owner_user_id,
-        i.screenshot,
-        i.created_at,
-        i.title         AS name,
-        i.type          AS type,
-        i.weapon_type   AS weaponType,
-        i.category      AS quality,
-        i.roll,
-        s.status
-      FROM items i
-      LEFT JOIN item_status s ON s.item_id = i.id
-      ORDER BY i.created_at DESC
-    `);
-
-    res.json(rows);
-  } catch (err) {
-    console.error("GET /api/items:", err);
-    res.status(500).json({ error: "Items konnten nicht geladen werden" });
-  }
-});
-
-/* =====================================================
-   GET /api/items/public
-   ÖFFENTLICH – NUR SICHERE FELDER
-   ❗ KEIN i.category (existiert nicht in DB)
-===================================================== */
-router.get("/public", async (req, res) => {
+  router.get("/public", async (req, res) => {
   try {
     const rows = await db.all(
       `
@@ -86,7 +55,6 @@ router.get("/public", async (req, res) => {
         i.type          AS type,
         i.weapon_type   AS weaponType,
         i.roll,
-        i.stars,
         i.owner_user_id AS contact,
         i.screenshot,
         i.created_at,
@@ -101,8 +69,7 @@ router.get("/public", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error("GET /api/items/public ERROR:");
-console.error(err);
+    console.error("GET /api/items/public ERROR:", err);
     res.status(500).json({
       error: "Öffentliche Items konnten nicht geladen werden"
     });
