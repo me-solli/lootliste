@@ -121,6 +121,18 @@ function updateStatus(itemId, status) {
 ================================ */
 router.post("/items/:id/approve", requireAdmin, async (req, res) => {
   try {
+    // 🔒 NEU: Name MUSS vor Approve gesetzt sein
+    const item = await db.get(
+      `SELECT name FROM items WHERE id = ?`,
+      [req.params.id]
+    );
+
+    if (!item || !item.name || item.name.trim() === "") {
+      return res.status(400).json({
+        error: "Item kann nicht freigegeben werden: Name fehlt"
+      });
+    }
+
     await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
     res.json({ ok: true });
   } catch (err) {
@@ -139,9 +151,6 @@ router.post("/items/:id/hide", requireAdmin, async (req, res) => {
   }
 });
 
-/* ================================
-   UNHIDE (Hidden → Approved)
-================================ */
 router.post("/items/:id/unhide", requireAdmin, async (req, res) => {
   try {
     await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
