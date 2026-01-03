@@ -41,32 +41,31 @@ const upload = multer({
 });
 
 /* =====================================================
-   GET /api/items
-   ADMIN / INTERN – vollständiger Datensatz
-   (DARF mehr Felder haben als Public)
+   GET /api/items/public
+   PUBLIC – freigegebene Items
 ===================================================== */
-  router.get("/public", async (req, res) => {
+router.get("/public", async (req, res) => {
   try {
-const rows = await db.all(
-  `
-  SELECT
-    i.id,
-    i.title         AS name,
-    i.type          AS type,
-    i.weapon_type   AS weaponType,
-    i.roll,
-    i.owner_user_id AS contact,
-    i.screenshot,
-    i.created_at,
-    s.status        AS status,
-    i.rating        AS rating
-  FROM items i
-  JOIN item_status s ON s.item_id = i.id
-  WHERE s.status = ?
-  ORDER BY i.created_at DESC
-  `,
-  [ITEM_STATUS.APPROVED]
-);
+    const rows = await db.all(
+      `
+      SELECT
+        i.id,
+        i.title         AS name,
+        i.type          AS type,
+        i.weapon_type   AS weaponType,
+        i.roll,
+        i.owner_user_id AS contact,
+        i.screenshot,
+        i.created_at,
+        s.status        AS status,
+        i.rating        AS rating
+      FROM items i
+      JOIN item_status s ON s.item_id = i.id
+      WHERE s.status = ?
+      ORDER BY i.created_at DESC
+      `,
+      [ITEM_STATUS.APPROVED]
+    );
 
     res.json(rows);
   } catch (err) {
@@ -91,12 +90,19 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
   }
 
   try {
+    // 🔹 NEU: weaponType optional aus dem Request
+    const { weaponType } = req.body;
+
     const result = await db.run(
       `
-      INSERT INTO items (owner_user_id, screenshot)
-      VALUES (?, ?)
+      INSERT INTO items (owner_user_id, screenshot, weapon_type)
+      VALUES (?, ?, ?)
       `,
-      [req.user.id, `/uploads/${req.file.filename}`]
+      [
+        req.user.id,
+        `/uploads/${req.file.filename}`,
+        weaponType || null
+      ]
     );
 
     await db.run(
@@ -113,7 +119,7 @@ router.post("/", upload.single("screenshot"), async (req, res) => {
       status: ITEM_STATUS.SUBMITTED
     });
   } catch (err) {
-    console.error("POST /api/items:", err);
+    console.error("POST /api/items ERROR:", err);
     res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
   }
 });
