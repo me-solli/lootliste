@@ -821,7 +821,8 @@ items = Array.isArray(data)
         weaponType: i.weaponType || "",
 
         // ⭐ Sterne für UI
-        stars: ratingValue > 0 ? "★".repeat(ratingValue) : "",
+        stars: "★".repeat(ratingValue),
+rating: ratingValue,
 
         quality: i.quality || "",
         roll: i.roll || "",
@@ -863,9 +864,7 @@ const filtered = items
 
     return matchesSearch && matchesStatus;
   })
-  .sort((a,b)=>{
-    const d = ratingValue(b.stars) - ratingValue(a.stars);
-    return d;
+  .sort((a, b) => b.rating - a.rating);
   });
 
   const total=items.length;
