@@ -88,10 +88,16 @@ async function loadItems(list) {
           <div><b>Qualität:</b> ${item.quality || "-"}</div>
           <div><b>Roll:</b> ${item.roll || "-"}</div>
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
+          <div><b>WeaponType:</b> ${item.weaponType || "-"}</div>
 
           <!-- EDIT MASKE -->
           <div class="edit" data-item-id="${item.id}">
-            <input type="text" placeholder="Item-Name" data-field="name" value="${item.name || ""}">
+            <input
+              type="text"
+              placeholder="Item-Name"
+              data-field="name"
+              value="${item.name || ""}"
+            >
 
             <select data-field="quality">
               <option value="">– Qualität –</option>
@@ -103,7 +109,30 @@ async function loadItems(list) {
               <option value="other" ${item.quality === "other" ? "selected" : ""}>Sonstiges</option>
             </select>
 
-            <input type="text" placeholder="Roll / Kurzwerte" data-field="roll" value="${item.roll || ""}">
+            <input
+              type="text"
+              placeholder="Roll / Kurzwerte"
+              data-field="roll"
+              value="${item.roll || ""}"
+            >
+
+            <!-- 🔹 WEAPONTYPE -->
+            <select data-field="weaponType">
+              <option value="">– WeaponType –</option>
+              <option value="Schwert" ${item.weaponType === "Schwert" ? "selected" : ""}>Schwert</option>
+              <option value="Axt" ${item.weaponType === "Axt" ? "selected" : ""}>Axt</option>
+              <option value="Keule" ${item.weaponType === "Keule" ? "selected" : ""}>Keule</option>
+              <option value="Stab" ${item.weaponType === "Stab" ? "selected" : ""}>Stab</option>
+              <option value="Speer" ${item.weaponType === "Speer" ? "selected" : ""}>Speer</option>
+              <option value="Dolch" ${item.weaponType === "Dolch" ? "selected" : ""}>Dolch</option>
+              <option value="Zauberstab" ${item.weaponType === "Zauberstab" ? "selected" : ""}>Zauberstab</option>
+              <option value="Bogen" ${item.weaponType === "Bogen" ? "selected" : ""}>Bogen</option>
+              <option value="Armbrust" ${item.weaponType === "Armbrust" ? "selected" : ""}>Armbrust</option>
+              <option value="Wurfwaffe" ${item.weaponType === "Wurfwaffe" ? "selected" : ""}>Wurfwaffe</option>
+              <option value="Sense" ${item.weaponType === "Sense" ? "selected" : ""}>Sense</option>
+              <option value="Klaue" ${item.weaponType === "Klaue" ? "selected" : ""}>Klaue</option>
+              <option value="Zepter" ${item.weaponType === "Zepter" ? "selected" : ""}>Zepter</option>
+            </select>
 
             <select data-field="rating">
               <option value="">– Sterne –</option>
