@@ -764,7 +764,6 @@ function resolveItemName(item){
 }
   
 /* ===== HELPERS ===== */
-function ratingValue(s){return (s?.match(/★/g)||[]).length}
 
 /* ===== RENDER ===== */
 
@@ -784,7 +783,6 @@ items = Array.isArray(data)
   ? data.map(i => {
 
       // 🔍 Debug: Rohdaten aus dem Backend
-      console.log("ADMIN RAW ITEM:", i);
 
       // ⭐ Rating normalisieren
       let ratingValue = 0;
@@ -801,14 +799,7 @@ items = Array.isArray(data)
       else if (Number.isFinite(Number(i.sterne))) {
         ratingValue = Number(i.sterne);
       }
-
-      console.log(
-        "RATING CHECK →",
-        "rating:", i.rating,
-        "stars:", i.stars,
-        "sterne:", i.sterne,
-        "=> value:", ratingValue
-      );
+ );
 
       // ✅ Öffentliches Item-Objekt
       return {
