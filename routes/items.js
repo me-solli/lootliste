@@ -40,25 +40,25 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-/* =========================
-   GET /api/items (ADMIN / INTERN)
-========================= */
+/* =====================================================
+   GET /api/items
+   ADMIN / INTERN – vollständiger Datensatz
+===================================================== */
 router.get("/", async (req, res) => {
   try {
     const rows = await db.all(`
       SELECT
-SELECT
-  i.id,
-  i.title        AS name,
-  i.type         AS type,
-  i.weapon_type  AS weaponType,
-  i.category     AS quality,
-  i.roll,
-  i.stars,
-  i.owner_user_id AS contact,
-  i.screenshot,
-  i.created_at,
-  s.status       AS status
+        i.id,
+        i.owner_user_id,
+        i.screenshot,
+        i.created_at,
+        i.title         AS name,
+        i.type          AS type,
+        i.weapon_type   AS weaponType,
+        i.category      AS quality,
+        i.roll,
+        i.stars,
+        s.status
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
       ORDER BY i.created_at DESC
@@ -71,24 +71,26 @@ SELECT
   }
 });
 
-/* =========================
+/* =====================================================
    GET /api/items/public
-   (ROBUST + 500-SICHER)
-========================= */
+   ÖFFENTLICH – freigegebene Items (FINAL)
+===================================================== */
 router.get("/public", async (req, res) => {
   try {
     const rows = await db.all(
       `
       SELECT
         i.id,
+        i.title         AS name,
+        i.type          AS type,
+        i.weapon_type   AS weaponType,
+        i.category      AS quality,
+        i.roll,
+        i.stars,
+        i.owner_user_id AS contact,
         i.screenshot,
         i.created_at,
-
-        i.title        AS name,
-        i.type         AS type,
-        i.weapon_type  AS weaponType,
-
-        s.status       AS status
+        s.status        AS status
       FROM items i
       JOIN item_status s ON s.item_id = i.id
       WHERE s.status = ?
@@ -106,9 +108,10 @@ router.get("/public", async (req, res) => {
   }
 });
 
-/* =========================
+/* =====================================================
    POST /api/items
-========================= */
+   Einreichen (Screenshot Pflicht)
+===================================================== */
 router.post("/", upload.single("screenshot"), async (req, res) => {
   if (!req.user?.id) {
     return res.status(401).json({ error: "Nicht eingeloggt" });
