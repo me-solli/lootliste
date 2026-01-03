@@ -75,12 +75,7 @@ async function loadItems(list) {
 
           <!-- EDIT -->
           <div class="edit" data-item-id="${item.id}">
-            <input
-              type="text"
-              data-field="name"
-              placeholder="Item-Name"
-              value="${item.name || ""}"
-            >
+            <input type="text" data-field="name" placeholder="Item-Name" value="${item.name || ""}">
 
             <!-- 🔹 ITEM TYPE -->
             <select data-field="type">
@@ -99,7 +94,7 @@ async function loadItems(list) {
               <option value="sonstiges" ${item.type==="sonstiges"?"selected":""}>Sonstiges</option>
             </select>
 
-            <!-- 🔹 WEAPONTYPE (nur sinnvoll bei Waffe) -->
+            <!-- 🔹 WEAPONTYPE -->
             <select data-field="weaponType" ${item.type !== "waffe" ? "disabled" : ""}>
               <option value="">– WeaponType –</option>
               <option value="Schwert" ${item.weaponType==="Schwert"?"selected":""}>Schwert</option>
@@ -117,12 +112,7 @@ async function loadItems(list) {
               <option value="Wurfwaffe" ${item.weaponType==="Wurfwaffe"?"selected":""}>Wurfwaffe</option>
             </select>
 
-            <input
-              type="text"
-              placeholder="Roll / Kurzwerte"
-              data-field="roll"
-              value="${item.roll || ""}"
-            >
+            <input type="text" data-field="roll" placeholder="Roll / Kurzwerte" value="${item.roll || ""}">
 
             <select data-field="rating">
               <option value="">– Sterne –</option>
@@ -165,7 +155,7 @@ async function saveItem(container) {
   const data = {};
 
   container.querySelectorAll("[data-field]").forEach(el => {
-    if (el.disabled) return; // 🔒 disabled fields not saved
+    if (el.disabled) return;
     data[el.dataset.field] = el.value || null;
   });
 
@@ -221,6 +211,23 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error(err);
       alert("Aktion fehlgeschlagen");
+    }
+  });
+
+  // 🔥 FIX: WeaponType live steuern
+  list.addEventListener("change", e => {
+    const typeSelect = e.target.closest('select[data-field="type"]');
+    if (!typeSelect) return;
+
+    const edit = typeSelect.closest(".edit");
+    const weaponSelect = edit.querySelector('select[data-field="weaponType"]');
+    if (!weaponSelect) return;
+
+    if (typeSelect.value === "waffe") {
+      weaponSelect.disabled = false;
+    } else {
+      weaponSelect.value = "";
+      weaponSelect.disabled = true;
     }
   });
 
