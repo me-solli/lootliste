@@ -756,12 +756,6 @@ Object.keys(ICONS).forEach(type=>{
   };
   iconBar.appendChild(btn);
 });
-function resolveItemName(item){
-  if (item.name && item.name.trim()) return item.name;
-  if (item.weaponType) return item.weaponType;
-  if (item.type) return item.type;
-  return "Unbekanntes Item";
-}
   
 /* ===== HELPERS ===== */
 
