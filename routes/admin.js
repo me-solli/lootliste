@@ -42,6 +42,7 @@ router.get("/items", requireAdmin, async (req, res) => {
         i.quality,
         i.roll,
         i.rating,
+        i.weapon_type AS weaponType,
         i.screenshot,
         i.created_at,
         COALESCE(s.status, ?) AS status,
@@ -70,7 +71,7 @@ router.get("/items", requireAdmin, async (req, res) => {
 ================================ */
 router.put("/items/:id", requireAdmin, async (req, res) => {
   const { id } = req.params;
-  const { name, quality, roll, rating } = req.body;
+  const { name, quality, roll, rating, weaponType } = req.body;
 
   try {
     await db.run(
@@ -80,7 +81,8 @@ router.put("/items/:id", requireAdmin, async (req, res) => {
         name = ?,
         quality = ?,
         roll = ?,
-        rating = ?
+        rating = ?,
+        weapon_type = ?
       WHERE id = ?
       `,
       [
@@ -88,6 +90,7 @@ router.put("/items/:id", requireAdmin, async (req, res) => {
         quality || null,
         roll || null,
         rating || null,
+        weaponType || null,
         id
       ]
     );
@@ -137,7 +140,7 @@ router.post("/items/:id/hide", requireAdmin, async (req, res) => {
 });
 
 /* ================================
-   🔥 NEW: UNHIDE (Hidden → Approved)
+   UNHIDE (Hidden → Approved)
 ================================ */
 router.post("/items/:id/unhide", requireAdmin, async (req, res) => {
   try {
