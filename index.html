@@ -739,20 +739,18 @@ Object.keys(ICONS).forEach(type=>{
     else{activeType=type;btn.classList.add("active");}
     loadItems().then(() => {
   render();
-      function resolveItemName(item){
-  if (item.name && item.name.trim()) return item.name;
-
-  if (item.weaponType) return item.weaponType;
-  if (item.type) return item.type;
-
-  return "Unbekanntes Item";
-}
-
+ 
 });
   };
   iconBar.appendChild(btn);
 });
-
+function resolveItemName(item){
+  if (item.name && item.name.trim()) return item.name;
+  if (item.weaponType) return item.weaponType;
+  if (item.type) return item.type;
+  return "Unbekanntes Item";
+}
+  
 /* ===== HELPERS ===== */
 function ratingValue(s){return (s?.match(/★/g)||[]).length}
 
