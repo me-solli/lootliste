@@ -58,7 +58,6 @@ router.get("/", async (req, res) => {
         i.weapon_type   AS weaponType,
         i.category      AS quality,
         i.roll,
-        i.stars,
         s.status
       FROM items i
       LEFT JOIN item_status s ON s.item_id = i.id
