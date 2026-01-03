@@ -32,15 +32,10 @@ async function loadItems(list) {
   try {
     const res = await fetch(
       API_BASE + "/api/admin/items?status=" + currentStatus,
-      {
-        headers: {
-          "x-admin-token": ADMIN_TOKEN
-        }
-      }
+      { headers: { "x-admin-token": ADMIN_TOKEN } }
     );
 
     if (!res.ok) throw new Error("HTTP " + res.status);
-
     const items = await res.json();
 
     if (!items.length) {
@@ -53,60 +48,73 @@ async function loadItems(list) {
         <div class="thumb">
           <img src="${resolveImageSrc(item.screenshot)}" alt="">
           <div class="actions">
+            ${currentStatus === "submitted" ? `
+              <button data-action="approve" data-id="${item.id}">Freigeben</button>
+              <button data-action="reject" data-id="${item.id}">Ablehnen</button>
+            ` : ""}
 
-            ${
-              currentStatus === "submitted"
-                ? `
-                  <button data-action="approve" data-id="${item.id}">Freigeben</button>
-                  <button data-action="reject" data-id="${item.id}">Ablehnen</button>
-                `
-                : ""
-            }
+            ${currentStatus === "approved"
+              ? `<button data-action="hide" data-id="${item.id}">Verstecken</button>`
+              : ""}
 
-            ${
-              currentStatus === "approved"
-                ? `<button data-action="hide" data-id="${item.id}">Verstecken</button>`
-                : ""
-            }
-
-            ${
-              currentStatus === "hidden"
-                ? `<button data-action="unhide" data-id="${item.id}">♻️ Wieder freigeben</button>`
-                : ""
-            }
-
+            ${currentStatus === "hidden"
+              ? `<button data-action="unhide" data-id="${item.id}">♻️ Wieder freigeben</button>`
+              : ""}
           </div>
         </div>
 
         <div class="meta">
-          <div class="status-badge status-${item.status}">
-            ${item.status}
-          </div>
+          <div class="status-badge status-${item.status}">${item.status}</div>
 
           <div><b>ID:</b> ${item.id}</div>
           <div><b>Name:</b> ${item.name || "-"}</div>
-          <div><b>Qualität:</b> ${item.quality || "-"}</div>
+          <div><b>Typ:</b> ${item.type || "-"}</div>
+          <div><b>WeaponType:</b> ${item.weaponType || "-"}</div>
           <div><b>Roll:</b> ${item.roll || "-"}</div>
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
-          <div><b>WeaponType:</b> ${item.weaponType || "-"}</div>
 
-          <!-- EDIT MASKE -->
+          <!-- EDIT -->
           <div class="edit" data-item-id="${item.id}">
             <input
               type="text"
-              placeholder="Item-Name"
               data-field="name"
+              placeholder="Item-Name"
               value="${item.name || ""}"
             >
 
-            <select data-field="quality">
-              <option value="">– Qualität –</option>
-              <option value="unique" ${item.quality === "unique" ? "selected" : ""}>Unique</option>
-              <option value="set" ${item.quality === "set" ? "selected" : ""}>Set</option>
-              <option value="rare" ${item.quality === "rare" ? "selected" : ""}>Rare</option>
-              <option value="magic" ${item.quality === "magic" ? "selected" : ""}>Magic</option>
-              <option value="rune" ${item.quality === "rune" ? "selected" : ""}>Rune</option>
-              <option value="other" ${item.quality === "other" ? "selected" : ""}>Sonstiges</option>
+            <!-- 🔹 ITEM TYPE -->
+            <select data-field="type">
+              <option value="">– Typ –</option>
+              <option value="waffe" ${item.type==="waffe"?"selected":""}>Waffe</option>
+              <option value="schild" ${item.type==="schild"?"selected":""}>Schild</option>
+              <option value="helm" ${item.type==="helm"?"selected":""}>Helm</option>
+              <option value="ruestung" ${item.type==="ruestung"?"selected":""}>Rüstung</option>
+              <option value="handschuhe" ${item.type==="handschuhe"?"selected":""}>Handschuhe</option>
+              <option value="guertel" ${item.type==="guertel"?"selected":""}>Gürtel</option>
+              <option value="stiefel" ${item.type==="stiefel"?"selected":""}>Stiefel</option>
+              <option value="amulet" ${item.type==="amulet"?"selected":""}>Amulett</option>
+              <option value="ring" ${item.type==="ring"?"selected":""}>Ring</option>
+              <option value="charm" ${item.type==="charm"?"selected":""}>Charm</option>
+              <option value="rune" ${item.type==="rune"?"selected":""}>Rune</option>
+              <option value="sonstiges" ${item.type==="sonstiges"?"selected":""}>Sonstiges</option>
+            </select>
+
+            <!-- 🔹 WEAPONTYPE (nur sinnvoll bei Waffe) -->
+            <select data-field="weaponType" ${item.type !== "waffe" ? "disabled" : ""}>
+              <option value="">– WeaponType –</option>
+              <option value="Schwert" ${item.weaponType==="Schwert"?"selected":""}>Schwert</option>
+              <option value="Axt" ${item.weaponType==="Axt"?"selected":""}>Axt</option>
+              <option value="Keule" ${item.weaponType==="Keule"?"selected":""}>Keule</option>
+              <option value="Dolch" ${item.weaponType==="Dolch"?"selected":""}>Dolch</option>
+              <option value="Klaue" ${item.weaponType==="Klaue"?"selected":""}>Klaue</option>
+              <option value="Stab" ${item.weaponType==="Stab"?"selected":""}>Stab</option>
+              <option value="Zauberstab" ${item.weaponType==="Zauberstab"?"selected":""}>Zauberstab</option>
+              <option value="Zepter" ${item.weaponType==="Zepter"?"selected":""}>Zepter</option>
+              <option value="Speer" ${item.weaponType==="Speer"?"selected":""}>Speer</option>
+              <option value="Sense" ${item.weaponType==="Sense"?"selected":""}>Sense</option>
+              <option value="Bogen" ${item.weaponType==="Bogen"?"selected":""}>Bogen</option>
+              <option value="Armbrust" ${item.weaponType==="Armbrust"?"selected":""}>Armbrust</option>
+              <option value="Wurfwaffe" ${item.weaponType==="Wurfwaffe"?"selected":""}>Wurfwaffe</option>
             </select>
 
             <input
@@ -116,31 +124,13 @@ async function loadItems(list) {
               value="${item.roll || ""}"
             >
 
-            <!-- 🔹 WEAPONTYPE -->
-            <select data-field="weaponType">
-              <option value="">– WeaponType –</option>
-              <option value="Schwert" ${item.weaponType === "Schwert" ? "selected" : ""}>Schwert</option>
-              <option value="Axt" ${item.weaponType === "Axt" ? "selected" : ""}>Axt</option>
-              <option value="Keule" ${item.weaponType === "Keule" ? "selected" : ""}>Keule</option>
-              <option value="Stab" ${item.weaponType === "Stab" ? "selected" : ""}>Stab</option>
-              <option value="Speer" ${item.weaponType === "Speer" ? "selected" : ""}>Speer</option>
-              <option value="Dolch" ${item.weaponType === "Dolch" ? "selected" : ""}>Dolch</option>
-              <option value="Zauberstab" ${item.weaponType === "Zauberstab" ? "selected" : ""}>Zauberstab</option>
-              <option value="Bogen" ${item.weaponType === "Bogen" ? "selected" : ""}>Bogen</option>
-              <option value="Armbrust" ${item.weaponType === "Armbrust" ? "selected" : ""}>Armbrust</option>
-              <option value="Wurfwaffe" ${item.weaponType === "Wurfwaffe" ? "selected" : ""}>Wurfwaffe</option>
-              <option value="Sense" ${item.weaponType === "Sense" ? "selected" : ""}>Sense</option>
-              <option value="Klaue" ${item.weaponType === "Klaue" ? "selected" : ""}>Klaue</option>
-              <option value="Zepter" ${item.weaponType === "Zepter" ? "selected" : ""}>Zepter</option>
-            </select>
-
             <select data-field="rating">
               <option value="">– Sterne –</option>
-              <option value="1" ${item.rating == 1 ? "selected" : ""}>⭐</option>
-              <option value="2" ${item.rating == 2 ? "selected" : ""}>⭐⭐</option>
-              <option value="3" ${item.rating == 3 ? "selected" : ""}>⭐⭐⭐</option>
-              <option value="4" ${item.rating == 4 ? "selected" : ""}>⭐⭐⭐⭐</option>
-              <option value="5" ${item.rating == 5 ? "selected" : ""}>⭐⭐⭐⭐⭐</option>
+              <option value="1" ${item.rating==1?"selected":""}>⭐</option>
+              <option value="2" ${item.rating==2?"selected":""}>⭐⭐</option>
+              <option value="3" ${item.rating==3?"selected":""}>⭐⭐⭐</option>
+              <option value="4" ${item.rating==4?"selected":""}>⭐⭐⭐⭐</option>
+              <option value="5" ${item.rating==5?"selected":""}>⭐⭐⭐⭐⭐</option>
             </select>
 
             <button data-action="save" data-id="${item.id}">💾 Speichern</button>
@@ -167,7 +157,6 @@ async function doAction(path, body) {
     },
     body: body ? JSON.stringify(body) : null
   });
-
   if (!res.ok) throw new Error("HTTP " + res.status);
 }
 
@@ -176,20 +165,18 @@ async function saveItem(container) {
   const data = {};
 
   container.querySelectorAll("[data-field]").forEach(el => {
+    if (el.disabled) return; // 🔒 disabled fields not saved
     data[el.dataset.field] = el.value || null;
   });
 
-  const res = await fetch(
-    API_BASE + "/api/admin/items/" + id,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "x-admin-token": ADMIN_TOKEN
-      },
-      body: JSON.stringify(data)
-    }
-  );
+  const res = await fetch(API_BASE + "/api/admin/items/" + id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-token": ADMIN_TOKEN
+    },
+    body: JSON.stringify(data)
+  });
 
   if (!res.ok) throw new Error("Save failed");
 }
@@ -201,22 +188,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const list = document.getElementById("list");
   const tabs = document.getElementById("tabs");
 
-  // Tabs
   tabs.addEventListener("click", e => {
     const btn = e.target.closest("button[data-status]");
     if (!btn) return;
 
     currentStatus = btn.dataset.status;
-
-    tabs.querySelectorAll("button").forEach(b =>
-      b.classList.remove("active")
-    );
+    tabs.querySelectorAll("button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-
     loadItems(list);
   });
 
-  // Actions (Delegation)
   list.addEventListener("click", async e => {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
@@ -225,28 +206,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const action = btn.dataset.action;
 
     try {
-      if (action === "approve") {
-        await doAction("/api/admin/items/" + id + "/approve");
-      }
-      if (action === "hide") {
-        await doAction("/api/admin/items/" + id + "/hide");
-      }
-      if (action === "unhide") {
-        await doAction("/api/admin/items/" + id + "/unhide");
-      }
+      if (action === "approve") await doAction("/api/admin/items/" + id + "/approve");
+      if (action === "hide") await doAction("/api/admin/items/" + id + "/hide");
+      if (action === "unhide") await doAction("/api/admin/items/" + id + "/unhide");
       if (action === "reject") {
         const note = prompt("Ablehnungsgrund (optional):");
-        await doAction(
-          "/api/admin/items/" + id + "/reject",
-          { admin_note: note || null }
-        );
+        await doAction("/api/admin/items/" + id + "/reject", { admin_note: note || null });
       }
       if (action === "save") {
-        const container = btn.closest(".edit");
-        await saveItem(container);
+        await saveItem(btn.closest(".edit"));
         alert("Item gespeichert");
       }
-
       loadItems(list);
     } catch (err) {
       console.error(err);
