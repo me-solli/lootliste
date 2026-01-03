@@ -828,7 +828,7 @@ const filtered = items
     const statusValue = statusFilter.value;
 
     const matchesSearch =
-      i.name.toLowerCase().includes(q) ||
+      (i.name || "").toLowerCase().includes(q) ||
       (i.category && i.category.toLowerCase().includes(q));
 
     const matchesStatus =
