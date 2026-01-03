@@ -862,10 +862,18 @@ cards.innerHTML += `
 }.png" alt="${item.name}">
 </div>
 
-    <div class="card-body">
-      <div class="item-name">
-       ${resolveItemName(item)}
-      </div>
+</div>
+
+<div class="card-body">
+  <div class="item-name">
+    ${resolveItemName(item)}
+  </div>
+
+  ${item.weaponType || item.type ? `
+    <div class="item-sub">
+      ${item.weaponType || item.type}${item.weaponType && item.type ? " · " + item.type : ""}
+    </div>
+  ` : ""}
       
 ${
   item.stars
