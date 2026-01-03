@@ -73,11 +73,9 @@ async function loadItems(list) {
           <div><b>Roll:</b> ${item.roll || "-"}</div>
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
 
-          <!-- EDIT -->
           <div class="edit" data-item-id="${item.id}">
             <input type="text" data-field="name" placeholder="Item-Name" value="${item.name || ""}">
 
-            <!-- 🔹 ITEM TYPE -->
             <select data-field="type">
               <option value="">– Typ –</option>
               <option value="waffe" ${item.type==="waffe"?"selected":""}>Waffe</option>
@@ -94,7 +92,6 @@ async function loadItems(list) {
               <option value="sonstiges" ${item.type==="sonstiges"?"selected":""}>Sonstiges</option>
             </select>
 
-            <!-- 🔹 WEAPONTYPE -->
             <select data-field="weaponType" ${item.type !== "waffe" ? "disabled" : ""}>
               <option value="">– WeaponType –</option>
               <option value="Schwert" ${item.weaponType==="Schwert"?"selected":""}>Schwert</option>
@@ -150,13 +147,20 @@ async function doAction(path, body) {
   if (!res.ok) throw new Error("HTTP " + res.status);
 }
 
+/* ================================
+   SAVE (FIXED)
+================================ */
 async function saveItem(container) {
   const id = container.dataset.itemId;
   const data = {};
 
+  const typeValue = container.querySelector('[data-field="type"]')?.value;
+
   container.querySelectorAll("[data-field]").forEach(el => {
-    if (el.disabled) return;
-    data[el.dataset.field] = el.value || null;
+    const field = el.dataset.field;
+
+    if (el.disabled && !(field === "weaponType" && typeValue === "waffe")) return;
+    data[field] = el.value || null;
   });
 
   const res = await fetch(API_BASE + "/api/admin/items/" + id, {
@@ -214,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 🔥 FIX: WeaponType live steuern
+  // WeaponType live steuern
   list.addEventListener("change", e => {
     const typeSelect = e.target.closest('select[data-field="type"]');
     if (!typeSelect) return;
