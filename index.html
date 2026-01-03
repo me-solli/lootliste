@@ -865,7 +865,6 @@ const filtered = items
     return matchesSearch && matchesStatus;
   })
   .sort((a, b) => b.rating - a.rating);
-  });
 
   const total=items.length;
   const frei=items.filter(i=>i.status==="Verfügbar").length;
