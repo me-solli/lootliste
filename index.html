@@ -793,7 +793,13 @@ console.log("TYPE:", Array.isArray(data), typeof data);
         weaponType: i.weaponType || "",
 
           // ⭐ Rating → stars (wird überall genutzt)
-          stars: "★".repeat(Number(i.rating || 0)),
+          const ratingValue = Number(
+  i.rating ?? i.stars ?? i.sterne ?? 0
+);
+
+stars: Number.isFinite(ratingValue) && ratingValue > 0
+  ? "★".repeat(ratingValue)
+  : "",
 
           // Werte aus Admin
           quality: i.quality || "",
