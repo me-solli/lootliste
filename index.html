@@ -875,11 +875,11 @@ cards.innerHTML += `
     
 ${item.name ? `<div class="item-name">${item.name}</div>` : ""}
 
-      ${item.weaponType || item.type ? `
-        <div class="item-sub">
-          ${item.weaponType || item.type}${item.weaponType && item.type ? " · " + item.type : ""}
-        </div>
-      ` : ""}
+${item.weaponType ? `
+  <div class="item-sub">
+    ${item.weaponType}
+  </div>
+` : ""}
 
       ${item.stars ? `
         <div class="stars">
