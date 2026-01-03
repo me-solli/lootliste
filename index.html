@@ -865,8 +865,8 @@ cards.innerHTML += `
 <div class="card-image"
   ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
   <img src="img/icons/${
-    (item.weaponType && WEAPON_ICONS[item.weaponType])
-      ? WEAPON_ICONS[item.weaponType]
+    item.weaponType
+      ? (WEAPON_ICONS[item.weaponType] || "waffe")
       : (ICONS[item.type] || "default")
   }.png" alt="${item.name || ""}">
 </div>
