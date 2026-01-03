@@ -102,7 +102,8 @@ router.get("/public", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error("GET /api/items/public:", err);
+    console.error("GET /api/items/public ERROR:");
+console.error(err);
     res.status(500).json({
       error: "Öffentliche Items konnten nicht geladen werden"
     });
