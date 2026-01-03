@@ -899,7 +899,7 @@ ${item.name ? `<div class="item-name">${item.name}</div>` : ""}
         Spieler: ${item.contact || "—"}
       </div>
 
-      <div class="cta request-btn" data-item="${item.name}">
+      <div class="cta request-btn" data-item="${item.name || ""}">
         📨 Item anfragen
       </div>
     </div>
