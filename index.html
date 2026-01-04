@@ -890,6 +890,20 @@ function render() {
       return matchesSearch && matchesStatus && matchesType;
     })
     .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    const total = items.length;
+  const frei = items.filter(i => i.status === "Verfügbar").length;
+  const res  = items.filter(i => i.status === "Reserviert").length;
+  const weg  = items.filter(i => i.status === "Vergeben").length;
+
+  heroStats.innerHTML = `
+    <div>📦 ${total} Items</div>
+    <div style="color:var(--green)">🟢 ${frei} verfügbar</div>
+    <div style="color:var(--yellow)">🟡 ${res} reserviert</div>
+    <div style="color:var(--red)">🔴 ${weg} vergeben</div>
+  `;
+
+  metaBar.innerHTML =
+    `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
   filtered.forEach(item => {
   const s =
@@ -939,6 +953,8 @@ function render() {
     </div>
   `;
 });
+    renderRequestFeed();
+  }
 
 document.getElementById("closeReq").onclick=()=>modal.style.display="none";
 
