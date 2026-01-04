@@ -7,6 +7,16 @@ const path = require("path");
 const fs = require("fs");
 
 /* ================================
+   DEV AUTH (TEMP – nur für Submit)
+================================ */
+function devAuth(req, res, next) {
+  if (req.headers["x-login-id"] === "dev-admin") {
+    req.user = { id: "dev-admin", role: "admin" };
+  }
+  next();
+}
+
+/* ================================
    ITEM STATUS
 ================================ */
 const ITEM_STATUS = {
@@ -78,50 +88,55 @@ router.get("/public", async (req, res) => {
 
 /* =====================================================
    POST /api/items
-   Einreichen (Screenshot Pflicht)
+   Einreichen (Screenshot Pflicht, DEV erlaubt)
 ===================================================== */
-router.post("/", upload.single("screenshot"), async (req, res) => {
-  if (!req.user?.id) {
-    return res.status(401).json({ error: "Nicht eingeloggt" });
+router.post(
+  "/",
+  devAuth,
+  upload.single("screenshot"),
+  async (req, res) => {
+
+    if (!req.user?.id) {
+      return res.status(401).json({ error: "Nicht eingeloggt" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "Screenshot fehlt" });
+    }
+
+    try {
+      const { weaponType } = req.body;
+
+      const result = await db.run(
+        `
+        INSERT INTO items (owner_user_id, screenshot, weapon_type)
+        VALUES (?, ?, ?)
+        `,
+        [
+          req.user.id,
+          `/uploads/${req.file.filename}`,
+          weaponType || null
+        ]
+      );
+
+      await db.run(
+        `
+        INSERT INTO item_status (item_id, status, status_since)
+        VALUES (?, ?, datetime('now'))
+        `,
+        [result.lastID, ITEM_STATUS.SUBMITTED]
+      );
+
+      res.status(201).json({
+        success: true,
+        item_id: result.lastID,
+        status: ITEM_STATUS.SUBMITTED
+      });
+    } catch (err) {
+      console.error("POST /api/items ERROR:", err);
+      res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
+    }
   }
-
-  if (!req.file) {
-    return res.status(400).json({ error: "Screenshot fehlt" });
-  }
-
-  try {
-    // 🔹 NEU: weaponType optional aus dem Request
-    const { weaponType } = req.body;
-
-    const result = await db.run(
-      `
-      INSERT INTO items (owner_user_id, screenshot, weapon_type)
-      VALUES (?, ?, ?)
-      `,
-      [
-        req.user.id,
-        `/uploads/${req.file.filename}`,
-        weaponType || null
-      ]
-    );
-
-    await db.run(
-      `
-      INSERT INTO item_status (item_id, status, status_since)
-      VALUES (?, ?, datetime('now'))
-      `,
-      [result.lastID, ITEM_STATUS.SUBMITTED]
-    );
-
-    res.status(201).json({
-      success: true,
-      item_id: result.lastID,
-      status: ITEM_STATUS.SUBMITTED
-    });
-  } catch (err) {
-    console.error("POST /api/items ERROR:", err);
-    res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
-  }
-});
+);
 
 module.exports = router;
