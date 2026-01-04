@@ -37,7 +37,7 @@ async function loadItems(list) {
 
     if (!res.ok) throw new Error("HTTP " + res.status);
 
-    // 🔥 FIX 1: Normalisieren (weaponType ⇒ type = waffe)
+    // 🔥 Normalize legacy data: weaponType ⇒ type = waffe
     const items = (await res.json()).map(item => {
       if (!item.type && item.weaponType) {
         item.type = "waffe";
@@ -153,23 +153,28 @@ async function doAction(path, body) {
 }
 
 /* ================================
-   SAVE (FIX 2)
+   SAVE (FINAL, STRICT)
 ================================ */
 async function saveItem(container) {
   const id = container.dataset.itemId;
   const data = {};
 
-  const typeEl = container.querySelector('[data-field="type"]');
-  const typeValue = typeEl ? typeEl.value : null;
+  const typeValue = container.querySelector('[data-field="type"]')?.value || null;
 
-  // 🔥 FIX 2: type erzwingen, wenn weaponType gesetzt
-  data.type = typeValue || (container.querySelector('[data-field="weaponType"]')?.value ? "waffe" : null);
+  // 🔒 type is authoritative
+  data.type = typeValue;
+
+  if (data.type === "waffe") {
+    data.weaponType =
+      container.querySelector('[data-field="weaponType"]')?.value || null;
+  } else {
+    data.weaponType = null;
+  }
 
   container.querySelectorAll("[data-field]").forEach(el => {
     const field = el.dataset.field;
-    if (field === "type") return;
-
-    if (el.disabled && !(field === "weaponType" && data.type === "waffe")) return;
+    if (field === "type" || field === "weaponType") return;
+    if (el.disabled) return;
     data[field] = el.value || null;
   });
 
