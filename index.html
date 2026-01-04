@@ -796,7 +796,7 @@ const ratingValue = Number(i.rating) || 0;
 
      name: i.name || null,
 
-        type: i.type || "Sonstiges",
+        type: i.type || "sonstiges",
         category: i.type || "",
         weaponType: i.weaponType || "",
 
@@ -882,8 +882,8 @@ cards.innerHTML += `
     <div class="card-body">
 
       <div class="stars">
-        ${"★".repeat(ratingValue)}${"☆".repeat(5 - ratingValue)}
-        (${ratingValue}/5)
+        ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
+(${item.rating}/5)
       </div>
 
       ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
