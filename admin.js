@@ -27,8 +27,8 @@ function ratingStars(value) {
    DEFAULT TEXTS (WICHTIG)
 ================================ */
 const DEFAULTS = {
-  name: "Name eingeben",
-  roll: "Roll / Werte"
+  name: "Name",
+  roll: "Roll"
 };
 
 /* ================================
