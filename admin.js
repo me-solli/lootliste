@@ -37,11 +37,8 @@ async function loadItems(list) {
 
     if (!res.ok) throw new Error("HTTP " + res.status);
 
-    // 🔥 Normalize legacy data: weaponType ⇒ type = waffe
     const items = (await res.json()).map(item => {
-      if (!item.type && item.weaponType) {
-        item.type = "waffe";
-      }
+      if (!item.type && item.weaponType) item.type = "waffe";
       return item;
     });
 
@@ -54,18 +51,6 @@ async function loadItems(list) {
       <div class="item">
         <div class="thumb">
           <img src="${resolveImageSrc(item.screenshot)}" alt="">
-          <div class="actions">
-            ${currentStatus === "submitted" ? `
-              <button data-action="approve" data-id="${item.id}">Freigeben</button>
-              <button data-action="reject" data-id="${item.id}">Ablehnen</button>
-            ` : ""}
-            ${currentStatus === "approved"
-              ? `<button data-action="hide" data-id="${item.id}">Verstecken</button>`
-              : ""}
-            ${currentStatus === "hidden"
-              ? `<button data-action="unhide" data-id="${item.id}">♻️ Wieder freigeben</button>`
-              : ""}
-          </div>
         </div>
 
         <div class="meta">
@@ -79,7 +64,12 @@ async function loadItems(list) {
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
 
           <div class="edit" data-item-id="${item.id}">
-            <input type="text" data-field="name" value="${item.name || ""}">
+            <input
+              type="text"
+              data-field="name"
+              value="${item.name || ""}"
+              placeholder="Item-Name (z. B. Spirit Schild)"
+            >
 
             <select data-field="type">
               <option value="">– Typ –</option>
@@ -114,7 +104,12 @@ async function loadItems(list) {
               <option value="Wurfwaffe" ${item.weaponType==="Wurfwaffe"?"selected":""}>Wurfwaffe</option>
             </select>
 
-            <input type="text" data-field="roll" value="${item.roll || ""}">
+            <input
+              type="text"
+              data-field="roll"
+              value="${item.roll || ""}"
+              placeholder="Roll / Werte (z. B. +35% fcr | +80% def)"
+            >
 
             <select data-field="rating">
               <option value="">– Sterne –</option>
@@ -138,30 +133,13 @@ async function loadItems(list) {
 }
 
 /* ================================
-   ACTIONS
-================================ */
-async function doAction(path, body) {
-  const res = await fetch(API_BASE + path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-token": ADMIN_TOKEN
-    },
-    body: body ? JSON.stringify(body) : null
-  });
-  if (!res.ok) throw new Error("HTTP " + res.status);
-}
-
-/* ================================
-   SAVE (FINAL, STRICT)
+   SAVE (unverändert)
 ================================ */
 async function saveItem(container) {
   const id = container.dataset.itemId;
   const data = {};
 
   const typeValue = container.querySelector('[data-field="type"]')?.value || null;
-
-  // 🔒 type is authoritative
   data.type = typeValue;
 
   if (data.type === "waffe") {
@@ -213,13 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const action = btn.dataset.action;
 
     try {
-      if (action === "approve") await doAction("/api/admin/items/" + id + "/approve");
-      if (action === "hide") await doAction("/api/admin/items/" + id + "/hide");
-      if (action === "unhide") await doAction("/api/admin/items/" + id + "/unhide");
-      if (action === "reject") {
-        const note = prompt("Ablehnungsgrund (optional):");
-        await doAction("/api/admin/items/" + id + "/reject", { admin_note: note || null });
-      }
       if (action === "save") {
         await saveItem(btn.closest(".edit"));
         alert("Item gespeichert");
