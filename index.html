@@ -933,7 +933,7 @@ cards.innerHTML += `
 
       <div class="stars">
         ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
-(${item.rating}/5)
+        (${item.rating}/5)
       </div>
 
       ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
@@ -950,14 +950,13 @@ cards.innerHTML += `
         Spieler: ${item.contact || "-"}
       </div>
 
-      <button class="request-btn">
+      <button class="request-btn" data-item="${item.name}">
         📩 Item anfragen
       </button>
 
     </div>
   </div>
 `;
-
   });
 
   renderRequestFeed();
