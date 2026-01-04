@@ -36,7 +36,14 @@ async function loadItems(list) {
     );
 
     if (!res.ok) throw new Error("HTTP " + res.status);
-    const items = await res.json();
+
+    // 🔥 FIX 1: Normalisieren (weaponType ⇒ type = waffe)
+    const items = (await res.json()).map(item => {
+      if (!item.type && item.weaponType) {
+        item.type = "waffe";
+      }
+      return item;
+    });
 
     if (!items.length) {
       list.innerHTML = '<div class="empty">Keine Items.</div>';
@@ -52,11 +59,9 @@ async function loadItems(list) {
               <button data-action="approve" data-id="${item.id}">Freigeben</button>
               <button data-action="reject" data-id="${item.id}">Ablehnen</button>
             ` : ""}
-
             ${currentStatus === "approved"
               ? `<button data-action="hide" data-id="${item.id}">Verstecken</button>`
               : ""}
-
             ${currentStatus === "hidden"
               ? `<button data-action="unhide" data-id="${item.id}">♻️ Wieder freigeben</button>`
               : ""}
@@ -74,7 +79,7 @@ async function loadItems(list) {
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
 
           <div class="edit" data-item-id="${item.id}">
-            <input type="text" data-field="name" placeholder="Item-Name" value="${item.name || ""}">
+            <input type="text" data-field="name" value="${item.name || ""}">
 
             <select data-field="type">
               <option value="">– Typ –</option>
@@ -109,7 +114,7 @@ async function loadItems(list) {
               <option value="Wurfwaffe" ${item.weaponType==="Wurfwaffe"?"selected":""}>Wurfwaffe</option>
             </select>
 
-            <input type="text" data-field="roll" placeholder="Roll / Kurzwerte" value="${item.roll || ""}">
+            <input type="text" data-field="roll" value="${item.roll || ""}">
 
             <select data-field="rating">
               <option value="">– Sterne –</option>
@@ -148,7 +153,7 @@ async function doAction(path, body) {
 }
 
 /* ================================
-   SAVE (FINAL FIX)
+   SAVE (FIX 2)
 ================================ */
 async function saveItem(container) {
   const id = container.dataset.itemId;
@@ -157,15 +162,14 @@ async function saveItem(container) {
   const typeEl = container.querySelector('[data-field="type"]');
   const typeValue = typeEl ? typeEl.value : null;
 
-  // 🔴 WICHTIG: type IMMER explizit setzen
-  data.type = typeValue || null;
+  // 🔥 FIX 2: type erzwingen, wenn weaponType gesetzt
+  data.type = typeValue || (container.querySelector('[data-field="weaponType"]')?.value ? "waffe" : null);
 
   container.querySelectorAll("[data-field]").forEach(el => {
     const field = el.dataset.field;
+    if (field === "type") return;
 
-    if (field === "type") return; // schon gesetzt
-
-    if (el.disabled && !(field === "weaponType" && typeValue === "waffe")) return;
+    if (el.disabled && !(field === "weaponType" && data.type === "waffe")) return;
     data[field] = el.value || null;
   });
 
@@ -191,7 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
   tabs.addEventListener("click", e => {
     const btn = e.target.closest("button[data-status]");
     if (!btn) return;
-
     currentStatus = btn.dataset.status;
     tabs.querySelectorAll("button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
@@ -201,7 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
   list.addEventListener("click", async e => {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
-
     const id = btn.dataset.id;
     const action = btn.dataset.action;
 
@@ -224,7 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // WeaponType live steuern
   list.addEventListener("change", e => {
     const typeSelect = e.target.closest('select[data-field="type"]');
     if (!typeSelect) return;
