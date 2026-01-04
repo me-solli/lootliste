@@ -39,6 +39,7 @@ router.get("/items", requireAdmin, async (req, res) => {
         i.id,
         i.owner_user_id,
         i.name,
+        i.type,
         i.quality,
         i.roll,
         i.rating,
@@ -67,11 +68,11 @@ router.get("/items", requireAdmin, async (req, res) => {
 });
 
 /* ================================
-   UPDATE ITEM DETAILS
+   UPDATE ITEM DETAILS (FIX)
 ================================ */
 router.put("/items/:id", requireAdmin, async (req, res) => {
   const { id } = req.params;
-  const { name, quality, roll, rating, weaponType } = req.body;
+  const { name, type, quality, roll, rating, weaponType } = req.body;
 
   try {
     await db.run(
@@ -79,6 +80,7 @@ router.put("/items/:id", requireAdmin, async (req, res) => {
       UPDATE items
       SET
         name = ?,
+        type = ?,
         quality = ?,
         roll = ?,
         rating = ?,
@@ -87,10 +89,11 @@ router.put("/items/:id", requireAdmin, async (req, res) => {
       `,
       [
         name || null,
+        type || null,
         quality || null,
         roll || null,
         rating || null,
-        weaponType || null,
+        type === "waffe" ? weaponType || null : null,
         id
       ]
     );
@@ -121,7 +124,6 @@ function updateStatus(itemId, status) {
 ================================ */
 router.post("/items/:id/approve", requireAdmin, async (req, res) => {
   try {
-    // 🔒 NEU: Name MUSS vor Approve gesetzt sein
     const item = await db.get(
       `SELECT name FROM items WHERE id = ?`,
       [req.params.id]
