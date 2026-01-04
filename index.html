@@ -868,23 +868,33 @@ function resolveImageSrc(src) {
     : "https://content-connection-production-ea07.up.railway.app" + src;
 }
 
-function render(){
-  cards.innerHTML="";
-const filtered = items
-  .filter(i => {
-    const q = search.value.toLowerCase();
-    const statusValue = statusFilter.value;
+function render() {
+  cards.innerHTML = "";
 
-    const matchesSearch =
-      (i.name || "").toLowerCase().includes(q) ||
-      (i.category && i.category.toLowerCase().includes(q));
+  const filtered = items
+    .filter(i => {
+      const q = search.value.toLowerCase();
+      const statusValue = statusFilter.value;
 
-    const matchesStatus =
-      !statusValue || i.status === statusValue;
+      const matchesSearch =
+        !q ||
+        (i.name || "").toLowerCase().includes(q) ||
+        (i.category || "").toLowerCase().includes(q);
 
-    return matchesSearch && matchesStatus;
-  })
-  .sort((a, b) => b.rating - a.rating);
+      const matchesStatus =
+        !statusValue || i.status === statusValue;
+
+      const matchesType =
+        !activeType || i.type === activeType;
+
+      return matchesSearch && matchesStatus && matchesType;
+    })
+    .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+  filtered.forEach(item => {
+    // ⬇️ dein bestehender Card-Code bleibt HIER
+  });
+}
 
   const total=items.length;
   const frei=items.filter(i=>i.status==="Verfügbar").length;
