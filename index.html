@@ -870,46 +870,40 @@ cards.innerHTML += `
   <div class="card ${s}">
     <span class="status-badge ${s}">${item.status}</span>
 
-<div class="card-image"
-  ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
-<img src="img/icons/${
-  item.type === "waffe" && item.weaponType
-    ? (WEAPON_ICONS[item.weaponType] || "waffe")
-    : (ICONS[item.type] || "default")
-}.png">
-</div>
+    <div class="card-image"
+      ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
+      <img src="img/icons/${
+        item.type === "waffe" && item.weaponType
+          ? (WEAPON_ICONS[item.weaponType] || "waffe")
+          : (ICONS[item.type] || "default")
+      }.png">
+    </div>
 
     <div class="card-body">
-    
-${item.name ? `<div class="item-name">${item.name}</div>` : ""}
 
-${item.weaponType ? `
-  <div class="item-sub">
-    ${item.weaponType}
-  </div>
-` : ""}
+      <div class="stars">
+        ${"★".repeat(ratingValue)}${"☆".repeat(5 - ratingValue)}
+        (${ratingValue}/5)
+      </div>
 
-      ${item.stars ? `
-        <div class="stars">
-          ${item.stars}${"☆".repeat(5 - item.stars.length)}
-          <span style="opacity:.6">(${item.stars.length}/5)</span>
-        </div>` : ""}
+      ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 
-      <div class="category">${item.quality || ""}</div>
-      <div class="roll">${item.roll || "—"}</div>
-
-      ${count ? `
-        <div style="font-size:12px;opacity:.8">
-          📬 ${count} Anfrage(n)
-        </div>` : ""}
+      <div class="category">
+        ${
+          item.type === "waffe"
+            ? `Waffe${item.weaponType ? " · " + item.weaponType : ""}`
+            : (TYPE_LABELS[item.type] || "")
+        }
+      </div>
 
       <div class="player">
-        Spieler: ${item.contact || "—"}
+        Spieler: ${item.contact || "-"}
       </div>
 
-      <div class="cta request-btn" data-item="${item.name || ""}">
-        📨 Item anfragen
-      </div>
+      <button class="request-btn">
+        📩 Item anfragen
+      </button>
+
     </div>
   </div>
 `;
