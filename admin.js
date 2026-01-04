@@ -148,16 +148,22 @@ async function doAction(path, body) {
 }
 
 /* ================================
-   SAVE (FIXED)
+   SAVE (FINAL FIX)
 ================================ */
 async function saveItem(container) {
   const id = container.dataset.itemId;
   const data = {};
 
-  const typeValue = container.querySelector('[data-field="type"]')?.value;
+  const typeEl = container.querySelector('[data-field="type"]');
+  const typeValue = typeEl ? typeEl.value : null;
+
+  // 🔴 WICHTIG: type IMMER explizit setzen
+  data.type = typeValue || null;
 
   container.querySelectorAll("[data-field]").forEach(el => {
     const field = el.dataset.field;
+
+    if (field === "type") return; // schon gesetzt
 
     if (el.disabled && !(field === "weaponType" && typeValue === "waffe")) return;
     data[field] = el.value || null;
