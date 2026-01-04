@@ -2,64 +2,27 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Item einreichen – Community Lootliste</title>
+<title>Item einreichen</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-:root{--bg:#0b0b0b;--panel:#141414;--border:#2a2a2a;--gold:#f5c451;--text:#eaeaea;--muted:#999;--green:#4cff4c;--red:#ff5c5c}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui;background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);color:var(--text)}
-.wrapper{max-width:600px;margin:40px auto;padding:20px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px}
-label{display:block;margin:14px 0 6px;font-size:14px}
-select,input[type="file"]{width:100%;padding:10px;background:#0f0f0f;border:1px solid var(--border);border-radius:8px;color:var(--text)}
-button{margin-top:20px;width:100%;padding:12px;background:linear-gradient(180deg,#f5c451,#caa03a);border:none;border-radius:10px;font-weight:600;cursor:pointer}
-.notice{padding:12px;border-radius:8px;margin-top:16px;font-size:14px}
-.notice.success{background:#0f1a0f;border:1px solid #1a3a1a;color:var(--green)}
-.notice.error{background:#1a0f0f;border:1px solid #3a1a1a;color:var(--red)}
+body{margin:0;font-family:system-ui;background:#0b0b0b;color:#eee}
+.panel{max-width:520px;margin:40px auto;padding:24px;background:#141414;border-radius:12px}
+label{display:block;margin:12px 0 6px}
+input,button{width:100%;padding:10px;border-radius:8px;border:1px solid #2a2a2a;background:#0f0f0f;color:#eee}
+button{margin-top:16px;background:#f5c451;color:#000;font-weight:600;cursor:pointer}
+.notice{margin-top:12px;padding:10px;border-radius:8px;display:none}
+.ok{background:#0f1a0f;color:#4cff4c}
+.err{background:#1a0f0f;color:#ff5c5c}
 </style>
 </head>
 
 <body>
-<div class="wrapper">
 <div class="panel">
+<h2>Item einreichen</h2>
 
-<h1 style="color:#f5c451">Item einreichen</h1>
-
-<form id="submitForm">
-  <label>Item-Typ *</label>
-  <select name="type" id="type" required>
-    <option value="">– Typ –</option>
-    <option value="waffe">Waffe</option>
-    <option value="schild">Schild</option>
-    <option value="helm">Helm</option>
-    <option value="ruestung">Rüstung</option>
-    <option value="guertel">Gürtel</option>
-    <option value="handschuhe">Handschuhe</option>
-    <option value="stiefel">Stiefel</option>
-    <option value="ring">Ring</option>
-    <option value="amulett">Amulett</option>
-    <option value="charm">Charm</option>
-    <option value="rune">Rune</option>
-    <option value="sonstiges">Sonstiges</option>
-  </select>
-
-  <label>Waffentyp</label>
-  <select name="weaponType" id="weaponType" disabled>
-    <option value="">– Waffentyp –</option>
-    <option value="schwert">Schwert</option>
-    <option value="axt">Axt</option>
-    <option value="keule">Keule</option>
-    <option value="stab">Stab</option>
-    <option value="speer">Speer</option>
-    <option value="dolch">Dolch</option>
-    <option value="zauberstab">Zauberstab</option>
-    <option value="bogen">Bogen</option>
-    <option value="armbrust">Armbrust</option>
-    <option value="wurfwaffe">Wurfwaffe</option>
-    <option value="sense">Sense</option>
-    <option value="klaue">Klaue</option>
-    <option value="zepter">Zepter</option>
-  </select>
+<form id="f">
+  <!-- DEFAULT TYPE, ADMIN ÜBERSCHREIBT -->
+  <input type="hidden" name="type" value="sonstiges">
 
   <label>Item-Screenshot *</label>
   <input type="file" name="screenshot" accept="image/*" required>
@@ -67,34 +30,25 @@ button{margin-top:20px;width:100%;padding:12px;background:linear-gradient(180deg
   <button type="submit">Item einreichen</button>
 </form>
 
-<div id="ok" class="notice success" style="display:none">✔ Erfolgreich</div>
-<div id="err" class="notice error" style="display:none">✖ Fehler</div>
-
-</div>
+<div id="ok" class="notice ok">✔ Erfolgreich</div>
+<div id="err" class="notice err">✖ Fehler</div>
 </div>
 
 <script>
 const API="https://content-connection-production-ea07.up.railway.app";
-const form=document.getElementById("submitForm");
-const type=document.getElementById("type");
-const weapon=document.getElementById("weaponType");
-type.addEventListener("change",()=>weapon.disabled=type.value!=="waffe");
-
-form.addEventListener("submit",async e=>{
-  e.preventDefault();
-  ok.style.display=err.style.display="none";
+f.onsubmit=async e=>{
+  e.preventDefault(); ok.style.display=err.style.display="none";
   try{
-    const res=await fetch(API+"/api/items",{
+    const r=await fetch(API+"/api/items",{
       method:"POST",
       headers:{"x-login-id":"dev-admin"},
       credentials:"include",
-      body:new FormData(form)
+      body:new FormData(f)
     });
-    if(!res.ok) throw 0;
-    form.reset(); weapon.disabled=true;
-    ok.style.display="block";
+    if(!r.ok) throw 0;
+    f.reset(); ok.style.display="block";
   }catch{err.style.display="block";}
-});
+};
 </script>
 </body>
 </html>
