@@ -892,97 +892,52 @@ function render() {
     .sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
   filtered.forEach(item => {
-    // ⬇️ dein bestehender Card-Code bleibt HIER
-  });
-}
+  const s =
+    item.status === "Reserviert" ? "reserviert" :
+    item.status === "Vergeben" ? "vergeben" :
+    "verfuegbar";
 
-  const total=items.length;
-  const frei=items.filter(i=>i.status==="Verfügbar").length;
-  const res=items.filter(i=>i.status==="Reserviert").length;
-  const weg=items.filter(i=>i.status==="Vergeben").length;
+  cards.innerHTML += `
+    <div class="card ${s}">
+      <span class="status-badge ${s}">${item.status}</span>
 
-  heroStats.innerHTML=`
-    <div>📦 ${total} Items</div>
-    <div style="color:var(--green)">🟢 ${frei} verfügbar</div>
-    <div style="color:var(--yellow)">🟡 ${res} reserviert</div>
-    <div style="color:var(--red)">🔴 ${weg} vergeben</div>
+      <div class="card-image"
+        ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
+        <img src="img/icons/${
+          item.type === "waffe" && item.weaponType
+            ? (WEAPON_ICONS[item.weaponType] || "waffe")
+            : (ICONS[item.type] || "default")
+        }.png">
+      </div>
+
+      <div class="card-body">
+
+        <div class="stars">
+          ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
+          (${item.rating}/5)
+        </div>
+
+        ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
+
+        <div class="category">
+          ${
+            item.type === "waffe"
+              ? `Waffe${item.weaponType ? " · " + item.weaponType : ""}`
+              : (TYPE_LABELS[item.type] || "")
+          }
+        </div>
+
+        <div class="player">
+          Spieler: ${item.contact || "-"}
+        </div>
+
+        <button class="request-btn" data-item="${item.name}">
+          📩 Item anfragen
+        </button>
+
+      </div>
+    </div>
   `;
-
-  metaBar.innerHTML=`📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
-
-  const requests=JSON.parse(localStorage.getItem("loot_requests")||"[]");
-
-  filtered.forEach(item=>{
-    const s=item.status==="Reserviert"?"reserviert":item.status==="Vergeben"?"vergeben":"verfuegbar";
-    const count=requests.filter(r=>r.item===item.name).length;
-
-cards.innerHTML += `
-  <div class="card ${s}">
-    <span class="status-badge ${s}">${item.status}</span>
-
-    <div class="card-image"
-      ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
-      <img src="img/icons/${
-        item.type === "waffe" && item.weaponType
-          ? (WEAPON_ICONS[item.weaponType] || "waffe")
-          : (ICONS[item.type] || "default")
-      }.png">
-    </div>
-
-    <div class="card-body">
-
-      <div class="stars">
-        ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
-        (${item.rating}/5)
-      </div>
-
-      ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
-
-      <div class="category">
-        ${
-          item.type === "waffe"
-            ? `Waffe${item.weaponType ? " · " + item.weaponType : ""}`
-            : (TYPE_LABELS[item.type] || "")
-        }
-      </div>
-
-      <div class="player">
-        Spieler: ${item.contact || "-"}
-      </div>
-
-      <button class="request-btn" data-item="${item.name}">
-        📩 Item anfragen
-      </button>
-
-    </div>
-  </div>
-`;
-  });
-
-  renderRequestFeed();
-}
-
-/* ===== REQUEST FEED ===== */
-function renderRequestFeed(){
-  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]")
-    .slice(-5).reverse();
-
-  requestFeed.innerHTML=data.length
-    ? data.map(r=>`
-      <div class="request-entry">
-        📨 <b>${r.name}</b> → <i>${r.item}</i><br>
-        <span style="opacity:.6">${new Date(r.time).toLocaleString("de-DE")}</span>
-      </div>`).join("")
-    : `<div class="request-entry">Noch keine Anfragen</div>`;
-}
-
-/* ===== REQUEST MODAL ===== */
-document.addEventListener("click",e=>{
-  if(e.target.classList.contains("request-btn")){
-    currentItem=e.target.dataset.item;
-    modalItem.textContent="Item: "+currentItem;
-    modal.style.display="block";
-  }
 });
 
 document.getElementById("closeReq").onclick=()=>modal.style.display="none";
