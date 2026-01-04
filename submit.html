@@ -4,169 +4,96 @@
 <meta charset="UTF-8">
 <title>Item einreichen – Community Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-:root{
-  --bg:#0b0b0b;
-  --panel:#141414;
-  --border:#2a2a2a;
-  --gold:#f5c451;
-  --text:#eaeaea;
-  --muted:#999;
-  --green:#4cff4c;
-  --red:#ff5c5c;
-}
-
+:root{--bg:#0b0b0b;--panel:#141414;--border:#2a2a2a;--gold:#f5c451;--text:#eaeaea;--muted:#999;--green:#4cff4c;--red:#ff5c5c}
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
-  color:var(--text);
-}
-
-.wrapper{
-  max-width:600px;
-  margin:40px auto;
-  padding:20px;
-}
-
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:24px;
-}
-
-h1{
-  margin:0 0 10px;
-  color:var(--gold);
-}
-
-p{
-  margin:0 0 20px;
-  color:var(--muted);
-  font-size:14px;
-}
-
-label{
-  display:block;
-  margin:14px 0 6px;
-  font-size:14px;
-}
-
-input[type="file"]{
-  width:100%;
-  padding:10px;
-  background:#0f0f0f;
-  border:1px solid var(--border);
-  border-radius:8px;
-  color:var(--text);
-}
-
-button{
-  margin-top:20px;
-  width:100%;
-  padding:12px;
-  background:linear-gradient(180deg,#f5c451,#caa03a);
-  border:none;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.notice{
-  padding:12px;
-  border-radius:8px;
-  margin-top:16px;
-  font-size:14px;
-}
-
-.notice.success{
-  background:#0f1a0f;
-  border:1px solid #1a3a1a;
-  color:var(--green);
-}
-
-.notice.error{
-  background:#1a0f0f;
-  border:1px solid #3a1a1a;
-  color:var(--red);
-}
+body{margin:0;font-family:system-ui;background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);color:var(--text)}
+.wrapper{max-width:600px;margin:40px auto;padding:20px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px}
+label{display:block;margin:14px 0 6px;font-size:14px}
+select,input[type="file"]{width:100%;padding:10px;background:#0f0f0f;border:1px solid var(--border);border-radius:8px;color:var(--text)}
+button{margin-top:20px;width:100%;padding:12px;background:linear-gradient(180deg,#f5c451,#caa03a);border:none;border-radius:10px;font-weight:600;cursor:pointer}
+.notice{padding:12px;border-radius:8px;margin-top:16px;font-size:14px}
+.notice.success{background:#0f1a0f;border:1px solid #1a3a1a;color:var(--green)}
+.notice.error{background:#1a0f0f;border:1px solid #3a1a1a;color:var(--red)}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
-  <div class="panel">
+<div class="panel">
 
-    <h1>Item einreichen</h1>
-    <p>
-      DEV-Modus aktiv. Screenshot ist Pflicht.  
-      Das Item erscheint anschließend als <b>„eingereicht“</b> im Admin-Bereich.
-    </p>
+<h1 style="color:#f5c451">Item einreichen</h1>
 
-    <form id="submitForm">
-      <label for="screenshot">Item-Screenshot *</label>
-      <input type="file" id="screenshot" accept="image/*" required>
+<form id="submitForm">
+  <label>Item-Typ *</label>
+  <select name="type" id="type" required>
+    <option value="">– Typ –</option>
+    <option value="waffe">Waffe</option>
+    <option value="schild">Schild</option>
+    <option value="helm">Helm</option>
+    <option value="ruestung">Rüstung</option>
+    <option value="guertel">Gürtel</option>
+    <option value="handschuhe">Handschuhe</option>
+    <option value="stiefel">Stiefel</option>
+    <option value="ring">Ring</option>
+    <option value="amulett">Amulett</option>
+    <option value="charm">Charm</option>
+    <option value="rune">Rune</option>
+    <option value="sonstiges">Sonstiges</option>
+  </select>
 
-      <button type="submit">Item einreichen</button>
-    </form>
+  <label>Waffentyp</label>
+  <select name="weaponType" id="weaponType" disabled>
+    <option value="">– Waffentyp –</option>
+    <option value="schwert">Schwert</option>
+    <option value="axt">Axt</option>
+    <option value="keule">Keule</option>
+    <option value="stab">Stab</option>
+    <option value="speer">Speer</option>
+    <option value="dolch">Dolch</option>
+    <option value="zauberstab">Zauberstab</option>
+    <option value="bogen">Bogen</option>
+    <option value="armbrust">Armbrust</option>
+    <option value="wurfwaffe">Wurfwaffe</option>
+    <option value="sense">Sense</option>
+    <option value="klaue">Klaue</option>
+    <option value="zepter">Zepter</option>
+  </select>
 
-    <div id="msgSuccess" class="notice success" style="display:none">
-      ✔ Item wurde erfolgreich eingereicht.
-    </div>
-    <div id="msgError" class="notice error" style="display:none">
-      ✖ Fehler beim Einreichen.
-    </div>
+  <label>Item-Screenshot *</label>
+  <input type="file" name="screenshot" accept="image/*" required>
 
-  </div>
+  <button type="submit">Item einreichen</button>
+</form>
+
+<div id="ok" class="notice success" style="display:none">✔ Erfolgreich</div>
+<div id="err" class="notice error" style="display:none">✖ Fehler</div>
+
+</div>
 </div>
 
 <script>
-/* ================================
-   CONFIG
-================================ */
-const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+const API="https://content-connection-production-ea07.up.railway.app";
+const form=document.getElementById("submitForm");
+const type=document.getElementById("type");
+const weapon=document.getElementById("weaponType");
+type.addEventListener("change",()=>weapon.disabled=type.value!=="waffe");
 
-/* ================================
-   SUBMIT (DEV)
-================================ */
-const form = document.getElementById("submitForm");
-const msgSuccess = document.getElementById("msgSuccess");
-const msgError = document.getElementById("msgError");
-
-form.addEventListener("submit", async (e) => {
+form.addEventListener("submit",async e=>{
   e.preventDefault();
-  msgSuccess.style.display = "none";
-  msgError.style.display = "none";
-
-  const file = document.getElementById("screenshot").files[0];
-  if (!file) return;
-
-  const data = new FormData();
-  data.append("screenshot", file);
-
-  try {
-    const res = await fetch(API_BASE + "/api/items", {
-      method: "POST",
-      headers: {
-        // DEV-LOGIN
-        "x-login-id": "dev-admin"
-      },
-      credentials: "include", // 🔴 WICHTIG für CORS + Allow-Credentials
-      body: data
+  ok.style.display=err.style.display="none";
+  try{
+    const res=await fetch(API+"/api/items",{
+      method:"POST",
+      headers:{"x-login-id":"dev-admin"},
+      credentials:"include",
+      body:new FormData(form)
     });
-
-    if (!res.ok) throw new Error("Submit fehlgeschlagen");
-
-    form.reset();
-    msgSuccess.style.display = "block";
-  } catch (err) {
-    console.error(err);
-    msgError.style.display = "block";
-  }
+    if(!res.ok) throw 0;
+    form.reset(); weapon.disabled=true;
+    ok.style.display="block";
+  }catch{err.style.display="block";}
 });
 </script>
 </body>
