@@ -91,8 +91,7 @@ const adminRoutes = require("./routes/admin");
 // /api/items/public  → router.get("/public")
 // /api/items          → router.get("/"), router.post("/")
 
-app.use("/api/items", itemRoutes);               // public + intern
-app.use("/api/items", requireAuth, itemRoutes);  // protected POST etc.
+app.use("/api/items", itemRoutes);
 
 /* ================================
    ADMIN
