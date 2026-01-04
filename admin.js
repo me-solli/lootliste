@@ -24,6 +24,14 @@ function ratingStars(value) {
 }
 
 /* ================================
+   DEFAULT TEXTS (WICHTIG)
+================================ */
+const DEFAULTS = {
+  name: "Name eingeben",
+  roll: "Roll / Werte"
+};
+
+/* ================================
    LOAD + RENDER
 ================================ */
 async function loadItems(list) {
@@ -67,8 +75,8 @@ async function loadItems(list) {
             <input
               type="text"
               data-field="name"
-              value="${item.name || ""}"
-              placeholder="Item-Name (z. B. Spirit Schild)"
+              data-default="${DEFAULTS.name}"
+              value="${item.name || DEFAULTS.name}"
             >
 
             <select data-field="type">
@@ -107,8 +115,8 @@ async function loadItems(list) {
             <input
               type="text"
               data-field="roll"
-              value="${item.roll || ""}"
-              placeholder="Roll / Werte (z. B. +35% fcr | +80% def)"
+              data-default="${DEFAULTS.roll}"
+              value="${item.roll || DEFAULTS.roll}"
             >
 
             <select data-field="rating">
@@ -133,7 +141,7 @@ async function loadItems(list) {
 }
 
 /* ================================
-   SAVE (unverändert)
+   SAVE
 ================================ */
 async function saveItem(container) {
   const id = container.dataset.itemId;
@@ -153,7 +161,13 @@ async function saveItem(container) {
     const field = el.dataset.field;
     if (field === "type" || field === "weaponType") return;
     if (el.disabled) return;
-    data[field] = el.value || null;
+
+    const def = el.dataset.default;
+    if (def && el.value === def) {
+      data[field] = null;
+    } else {
+      data[field] = el.value || null;
+    }
   });
 
   const res = await fetch(API_BASE + "/api/admin/items/" + id, {
@@ -184,20 +198,29 @@ document.addEventListener("DOMContentLoaded", () => {
     loadItems(list);
   });
 
+  list.addEventListener("focusin", e => {
+    const el = e.target;
+    const def = el.dataset?.default;
+    if (def && el.value === def) el.value = "";
+  });
+
+  list.addEventListener("blur", e => {
+    const el = e.target;
+    const def = el.dataset?.default;
+    if (def && el.value.trim() === "") el.value = def;
+  }, true);
+
   list.addEventListener("click", async e => {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
-    const id = btn.dataset.id;
-    const action = btn.dataset.action;
 
     try {
-      if (action === "save") {
+      if (btn.dataset.action === "save") {
         await saveItem(btn.closest(".edit"));
         alert("Item gespeichert");
       }
       loadItems(list);
-    } catch (err) {
-      console.error(err);
+    } catch {
       alert("Aktion fehlgeschlagen");
     }
   });
