@@ -256,4 +256,26 @@ router.post("/repair/missing-status", requireAdmin, async (req, res) => {
   }
 });
 
+/* ================================
+   MIGRATION: item_interest (V3)
+================================ */
+router.post("/migrate/item-interest", requireAdmin, async (req, res) => {
+  try {
+    await db.run(`
+      CREATE TABLE IF NOT EXISTS item_interest (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        item_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(item_id, user_id)
+      )
+    `);
+
+    res.json({ ok: true, migrated: "item_interest ensured" });
+  } catch (err) {
+    console.error("MIGRATE item_interest ERROR:", err);
+    res.status(500).json({ error: "Migration item_interest fehlgeschlagen" });
+  }
+});
+
 module.exports = router;
