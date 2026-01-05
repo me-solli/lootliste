@@ -1076,6 +1076,16 @@ if(localStorage.getItem(D)!==today){
 }
 visitorCounter.innerHTML =
   '&#128065; Besucher gesamt: <b>' + localStorage.getItem(K) + '</b>';
+  
+/* ===== REQUEST BUTTON CLICK (DELEGATION) ===== */
+cards.addEventListener("click", e => {
+  const btn = e.target.closest(".request-btn");
+  if (!btn || btn.classList.contains("disabled")) return;
+
+  currentItem = btn.dataset.item;
+  modalItem.textContent = currentItem;
+  modal.style.display = "block";
+});
 
 /* ===== INIT ===== */
 search.oninput=render;
