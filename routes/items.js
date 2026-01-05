@@ -17,7 +17,7 @@ function devAuth(req, res, next) {
 }
 
 /* ================================
-   ITEM STATUS
+   ITEM STATUS (Admin / Moderation)
 ================================ */
 const ITEM_STATUS = {
   SUBMITTED: "submitted",
@@ -52,7 +52,7 @@ const upload = multer({
 
 /* =====================================================
    GET /api/items/public
-   PUBLIC – freigegebene Items
+   PUBLIC – freigegebene Items (V3 READ ONLY)
 ===================================================== */
 router.get("/public", async (req, res) => {
   try {
@@ -68,11 +68,27 @@ router.get("/public", async (req, res) => {
         i.owner_user_id AS contact,
         i.screenshot,
         i.created_at,
-        s.status        AS status,
-        i.rating        AS rating
+        i.rating        AS rating,
+
+        -- V3 Felder (neu, read-only)
+        i.published_at,
+        i.earliest_assign_at,
+        i.latest_assign_at,
+        i.status        AS assign_status,
+
+        COUNT(ii.id)    AS interest_count,
+
+        s.status        AS admin_status
+
       FROM items i
-      JOIN item_status s ON s.item_id = i.id
+      JOIN item_status s
+        ON s.item_id = i.id
+      LEFT JOIN item_interest ii
+        ON ii.item_id = i.id
+
       WHERE s.status = ?
+
+      GROUP BY i.id
       ORDER BY i.created_at DESC
       `,
       [ITEM_STATUS.APPROVED]
