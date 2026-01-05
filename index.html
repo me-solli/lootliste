@@ -1050,7 +1050,6 @@ document.getElementById("sendReq").onclick=()=>{
   localStorage.setItem("loot_requests",JSON.stringify(data));
   reqName.value=reqContact.value=reqMsg.value="";
   modal.style.display="none";
-  setSimStatus(currentItem, "Bedarf offen");
   loadItems().then(() => {
   render();
 });
