@@ -991,9 +991,11 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
           Spieler: ${item.contact || "-"}
         </div>
 
-        <button class="request-btn" data-item="${item.name}">
-          📩 Item anfragen
-        </button>
+${item.status === "Verfügbar" ? `
+  <button class="request-btn" data-item="${item.name}">
+    📩 Bedarf anmelden
+  </button>
+` : ``}
 
       </div>
     </div>
