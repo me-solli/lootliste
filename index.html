@@ -938,8 +938,8 @@ function render() {
         (i.name || "").toLowerCase().includes(q) ||
         (i.category || "").toLowerCase().includes(q);
 
-      const matchesStatus =
-        !statusValue || i.status === statusValue;
+const matchesStatus =
+  !statusValue || getSimStatus(i.name, i.status) === statusValue;
 
       const matchesType =
         !activeType || i.type === activeType;
