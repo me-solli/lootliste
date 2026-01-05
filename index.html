@@ -851,9 +851,18 @@ Object.keys(ICONS).forEach(type=>{
     if(activeType===type){activeType="";}
     else{activeType=type;btn.classList.add("active");}
     loadItems().then(() => {
-  render();
- 
+  render();      
 });
+    /* ===== REQUEST BUTTON CLICK (DELEGATION) ===== */
+cards.addEventListener("click", e => {
+  const btn = e.target.closest(".request-btn");
+  if (!btn || btn.classList.contains("disabled")) return;
+
+  currentItem = btn.dataset.item;
+  modalItem.textContent = currentItem;
+  modal.style.display = "block";
+});
+
   };
   iconBar.appendChild(btn);
 });
