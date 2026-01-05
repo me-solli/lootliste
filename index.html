@@ -1045,45 +1045,46 @@ ${
     </div>
   `;
 });
-  }
 
-document.getElementById("closeReq").onclick=()=>modal.style.display="none";
+document.getElementById("sendReq").onclick = () => {
 
-document.getElementById("sendReq").onclick=()=>{
-  if(!reqName.value||!reqContact.value){
+  // 1️⃣ Pflichtfelder prüfen
+  if (!reqName.value || !reqContact.value) {
     alert("Bitte Pflichtfelder ausfüllen");
     return;
   }
 
-  const data=JSON.parse(localStorage.getItem("loot_requests")||"[]");
+  // 2️⃣ Doppelklick-/Spam-Schutz
+  const sendBtn = document.getElementById("sendReq");
+  if (sendBtn.disabled) return;
+  sendBtn.disabled = true;
+
+  // 3️⃣ Anfrage speichern
+  const data = JSON.parse(localStorage.getItem("loot_requests") || "[]");
   data.push({
-    item:currentItem,
-    name:reqName.value,
-    contact:reqContact.value,
-    msg:reqMsg.value,
-    time:new Date().toISOString()
+    item: currentItem,
+    user: CURRENT_USER,
+    name: reqName.value,
+    contact: reqContact.value,
+    msg: reqMsg.value,
+    time: new Date().toISOString()
   });
 
-  localStorage.setItem("loot_requests",JSON.stringify(data));
-  reqName.value=reqContact.value=reqMsg.value="";
-  
-  // Modal schließen
+  localStorage.setItem("loot_requests", JSON.stringify(data));
+
+  // 4️⃣ Cleanup
+  reqName.value = "";
+  reqContact.value = "";
+  reqMsg.value = "";
+
   modal.style.display = "none";
 
-  // 🔔 Sofortiges UX-Feedback am Card-Button
-  const btn = [...document.querySelectorAll(".request-btn")]
-    .find(b => b.dataset.item === currentItem);
-
-  if (btn) {
-    btn.classList.add("disabled");
-    btn.disabled = true;
-  }
-
-  // UI neu rendern (für Reload-Festigkeit)
+  // 5️⃣ Re-render + Button freigeben
   loadItems().then(() => {
     render();
+    sendBtn.disabled = false;
   });
-  };
+};
 
 /* ===== VISITOR COUNTER ===== */
 const K="lootliste_visitors",D="lootliste_last_visit";
