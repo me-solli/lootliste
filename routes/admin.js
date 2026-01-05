@@ -3,8 +3,13 @@ const router = express.Router();
 const db = require("../db");
 
 /* ================================
-   ITEM STATUS
+   KONSTANTEN
 ================================ */
+
+/**
+ * Admin-Moderationsstatus
+ * (Sichtbarkeit / Freigabe)
+ */
 const ITEM_STATUS = {
   SUBMITTED: "submitted",
   APPROVED: "approved",
@@ -12,8 +17,22 @@ const ITEM_STATUS = {
   REJECTED: "rejected"
 };
 
+/**
+ * Vergabe-/Systemstatus (V3)
+ * (noch ohne aktive Vergabe-Logik)
+ *
+ * open     → sichtbar, Bedarf möglich
+ * assigned → vergeben
+ * closed   → abgeschlossen
+ */
+const ASSIGN_STATUS = {
+  OPEN: "open",
+  ASSIGNED: "assigned",
+  CLOSED: "closed"
+};
+
 /* ================================
-   Admin Auth
+   ADMIN AUTH
 ================================ */
 function requireAdmin(req, res, next) {
   if (req.headers["x-admin-token"] !== "lootliste-admin-2025") {
@@ -23,7 +42,21 @@ function requireAdmin(req, res, next) {
 }
 
 /* ================================
-   GET Admin Items (ROBUST)
+   HELPER: Status setzen
+================================ */
+function updateAdminStatus(itemId, status) {
+  return db.run(
+    `
+    UPDATE item_status
+    SET status = ?, status_since = datetime('now')
+    WHERE item_id = ?
+    `,
+    [status, itemId]
+  );
+}
+
+/* ================================
+   GET: Admin-Items (nach Status)
 ================================ */
 router.get("/items", requireAdmin, async (req, res) => {
   try {
@@ -46,10 +79,20 @@ router.get("/items", requireAdmin, async (req, res) => {
         i.weapon_type AS weaponType,
         i.screenshot,
         i.created_at,
-        COALESCE(s.status, ?) AS status,
+
+        -- V3 Felder
+        i.published_at,
+        i.earliest_assign_at,
+        i.latest_assign_at,
+        i.status AS assign_status,
+
+        COALESCE(s.status, ?) AS admin_status,
         s.status_since
+
       FROM items i
-      LEFT JOIN item_status s ON s.item_id = i.id
+      LEFT JOIN item_status s
+        ON s.item_id = i.id
+
       WHERE COALESCE(s.status, ?) = ?
       ORDER BY i.created_at DESC
       `,
@@ -58,13 +101,13 @@ router.get("/items", requireAdmin, async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error("ADMIN GET ITEMS FEHLER:", err);
-    res.status(500).json({ error: "Admin Items konnten nicht geladen werden" });
+    console.error("ADMIN GET ITEMS ERROR:", err);
+    res.status(500).json({ error: "Admin items konnten nicht geladen werden" });
   }
 });
 
 /* ================================
-   UPDATE ITEM DETAILS (FIX)
+   PUT: Item bearbeiten
 ================================ */
 router.put("/items/:id", requireAdmin, async (req, res) => {
   const { id } = req.params;
@@ -96,27 +139,14 @@ router.put("/items/:id", requireAdmin, async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.error("ADMIN UPDATE ITEM FEHLER:", err);
+    console.error("ADMIN UPDATE ITEM ERROR:", err);
     res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
   }
 });
 
 /* ================================
-   Helper: Status ändern
-================================ */
-function updateStatus(itemId, status) {
-  return db.run(
-    `
-    UPDATE item_status
-    SET status = ?, status_since = datetime('now')
-    WHERE item_id = ?
-    `,
-    [status, itemId]
-  );
-}
-
-/* ================================
-   Status Actions
+   POST: Item freigeben (APPROVE)
+   → setzt V3-Zeitfenster
 ================================ */
 router.post("/items/:id/approve", requireAdmin, async (req, res) => {
   try {
@@ -131,13 +161,13 @@ router.post("/items/:id/approve", requireAdmin, async (req, res) => {
       });
     }
 
-    // Admin-Status setzen
-    await updateStatus(item.id, ITEM_STATUS.APPROVED);
+    // Admin-Status
+    await updateAdminStatus(item.id, ITEM_STATUS.APPROVED);
 
-    // ===== V3.0 Publish-Logik =====
+    // V3 Zeitlogik (minimal, fair, nachvollziehbar)
     const now = new Date();
-    const earliest = new Date(now.getTime() + 60 * 60 * 1000); // +60 min
-    const latest = new Date(now.getTime() + 6 * 60 * 60 * 1000); // +6h
+    const earliest = new Date(now.getTime() + 60 * 60 * 1000); // +60 Min
+    const latest = new Date(now.getTime() + 6 * 60 * 60 * 1000); // +6 Std
 
     await db.run(
       `
@@ -146,51 +176,60 @@ router.post("/items/:id/approve", requireAdmin, async (req, res) => {
         published_at = ?,
         earliest_assign_at = ?,
         latest_assign_at = ?,
-        status = 'open'
+        status = ?
       WHERE id = ?
       `,
       [
         now.toISOString(),
         earliest.toISOString(),
         latest.toISOString(),
+        ASSIGN_STATUS.OPEN,
         item.id
       ]
     );
-    // ==============================
 
     res.json({ ok: true });
   } catch (err) {
-    console.error("APPROVE FEHLER:", err);
+    console.error("APPROVE ERROR:", err);
     res.status(500).json({ error: "Approve fehlgeschlagen" });
   }
 });
 
+/* ================================
+   POST: Item verstecken
+================================ */
 router.post("/items/:id/hide", requireAdmin, async (req, res) => {
   try {
-    await updateStatus(req.params.id, ITEM_STATUS.HIDDEN);
+    await updateAdminStatus(req.params.id, ITEM_STATUS.HIDDEN);
     res.json({ ok: true });
   } catch (err) {
-    console.error("HIDE FEHLER:", err);
+    console.error("HIDE ERROR:", err);
     res.status(500).json({ error: "Hide fehlgeschlagen" });
   }
 });
 
+/* ================================
+   POST: Item wieder sichtbar
+================================ */
 router.post("/items/:id/unhide", requireAdmin, async (req, res) => {
   try {
-    await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
+    await updateAdminStatus(req.params.id, ITEM_STATUS.APPROVED);
     res.json({ ok: true });
   } catch (err) {
-    console.error("UNHIDE FEHLER:", err);
+    console.error("UNHIDE ERROR:", err);
     res.status(500).json({ error: "Unhide fehlgeschlagen" });
   }
 });
 
+/* ================================
+   POST: Item ablehnen
+================================ */
 router.post("/items/:id/reject", requireAdmin, async (req, res) => {
   try {
-    await updateStatus(req.params.id, ITEM_STATUS.REJECTED);
+    await updateAdminStatus(req.params.id, ITEM_STATUS.REJECTED);
     res.json({ ok: true });
   } catch (err) {
-    console.error("REJECT FEHLER:", err);
+    console.error("REJECT ERROR:", err);
     res.status(500).json({ error: "Reject fehlgeschlagen" });
   }
 });
@@ -198,7 +237,7 @@ router.post("/items/:id/reject", requireAdmin, async (req, res) => {
 /* ================================
    REPAIR: fehlende item_status
 ================================ */
-router.post("/migrate/fix-missing-status", requireAdmin, async (req, res) => {
+router.post("/repair/missing-status", requireAdmin, async (req, res) => {
   try {
     const result = await db.run(
       `
@@ -210,35 +249,10 @@ router.post("/migrate/fix-missing-status", requireAdmin, async (req, res) => {
       [ITEM_STATUS.SUBMITTED]
     );
 
-    res.json({ ok: true, migrated: result.changes });
+    res.json({ ok: true, repaired: result.changes });
   } catch (err) {
-    console.error("MIGRATION FEHLER:", err);
-    res.status(500).json({ error: "Migration fehlgeschlagen" });
-  }
-});
-
-/* ================================
-   TEMP: V3 MIGRATION (EINMALIG)
-   - fügt fehlende Spalten hinzu
-   - idempotent (mehrfach aufrufbar)
-================================ */
-
-/* ================================
-   DEBUG: DB ROHANSICHT (TEMP!)
-================================ */
-router.get("/debug/items-raw", requireAdmin, async (req, res) => {
-  try {
-    const items = await db.all(`SELECT * FROM items`);
-    const status = await db.all(`SELECT * FROM item_status`);
-
-    res.json({
-      items_count: items.length,
-      status_count: status.length,
-      items,
-      status
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("REPAIR ERROR:", err);
+    res.status(500).json({ error: "Repair fehlgeschlagen" });
   }
 });
 
