@@ -438,6 +438,20 @@ body{
   color:#1a140c;
   border-color:#c9a24d;
 }
+  
+  /* ===============================
+   V3 CTA – visuell beruhigt
+   =============================== */
+
+/* CTA standardmäßig verborgen */
+.card-footer .request-btn{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(4px);
+  transition:opacity .2s ease, transform .2s ease;
+}
+
+/* CTA erscheint nur bei bewusster Inter*
 
   /* ===== MODAL ===== */
 #requestModal{display:none}
