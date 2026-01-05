@@ -949,7 +949,8 @@ document.getElementById("metaStats").textContent =
 ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 
 <div class="stars">
-  ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
+  <span class="stars-filled">${"★".repeat(item.rating)}</span>
+  <span class="stars-empty">${"☆".repeat(5 - item.rating)}</span>
   <span>(${item.rating}/5)</span>
 </div>
 
