@@ -127,6 +127,15 @@ async function loadItems(list) {
               <option value="4" ${item.rating==4?"selected":""}>⭐⭐⭐⭐</option>
               <option value="5" ${item.rating==5?"selected":""}>⭐⭐⭐⭐⭐</option>
             </select>
+            
+            <select data-field="quality">
+  <option value="">– Qualität –</option>
+  <option value="unique" ${item.quality==="unique"?"selected":""}>Unique</option>
+  <option value="set" ${item.quality==="set"?"selected":""}>Set</option>
+  <option value="rare" ${item.quality==="rare"?"selected":""}>Rare</option>
+  <option value="magic" ${item.quality==="magic"?"selected":""}>Magic</option>
+</select>
+
 
             <button data-action="save" data-id="${item.id}">💾 Speichern</button>
           </div>
