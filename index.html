@@ -438,10 +438,15 @@ body{
   cursor:default;
 }
   
-.request-btn:hover{
+.request-btn:not(.disabled):hover{
   background:linear-gradient(#2f2618,#1d170e);
   color:#f0e3c2;
-  border-color:#6f7f4a; /* greift die Verfügbar-Farbe subtil auf */
+  border-color:#6f7f4a;
+}
+
+.request-btn.disabled{
+  opacity:.6;
+  cursor:default;
 }
     
   /* ===============================
