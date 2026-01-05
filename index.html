@@ -303,10 +303,12 @@ body{
   border:1px solid #b85a5a;
 }
 
-  .card:hover{
+  /* ===== CARD HOVER (V3) ===== */
+.card:hover{
   transform:translateY(-4px);
-  border-color:var(--gold);
-  box-shadow:0 10px 28px rgba(0,0,0,.6);
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.65),
+    inset 0 0 0 1px rgba(255,255,255,.04);
 }
 
 .card-image{
