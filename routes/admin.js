@@ -125,7 +125,7 @@ function updateStatus(itemId, status) {
 router.post("/items/:id/approve", requireAdmin, async (req, res) => {
   try {
     const item = await db.get(
-      `SELECT name FROM items WHERE id = ?`,
+      `SELECT id, name FROM items WHERE id = ?`,
       [req.params.id]
     );
 
@@ -135,7 +135,33 @@ router.post("/items/:id/approve", requireAdmin, async (req, res) => {
       });
     }
 
-    await updateStatus(req.params.id, ITEM_STATUS.APPROVED);
+    // Admin-Status setzen
+    await updateStatus(item.id, ITEM_STATUS.APPROVED);
+
+    // ===== V3.0 Publish-Logik =====
+    const now = new Date();
+    const earliest = new Date(now.getTime() + 60 * 60 * 1000); // +60 min
+    const latest = new Date(now.getTime() + 6 * 60 * 60 * 1000); // +6h
+
+    await db.run(
+      `
+      UPDATE items
+      SET
+        published_at = ?,
+        earliest_assign_at = ?,
+        latest_assign_at = ?,
+        status = 'open'
+      WHERE id = ?
+      `,
+      [
+        now.toISOString(),
+        earliest.toISOString(),
+        latest.toISOString(),
+        item.id
+      ]
+    );
+    // ==============================
+
     res.json({ ok: true });
   } catch (err) {
     console.error("APPROVE FEHLER:", err);
