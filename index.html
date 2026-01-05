@@ -1049,7 +1049,8 @@ if(localStorage.getItem(D)!==today){
   localStorage.setItem(K,(+localStorage.getItem(K)||0)+1);
   localStorage.setItem(D,today);
 }
-visitorCounter.innerHTML = `Besucher gesamt: <b>${localStorage.getItem(K)}</b>`;
+visitorCounter.innerHTML =
+  '&#128065; Besucher gesamt: <b>' + localStorage.getItem(K) + '</b>';
 
 /* ===== INIT ===== */
 search.oninput=render;
