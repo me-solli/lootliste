@@ -757,10 +757,23 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 <script type="module">
   const STATUS_MAP = {
-  approved: "Verfügbar",
-  reserved: "Reserviert",
-  given: "Vergeben"
-};
+    approved: "Verfügbar",
+    reserved: "Reserviert",
+    given: "Vergeben"
+  };
+
+  /* ===== SIM MODE ===== */
+  const SIM_MODE = true;
+
+  function getSimStatus(itemName, fallback){
+    if(!SIM_MODE) return fallback;
+    return localStorage.getItem("sim_status_" + itemName) || fallback;
+  }
+
+  function setSimStatus(itemName, status){
+    if(!SIM_MODE) return;
+    localStorage.setItem("sim_status_" + itemName, status);
+  }
 
 /* ===== ICON MAPPING ===== */
 const ICONS = {
