@@ -1056,11 +1056,25 @@ document.getElementById("sendReq").onclick=()=>{
 
   localStorage.setItem("loot_requests",JSON.stringify(data));
   reqName.value=reqContact.value=reqMsg.value="";
-  modal.style.display="none";
+  
+  // Modal schließen
+  modal.style.display = "none";
+
+  // 🔔 Sofortiges UX-Feedback am Card-Button
+  const btn = [...document.querySelectorAll(".request-btn")]
+    .find(b => b.dataset.item === currentItem);
+
+  if (btn) {
+    btn.textContent = "✔ Bedarf gespeichert";
+    btn.classList.add("disabled");
+    btn.disabled = true;
+  }
+
+  // UI neu rendern (für Reload-Festigkeit)
   loadItems().then(() => {
-  render();
-});
-};
+    render();
+  });
+
 
 /* ===== VISITOR COUNTER ===== */
 const K="lootliste_visitors",D="lootliste_last_visit";
