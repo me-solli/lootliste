@@ -925,6 +925,10 @@ function render() {
       </div>
 
       <div class="card-body">
+      
+      <div class="item-name">
+  ${item.name || "Unbekanntes Item"}
+</div>
 
         <div class="stars">
           ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
