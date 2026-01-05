@@ -884,7 +884,38 @@ Object.keys(ICONS).forEach(type=>{
   function loadRequests() {
   return JSON.parse(localStorage.getItem("loot_requests") || "[]");
 }
+  function renderRequestFeed(){
+  const data = loadRequests();
+  requestFeed.innerHTML = "";
 
+  if (!data.length) {
+    requestFeed.innerHTML =
+      `<div class="request-entry">Noch keine Anfragen</div>`;
+    return;
+  }
+
+  // Neueste zuerst, maximal 5
+  data
+    .slice()
+    .reverse()
+    .slice(0, 5)
+    .forEach(r => {
+      const t = new Date(r.time);
+      const mins = Math.max(
+        1,
+        Math.floor((Date.now() - t.getTime()) / 60000)
+      );
+
+      requestFeed.innerHTML += `
+        <div class="request-entry">
+          <strong>${r.name}</strong>
+          interessiert sich für
+          <em>${r.item}</em>
+          <span style="opacity:.6">· vor ${mins} min</span>
+        </div>
+      `;
+    });
+}
 
 /* ===== RENDER ===== */
 
