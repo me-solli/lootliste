@@ -924,12 +924,9 @@ document.getElementById("metaStats").textContent =
 ${item.name ?? (item.weaponType ? `Waffe · ${item.weaponType}` : (item.type ? item.type.charAt(0).toUpperCase() + item.type.slice(1) : "Unbekanntes Item"))}
 </div>
 
-        <div class="stars">
-          ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
-          (${item.rating}/5)
-        </div>
-
-        ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
+<div class="item-name ${item.quality || ""}">
+${item.name ?? (item.weaponType ? `Waffe · ${item.weaponType}` : (item.type ? item.type.charAt(0).toUpperCase() + item.type.slice(1) : "Unbekanntes Item"))}
+</div>
 
 <div class="item-sub">
   ${
@@ -937,6 +934,13 @@ ${item.name ?? (item.weaponType ? `Waffe · ${item.weaponType}` : (item.type ? i
       ? `Waffe · ${item.weaponType}`
       : (TYPE_LABELS[item.type] || "")
   }
+</div>
+
+${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
+
+<div class="stars">
+  ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
+  (${item.rating}/5)
 </div>
 
         <div class="player">
