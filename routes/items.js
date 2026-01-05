@@ -151,4 +151,49 @@ router.post(
   }
 );
 
+/* =====================================================
+   POST /api/items/:id/interest
+   PUBLIC – Interesse setzen (V3 STEP 2)
+===================================================== */
+router.post("/:id/interest", async (req, res) => {
+  try {
+    const itemId = Number(req.params.id);
+    const userId = Number(req.body.user_id || 0);
+
+    if (!itemId || !userId) {
+      return res.status(400).json({ error: "Invalid item or user" });
+    }
+
+    // Nur freigegebene Items
+    const item = await db.get(
+      `
+      SELECT i.id
+      FROM items i
+      JOIN item_status s ON s.item_id = i.id
+      WHERE i.id = ?
+        AND s.status = ?
+      `,
+      [itemId, ITEM_STATUS.APPROVED]
+    );
+
+    if (!item) {
+      return res.status(404).json({ error: "Item not found or not public" });
+    }
+
+    // Interesse setzen (idempotent)
+    await db.run(
+      `
+      INSERT OR IGNORE INTO item_interest (item_id, user_id)
+      VALUES (?, ?)
+      `,
+      [itemId, userId]
+    );
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("SET INTEREST ERROR:", err);
+    res.status(500).json({ error: "Interest konnte nicht gesetzt werden" });
+  }
+});
+
 module.exports = router;
