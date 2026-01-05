@@ -62,6 +62,7 @@ router.get("/public", async (req, res) => {
         i.id,
         i.name         AS name,
         i.type          AS type,
+        i.quality       AS quality,
         i.weapon_type   AS weaponType,
         i.roll,
         i.owner_user_id AS contact,
