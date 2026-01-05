@@ -222,14 +222,6 @@ router.post("/migrate/fix-missing-status", requireAdmin, async (req, res) => {
    - fügt fehlende Spalten hinzu
    - idempotent (mehrfach aufrufbar)
 ================================ */
-router.post("/migrate/v3-items", requireAdmin, async (req, res) => {
-  try { await db.run(`ALTER TABLE items ADD COLUMN published_at TEXT`); } catch (_) {}
-  try { await db.run(`ALTER TABLE items ADD COLUMN earliest_assign_at TEXT`); } catch (_) {}
-  try { await db.run(`ALTER TABLE items ADD COLUMN latest_assign_at TEXT`); } catch (_) {}
-  try { await db.run(`ALTER TABLE items ADD COLUMN status TEXT`); } catch (_) {}
-
-  res.json({ ok: true, migrated: "v3 items columns ensured" });
-});
 
 /* ================================
    DEBUG: DB ROHANSICHT (TEMP!)
