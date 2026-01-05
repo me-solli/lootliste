@@ -1117,10 +1117,11 @@ document.getElementById("sendReq").onclick = () => {
   modal.style.display = "none";
 
   // 5️⃣ Re-render + Button freigeben
-  loadItems().then(() => {
-    render();
-    sendBtn.disabled = false;
-  });
+loadItems().then(() => {
+  render();
+  renderRequestFeed();   // Feed nach neuer Anfrage aktualisieren
+  sendBtn.disabled = false;
+});
 };
 
 /* ===== VISITOR COUNTER ===== */
