@@ -943,13 +943,13 @@ ${item.name ?? (item.weaponType ? `Waffe · ${item.weaponType}` : (item.type ? i
 
         ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 
-        <div class="category">
-          ${
-            item.type === "waffe"
-              ? `Waffe${item.weaponType ? " · " + item.weaponType : ""}`
-              : (TYPE_LABELS[item.type] || "")
-          }
-        </div>
+<div class="item-sub">
+  ${
+    item.type === "waffe"
+      ? `Waffe · ${item.weaponType}`
+      : (TYPE_LABELS[item.type] || "")
+  }
+</div>
 
         <div class="player">
           Spieler: ${item.contact || "-"}
