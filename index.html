@@ -958,7 +958,8 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 <div class="stars">
   <span class="stars-filled">${"★".repeat(item.rating)}</span>
   <span class="stars-empty">${"☆".repeat(5 - item.rating)}</span>
-  <span>(${item.rating}/5)</span>
+  <span class="stars-sep">|</span>
+  <span class="stars-num">${item.rating}/5</span>
 </div>
 
         <div class="player">
