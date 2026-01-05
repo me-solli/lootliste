@@ -933,7 +933,7 @@ function render() {
       <div class="card-body">
       
       <div class="item-name">
-${item.name || item.title || "Unbekanntes Item"}
+${item.name ?? (item.weaponType ? `Waffe · ${item.weaponType}` : (item.type ? item.type.charAt(0).toUpperCase() + item.type.slice(1) : "Unbekanntes Item"))}
 </div>
 
         <div class="stars">
