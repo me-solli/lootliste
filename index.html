@@ -1011,7 +1011,7 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
         </div>
 
 ${
-  item.status === "Verfügbar"
+  currentStatus === "Verfügbar"
     ? (
         hasRequested(item.name)
           ? `<button class="request-btn disabled" disabled>
