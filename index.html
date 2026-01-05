@@ -965,10 +965,10 @@ document.getElementById("metaStats").textContent =
   filtered.forEach(item => {
       const currentStatus = getSimStatus(item.name, item.status);
 
-  const s =
-    item.status === "Reserviert" ? "reserviert" :
-    item.status === "Vergeben" ? "vergeben" :
-    "verfuegbar";
+const s =
+  currentStatus === "Reserviert" ? "reserviert" :
+  currentStatus === "Vergeben" ? "vergeben" :
+  "verfuegbar";
 
   cards.innerHTML += `
     <div class="card ${s}">
