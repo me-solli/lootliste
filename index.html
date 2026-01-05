@@ -846,6 +846,10 @@ Object.keys(ICONS).forEach(type=>{
 });
   
 /* ===== HELPERS ===== */
+  function hasRequested(itemName){
+  const data = JSON.parse(localStorage.getItem("loot_requests") || "[]");
+  return data.some(r => r.item === itemName);
+}
 
 /* ===== RENDER ===== */
 
