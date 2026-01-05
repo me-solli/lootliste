@@ -60,7 +60,7 @@ router.get("/public", async (req, res) => {
       `
       SELECT
         i.id,
-        i.title         AS name,
+        i.name         AS name,
         i.type          AS type,
         i.weapon_type   AS weaponType,
         i.roll,
