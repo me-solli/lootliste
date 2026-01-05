@@ -920,8 +920,8 @@ function render() {
     <div style="color:var(--red)">🔴 ${weg} vergeben</div>
   `;
 
-  metaBar.innerHTML =
-    `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
+document.getElementById("metaStats").textContent =
+  `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
   filtered.forEach(item => {
   const s =
