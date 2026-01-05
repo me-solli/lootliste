@@ -963,6 +963,8 @@ document.getElementById("metaStats").textContent =
   `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
   filtered.forEach(item => {
+      const currentStatus = getSimStatus(item.name, item.status);
+
   const s =
     item.status === "Reserviert" ? "reserviert" :
     item.status === "Vergeben" ? "vergeben" :
