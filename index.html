@@ -250,17 +250,15 @@ body{
   opacity:.85;
 }
 
-/* Status-Badge entschärfen */
-  /* ===== STATUS BADGE ===== */
-
+/* ===== STATUS BADGE (V3 FINAL) ===== */
 .status-badge{
   position:absolute;
   top:12px;
   right:12px;
-  font-size:12px;
+  font-size:11px;
   padding:4px 10px;
   border-radius:999px;
-  font-weight:bold;
+  font-weight:600;
 
   background:rgba(0,0,0,.55);
   border:1px solid #2a2a2a;
@@ -268,6 +266,21 @@ body{
 
   text-transform:uppercase;
   letter-spacing:.4px;
+}
+
+.status-badge.verfuegbar{
+  border-color:#6f7f4a;
+  color:#e6edd0;
+}
+
+.status-badge.reserviert{
+  border-color:#8a6a3a;
+  color:#f0e3c2;
+}
+
+.status-badge.vergeben{
+  border-color:#5a2e2e;
+  color:#e8cfcf;
 }
 
 .status-badge.reserviert{
