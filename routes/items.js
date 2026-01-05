@@ -52,7 +52,7 @@ const upload = multer({
 
 /* =====================================================
    GET /api/items/public
-   PUBLIC – freigegebene Items (V3 READ ONLY)
+   PUBLIC – freigegebene Items (V3 READ ONLY, stabil)
 ===================================================== */
 router.get("/public", async (req, res) => {
   try {
@@ -61,34 +61,29 @@ router.get("/public", async (req, res) => {
       SELECT
         i.id,
         i.name         AS name,
-        i.type          AS type,
-        i.quality       AS quality,
-        i.weapon_type   AS weaponType,
+        i.type         AS type,
+        i.quality      AS quality,
+        i.weapon_type  AS weaponType,
         i.roll,
         i.owner_user_id AS contact,
         i.screenshot,
         i.created_at,
-        i.rating        AS rating,
+        i.rating       AS rating,
 
-        -- V3 Felder (neu, read-only)
+        -- V3 Felder (read-only)
         i.published_at,
         i.earliest_assign_at,
         i.latest_assign_at,
         i.status        AS assign_status,
-
-        COUNT(ii.id)    AS interest_count,
 
         s.status        AS admin_status
 
       FROM items i
       JOIN item_status s
         ON s.item_id = i.id
-      LEFT JOIN item_interest ii
-        ON ii.item_id = i.id
 
       WHERE s.status = ?
 
-      GROUP BY i.id
       ORDER BY i.created_at DESC
       `,
       [ITEM_STATUS.APPROVED]
