@@ -53,11 +53,7 @@ router.get("/items", requireAdmin, async (req, res) => {
       WHERE COALESCE(s.status, ?) = ?
       ORDER BY i.created_at DESC
       `,
-      [
-        ITEM_STATUS.SUBMITTED,
-        status,
-        status
-      ]
+      [ITEM_STATUS.SUBMITTED, status, status]
     );
 
     res.json(rows);
@@ -202,31 +198,38 @@ router.post("/items/:id/reject", requireAdmin, async (req, res) => {
 /* ================================
    REPAIR: fehlende item_status
 ================================ */
-router.post(
-  "/migrate/fix-missing-status",
-  requireAdmin,
-  async (req, res) => {
-    try {
-      const result = await db.run(
-        `
-        INSERT INTO item_status (item_id, status, status_since)
-        SELECT id, ?, datetime('now')
-        FROM items
-        WHERE id NOT IN (SELECT item_id FROM item_status)
-        `,
-        [ITEM_STATUS.SUBMITTED]
-      );
+router.post("/migrate/fix-missing-status", requireAdmin, async (req, res) => {
+  try {
+    const result = await db.run(
+      `
+      INSERT INTO item_status (item_id, status, status_since)
+      SELECT id, ?, datetime('now')
+      FROM items
+      WHERE id NOT IN (SELECT item_id FROM item_status)
+      `,
+      [ITEM_STATUS.SUBMITTED]
+    );
 
-      res.json({
-        ok: true,
-        migrated: result.changes
-      });
-    } catch (err) {
-      console.error("MIGRATION FEHLER:", err);
-      res.status(500).json({ error: "Migration fehlgeschlagen" });
-    }
+    res.json({ ok: true, migrated: result.changes });
+  } catch (err) {
+    console.error("MIGRATION FEHLER:", err);
+    res.status(500).json({ error: "Migration fehlgeschlagen" });
   }
-);
+});
+
+/* ================================
+   TEMP: V3 MIGRATION (EINMALIG)
+   - fügt fehlende Spalten hinzu
+   - idempotent (mehrfach aufrufbar)
+================================ */
+router.post("/migrate/v3-items", requireAdmin, async (req, res) => {
+  try { await db.run(`ALTER TABLE items ADD COLUMN published_at TEXT`); } catch (_) {}
+  try { await db.run(`ALTER TABLE items ADD COLUMN earliest_assign_at TEXT`); } catch (_) {}
+  try { await db.run(`ALTER TABLE items ADD COLUMN latest_assign_at TEXT`); } catch (_) {}
+  try { await db.run(`ALTER TABLE items ADD COLUMN status TEXT`); } catch (_) {}
+
+  res.json({ ok: true, migrated: "v3 items columns ensured" });
+});
 
 /* ================================
    DEBUG: DB ROHANSICHT (TEMP!)
