@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Über das Projekt – D2R Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body{
   background:#0b0b0b;
@@ -11,15 +12,136 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;
   padding:24px;
 }
-h1,h2{color:#d4af37}
-p,ul{max-width:760px;line-height:1.6}
-a{color:#d4af37;text-decoration:none}
-.small{opacity:.75;font-size:13px}
+
+h1,h2{
+  color:#d4af37;
+}
+
+p,ul{
+  max-width:760px;
+  line-height:1.6;
+}
+
+a{
+  color:#d4af37;
+  text-decoration:none;
+}
+
+.small{
+  opacity:.75;
+  font-size:13px;
+}
+
+/* ===== TIMELINE ===== */
+.timeline{
+  margin:40px 0 60px;
+}
+
+.timeline-line{
+  position:relative;
+  display:flex;
+  gap:26px;
+  padding-top:28px;
+  border-top:1px solid #333;
+  flex-wrap:wrap;
+}
+
+.timeline .step{
+  max-width:180px;
+  font-size:13px;
+  opacity:.85;
+}
+
+.timeline .step strong{
+  display:block;
+  color:#d4af37;
+  margin-bottom:6px;
+}
+
+.timeline .dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#555;
+  display:inline-block;
+  margin-bottom:10px;
+}
+
+.timeline .step.active .dot{
+  background:#d4af37;
+  box-shadow:0 0 8px rgba(212,175,55,.65);
+}
+
+.timeline .step.future{
+  opacity:.5;
+}
 </style>
 </head>
+
 <body>
 
 <h1>Über das Projekt</h1>
+
+<!-- ===== PROJEKT TIMELINE ===== -->
+<section class="timeline">
+
+  <h2>Projekt-Timeline</h2>
+
+  <div class="timeline-line">
+
+    <div class="step">
+      <span class="dot"></span>
+      <strong>Idee</strong>
+      <p>
+        Community-Loot ohne Handel,
+        ohne Druck und ohne Verpflichtung.
+      </p>
+    </div>
+
+    <div class="step">
+      <span class="dot"></span>
+      <strong>V1</strong>
+      <p>
+        Erste Lootliste,
+        manuell gepflegt –
+        Fokus auf Sichtbarkeit.
+      </p>
+    </div>
+
+    <div class="step">
+      <span class="dot"></span>
+      <strong>V2</strong>
+      <p>
+        Admin-Workflow,
+        Item-Typen,
+        Status,
+        Filter & Sortierung.
+      </p>
+    </div>
+
+    <div class="step active">
+      <span class="dot"></span>
+      <strong>V3 (aktuell)</strong>
+      <p>
+        Systemlogik,
+        Anfragen,
+        Status-Trennung,
+        UX-Fokus.
+      </p>
+    </div>
+
+    <div class="step future">
+      <span class="dot"></span>
+      <strong>Ausblick</strong>
+      <p>
+        Accounts,
+        automatisierte Vergabe,
+        Fair-Play-Mechaniken.
+      </p>
+    </div>
+
+  </div>
+</section>
 
 <p>
 Die <strong>D2R Lootliste</strong> ist ein privates, nicht-kommerzielles
