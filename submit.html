@@ -2,12 +2,11 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Item einreichen – Community Lootliste</title>
+<title>Items einreichen – Community Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --bg:#0b0b0b;
   --panel:#141414;
   --border:#2a2a2a;
   --gold:#f5c451;
@@ -24,7 +23,7 @@ body{
   color:var(--text);
 }
 .wrapper{
-  max-width:600px;
+  max-width:620px;
   margin:40px auto;
   padding:20px;
 }
@@ -43,12 +42,19 @@ p{
   color:var(--muted);
   font-size:14px;
 }
+.item-block{
+  padding:14px;
+  border:1px dashed #333;
+  border-radius:10px;
+  margin-bottom:12px;
+}
 label{
   display:block;
-  margin:14px 0 6px;
+  margin:6px 0 6px;
   font-size:14px;
 }
-input[type="file"]{
+input[type="file"],
+input[type="text"]{
   width:100%;
   padding:10px;
   background:#0f0f0f;
@@ -56,7 +62,20 @@ input[type="file"]{
   border-radius:8px;
   color:var(--text);
 }
-button{
+.add-btn{
+  margin-top:10px;
+  padding:8px;
+  background:#1b1b1b;
+  border:1px dashed #333;
+  color:#bbb;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+  text-align:center;
+}
+.add-btn:hover{ color:#eee; }
+
+button[type="submit"]{
   margin-top:20px;
   width:100%;
   padding:12px;
@@ -66,6 +85,7 @@ button{
   font-weight:600;
   cursor:pointer;
 }
+
 .notice{
   padding:12px;
   border-radius:8px;
@@ -82,6 +102,11 @@ button{
   border:1px solid #3a1a1a;
   color:var(--red);
 }
+.small-hint{
+  font-size:12px;
+  color:#777;
+  margin-top:4px;
+}
 </style>
 </head>
 
@@ -89,25 +114,42 @@ button{
 <div class="wrapper">
   <div class="panel">
 
-    <h1>Item einreichen</h1>
+    <h1>Items einreichen</h1>
     <p>
-      Screenshot hochladen.  
-      Typ & Status werden anschließend im Admin gesetzt.
+      Du kannst bis zu <strong>3 Items gleichzeitig</strong> einreichen.<br>
+      Jedes Item benötigt genau <strong>einen Screenshot</strong>.
     </p>
 
     <form id="submitForm">
-      <!-- Backend-Pflichtfelder -->
+
+      <!-- systemisch -->
       <input type="hidden" name="type" value="sonstiges">
       <input type="hidden" name="status" value="eingereicht">
 
-      <label for="screenshot">Item-Screenshot *</label>
-      <input type="file" id="screenshot" name="screenshot" accept="image/*" required>
+      <div id="items">
 
-      <button type="submit">Item einreichen</button>
+        <div class="item-block">
+          <label>Item 1 – Screenshot *</label>
+          <input type="file" name="screenshot_1" accept="image/*" required>
+
+          <label>Eigene Notiz (optional)</label>
+          <input
+            type="text"
+            name="note_1"
+            maxlength="40"
+            value="z. B. Mule xyz / MF Sorc / Char: xyz"
+          >
+        </div>
+
+      </div>
+
+      <div class="add-btn" id="addItemBtn">+ weiteres Item hinzufügen</div>
+
+      <button type="submit">Items einreichen</button>
     </form>
 
     <div id="msgSuccess" class="notice success" style="display:none">
-      ✔ Item wurde erfolgreich eingereicht.
+      ✔ Items wurden erfolgreich eingereicht.
     </div>
     <div id="msgError" class="notice error" style="display:none">
       ✖ Fehler beim Einreichen.
@@ -120,8 +162,41 @@ button{
 const API_BASE = "https://content-connection-production-ea07.up.railway.app";
 
 const form = document.getElementById("submitForm");
+const itemsWrap = document.getElementById("items");
+const addBtn = document.getElementById("addItemBtn");
+
 const msgSuccess = document.getElementById("msgSuccess");
 const msgError = document.getElementById("msgError");
+
+let itemCount = 1;
+const MAX_ITEMS = 3;
+
+addBtn.addEventListener("click", () => {
+  if (itemCount >= MAX_ITEMS) return;
+
+  itemCount++;
+
+  const block = document.createElement("div");
+  block.className = "item-block";
+  block.innerHTML = `
+    <label>Item ${itemCount} – Screenshot *</label>
+    <input type="file" name="screenshot_${itemCount}" accept="image/*" required>
+
+    <label>Eigene Notiz (optional)</label>
+    <input
+      type="text"
+      name="note_${itemCount}"
+      maxlength="40"
+      value="z. B. Mule xyz / MF Sorc / Char: xyz"
+    >
+  `;
+
+  itemsWrap.appendChild(block);
+
+  if (itemCount === MAX_ITEMS) {
+    addBtn.style.display = "none";
+  }
+});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -138,12 +213,11 @@ form.addEventListener("submit", async (e) => {
       body: new FormData(form)
     });
 
-    if (!res.ok) throw new Error("Submit fehlgeschlagen");
+    if (!res.ok) throw new Error();
 
     form.reset();
     msgSuccess.style.display = "block";
-  } catch (err) {
-    console.error(err);
+  } catch {
     msgError.style.display = "block";
   }
 });
