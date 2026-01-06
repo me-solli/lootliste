@@ -1005,10 +1005,16 @@ const matchesStatus =
       return matchesSearch && matchesStatus && matchesType;
     })
     .sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    const total = items.length;
-  const frei = items.filter(i => i.status === "Verfügbar").length;
-  const res  = items.filter(i => i.status === "Reserviert").length;
-  const weg  = items.filter(i => i.status === "Vergeben").length;
+const total = items.length;
+const frei = items.filter(i =>
+  getSimStatus(i.name, i.status) === "Verfügbar"
+).length;
+const res = items.filter(i =>
+  getSimStatus(i.name, i.status) === "Reserviert"
+).length;
+const weg = items.filter(i =>
+  getSimStatus(i.name, i.status) === "Vergeben"
+).length;
 
   heroStats.innerHTML = `
     <div>📦 ${total} Items</div>
