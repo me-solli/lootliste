@@ -1107,7 +1107,7 @@ function render() {
       const matchesSearch =
         !q ||
         (i.name || "").toLowerCase().includes(q) ||
-        (i.category || "").toLowerCase().includes(q);
+       (i.type || "").toLowerCase().includes(q);
 
 const matchesStatus =
   !statusValue || getSimStatus(i.name, i.status) === statusValue;
