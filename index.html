@@ -1201,7 +1201,7 @@ document.getElementById("metaStats").textContent =
   `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
   filtered.forEach(item => {
-      const currentStatus = getSimStatus(item.name, item.status);
+const currentStatus = item.status;
 
 const s =
   currentStatus === "Reserviert" ? "reserviert" :
