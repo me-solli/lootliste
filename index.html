@@ -1135,7 +1135,11 @@ name: i.name || ("item_" + i.id),
         roll: i.roll || "",
 
         contact: i.contact || "",
-        status: STATUS_MAP[i.status] || "Verfügbar",
+        
+status: getSimStatus(
+  i.name,
+  STATUS_MAP[i.status] || "Verfügbar"
+),
 
         screenshot: i.screenshot || ""
       };
