@@ -876,15 +876,7 @@ Object.keys(ICONS).forEach(type=>{
 });
   
 /* ===== HELPERS ===== */
-  function hasRequested(itemName){
-  const data = JSON.parse(localStorage.getItem("loot_requests") || "[]");
-  return data.some(r => r.item === itemName);
-}
-  
-  function loadRequests() {
-  return JSON.parse(localStorage.getItem("loot_requests") || "[]");
-}
-  function renderRequestFeed(){
+function renderRequestFeed(){
   const data = loadRequests();
   requestFeed.innerHTML = "";
 
@@ -894,7 +886,7 @@ Object.keys(ICONS).forEach(type=>{
     return;
   }
 
-  // Neueste zuerst, maximal 5
+  // Neueste zuerst, maximal 5 Einträge
   data
     .slice()
     .reverse()
@@ -906,16 +898,16 @@ Object.keys(ICONS).forEach(type=>{
         Math.floor((Date.now() - t.getTime()) / 60000)
       );
 
-requestFeed.innerHTML += `
-  <div class="request-entry"
-       data-item="${r.item}"
-       style="cursor:pointer">
-    <strong>${r.name}</strong>
-    interessiert sich für
-    <em>${r.item}</em>
-    <span style="opacity:.6">· vor ${mins} min</span>
-  </div>
-`;
+      requestFeed.innerHTML += `
+        <div class="request-entry"
+             data-item="${r.item}"
+             style="cursor:pointer">
+          <strong>${r.name}</strong>
+          interessiert sich für
+          <em>${r.item}</em>
+          <span style="opacity:.6">· vor ${mins} min</span>
+        </div>
+      `;
     });
 }
 
