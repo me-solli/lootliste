@@ -948,11 +948,6 @@ const SIM_MODE = location.hostname === "localhost";
     return localStorage.getItem("sim_status_" + itemName) || fallback;
   }
 
-  function setSimStatus(itemName, status){
-    if(!SIM_MODE) return;
-    localStorage.setItem("sim_status_" + itemName, status);
-  }
-
       /* ===== CURRENT USER (LOCAL / DEV) ===== */
   const CURRENT_USER =
     localStorage.getItem("loot_current_user")
