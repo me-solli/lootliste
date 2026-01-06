@@ -867,8 +867,10 @@ Object.keys(ICONS).forEach(type=>{
     document.querySelectorAll(".icon-btn").forEach(b=>b.classList.remove("active"));
     if(activeType===type){activeType="";}
     else{activeType=type;btn.classList.add("active");}
-    loadItems().then(() => {
-  render();      
+    
+loadItems().then(() => {
+  render();
+  renderRequestFeed();
 });
 
   };
