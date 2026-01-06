@@ -316,11 +316,26 @@ body{
   box-shadow:none;
 }
   
-  .card.highlight{
-  box-shadow:
-    0 0 0 2px var(--gold),
-    0 0 28px rgba(245,196,81,.65);
-  transition: box-shadow .25s ease;
+@keyframes highlightPulse {
+  0% {
+    box-shadow:
+      0 0 0 1px rgba(245,196,81,.35),
+      0 0 10px rgba(245,196,81,.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(245,196,81,.85),
+      0 0 26px rgba(245,196,81,.65);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(245,196,81,.35),
+      0 0 10px rgba(245,196,81,.2);
+  }
+}
+
+.card.highlight{
+  animation: highlightPulse 1.4s ease-in-out 2;
 }
 
 .card-image{
