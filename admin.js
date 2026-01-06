@@ -38,12 +38,11 @@ function showInlineFeedback(el, text) {
 }
 
 /* ================================
-   DEFAULT TEXTS
+   DEFAULTS
 ================================ */
 const DEFAULTS = {
   name: "Name",
-  roll: "Roll",
-  admin_note: ""
+  roll: "Roll"
 };
 
 /* ================================
@@ -74,12 +73,17 @@ async function loadItems(list) {
         </div>
 
         <div class="meta">
+
+          <!-- 🔥 KLARER ITEM-NAME (kein UNDEFINED mehr) -->
+          <div style="font-weight:600;margin-bottom:4px;">
+            ${item.name || "Unbenanntes Item"}
+          </div>
+
           <div class="status-badge status-${item.status}">
             ${item.status}
           </div>
 
           <div><b>ID:</b> ${item.id}</div>
-          <div><b>Name:</b> ${item.name || "-"}</div>
           <div><b>Typ:</b> ${item.type || "-"}</div>
           <div><b>WeaponType:</b> ${item.weaponType || "-"}</div>
           <div><b>Roll:</b> ${item.roll || "-"}</div>
@@ -87,36 +91,65 @@ async function loadItems(list) {
 
           <div class="edit" data-item-id="${item.id}">
 
-            <input data-field="name" data-default="${DEFAULTS.name}"
-              value="${item.name || DEFAULTS.name}">
+            <input
+              data-field="name"
+              data-default="${DEFAULTS.name}"
+              value="${item.name || DEFAULTS.name}"
+            >
 
             <select data-field="type">
               <option value="">– Typ –</option>
-              ${["waffe","schild","helm","ruestung","handschuhe","guertel","stiefel","amulet","ring","charm","rune","sonstiges"]
-                .map(t => `<option ${item.type===t?"selected":""}>${t}</option>`).join("")}
+              ${[
+                "waffe","schild","helm","ruestung",
+                "handschuhe","guertel","stiefel",
+                "amulet","ring","charm","rune","sonstiges"
+              ].map(t =>
+                `<option value="${t}" ${item.type===t?"selected":""}>${t}</option>`
+              ).join("")}
             </select>
 
-            <select data-field="weaponType" ${item.type!=="waffe"?"disabled":""}>
+            <select
+              data-field="weaponType"
+              ${item.type !== "waffe" ? "disabled" : ""}
+            >
               <option value="">– WeaponType –</option>
-              ${["Schwert","Axt","Keule","Dolch","Klaue","Stab","Zauberstab","Zepter","Speer","Sense","Bogen","Armbrust","Wurfwaffe"]
-                .map(w => `<option ${item.weaponType===w?"selected":""}>${w}</option>`).join("")}
+              ${[
+                "Schwert","Axt","Keule","Dolch","Klaue",
+                "Stab","Zauberstab","Zepter","Speer",
+                "Sense","Bogen","Armbrust","Wurfwaffe"
+              ].map(w =>
+                `<option value="${w}" ${item.weaponType===w?"selected":""}>${w}</option>`
+              ).join("")}
             </select>
 
-            <input data-field="roll" data-default="${DEFAULTS.roll}"
-              value="${item.roll || DEFAULTS.roll}">
+            <input
+              data-field="roll"
+              data-default="${DEFAULTS.roll}"
+              value="${item.roll || DEFAULTS.roll}"
+            >
 
             <select data-field="rating">
               <option value="">– Sterne –</option>
               ${[1,2,3,4,5].map(n =>
-                `<option value="${n}" ${item.rating==n?"selected":""}>${"⭐".repeat(n)}</option>`
+                `<option value="${n}" ${item.rating==n?"selected":""}>
+                  ${"⭐".repeat(n)}
+                </option>`
               ).join("")}
             </select>
 
-            <!-- 🧠 Admin-Notiz (intern) -->
+            <!-- 🧠 Interne Admin-Notiz -->
             <textarea
               data-field="admin_note"
               placeholder="Interne Admin-Notiz (nicht öffentlich)"
-              style="width:100%;min-height:46px;margin-top:6px;"
+              style="
+                width:100%;
+                min-height:38px;
+                margin-top:6px;
+                background:#181818;
+                color:#ccc;
+                border:1px dashed #333;
+                font-size:12px;
+              "
             >${item.admin_note || ""}</textarea>
 
             <div class="actions">
@@ -145,9 +178,8 @@ async function saveItem(container) {
   const data = {};
 
   container.querySelectorAll("[data-field]").forEach(el => {
-    const field = el.dataset.field;
     if (el.disabled) return;
-
+    const field = el.dataset.field;
     const def = el.dataset.default;
     data[field] = (def && el.value === def) ? null : el.value || null;
   });
@@ -195,7 +227,6 @@ document.addEventListener("DOMContentLoaded", () => {
   list.onclick = async e => {
     const btn = e.target.closest("button");
     if (!btn) return;
-
     const edit = btn.closest(".edit");
 
     try {
