@@ -885,17 +885,22 @@ Object.keys(ICONS).forEach(type=>{
   const btn=document.createElement("div");
   btn.className="icon-btn";
   btn.innerHTML=`<img src="img/icons/${ICONS[type]}.png"><span>${TYPE_LABELS[type] || type}</span>`;
-  btn.onclick=()=>{
-    document.querySelectorAll(".icon-btn").forEach(b=>b.classList.remove("active"));
-    if(activeType===type){activeType="";}
-    else{activeType=type;btn.classList.add("active");}
-    
-loadItems().then(() => {
+  
+btn.onclick = () => {
+  document.querySelectorAll(".icon-btn")
+    .forEach(b => b.classList.remove("active"));
+
+  if (activeType === type) {
+    activeType = "";
+  } else {
+    activeType = type;
+    btn.classList.add("active");
+  }
+
   render();
   renderRequestFeed();
-});
+};
 
-  };
   iconBar.appendChild(btn);
 });
   
