@@ -700,6 +700,45 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   width:12px;
   transform: translateY(-1px);
 }
+
+  /* ===== PROJECT TIMELINE ===== */
+.project-timeline{
+  padding:18px 32px 10px;
+  position:relative;
+}
+
+.timeline-track{
+  height:2px;
+  background:#2a2a2a;
+  margin-bottom:14px;
+  position:relative;
+}
+
+.timeline-progress{
+  position:absolute;
+  left:0;
+  top:0;
+  height:2px;
+  width:75%;
+  background:linear-gradient(90deg,#bfa86a,#6f7f4a);
+}
+
+.timeline-steps{
+  display:flex;
+  justify-content:space-between;
+}
+
+.timeline-step{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  background:#333;
+  position:relative;
+}
   
 /* Zustände */
 .timeline-step.done{
