@@ -1190,10 +1190,15 @@ requestFeed.addEventListener("click", e => {
     block: "center"
   });
 
-  card.classList.add("highlight");
-  setTimeout(() => {
-    card.classList.remove("highlight");
-  }, 2000);
+// 👇 alle bestehenden Highlights sofort entfernen
+document.querySelectorAll(".card.highlight")
+  .forEach(c => c.classList.remove("highlight"));
+
+card.classList.add("highlight");
+
+setTimeout(() => {
+  card.classList.remove("highlight");
+}, 2000);
 });
 
 /* ===== INIT ===== */
