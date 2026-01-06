@@ -24,7 +24,7 @@ function ratingStars(value) {
 }
 
 /* ================================
-   DEFAULT TEXTS (WICHTIG)
+   DEFAULT TEXTS
 ================================ */
 const DEFAULTS = {
   name: "Name",
@@ -58,11 +58,13 @@ async function loadItems(list) {
     list.innerHTML = items.map(item => `
       <div class="item">
         <div class="thumb">
-          <img src="${resolveImageSrc(item.screenshot)}" alt="">
+          <img src="${resolveImageSrc(item.screenshot)}">
         </div>
 
         <div class="meta">
-          <div class="status-badge status-${item.status}">${item.status}</div>
+          <div class="status-badge status-${item.status}">
+            ${item.status}
+          </div>
 
           <div><b>ID:</b> ${item.id}</div>
           <div><b>Name:</b> ${item.name || "-"}</div>
@@ -72,72 +74,41 @@ async function loadItems(list) {
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
 
           <div class="edit" data-item-id="${item.id}">
-            <input
-              type="text"
-              data-field="name"
+
+            <input type="text" data-field="name"
               data-default="${DEFAULTS.name}"
-              value="${item.name || DEFAULTS.name}"
-            >
+              value="${item.name || DEFAULTS.name}">
 
             <select data-field="type">
               <option value="">– Typ –</option>
-              <option value="waffe" ${item.type==="waffe"?"selected":""}>Waffe</option>
-              <option value="schild" ${item.type==="schild"?"selected":""}>Schild</option>
-              <option value="helm" ${item.type==="helm"?"selected":""}>Helm</option>
-              <option value="ruestung" ${item.type==="ruestung"?"selected":""}>Rüstung</option>
-              <option value="handschuhe" ${item.type==="handschuhe"?"selected":""}>Handschuhe</option>
-              <option value="guertel" ${item.type==="guertel"?"selected":""}>Gürtel</option>
-              <option value="stiefel" ${item.type==="stiefel"?"selected":""}>Stiefel</option>
-              <option value="amulet" ${item.type==="amulet"?"selected":""}>Amulett</option>
-              <option value="ring" ${item.type==="ring"?"selected":""}>Ring</option>
-              <option value="charm" ${item.type==="charm"?"selected":""}>Charm</option>
-              <option value="rune" ${item.type==="rune"?"selected":""}>Rune</option>
-              <option value="sonstiges" ${item.type==="sonstiges"?"selected":""}>Sonstiges</option>
+              ${["waffe","schild","helm","ruestung","handschuhe","guertel","stiefel","amulet","ring","charm","rune","sonstiges"]
+                .map(t => `<option value="${t}" ${item.type===t?"selected":""}>${t}</option>`).join("")}
             </select>
 
-            <select data-field="weaponType" ${item.type !== "waffe" ? "disabled" : ""}>
+            <select data-field="weaponType" ${item.type!=="waffe"?"disabled":""}>
               <option value="">– WeaponType –</option>
-              <option value="Schwert" ${item.weaponType==="Schwert"?"selected":""}>Schwert</option>
-              <option value="Axt" ${item.weaponType==="Axt"?"selected":""}>Axt</option>
-              <option value="Keule" ${item.weaponType==="Keule"?"selected":""}>Keule</option>
-              <option value="Dolch" ${item.weaponType==="Dolch"?"selected":""}>Dolch</option>
-              <option value="Klaue" ${item.weaponType==="Klaue"?"selected":""}>Klaue</option>
-              <option value="Stab" ${item.weaponType==="Stab"?"selected":""}>Stab</option>
-              <option value="Zauberstab" ${item.weaponType==="Zauberstab"?"selected":""}>Zauberstab</option>
-              <option value="Zepter" ${item.weaponType==="Zepter"?"selected":""}>Zepter</option>
-              <option value="Speer" ${item.weaponType==="Speer"?"selected":""}>Speer</option>
-              <option value="Sense" ${item.weaponType==="Sense"?"selected":""}>Sense</option>
-              <option value="Bogen" ${item.weaponType==="Bogen"?"selected":""}>Bogen</option>
-              <option value="Armbrust" ${item.weaponType==="Armbrust"?"selected":""}>Armbrust</option>
-              <option value="Wurfwaffe" ${item.weaponType==="Wurfwaffe"?"selected":""}>Wurfwaffe</option>
+              ${["Schwert","Axt","Keule","Dolch","Klaue","Stab","Zauberstab","Zepter","Speer","Sense","Bogen","Armbrust","Wurfwaffe"]
+                .map(w => `<option ${item.weaponType===w?"selected":""}>${w}</option>`).join("")}
             </select>
 
-            <input
-              type="text"
-              data-field="roll"
+            <input type="text" data-field="roll"
               data-default="${DEFAULTS.roll}"
-              value="${item.roll || DEFAULTS.roll}"
-            >
+              value="${item.roll || DEFAULTS.roll}">
 
             <select data-field="rating">
               <option value="">– Sterne –</option>
-              <option value="1" ${item.rating==1?"selected":""}>⭐</option>
-              <option value="2" ${item.rating==2?"selected":""}>⭐⭐</option>
-              <option value="3" ${item.rating==3?"selected":""}>⭐⭐⭐</option>
-              <option value="4" ${item.rating==4?"selected":""}>⭐⭐⭐⭐</option>
-              <option value="5" ${item.rating==5?"selected":""}>⭐⭐⭐⭐⭐</option>
+              ${[1,2,3,4,5].map(n =>
+                `<option value="${n}" ${item.rating==n?"selected":""}>${"⭐".repeat(n)}</option>`
+              ).join("")}
             </select>
-            
-            <select data-field="quality">
-  <option value="">– Qualität –</option>
-  <option value="unique" ${item.quality==="unique"?"selected":""}>Unique</option>
-  <option value="set" ${item.quality==="set"?"selected":""}>Set</option>
-  <option value="rare" ${item.quality==="rare"?"selected":""}>Rare</option>
-  <option value="magic" ${item.quality==="magic"?"selected":""}>Magic</option>
-</select>
 
+            <div class="actions">
+              <button data-action="save" data-id="${item.id}">💾 Speichern</button>
+              <button data-action="status" data-status="approved" data-id="${item.id}">✅ Freigeben</button>
+              <button data-action="status" data-status="hidden" data-id="${item.id}">👁 Verstecken</button>
+              <button data-action="status" data-status="rejected" data-id="${item.id}">❌ Ablehnen</button>
+            </div>
 
-            <button data-action="save" data-id="${item.id}">💾 Speichern</button>
           </div>
         </div>
       </div>
@@ -150,7 +121,7 @@ async function loadItems(list) {
 }
 
 /* ================================
-   SAVE
+   SAVE ITEM
 ================================ */
 async function saveItem(container) {
   const id = container.dataset.itemId;
@@ -158,28 +129,21 @@ async function saveItem(container) {
 
   const typeValue = container.querySelector('[data-field="type"]')?.value || null;
   data.type = typeValue;
-
-  if (data.type === "waffe") {
-    data.weaponType =
-      container.querySelector('[data-field="weaponType"]')?.value || null;
-  } else {
-    data.weaponType = null;
-  }
+  data.weaponType =
+    data.type === "waffe"
+      ? container.querySelector('[data-field="weaponType"]')?.value || null
+      : null;
 
   container.querySelectorAll("[data-field]").forEach(el => {
     const field = el.dataset.field;
-    if (field === "type" || field === "weaponType") return;
+    if (["type","weaponType"].includes(field)) return;
     if (el.disabled) return;
 
     const def = el.dataset.default;
-    if (def && el.value === def) {
-      data[field] = null;
-    } else {
-      data[field] = el.value || null;
-    }
+    data[field] = (def && el.value === def) ? null : el.value || null;
   });
 
-  const res = await fetch(API_BASE + "/api/admin/items/" + id, {
+  await fetch(API_BASE + "/api/admin/items/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -187,8 +151,20 @@ async function saveItem(container) {
     },
     body: JSON.stringify(data)
   });
+}
 
-  if (!res.ok) throw new Error("Save failed");
+/* ================================
+   UPDATE STATUS
+================================ */
+async function updateStatus(id, status) {
+  await fetch(API_BASE + "/api/admin/items/" + id + "/status", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-token": ADMIN_TOKEN
+    },
+    body: JSON.stringify({ status })
+  });
 }
 
 /* ================================
@@ -198,57 +174,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const list = document.getElementById("list");
   const tabs = document.getElementById("tabs");
 
-  tabs.addEventListener("click", e => {
+  tabs.onclick = e => {
     const btn = e.target.closest("button[data-status]");
     if (!btn) return;
     currentStatus = btn.dataset.status;
     tabs.querySelectorAll("button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     loadItems(list);
-  });
+  };
 
-  list.addEventListener("focusin", e => {
-    const el = e.target;
-    const def = el.dataset?.default;
-    if (def && el.value === def) el.value = "";
-  });
-
-  list.addEventListener("blur", e => {
-    const el = e.target;
-    const def = el.dataset?.default;
-    if (def && el.value.trim() === "") el.value = def;
-  }, true);
-
-  list.addEventListener("click", async e => {
-    const btn = e.target.closest("button[data-action]");
+  list.onclick = async e => {
+    const btn = e.target.closest("button");
     if (!btn) return;
 
     try {
       if (btn.dataset.action === "save") {
         await saveItem(btn.closest(".edit"));
-        alert("Item gespeichert");
       }
+
+      if (btn.dataset.action === "status") {
+        await updateStatus(btn.dataset.id, btn.dataset.status);
+      }
+
       loadItems(list);
     } catch {
       alert("Aktion fehlgeschlagen");
     }
-  });
+  };
 
-  list.addEventListener("change", e => {
-    const typeSelect = e.target.closest('select[data-field="type"]');
-    if (!typeSelect) return;
-
-    const edit = typeSelect.closest(".edit");
-    const weaponSelect = edit.querySelector('select[data-field="weaponType"]');
-    if (!weaponSelect) return;
-
-    if (typeSelect.value === "waffe") {
-      weaponSelect.disabled = false;
-    } else {
-      weaponSelect.value = "";
-      weaponSelect.disabled = true;
-    }
-  });
+  list.onchange = e => {
+    const type = e.target.closest('[data-field="type"]');
+    if (!type) return;
+    const weapon = type.closest(".edit")
+      .querySelector('[data-field="weaponType"]');
+    weapon.disabled = type.value !== "waffe";
+    if (weapon.disabled) weapon.value = "";
+  };
 
   loadItems(list);
 });
