@@ -23,12 +23,27 @@ function ratingStars(value) {
   return "⭐".repeat(value);
 }
 
+function showInlineFeedback(el, text) {
+  let note = el.querySelector(".inline-feedback");
+  if (!note) {
+    note = document.createElement("div");
+    note.className = "inline-feedback";
+    note.style.color = "#7ddc7d";
+    note.style.fontSize = "12px";
+    note.style.marginTop = "6px";
+    el.appendChild(note);
+  }
+  note.textContent = text;
+  setTimeout(() => note.remove(), 1600);
+}
+
 /* ================================
    DEFAULT TEXTS
 ================================ */
 const DEFAULTS = {
   name: "Name",
-  roll: "Roll"
+  roll: "Roll",
+  admin_note: ""
 };
 
 /* ================================
@@ -45,10 +60,7 @@ async function loadItems(list) {
 
     if (!res.ok) throw new Error("HTTP " + res.status);
 
-    const items = (await res.json()).map(item => {
-      if (!item.type && item.weaponType) item.type = "waffe";
-      return item;
-    });
+    const items = await res.json();
 
     if (!items.length) {
       list.innerHTML = '<div class="empty">Keine Items.</div>';
@@ -75,14 +87,13 @@ async function loadItems(list) {
 
           <div class="edit" data-item-id="${item.id}">
 
-            <input type="text" data-field="name"
-              data-default="${DEFAULTS.name}"
+            <input data-field="name" data-default="${DEFAULTS.name}"
               value="${item.name || DEFAULTS.name}">
 
             <select data-field="type">
               <option value="">– Typ –</option>
               ${["waffe","schild","helm","ruestung","handschuhe","guertel","stiefel","amulet","ring","charm","rune","sonstiges"]
-                .map(t => `<option value="${t}" ${item.type===t?"selected":""}>${t}</option>`).join("")}
+                .map(t => `<option ${item.type===t?"selected":""}>${t}</option>`).join("")}
             </select>
 
             <select data-field="weaponType" ${item.type!=="waffe"?"disabled":""}>
@@ -91,8 +102,7 @@ async function loadItems(list) {
                 .map(w => `<option ${item.weaponType===w?"selected":""}>${w}</option>`).join("")}
             </select>
 
-            <input type="text" data-field="roll"
-              data-default="${DEFAULTS.roll}"
+            <input data-field="roll" data-default="${DEFAULTS.roll}"
               value="${item.roll || DEFAULTS.roll}">
 
             <select data-field="rating">
@@ -101,6 +111,13 @@ async function loadItems(list) {
                 `<option value="${n}" ${item.rating==n?"selected":""}>${"⭐".repeat(n)}</option>`
               ).join("")}
             </select>
+
+            <!-- 🧠 Admin-Notiz (intern) -->
+            <textarea
+              data-field="admin_note"
+              placeholder="Interne Admin-Notiz (nicht öffentlich)"
+              style="width:100%;min-height:46px;margin-top:6px;"
+            >${item.admin_note || ""}</textarea>
 
             <div class="actions">
               <button data-action="save" data-id="${item.id}">💾 Speichern</button>
@@ -127,16 +144,8 @@ async function saveItem(container) {
   const id = container.dataset.itemId;
   const data = {};
 
-  const typeValue = container.querySelector('[data-field="type"]')?.value || null;
-  data.type = typeValue;
-  data.weaponType =
-    data.type === "waffe"
-      ? container.querySelector('[data-field="weaponType"]')?.value || null
-      : null;
-
   container.querySelectorAll("[data-field]").forEach(el => {
     const field = el.dataset.field;
-    if (["type","weaponType"].includes(field)) return;
     if (el.disabled) return;
 
     const def = el.dataset.default;
@@ -187,16 +196,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn = e.target.closest("button");
     if (!btn) return;
 
+    const edit = btn.closest(".edit");
+
     try {
       if (btn.dataset.action === "save") {
-        await saveItem(btn.closest(".edit"));
+        await saveItem(edit);
+        showInlineFeedback(edit, "✔ gespeichert");
       }
 
       if (btn.dataset.action === "status") {
         await updateStatus(btn.dataset.id, btn.dataset.status);
+        showInlineFeedback(edit, "✔ Status geändert");
+        loadItems(list);
       }
-
-      loadItems(list);
     } catch {
       alert("Aktion fehlgeschlagen");
     }
