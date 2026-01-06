@@ -949,7 +949,7 @@ const ratingValue = Number(i.rating) || 0;
       return {
         id: i.id,
 
-     name: i.name || null,
+name: i.name || ("item_" + i.id),
 
         type: i.type || "sonstiges",
         category: i.type || "",
