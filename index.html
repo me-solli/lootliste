@@ -1290,14 +1290,12 @@ document.getElementById("sendReq").onclick = () => {
   reqContact.value = "";
   reqMsg.value = "";
 
-  modal.style.display = "none";
+modal.style.display = "none";
 
-  // 5️⃣ Re-render + Button freigeben
-loadItems().then(() => {
-  render();
-  renderRequestFeed();   // Feed nach neuer Anfrage aktualisieren
-  sendBtn.disabled = false;
-});
+// 5️⃣ Re-render + Button freigeben
+render();
+renderRequestFeed();   // Feed nach neuer Anfrage aktualisieren
+sendBtn.disabled = false;
 };
 
 /* ===== VISITOR COUNTER ===== */
