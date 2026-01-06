@@ -876,7 +876,18 @@ Object.keys(ICONS).forEach(type=>{
 });
   
 /* ===== HELPERS ===== */
-function renderRequestFeed(){
+  function loadRequests(){
+  return JSON.parse(localStorage.getItem("loot_requests") || "[]");
+}
+
+function hasRequested(itemName){
+  const data = loadRequests();
+  return data.some(
+    r => r.item === itemName && r.user === CURRENT_USER
+  );
+}
+
+  function renderRequestFeed(){
   const data = loadRequests();
   requestFeed.innerHTML = "";
 
