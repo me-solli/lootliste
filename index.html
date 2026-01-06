@@ -701,55 +701,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   transform: translateY(-1px);
 }
   
-  /* ===== PROJECT TIMELINE (INDEX) ===== */
-.project-timeline{
-  margin:22px 28px 10px;
-  position:relative;
-}
-
-.timeline-track{
-  position:relative;
-  height:1px;              /* dünner */
-  background:#242424;      /* dunkler */
-  border-radius:2px;
-}
-
-.timeline-progress{
-  position:absolute;
-  left:0;
-  top:0;
-  height:100%;
-  width:75%;              /* bis V3 */
-  background:#4f5a36;     /* entsättigt, ruhiger */
-  opacity:.6;             /* ~50 % Präsenz */
-}
-
-.timeline-steps{
-  display:flex;
-  justify-content:space-between;
-  margin-top:-8px;
-}
-
-.timeline-step{
-  position:relative;
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#333;
-  border:1px solid #2a2a2a;
-  cursor:default;
-}
-
-.timeline-step span{
-  position:absolute;
-  top:22px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:11px;
-  opacity:.65;
-  white-space:nowrap;
-}
-
 /* Zustände */
 .timeline-step.done{
   background:#bfa86a;
@@ -817,6 +768,55 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   <div class="rules-bar">
   <a href="verfahren.html">ⓘ Ablauf & Regeln der Lootliste</a>
 </div>
+
+   /* ===== PROJECT TIMELINE (INDEX) ===== */
+.project-timeline{
+  margin:22px 28px 10px;
+  position:relative;
+}
+
+.timeline-track{
+  position:relative;
+  height:1px;              /* dünner */
+  background:#242424;      /* dunkler */
+  border-radius:2px;
+}
+
+.timeline-progress{
+  position:absolute;
+  left:0;
+  top:0;
+  height:100%;
+  width:75%;              /* bis V3 */
+  background:#4f5a36;     /* entsättigt, ruhiger */
+  opacity:.6;             /* ~50 % Präsenz */
+}
+
+.timeline-steps{
+  display:flex;
+  justify-content:space-between;
+  margin-top:-8px;
+}
+
+.timeline-step{
+  position:relative;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#333;
+  border:1px solid #2a2a2a;
+  cursor:default;
+}
+
+.timeline-step span{
+  position:absolute;
+  top:22px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:11px;
+  opacity:.65;
+  white-space:nowrap;
+}
 
 <div class="icon-bar" id="iconBar"></div>
   
