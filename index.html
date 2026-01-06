@@ -1182,7 +1182,6 @@ const matchesStatus =
 const total = items.length;
 const frei = items.filter(i => i.status === "Verfügbar").length;
 const res = items.filter(i => i.status === "Reserviert").length;
-const weg = items.filter(i =>
 const weg = items.filter(i => i.status === "Vergeben").length;
 
   heroStats.innerHTML = `
