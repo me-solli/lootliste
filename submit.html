@@ -248,11 +248,38 @@ document.getElementById("submitForm").onsubmit=async e=>{
       bar.style.width=(e.loaded/e.total*100)+"%";
     }
   };
-  xhr.onload=()=>location.reload();
-  xhr.open("POST",API+"/api/items");
-  xhr.setRequestHeader("x-login-id","dev-admin");
-  xhr.send(new FormData(e.target));
+  
+xhr.onload = () => {
+  // Progress zurücksetzen
+  progress.style.display = "none";
+  bar.style.width = "0%";
+
+  // Erfolg anzeigen
+  msgSuccess.style.display = "block";
+  msgError.style.display = "none";
+
+  // Formular zurücksetzen
+  form.reset();
+
+  // Optional: Add-Button deaktivieren
+  addBtn.style.display = "none";
+
+  // Optional: nach kurzer Zeit neu laden
+  setTimeout(() => {
+    location.reload();
+  }, 2000);
 };
+
+xhr.onerror = () => {
+  progress.style.display = "none";
+  msgError.style.display = "block";
+};
+
+xhr.open("POST", API + "/api/items");
+xhr.setRequestHeader("x-login-id", "dev-admin");
+xhr.send(new FormData(e.target));
+};
+
 </script>
 
 </body>
