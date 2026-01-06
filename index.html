@@ -889,7 +889,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   };
 
   /* ===== SIM MODE ===== */
-  const SIM_MODE = true;
+const SIM_MODE = location.hostname === "localhost";
 
   function getSimStatus(itemName, fallback){
     if(!SIM_MODE) return fallback;
