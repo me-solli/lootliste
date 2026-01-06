@@ -906,14 +906,16 @@ Object.keys(ICONS).forEach(type=>{
         Math.floor((Date.now() - t.getTime()) / 60000)
       );
 
-      requestFeed.innerHTML += `
-        <div class="request-entry">
-          <strong>${r.name}</strong>
-          interessiert sich für
-          <em>${r.item}</em>
-          <span style="opacity:.6">· vor ${mins} min</span>
-        </div>
-      `;
+requestFeed.innerHTML += `
+  <div class="request-entry"
+       data-item="${r.item}"
+       style="cursor:pointer">
+    <strong>${r.name}</strong>
+    interessiert sich für
+    <em>${r.item}</em>
+    <span style="opacity:.6">· vor ${mins} min</span>
+  </div>
+`;
     });
 }
 
