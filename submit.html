@@ -33,15 +33,8 @@ body{
   border-radius:14px;
   padding:24px;
 }
-h1{
-  margin:0 0 10px;
-  color:var(--gold);
-}
-p{
-  margin:0 0 22px;
-  color:var(--muted);
-  font-size:14px;
-}
+h1{margin:0 0 10px;color:var(--gold)}
+p{margin:0 0 22px;color:var(--muted);font-size:14px}
 
 /* ===== ITEM CARD ===== */
 .item-block{
@@ -50,24 +43,39 @@ p{
   border-radius:14px;
   padding:16px;
   margin-bottom:20px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.04),
-    0 8px 18px rgba(0,0,0,0.45);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 8px 18px rgba(0,0,0,.45);
 }
 
-/* ===== SCREENSHOT AREA ===== */
+/* ===== TOOLTIP ===== */
+.tooltip{
+  margin-left:6px;
+  cursor:help;
+  color:#777;
+  font-size:13px;
+  position:relative;
+}
+.tooltip span{
+  visibility:hidden;
+  background:#222;
+  color:#ddd;
+  padding:6px 8px;
+  border-radius:6px;
+  position:absolute;
+  top:20px;
+  left:0;
+  white-space:nowrap;
+  z-index:10;
+}
+.tooltip:hover span{visibility:visible}
+
+/* ===== SCREENSHOT ===== */
 .screenshot-box{
   background:#0e0e0e;
   border:1px solid #333;
   border-radius:12px;
   padding:14px;
 }
-.screenshot-box label{
-  display:block;
-  margin-bottom:8px;
-  font-size:14px;
-}
-input[type="file"]{
+input[type="file"],input[type="text"]{
   width:100%;
   padding:10px;
   background:#0f0f0f;
@@ -75,12 +83,7 @@ input[type="file"]{
   border-radius:8px;
   color:var(--text);
 }
-
-/* ===== PREVIEW ===== */
-.preview{
-  margin-top:12px;
-  display:none;
-}
+.preview{display:none;margin-top:12px}
 .preview img{
   width:100%;
   max-height:180px;
@@ -98,21 +101,7 @@ input[type="file"]{
   border:1px dashed #2a2a2a;
   border-radius:10px;
 }
-.note-box label{
-  font-size:13px;
-  color:#888;
-  display:block;
-  margin-bottom:6px;
-}
-input[type="text"]{
-  width:100%;
-  padding:10px;
-  background:#0f0f0f;
-  border:1px solid var(--border);
-  border-radius:8px;
-  color:var(--text);
-}
-input::placeholder{color:#666}
+.note-box label{font-size:13px;color:#888}
 
 /* ===== BUTTONS ===== */
 .add-btn{
@@ -123,13 +112,9 @@ input::placeholder{color:#666}
   color:#bbb;
   border-radius:10px;
   cursor:pointer;
-  font-size:13px;
   text-align:center;
 }
-.add-btn:hover{
-  color:#eee;
-  border-color:#555;
-}
+.add-btn:hover{color:#eee;border-color:#555}
 
 button[type="submit"]{
   margin-top:24px;
@@ -142,166 +127,132 @@ button[type="submit"]{
   cursor:pointer;
 }
 
-/* ===== MESSAGES ===== */
+/* ===== PROGRESS ===== */
+.progress{
+  display:none;
+  margin-top:14px;
+  background:#0f0f0f;
+  border:1px solid #333;
+  border-radius:8px;
+  overflow:hidden;
+}
+.progress div{
+  height:8px;
+  width:0%;
+  background:linear-gradient(90deg,#f5c451,#caa03a);
+}
+
+/* ===== MSG ===== */
 .notice{
   padding:12px;
   border-radius:8px;
   margin-top:18px;
   font-size:14px;
 }
-.notice.success{
-  background:#0f1a0f;
-  border:1px solid #1a3a1a;
-  color:var(--green);
-}
-.notice.error{
-  background:#1a0f0f;
-  border:1px solid #3a1a1a;
-  color:var(--red);
-}
+.notice.success{background:#0f1a0f;border:1px solid #1a3a1a;color:var(--green)}
+.notice.error{background:#1a0f0f;border:1px solid #3a1a1a;color:var(--red)}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
-  <div class="panel">
+<div class="panel">
 
-    <h1>Items einreichen</h1>
-    <p>
-      Du kannst bis zu <strong>3 Items gleichzeitig</strong> einreichen.<br>
-      Jedes Item benötigt genau <strong>einen Screenshot</strong>.
-    </p>
+<h1>Items einreichen</h1>
+<p>Bis zu <strong>3 Items</strong> gleichzeitig · je Item <strong>1 Screenshot</strong></p>
 
-    <form id="submitForm">
-      <input type="hidden" name="type" value="sonstiges">
-      <input type="hidden" name="status" value="eingereicht">
+<form id="submitForm">
+<input type="hidden" name="type" value="sonstiges">
+<input type="hidden" name="status" value="eingereicht">
 
-      <div id="items">
+<div id="items"></div>
 
-        <!-- ITEM 1 -->
-        <div class="item-block">
-          <div class="screenshot-box">
-            <label>Item 1 – Screenshot *</label>
-            <input type="file" name="screenshot_1" accept="image/*" required>
-            <div class="preview"><img></div>
-          </div>
+<div class="add-btn" id="addItemBtn">+ weiteres Item hinzufügen</div>
 
-          <div class="note-box">
-            <label>Eigene Notiz (optional)</label>
-            <input
-              type="text"
-              name="note_1"
-              maxlength="40"
-              value="z. B. Mule xyz / MF Sorc / Char: xyz"
-            >
-          </div>
-        </div>
+<button type="submit">Items einreichen</button>
 
-      </div>
+<div class="progress"><div></div></div>
+</form>
 
-      <div class="add-btn" id="addItemBtn">+ weiteres Item hinzufügen</div>
+<div id="msgSuccess" class="notice success" style="display:none">✔ Upload abgeschlossen</div>
+<div id="msgError" class="notice error" style="display:none">✖ Fehler beim Upload</div>
 
-      <button type="submit">Items einreichen</button>
-    </form>
-
-    <div id="msgSuccess" class="notice success" style="display:none">
-      ✔ Items wurden erfolgreich eingereicht.
-    </div>
-    <div id="msgError" class="notice error" style="display:none">
-      ✖ Fehler beim Einreichen.
-    </div>
-
-  </div>
+</div>
 </div>
 
 <script>
-const API_BASE = "https://content-connection-production-ea07.up.railway.app";
+const API="https://content-connection-production-ea07.up.railway.app";
+const MAX=3;
+let count=0;
 
-const form = document.getElementById("submitForm");
-const itemsWrap = document.getElementById("items");
-const addBtn = document.getElementById("addItemBtn");
+const items=document.getElementById("items");
+const addBtn=document.getElementById("addItemBtn");
+const progress=document.querySelector(".progress");
+const bar=progress.firstElementChild;
 
-const msgSuccess = document.getElementById("msgSuccess");
-const msgError = document.getElementById("msgError");
+function addItem(){
+  if(count>=MAX) return;
+  count++;
 
-let itemCount = 1;
-const MAX_ITEMS = 3;
-
-/* ===== PREVIEW HANDLER ===== */
-function attachPreview(input){
-  const previewBox = input.closest(".screenshot-box").querySelector(".preview");
-  const img = previewBox.querySelector("img");
-
-  input.addEventListener("change", () => {
-    if (!input.files || !input.files[0]) {
-      previewBox.style.display = "none";
-      return;
-    }
-    const file = input.files[0];
-    const reader = new FileReader();
-    reader.onload = e => {
-      img.src = e.target.result;
-      previewBox.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-attachPreview(document.querySelector('input[name="screenshot_1"]'));
-
-addBtn.addEventListener("click", () => {
-  if (itemCount >= MAX_ITEMS) return;
-
-  itemCount++;
-
-  const block = document.createElement("div");
-  block.className = "item-block";
-  block.innerHTML = `
+  const div=document.createElement("div");
+  div.className="item-block";
+  div.innerHTML=`
     <div class="screenshot-box">
-      <label>Item ${itemCount} – Screenshot *</label>
-      <input type="file" name="screenshot_${itemCount}" accept="image/*" required>
+      <label>Item ${count} – Screenshot *
+        <span class="tooltip">?
+          <span>Voll sichtbar, nicht zugeschnitten</span>
+        </span>
+      </label>
+      <input type="file" name="screenshot_${count}" accept="image/*" required>
       <div class="preview"><img></div>
     </div>
 
     <div class="note-box">
-      <label>Eigene Notiz (optional)</label>
-      <input
-        type="text"
-        name="note_${itemCount}"
-        maxlength="40"
-        value="z. B. Mule xyz / MF Sorc / Char: xyz"
-      >
+      <label>Eigene Notiz
+        <span class="tooltip">?
+          <span>Nur für dich sichtbar</span>
+        </span>
+      </label>
+      <input type="text" name="note_${count}" maxlength="40"
+        value="z. B. Mule xyz / MF Sorc / Char: xyz">
     </div>
   `;
+  items.appendChild(div);
 
-  itemsWrap.appendChild(block);
-  attachPreview(block.querySelector('input[type="file"]'));
+  const input=div.querySelector("input[type=file]");
+  const preview=div.querySelector(".preview");
+  const img=preview.querySelector("img");
 
-  if (itemCount === MAX_ITEMS) {
-    addBtn.style.display = "none";
-  }
-});
+  input.addEventListener("change",()=>{
+    const f=input.files[0];
+    if(!f || f.size>10*1024*1024) return alert("Bild max. 10 MB");
+    const r=new FileReader();
+    r.onload=e=>{img.src=e.target.result;preview.style.display="block";}
+    r.readAsDataURL(f);
+  });
 
-form.addEventListener("submit", async (e) => {
+  if(count===MAX) addBtn.style.display="none";
+}
+
+addBtn.onclick=addItem;
+addItem();
+
+document.getElementById("submitForm").onsubmit=async e=>{
   e.preventDefault();
-  msgSuccess.style.display = "none";
-  msgError.style.display = "none";
+  progress.style.display="block";
+  bar.style.width="10%";
 
-  try {
-    const res = await fetch(API_BASE + "/api/items", {
-      method: "POST",
-      headers: { "x-login-id": "dev-admin" },
-      credentials: "include",
-      body: new FormData(form)
-    });
-
-    if (!res.ok) throw new Error();
-    form.reset();
-    msgSuccess.style.display = "block";
-  } catch {
-    msgError.style.display = "block";
-  }
-});
+  const xhr=new XMLHttpRequest();
+  xhr.upload.onprogress=e=>{
+    if(e.lengthComputable){
+      bar.style.width=(e.loaded/e.total*100)+"%";
+    }
+  };
+  xhr.onload=()=>location.reload();
+  xhr.open("POST",API+"/api/items");
+  xhr.setRequestHeader("x-login-id","dev-admin");
+  xhr.send(new FormData(e.target));
+};
 </script>
 
 </body>
