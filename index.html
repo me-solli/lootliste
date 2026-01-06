@@ -1004,7 +1004,12 @@ const matchesStatus =
 
       return matchesSearch && matchesStatus && matchesType;
     })
-    .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+   .sort((a, b) => {
+  return sortRating.value === "asc"
+    ? (a.rating || 0) - (b.rating || 0)
+    : (b.rating || 0) - (a.rating || 0);
+});
+
 const total = items.length;
 const frei = items.filter(i =>
   getSimStatus(i.name, i.status) === "Verfügbar"
