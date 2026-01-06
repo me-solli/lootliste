@@ -1166,7 +1166,7 @@ function render() {
        (i.type || "").toLowerCase().includes(q);
 
 const matchesStatus =
-  !statusValue || getSimStatus(i.name, i.status) === statusValue;
+  !statusValue || i.status === statusValue;
 
       const matchesType =
         !activeType || i.type === activeType;
