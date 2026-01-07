@@ -301,16 +301,6 @@ xhr.onload = () => {
   }, 2000);
 };
 
-xhr.onerror = () => {
-  progress.style.display = "none";
-  msgError.style.display = "block";
-};
-
-xhr.open("POST", API + "/api/items");
-xhr.setRequestHeader("x-login-id", "dev-admin");
-xhr.send(new FormData(e.target));
-};
-
 </script>
 
 </body>
