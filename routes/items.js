@@ -111,7 +111,7 @@ router.get("/public", async (req, res) => {
 router.post(
   "/",
   devAuth,
-  upload.single("screenshot"),
+  upload.any(),
   async (req, res) => {
 
     if (!req.user?.id) {
