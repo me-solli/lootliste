@@ -172,10 +172,28 @@ main{
 .flow strong{color:#fff}
 
 .arrow{
-  display:block;
-  text-align:center;
-  color:var(--muted);
-  margin:8px 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:14px 0;
+  color:var(--gold);
+  font-weight:600;
+}
+.arrow::before,
+.arrow::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.arrow span{
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(245,196,81,.08);
+  font-size:12px;
+  letter-spacing:.5px;
 }
 
 /* =====================
@@ -250,7 +268,7 @@ footer{
     <div class="flow">
       <strong>Input:</strong><br>
       Waffe + Ral + Amn + Perf. Amethyst
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Gleiche Waffe mit zufälliger Sockelanzahl
     </div>
@@ -263,7 +281,7 @@ footer{
     <div class="flow">
       <strong>Input:</strong><br>
       Rüstung + Tal + Thul + Perf. Topaz
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Rüstung mit zufälligen Sockeln
     </div>
@@ -277,7 +295,7 @@ footer{
       <strong>Input:</strong><br>
       Waffe: Ral + Sol + Perf. Emerald<br>
       Rüstung: Tal + Shael + Perf. Diamond
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Höherer Item-Typ, neue Werte
     </div>
@@ -291,7 +309,7 @@ footer{
       <strong>Input:</strong><br>
       Waffe: Lum + Pul + Perf. Emerald<br>
       Rüstung: Ko + Lem + Perf. Diamond
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Elite-Version mit neuen Stats
     </div>
@@ -304,7 +322,7 @@ footer{
     <div class="flow">
       <strong>Input:</strong><br>
       3× gleiche Rune
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       1× höhere Rune
     </div>
@@ -317,7 +335,7 @@ footer{
     <div class="flow">
       <strong>Input:</strong><br>
       Magic Item + Rune + Perf. Amethyst + Jewel
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Crafted Item mit festen Caster-Mods
     </div>
@@ -330,7 +348,7 @@ footer{
     <div class="flow">
       <strong>Input:</strong><br>
       Magic Item + Rune + Perf. Ruby + Jewel
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Crafted Item mit Blood-Mods
     </div>
@@ -343,7 +361,7 @@ footer{
     <div class="flow">
       <strong>Input:</strong><br>
       3× Perf. Gems + Magic Item
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Gleiches Item mit neuen Affixen
     </div>
@@ -356,7 +374,7 @@ footer{
     <div class="flow">
       <strong>Input:</strong><br>
       6× Perf. Skulls + Rare Item
-      <span class="arrow">↓</span>
+      <div class="arrow"><span>TRANSFORMATION</span></div>
       <strong>Output:</strong><br>
       Rare Item mit stark reduziertem iLvl
     </div>
