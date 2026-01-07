@@ -129,7 +129,11 @@ router.post(
         });
       }
 
-      // ⬇️ HIER kommt Schritt 3 (req.files prüfen)
+       if (!req.files || req.files.length !== itemCount) {
+  return res.status(400).json({
+    error: "Anzahl Screenshots passt nicht zur Item-Anzahl"
+  });
+}
 
       const { weaponType } = req.body;
 
