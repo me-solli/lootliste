@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horadrim-Würfel – Quick Cube Guide (D2R)</title>
+
+  <style>
+    :root {
+      --bg: #0e0e0f;
+      --panel: #161618;
+      --border: #2a2a2e;
+      --text: #e6e6e6;
+      --muted: #9a9a9a;
+      --gold: #c8aa6e;
+      --good: #3fb950;
+      --warn: #d29922;
+      --bad: #f85149;
+      --accent: #6b5cff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(ellipse at top, #151518, #0b0b0c);
+      color: var(--text);
+    }
+
+    header {
+      padding: 32px 24px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(to bottom, #1a1a1e, #121214);
+    }
+
+    header h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+      color: var(--gold);
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 0 1px rgba(107,92,255,0.4);
+    }
+
+    section {
+      display: none;
+      animation: fade 0.15s ease-out;
+    }
+
+    section.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: var(--gold);
+    }
+
+    .recipe {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .ingredients {
+      color: #ddd;
+      font-size: 14px;
+    }
+
+    .result {
+      font-size: 13px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .good { color: var(--good); border-color: rgba(63,185,80,0.4); }
+    .warn { color: var(--warn); border-color: rgba(210,153,34,0.4); }
+    .bad { color: var(--bad); border-color: rgba(248,81,73,0.4); }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Horadrim-Würfel – Quick Cube Guide</h1>
+  <p>Kompakte Nachschlage-Seite für Diablo II Resurrected. Fokus: <strong>Was rein → was raus → lohnt sich?</strong></p>
+  <p style="margin-top:8px;color:#9a9a9a">Modus: <strong id="modeLabel">Non-Ladder</strong> <button id="modeToggle" style="margin-left:8px;padding:4px 8px">wechseln</button></p>
+</header>
+
+<main>
+
+    <div class="tabs">
+    <button class="tab-btn active" data-tab="sockel">Sockel & Upgrades</button>
+    <button class="tab-btn" data-tab="runen">Runen</button>
+    <button class="tab-btn" data-tab="craft">Crafting</button>
+    <button class="tab-btn" data-tab="charms">Charms & Reroll</button>
+    <button class="tab-btn" data-tab="reroll">Item-Reroll</button>
+    <button class="tab-btn" data-tab="legend">Legende</button>
+  </div>
+
+  <!-- SOCKEL -->
+    <section id="sockel" class="active">
+    <div class="card">
+      <h3>Waffe sockeln</h3>
+      <div class="recipe">
+        <div class="ingredients">Normale Waffe + Ral + Amn + Perf. Amethyst</div>
+        <div class="result warn">Zufällige Sockel</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Rüstung sockeln</h3>
+      <div class="recipe">
+        <div class="ingredients">Normale Rüstung + Tal + Thul + Perf. Topaz</div>
+        <div class="result warn">Zufällige Sockel</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Item upgraden – Normal → Exceptional</h3>
+      <p class="ingredients">Waffe: Ral + Sol + Perf. Emerald<br>Rüstung: Tal + Shael + Perf. Diamond</p>
+      <div class="result warn">Rolls werden neu gewürfelt</div>
+    </div>
+
+    <div class="card">
+      <h3>Item upgraden – Exceptional → Elite</h3>
+      <p class="ingredients">Waffe: Lum + Pul + Perf. Emerald<br>Rüstung: Ko + Lem + Perf. Diamond</p>
+      <div class="result warn">Rolls werden neu gewürfelt</div>
+    </div>
+  </section>
+
+  <!-- RUNEN -->
+  <section id="runen">
+    <div class="card">
+      <h3>Runen upgraden</h3>
+      <div class="recipe">
+        <div class="ingredients">3x gleiche Rune</div>
+        <div class="result good">1x höhere Rune</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Wichtiger Hinweis</h3>
+      <p class="ingredients">Ab <strong>Ist / Gul</strong> meist wirtschaftlich nicht sinnvoll.<br>Non-Ladder und Ladder unterscheiden sich!</p>
+      <div class="result warn">Situativ</div>
+    </div>
+  </section>
+
+  <!-- CRAFTING -->
+  <section id="craft">
+    <div class="card">
+      <h3>Caster Craft (Amu / Ring)</h3>
+      <p class="ingredients">Magic Item + Rune + Perf. Amethyst + Jewel</p>
+      <div class="result good">FCR / Mana / Stats</div>
+    </div>
+
+    <div class="card">
+      <h3>Blood Craft</h3>
+      <p class="ingredients">Ideal für Melee (LL / CB)</p>
+      <div class="result warn">Build-abhängig</div>
+    </div>
+  </section>
+
+  <!-- CHARMS -->
+  <section id="charms">
+    <div class="card">
+      <h3>Charm rerollen</h3>
+      <div class="recipe">
+        <div class="ingredients">3x Perf. Gems + Charm</div>
+        <div class="result good">Neuer Roll</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>iLvl beachten</h3>
+      <p class="ingredients">Nur Charms von Diablo / Baal / hohen Zonen lohnen sich.</p>
+      <div class="result warn">Sonst Zeitverschwendung</div>
+    </div>
+    </section>
+
+  <!-- ITEM REROLL -->
+  <section id="reroll">
+    <div class="card">
+      <h3>Magic Item neu würfeln</h3>
+      <p class="ingredients">3x Perf. Gems + Magic Item</p>
+      <div class="result good">Neue Affixe</div>
+    </div>
+
+    <div class="card">
+      <h3>Rare Item neu würfeln</h3>
+      <p class="ingredients">6x Perf. Skulls + Rare Item</p>
+      <div class="result warn">iLvl sinkt – nur bedingt sinnvoll</div>
+    </div>
+
+    <div class="card">
+      <h3>Eth Bug Repair (historisch)</h3>
+      <p class="ingredients">Früher: Eth Rüstung + Cube</p>
+      <div class="result bad">Bug gefixt – kein Vorteil mehr</div>
+    </div>
+  </section>
+
+  <!-- LEGENDE -->
+  <section id="legend">
+    <div class="card">
+      <h3>Bewertung & Hinweise</h3>
+      <ul class="ingredients">
+        <li><span class="good">🔥 lohnt sich</span> – häufig sinnvoll</li>
+        <li><span class="warn">⚠️ situativ</span> – Build / Markt abhängig</li>
+        <li><span class="bad">❌ meist nicht sinnvoll</span> – eher vermeiden</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Allgemeine Cube-Regeln</h3>
+      <ul class="ingredients">
+        <li>Cube-Rezepte setzen oft das iLvl zurück</li>
+        <li>Upgrades würfeln alle Stats neu</li>
+        <li>High-Runen selten cuben – Marktwert prüfen</li>
+        <li>Charms nur aus High-Level-Zonen rerollen</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Cube Guide – Community-Merker • Stand: WIP • Kein Anspruch auf Vollständigkeit
+</footer>
+
+<script>
+  const buttons = document.querySelectorAll('.tab-btn');
+  const sections = document.querySelectorAll('section');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Ladder / Non-Ladder Toggle (informativ)
+  const modeLabel = document.getElementById('modeLabel');
+  const modeToggle = document.getElementById('modeToggle');
+  let ladder = false;
+
+  modeToggle.addEventListener('click', () => {
+    ladder = !ladder;
+    modeLabel.textContent = ladder ? 'Ladder' : 'Non-Ladder';
+  });
+</script>
+
+</body>
+</html>
