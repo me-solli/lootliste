@@ -175,10 +175,24 @@ main{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
-  margin:14px 0;
-  color:var(--gold);
-  font-weight:600;
+  gap:8px;
+  margin:10px 0;
+  color:var(--muted);
+  font-size:12px;
+}
+.arrow::before,
+.arrow::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border),transparent);
+}
+.arrow span{
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:transparent;
+  letter-spacing:.3px;
 }
 .arrow::before,
 .arrow::after{
@@ -265,12 +279,10 @@ footer{
   <div class="panel">
     <h3>🗡️ Waffe sockeln</h3>
     <div class="subtitle">Nur normale (weiße) Waffen</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      Waffe + Ral + Amn + Perf. Amethyst
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Gleiche Waffe mit zufälliger Sockelanzahl
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag warn">⚠️ Sockel zufällig</span>
   </div>
@@ -278,12 +290,10 @@ footer{
   <div class="panel">
     <h3>🛡️ Rüstung sockeln</h3>
     <div class="subtitle">Kein Unique, kein Set</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      Rüstung + Tal + Thul + Perf. Topaz
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Rüstung mit zufälligen Sockeln
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag warn">⚠️ Sockel zufällig</span>
   </div>
@@ -291,13 +301,10 @@ footer{
   <div class="panel">
     <h3>⬆️ Normal → Exceptional</h3>
     <div class="subtitle">Alle Stats werden neu gewürfelt</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      Waffe: Ral + Sol + Perf. Emerald<br>
-      Rüstung: Tal + Shael + Perf. Diamond
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Höherer Item-Typ, neue Werte
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag info">🎲 Re-Roll</span>
   </div>
@@ -305,13 +312,10 @@ footer{
   <div class="panel">
     <h3>⬆️ Exceptional → Elite</h3>
     <div class="subtitle">Teuer – nur bei sehr guten Bases</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      Waffe: Lum + Pul + Perf. Emerald<br>
-      Rüstung: Ko + Lem + Perf. Diamond
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Elite-Version mit neuen Stats
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag warn">⚠️ gut abwägen</span>
   </div>
@@ -319,12 +323,10 @@ footer{
   <div class="panel">
     <h3>🧿 Runen upgraden</h3>
     <div class="subtitle">Bis max. Ist sinnvoll</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      3× gleiche Rune
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      1× höhere Rune
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag good">🔥 lohnt sich</span>
   </div>
@@ -332,12 +334,10 @@ footer{
   <div class="panel">
     <h3>🧪 Caster Craft</h3>
     <div class="subtitle">FCR / Mana / Caster Builds</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      Magic Item + Rune + Perf. Amethyst + Jewel
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Crafted Item mit festen Caster-Mods
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag good">🔥 Meta</span>
   </div>
@@ -345,12 +345,10 @@ footer{
   <div class="panel">
     <h3>🩸 Blood Craft</h3>
     <div class="subtitle">Melee / Life Leech / Crushing Blow</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      Magic Item + Rune + Perf. Ruby + Jewel
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Crafted Item mit Blood-Mods
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag warn">⚠️ Build-abhängig</span>
   </div>
@@ -358,12 +356,10 @@ footer{
   <div class="panel">
     <h3>🎲 Magic Item rerollen</h3>
     <div class="subtitle">Charms, Circlets</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      3× Perf. Gems + Magic Item
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Gleiches Item mit neuen Affixen
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag good">🔥 sehr beliebt</span>
   </div>
@@ -371,12 +367,10 @@ footer{
   <div class="panel">
     <h3>☠️ Rare Item rerollen</h3>
     <div class="subtitle">Item-Level sinkt stark</div>
-    <div class="flow">
-      <strong>Input:</strong><br>
-      6× Perf. Skulls + Rare Item
-      <div class="arrow"><span>TRANSFORMATION</span></div>
-      <strong>Output:</strong><br>
-      Rare Item mit stark reduziertem iLvl
+    <div class="flow">$1</div>
+    <div class="example">
+      <strong>Beispiel:</strong><br>
+      <span class="example-text">z. B. 3‑Sockel Archon Plate → 1–4 Sockel möglich</span>
     </div>
     <span class="tag bad">❌ fast nie sinnvoll</span>
   </div>
