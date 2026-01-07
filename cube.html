@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Horadrim-Würfel – Interaktive Übersicht</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Horadrim-Würfel – Cube Codex (D2R)</title>
+
 <style>
 /* ==================================================
    DESIGN BASIS
@@ -32,7 +33,7 @@ body{
    HEADER
    ================================================== */
 header{
-  padding:28px 32px 24px;
+  padding:28px 32px 26px;
   background:linear-gradient(180deg,#1d1d1d,#0d0d0d);
   border-bottom:1px solid var(--border);
 }
@@ -51,7 +52,34 @@ header p{
 main{
   max-width:1280px;
   margin:0 auto;
-  padding:28px 24px 80px;
+  padding:26px 24px 80px;
+}
+
+/* ==================================================
+   INTRO / ORIENTATION
+   ================================================== */
+.intro{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  margin-bottom:30px;
+}
+.intro-box{
+  background:linear-gradient(180deg,#181818,#101010);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:16px 18px;
+}
+.intro-box h3{
+  margin:0 0 8px;
+  font-size:15px;
+  color:var(--gold);
+}
+.intro-box p{
+  margin:0;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.45;
 }
 
 /* ==================================================
@@ -61,7 +89,7 @@ main{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-bottom:28px;
+  margin-bottom:26px;
 }
 .tab{
   padding:10px 16px;
@@ -76,7 +104,6 @@ main{
   border-color:var(--gold);
   box-shadow:0 0 0 1px rgba(245,196,81,.45);
 }
-
 .tab-content{display:none}
 .tab-content.active{display:block}
 
@@ -156,7 +183,6 @@ main{
   color:var(--muted);
 }
 .example strong{color:#fff}
-
 .tag{
   display:inline-flex;
   align-items:center;
@@ -185,11 +211,27 @@ footer{
 </head>
 <body>
 <header>
-  <h1>Horadrim-Würfel – Interaktive Übersicht</h1>
-  <p>Reinlegen → Würfeln → Ergebnis · visuelle Referenz</p>
+  <h1>Horadrim-Würfel – Cube Codex</h1>
+  <p>Schnelle, visuelle Referenz für Diablo II Resurrected</p>
 </header>
 
 <main>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="intro-box">
+    <h3>📦 Was ist das?</h3>
+    <p>Diese Übersicht zeigt dir die wichtigsten <strong>Horadrim-Würfel-Rezepte</strong> – kompakt, visuell und ohne Fließtext.</p>
+  </div>
+  <div class="intro-box">
+    <h3>🧠 Wie lesen?</h3>
+    <p>Links siehst du immer das <strong>REZEPT (im Cube)</strong>, rechts das <strong>ERGEBNIS</strong>. Pfeil = Würfel-Aktion.</p>
+  </div>
+  <div class="intro-box">
+    <h3>⚠️ Hinweise</h3>
+    <p>🎲 bedeutet Zufall / Re-Roll. ⚠️ = Risiko. ❌ = meist nicht sinnvoll.</p>
+  </div>
+</section>
 
 <!-- TABS -->
 <div class="tabs">
@@ -197,6 +239,7 @@ footer{
   <button class="tab" data-tab="upgrade">⬆️ Upgrades</button>
   <button class="tab" data-tab="craft">🧪 Crafting</button>
   <button class="tab" data-tab="reroll">🎲 Reroll</button>
+  <button class="tab" data-tab="runen">🧿 Runen & Gems</button>
 </div>
 
 <!-- TAB: SOCKEL -->
@@ -208,7 +251,7 @@ footer{
       <div class="subtitle">Nur normale (weiße) Waffen</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">📦 REINLEGEN</div>
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
           <ul>
             <li>🗡️ Normale Waffe</li>
             <li>🪙 Ral</li>
@@ -225,7 +268,7 @@ footer{
           </ul>
         </div>
       </div>
-      <div class="example"><strong>Beispiel:</strong> Weiße Berserker Axe → 1–6 Sockel möglich</div>
+      <div class="example"><strong>Beispiel:</strong> Berserker Axe → 1–6 Sockel</div>
       <span class="tag warn">⚠️ Sockel zufällig</span>
     </div>
 
@@ -234,7 +277,7 @@ footer{
       <div class="subtitle">Kein Unique, kein Set</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">📦 REINLEGEN</div>
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
           <ul>
             <li>🛡️ Normale Rüstung</li>
             <li>🪙 Tal</li>
@@ -251,8 +294,54 @@ footer{
           </ul>
         </div>
       </div>
-      <div class="example"><strong>Beispiel:</strong> Weiße Archon Plate → 1–4 Sockel möglich</div>
+      <div class="example"><strong>Beispiel:</strong> Archon Plate → 1–4 Sockel</div>
       <span class="tag warn">⚠️ Sockel zufällig</span>
+    </div>
+
+    <div class="panel">
+      <h3>🎩 Helm sockeln</h3>
+      <div class="subtitle">Nur normale Helme</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>🎩 Normaler Helm</li>
+            <li>🪙 Ral</li>
+            <li>🪙 Thul</li>
+            <li>💎 Perf. Sapphire</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>🎩 Helm mit Sockeln</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>🛡️ Schild sockeln</h3>
+      <div class="subtitle">Nur normale Schilde</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>🛡️ Normaler Schild</li>
+            <li>🪙 Tal</li>
+            <li>🪙 Amn</li>
+            <li>💎 Perf. Ruby</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>🛡️ Schild mit Sockeln</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -261,14 +350,15 @@ footer{
 <!-- TAB: UPGRADE -->
 <div id="upgrade" class="tab-content">
   <div class="dashboard">
+
     <div class="panel">
       <h3>⬆️ Normal → Exceptional</h3>
-      <div class="subtitle">Alle Stats werden neu gewürfelt</div>
+      <div class="subtitle">Stats werden neu gewürfelt</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">📦 REINLEGEN</div>
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
           <ul>
-            <li>Item (Normal)</li>
+            <li>Normales Item</li>
             <li>Ral + Sol + Perf. Emerald</li>
           </ul>
         </div>
@@ -283,18 +373,43 @@ footer{
       </div>
       <span class="tag warn">⚠️ Re-Roll</span>
     </div>
+
+    <div class="panel">
+      <h3>⬆️ Exceptional → Elite</h3>
+      <div class="subtitle">Hohe Anforderungen</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>Exceptional Item</li>
+            <li>Lum + Pul + Perf. Emerald</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>Elite-Version</li>
+            <li>🎲 Neue Werte</li>
+          </ul>
+        </div>
+      </div>
+      <span class="tag warn">⚠️ gut abwägen</span>
+    </div>
+
   </div>
 </div>
 
 <!-- TAB: CRAFT -->
 <div id="craft" class="tab-content">
   <div class="dashboard">
+
     <div class="panel">
       <h3>🧪 Caster Craft</h3>
       <div class="subtitle">FCR / Mana / Caster Builds</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">📦 REINLEGEN</div>
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
           <ul>
             <li>Magic Item</li>
             <li>Rune</li>
@@ -313,18 +428,93 @@ footer{
       </div>
       <span class="tag good">🔥 lohnt sich</span>
     </div>
+
+    <div class="panel">
+      <h3>🩸 Blood Craft</h3>
+      <div class="subtitle">Melee / Life Leech</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>Magic Item</li>
+            <li>Rune</li>
+            <li>Perf. Ruby</li>
+            <li>Jewel</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>Crafted Item</li>
+            <li>Blood-Mods</li>
+          </ul>
+        </div>
+      </div>
+      <span class="tag warn">⚠️ buildabhängig</span>
+    </div>
+
+    <div class="panel">
+      <h3>💥 Hitpower Craft</h3>
+      <div class="subtitle">Knockback / AR</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>Magic Item</li>
+            <li>Rune</li>
+            <li>Perf. Sapphire</li>
+            <li>Jewel</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>Crafted Item</li>
+            <li>Hitpower-Mods</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>🛡️ Safety Craft</h3>
+      <div class="subtitle">DR / Resistenzen</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>Magic Item</li>
+            <li>Rune</li>
+            <li>Perf. Emerald</li>
+            <li>Jewel</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>Crafted Item</li>
+            <li>Safety-Mods</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <!-- TAB: REROLL -->
 <div id="reroll" class="tab-content">
   <div class="dashboard">
+
     <div class="panel">
       <h3>🎲 Magic Item rerollen</h3>
       <div class="subtitle">Charms, Circlets</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">📦 REINLEGEN</div>
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
           <ul>
             <li>Magic Item</li>
             <li>3× Perf. Gems</li>
@@ -334,20 +524,156 @@ footer{
         <div class="phase">
           <div class="phase-title">🎁 ERGEBNIS</div>
           <ul>
-            <li>Neues Magic Item</li>
+            <li>Magic Item</li>
             <li>🎲 Neue Affixe</li>
           </ul>
         </div>
       </div>
-      <span class="tag good">🔥 beliebt</span>
+      <span class="tag good">🔥 sehr beliebt</span>
     </div>
+
+    <div class="panel">
+      <h3>🧿 Charm rerollen</h3>
+      <div class="subtitle">iLvl abhängig</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>Charm</li>
+            <li>3× Perf. Gems</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>Charm mit neuen Mods</li>
+          </ul>
+        </div>
+      </div>
+      <span class="tag warn">⚠️ Gebiet bestimmt Qualität</span>
+    </div>
+
+    <div class="panel">
+      <h3>☠️ Rare Item rerollen</h3>
+      <div class="subtitle">Item-Level sinkt</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>Rare Item</li>
+            <li>6× Perf. Skulls</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>Rare Item</li>
+            <li>❌ Stark reduziertes iLvl</li>
+          </ul>
+        </div>
+      </div>
+      <span class="tag bad">❌ meist nicht sinnvoll</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- TAB: RUNEN -->
+<div id="runen" class="tab-content">
+  <div class="dashboard">
+
+    <div class="panel">
+      <h3>🧿 Runen upgraden</h3>
+      <div class="subtitle">3 → 1</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>3× gleiche Rune</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>1× höhere Rune</li>
+          </ul>
+        </div>
+      </div>
+      <span class="tag warn">⚠️ ab Ist selten sinnvoll</span>
+    </div>
+
+    <div class="panel">
+      <h3>💎 Gems upgraden</h3>
+      <div class="subtitle">3 → 1</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>3× gleicher Gem</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>1× höherer Gem</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>💀 Skulls upgraden</h3>
+      <div class="subtitle">bis Perfekt</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>3× Skull</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>1× höherer Skull</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>🔓 Edelsteine entfernen</h3>
+      <div class="subtitle">Sockel bleiben</div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <ul>
+            <li>Item mit Sockeln</li>
+            <li>Hel Rune</li>
+            <li>TP Scroll</li>
+          </ul>
+        </div>
+        <div class="phase-arrow">➡️</div>
+        <div class="phase">
+          <div class="phase-title">🎁 ERGEBNIS</div>
+          <ul>
+            <li>Item ohne Gems/Runen</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 </main>
 
 <footer>
-  Horadrim-Würfel · visuelle Referenz · Stand: stabil
+  Horadrim-Würfel · Cube Codex · Stand: stabil / erweiterbar
 </footer>
 
 <script>
