@@ -124,44 +124,50 @@ router.post(
       const itemCount = Number(req.body.item_count || 0);
 
       if (!itemCount || itemCount < 1 || itemCount > 3) {
+        return res.status(400).json({ error: "Ungültige Item-Anzahl" });
+      }
+
+      if (!req.files || req.files.length !== itemCount) {
         return res.status(400).json({
-          error: "Ungültige Item-Anzahl"
+          error: "Anzahl Screenshots passt nicht zur Item-Anzahl"
         });
       }
 
-       if (!req.files || req.files.length !== itemCount) {
-  return res.status(400).json({
-    error: "Anzahl Screenshots passt nicht zur Item-Anzahl"
-  });
-}
+      // 🔥 SCHRITT 4: Multi-Insert
+      const createdItems = [];
 
-      const { weaponType } = req.body;
+      for (let i = 0; i < itemCount; i++) {
+        const file = req.files[i];
 
-      const result = await db.run(
-        `
-        INSERT INTO items (owner_user_id, screenshot, weapon_type)
-        VALUES (?, ?, ?)
-        `,
-        [
-          req.user.id,
-          `/uploads/${req.file.filename}`,
-          weaponType || null
-        ]
-      );
+        const result = await db.run(
+          `
+          INSERT INTO items (owner_user_id, screenshot, created_at)
+          VALUES (?, ?, datetime('now'))
+          `,
+          [
+            req.user.id,
+            `/uploads/${file.filename}`
+          ]
+        );
 
-      await db.run(
-        `
-        INSERT INTO item_status (item_id, status, status_since)
-        VALUES (?, ?, datetime('now'))
-        `,
-        [result.lastID, ITEM_STATUS.SUBMITTED]
-      );
+        await db.run(
+          `
+          INSERT INTO item_status (item_id, status, status_since)
+          VALUES (?, ?, datetime('now'))
+          `,
+          [result.lastID, ITEM_STATUS.SUBMITTED]
+        );
+
+        createdItems.push(result.lastID);
+      }
 
       res.status(201).json({
         success: true,
-        item_id: result.lastID,
+        created: createdItems.length,
+        item_ids: createdItems,
         status: ITEM_STATUS.SUBMITTED
       });
+
     } catch (err) {
       console.error("POST /api/items ERROR:", err);
       res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
