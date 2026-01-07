@@ -3,11 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Horadrim-Würfel – Visuelle Übersicht</title>
+<title>Horadrim-Würfel – Interaktive Übersicht</title>
 <style>
+/* =====================
+   DESIGN-GRUNDLAGEN
+   ===================== */
 :root{
   --bg:#0b0b0b;
   --panel:#141414;
+  --panel-soft:#1b1b1b;
   --border:#2a2a2a;
   --gold:#f5c451;
   --text:#eaeaea;
@@ -15,95 +19,190 @@
   --good:#4cff4c;
   --warn:#ffd24c;
   --bad:#ff5c5c;
+  --info:#6fb4ff;
 }
+
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  background:radial-gradient(ellipse at top,#1a1a1a 0%,#090909 65%);
   color:var(--text);
 }
+
+/* =====================
+   HEADER
+   ===================== */
 header{
-  padding:28px 32px 22px;
-  background:linear-gradient(180deg,#1a1a1a,#0e0e0e);
+  padding:28px 32px 26px;
+  background:linear-gradient(180deg,#1d1d1d,#0d0d0d);
   border-bottom:1px solid var(--border);
 }
-header h1{margin:0;color:var(--gold);font-size:28px;letter-spacing:1px}
-header p{margin:8px 0 0;color:var(--muted);font-size:14px}
-main{max-width:1200px;margin:0 auto;padding:26px 24px 60px}
-
-/* GRID */
-.dashboard{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;
+header h1{
+  margin:0;
+  color:var(--gold);
+  font-size:30px;
+  letter-spacing:1px;
+}
+header p{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:15px;
 }
 
-.panel{
-  background:linear-gradient(180deg,#181818,#0f0f0f);
+main{
+  max-width:1280px;
+  margin:0 auto;
+  padding:28px 24px 80px;
+}
+
+/* =====================
+   HOW TO READ THIS PAGE
+   ===================== */
+.howto{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin-bottom:30px;
+}
+
+.how-card{
+  background:linear-gradient(180deg,#181818,#101010);
   border:1px solid var(--border);
   border-radius:18px;
   padding:16px 18px;
+}
+
+.how-card h3{
+  margin:0 0 8px;
+  font-size:15px;
+  color:var(--gold);
+}
+
+.how-card p{
+  margin:0;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+/* =====================
+   LEGEND
+   ===================== */
+.legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:30px 0 26px;
+}
+
+.legend span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  font-size:12px;
+}
+
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+.bad{color:var(--bad)}
+.info{color:var(--info)}
+
+/* =====================
+   DASHBOARD GRID
+   ===================== */
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px;
+}
+
+/* =====================
+   CUBE PANEL
+   ===================== */
+.panel{
+  background:linear-gradient(180deg,#1a1a1a,#0f0f0f);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px 20px 20px;
   position:relative;
 }
+
 .panel::before{
   content:"";
   position:absolute;
   inset:0;
-  border-radius:18px;
+  border-radius:20px;
   box-shadow:inset 0 0 0 1px rgba(245,196,81,.08);
   pointer-events:none;
 }
+
 .panel h3{
-  margin:0 0 10px;
-  font-size:15px;
+  margin:0 0 6px;
+  font-size:16px;
   color:var(--gold);
   display:flex;
   align-items:center;
   gap:8px;
 }
-.panel small{color:var(--muted)}
 
-.recipe{
-  border-top:1px dashed var(--border);
-  margin-top:10px;
-  padding-top:10px;
+.panel .subtitle{
   font-size:13px;
+  color:var(--muted);
+  margin-bottom:12px;
 }
 
+/* =====================
+   FLOW BLOCK
+   ===================== */
 .flow{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
+  background:var(--panel-soft);
+  border:1px dashed var(--border);
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:13px;
+  line-height:1.5;
 }
 
+.flow strong{color:#fff}
+
+.arrow{
+  display:block;
+  text-align:center;
+  color:var(--muted);
+  margin:8px 0;
+}
+
+/* =====================
+   RESULT TAGS
+   ===================== */
 .tag{
-  padding:3px 8px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
   border-radius:999px;
   font-size:12px;
   border:1px solid var(--border);
+  margin-top:10px;
 }
-.good{color:var(--good)}
-.warn{color:var(--warn)}
-.bad{color:var(--bad)}
 
-.legend{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:22px;
-}
-.legend span{
-  padding:6px 10px;
-  border-radius:12px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  font-size:12px;
-}
+.tag.good{background:rgba(76,255,76,.08)}
+.tag.warn{background:rgba(255,210,76,.08)}
+.tag.bad{background:rgba(255,92,92,.08)}
+.tag.info{background:rgba(111,180,255,.08)}
+
+/* =====================
+   FOOTER
+   ===================== */
 footer{
   text-align:center;
-  padding:28px 16px;
+  padding:30px 16px;
   border-top:1px solid var(--border);
   color:var(--muted);
   font-size:12px;
@@ -112,115 +211,163 @@ footer{
 </head>
 <body>
 <header>
-  <h1>Horadrim-Würfel – Visuelle Übersicht</h1>
-  <p>Selbsterklärender Cube‑Merker · Input → Output → Bewertung</p>
+  <h1>Horadrim-Würfel – Interaktive Übersicht</h1>
+  <p>Was du in den Würfel legst → was herauskommt → ob es sich lohnt</p>
 </header>
+
 <main>
 
+<!-- HOW TO READ -->
+<section class="howto">
+  <div class="how-card">
+    <h3>📦 Input</h3>
+    <p>Links siehst du immer, <strong>was exakt in den Horadrim-Würfel gelegt wird</strong>. Reihenfolge ist egal.</p>
+  </div>
+  <div class="how-card">
+    <h3>🎲 Aktion</h3>
+    <p>Der Würfel <strong>erzeugt ein neues Item</strong> oder verändert das bestehende (Sockel, Stats, iLvl).</p>
+  </div>
+  <div class="how-card">
+    <h3>🏷️ Bewertung</h3>
+    <p>Farben & Labels zeigen dir sofort, <strong>ob sich das Rezept lohnt</strong>.</p>
+  </div>
+</section>
+
+<!-- LEGEND -->
 <div class="legend">
   <span class="good">🔥 lohnt sich</span>
   <span class="warn">⚠️ situativ</span>
   <span class="bad">❌ meist nicht sinnvoll</span>
-  <span>🎲 Werte / iLvl ändern sich</span>
+  <span class="info">🎲 Werte / iLvl ändern sich</span>
 </div>
 
+<!-- DASHBOARD -->
 <div class="dashboard">
 
   <div class="panel">
     <h3>🗡️ Waffe sockeln</h3>
-    <small>Nur normale Items</small>
-    <div class="recipe">
-      <div class="flow">
-        <span>Waffe + Ral + Amn + Perf. Amethyst</span>
-        <span class="tag warn">Zufällig</span>
-      </div>
+    <div class="subtitle">Nur normale (weiße) Waffen</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      Waffe + Ral + Amn + Perf. Amethyst
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Gleiche Waffe mit zufälliger Sockelanzahl
     </div>
+    <span class="tag warn">⚠️ Sockel zufällig</span>
   </div>
 
   <div class="panel">
     <h3>🛡️ Rüstung sockeln</h3>
-    <small>Kein Unique / Set</small>
-    <div class="recipe">
-      <div class="flow">
-        <span>Rüstung + Tal + Thul + Perf. Topaz</span>
-        <span class="tag warn">Zufällig</span>
-      </div>
+    <div class="subtitle">Kein Unique, kein Set</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      Rüstung + Tal + Thul + Perf. Topaz
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Rüstung mit zufälligen Sockeln
     </div>
+    <span class="tag warn">⚠️ Sockel zufällig</span>
   </div>
 
   <div class="panel">
     <h3>⬆️ Normal → Exceptional</h3>
-    <small>Stats werden neu gerollt</small>
-    <div class="recipe">
-      <div>Waffe: Ral + Sol + Perf. Emerald</div>
-      <div>Rüstung: Tal + Shael + Perf. Diamond</div>
-      <span class="tag warn">🎲 Re-Roll</span>
+    <div class="subtitle">Alle Stats werden neu gewürfelt</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      Waffe: Ral + Sol + Perf. Emerald<br>
+      Rüstung: Tal + Shael + Perf. Diamond
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Höherer Item-Typ, neue Werte
     </div>
+    <span class="tag info">🎲 Re-Roll</span>
   </div>
 
   <div class="panel">
     <h3>⬆️ Exceptional → Elite</h3>
-    <small>Teurer – gut abwägen</small>
-    <div class="recipe">
-      <div>Waffe: Lum + Pul + Perf. Emerald</div>
-      <div>Rüstung: Ko + Lem + Perf. Diamond</div>
-      <span class="tag warn">🎲 Re-Roll</span>
+    <div class="subtitle">Teuer – nur bei sehr guten Bases</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      Waffe: Lum + Pul + Perf. Emerald<br>
+      Rüstung: Ko + Lem + Perf. Diamond
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Elite-Version mit neuen Stats
     </div>
+    <span class="tag warn">⚠️ gut abwägen</span>
   </div>
 
   <div class="panel">
     <h3>🧿 Runen upgraden</h3>
-    <small>Bis max. Ist sinnvoll</small>
-    <div class="recipe">
-      <div class="flow">
-        <span>3× gleiche Rune</span>
-        <span class="tag good">Upgrade</span>
-      </div>
+    <div class="subtitle">Bis max. Ist sinnvoll</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      3× gleiche Rune
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      1× höhere Rune
     </div>
+    <span class="tag good">🔥 lohnt sich</span>
   </div>
 
   <div class="panel">
     <h3>🧪 Caster Craft</h3>
-    <small>Beliebt für FCR Builds</small>
-    <div class="recipe">
-      <div>Magic Item + Rune + Perf. Amethyst + Jewel</div>
-      <span class="tag good">Meta</span>
+    <div class="subtitle">FCR / Mana / Caster Builds</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      Magic Item + Rune + Perf. Amethyst + Jewel
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Crafted Item mit festen Caster-Mods
     </div>
+    <span class="tag good">🔥 Meta</span>
   </div>
 
   <div class="panel">
     <h3>🩸 Blood Craft</h3>
-    <small>Melee / LL / CB</small>
-    <div class="recipe">
-      <div>Magic Item + Rune + Perf. Ruby + Jewel</div>
-      <span class="tag warn">Build‑abhängig</span>
+    <div class="subtitle">Melee / Life Leech / Crushing Blow</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      Magic Item + Rune + Perf. Ruby + Jewel
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Crafted Item mit Blood-Mods
     </div>
+    <span class="tag warn">⚠️ Build-abhängig</span>
   </div>
 
   <div class="panel">
     <h3>🎲 Magic Item rerollen</h3>
-    <small>Charms / Circlets</small>
-    <div class="recipe">
-      <div class="flow">
-        <span>3× Perf. Gems + Magic Item</span>
-        <span class="tag good">Neue Affixe</span>
-      </div>
+    <div class="subtitle">Charms, Circlets</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      3× Perf. Gems + Magic Item
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Gleiches Item mit neuen Affixen
     </div>
+    <span class="tag good">🔥 sehr beliebt</span>
   </div>
 
   <div class="panel">
     <h3>☠️ Rare Item rerollen</h3>
-    <small>iLvl sinkt stark</small>
-    <div class="recipe">
-      <div>6× Perf. Skulls + Rare Item</div>
-      <span class="tag bad">❌ meist nicht</span>
+    <div class="subtitle">Item-Level sinkt stark</div>
+    <div class="flow">
+      <strong>Input:</strong><br>
+      6× Perf. Skulls + Rare Item
+      <span class="arrow">↓</span>
+      <strong>Output:</strong><br>
+      Rare Item mit stark reduziertem iLvl
     </div>
+    <span class="tag bad">❌ fast nie sinnvoll</span>
   </div>
 
 </div>
 </main>
+
 <footer>
-  Cube‑Übersicht · Fokus: schnelle Entscheidungen
+  Horadrim-Würfel · Ziel: keine Rezepte auswendig lernen müssen
 </footer>
 </body>
 </html>
