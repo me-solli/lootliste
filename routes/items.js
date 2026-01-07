@@ -108,6 +108,7 @@ router.get("/public", async (req, res) => {
    POST /api/items
    Einreichen (Screenshot Pflicht, DEV erlaubt)
 ===================================================== */
+
 router.post(
   "/",
   devAuth,
@@ -118,11 +119,18 @@ router.post(
       return res.status(401).json({ error: "Nicht eingeloggt" });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ error: "Screenshot fehlt" });
-    }
-
     try {
+
+      const itemCount = Number(req.body.item_count || 0);
+
+      if (!itemCount || itemCount < 1 || itemCount > 3) {
+        return res.status(400).json({
+          error: "Ungültige Item-Anzahl"
+        });
+      }
+
+      // ⬇️ HIER kommt Schritt 3 (req.files prüfen)
+
       const { weaponType } = req.body;
 
       const result = await db.run(
