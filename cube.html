@@ -146,12 +146,23 @@ main{
   border:1px dashed var(--border);
   border-radius:16px;
   padding:14px 16px;
+  min-height:180px;
+  display:flex;
+  flex-direction:column;
+}
+.phase ul{
+  margin:0;
+  padding-left:18px;
+  font-size:13px;
+  line-height:1.5;
 }
 .phase-title{
   font-size:12px;
   letter-spacing:.6px;
   color:var(--gold);
   margin-bottom:8px;
+  text-transform:uppercase;
+  white-space:nowrap;
 }
 .phase ul{
   margin:0;
@@ -221,15 +232,15 @@ footer{
 <section class="intro">
   <div class="intro-box">
     <h3>📦 Was ist das?</h3>
-    <p>Diese Übersicht zeigt dir die wichtigsten <strong>Horadrim-Würfel-Rezepte</strong> – kompakt, visuell und ohne Fließtext.</p>
+    <p>Diese Übersicht zeigt dir die wichtigsten <strong>Horadrim-Würfel‑Rezepte</strong> – kompakt, visuell und ohne Fließtext.</p>
   </div>
   <div class="intro-box">
     <h3>🧠 Wie lesen?</h3>
-    <p>Links siehst du immer das <strong>REZEPT (im Cube)</strong>, rechts das <strong>ERGEBNIS</strong>. Pfeil = Würfel-Aktion.</p>
+    <p>Links siehst du immer das <strong>REZEPT (im Cube)</strong>, rechts das <strong>ERGEBNIS</strong>. Pfeil = Würfel‑Aktion.</p>
   </div>
   <div class="intro-box">
     <h3>⚠️ Hinweise</h3>
-    <p>🎲 bedeutet Zufall / Re-Roll. ⚠️ = Risiko. ❌ = meist nicht sinnvoll.</p>
+    <p>🎲 bedeutet Zufall / Re‑Roll. ⚠️ = Risiko. ❌ = meist nicht sinnvoll.</p>
   </div>
 </section>
 
@@ -251,7 +262,7 @@ footer{
       <div class="subtitle">Nur normale (weiße) Waffen</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>🗡️ Normale Waffe</li>
             <li>🪙 Ral</li>
@@ -277,7 +288,7 @@ footer{
       <div class="subtitle">Kein Unique, kein Set</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>🛡️ Normale Rüstung</li>
             <li>🪙 Tal</li>
@@ -303,7 +314,7 @@ footer{
       <div class="subtitle">Nur normale Helme</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>🎩 Normaler Helm</li>
             <li>🪙 Ral</li>
@@ -326,7 +337,7 @@ footer{
       <div class="subtitle">Nur normale Schilde</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>🛡️ Normaler Schild</li>
             <li>🪙 Tal</li>
@@ -356,7 +367,7 @@ footer{
       <div class="subtitle">Stats werden neu gewürfelt</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Normales Item</li>
             <li>Ral + Sol + Perf. Emerald</li>
@@ -379,7 +390,7 @@ footer{
       <div class="subtitle">Hohe Anforderungen</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Exceptional Item</li>
             <li>Lum + Pul + Perf. Emerald</li>
@@ -409,7 +420,7 @@ footer{
       <div class="subtitle">FCR / Mana / Caster Builds</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Magic Item</li>
             <li>Rune</li>
@@ -434,7 +445,7 @@ footer{
       <div class="subtitle">Melee / Life Leech</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Magic Item</li>
             <li>Rune</li>
@@ -459,7 +470,7 @@ footer{
       <div class="subtitle">Knockback / AR</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Magic Item</li>
             <li>Rune</li>
@@ -483,7 +494,7 @@ footer{
       <div class="subtitle">DR / Resistenzen</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Magic Item</li>
             <li>Rune</li>
@@ -514,7 +525,7 @@ footer{
       <div class="subtitle">Charms, Circlets</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Magic Item</li>
             <li>3× Perf. Gems</li>
@@ -537,7 +548,7 @@ footer{
       <div class="subtitle">iLvl abhängig</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Charm</li>
             <li>3× Perf. Gems</li>
@@ -559,7 +570,7 @@ footer{
       <div class="subtitle">Item-Level sinkt</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Rare Item</li>
             <li>6× Perf. Skulls</li>
@@ -589,7 +600,7 @@ footer{
       <div class="subtitle">3 → 1</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>3× gleiche Rune</li>
           </ul>
@@ -610,7 +621,7 @@ footer{
       <div class="subtitle">3 → 1</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>3× gleicher Gem</li>
           </ul>
@@ -630,7 +641,7 @@ footer{
       <div class="subtitle">bis Perfekt</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>3× Skull</li>
           </ul>
@@ -650,7 +661,7 @@ footer{
       <div class="subtitle">Sockel bleiben</div>
       <div class="phases">
         <div class="phase">
-          <div class="phase-title">🧾 REZEPT (IM CUBE)</div>
+          <div class="phase-title">🧾 REZEPT</div>
           <ul>
             <li>Item mit Sockeln</li>
             <li>Hel Rune</li>
