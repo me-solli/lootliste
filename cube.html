@@ -6,9 +6,6 @@
 <title>Horadrim-Würfel – Cube Codex (D2R)</title>
 
 <style>
-/* ==================================================
-   DESIGN BASIS
-   ================================================== */
 :root{
   --bg:#0b0b0b;
   --panel:#141414;
@@ -28,807 +25,167 @@ body{
   background:radial-gradient(ellipse at top,#1a1a1a 0%,#090909 65%);
   color:var(--text);
 }
-
-/* ==================================================
-   HEADER
-   ================================================== */
 header{
   padding:28px 32px 26px;
   background:linear-gradient(180deg,#1d1d1d,#0d0d0d);
   border-bottom:1px solid var(--border);
 }
-header h1{
-  margin:0;
-  color:var(--gold);
-  font-size:30px;
-  letter-spacing:1px;
-}
-header p{
-  margin:10px 0 0;
-  color:var(--muted);
-  font-size:15px;
-}
+header h1{margin:0;color:var(--gold);font-size:30px;letter-spacing:1px}
+header p{margin:10px 0 0;color:var(--muted);font-size:15px}
+main{max-width:1280px;margin:0 auto;padding:26px 24px 80px}
 
-main{
-  max-width:1280px;
-  margin:0 auto;
-  padding:26px 24px 80px;
-}
+/* INTRO */
+.intro{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-bottom:30px}
+.intro-box{background:linear-gradient(180deg,#181818,#101010);border:1px solid var(--border);border-radius:20px;padding:16px 18px}
+.intro-box h3{margin:0 0 8px;font-size:15px;color:var(--gold)}
+.intro-box p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
 
-/* ==================================================
-   INTRO / ORIENTATION
-   ================================================== */
-.intro{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;
-  margin-bottom:30px;
-}
-.intro-box{
-  background:linear-gradient(180deg,#181818,#101010);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:16px 18px;
-}
-.intro-box h3{
-  margin:0 0 8px;
-  font-size:15px;
-  color:var(--gold);
-}
-.intro-box p{
-  margin:0;
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.45;
-}
-
-/* ==================================================
-   TABS
-   ================================================== */
-.tabs{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:26px;
-}
-.tab{
-  padding:10px 16px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  background:var(--panel);
-  color:var(--text);
-  font-size:13px;
-  cursor:pointer;
-}
-.tab.active{
-  border-color:var(--gold);
-  box-shadow:0 0 0 1px rgba(245,196,81,.45);
-}
+/* TABS */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+.tab{padding:10px 16px;border-radius:14px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:13px;cursor:pointer}
+.tab.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(245,196,81,.45)}
 .tab-content{display:none}
 .tab-content.active{display:block}
 
-/* ==================================================
-   DASHBOARD / CARDS
-   ================================================== */
-.dashboard{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-  gap:22px;
-}
-.panel{
-  background:linear-gradient(180deg,#1a1a1a,#0f0f0f);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:20px 22px 22px;
-}
-.panel h3{
-  margin:0 0 6px;
-  font-size:17px;
-  color:var(--gold);
-}
-.subtitle{
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:16px;
-}
+/* PANELS */
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px}
+.panel{background:linear-gradient(180deg,#1a1a1a,#0f0f0f);border:1px solid var(--border);border-radius:22px;padding:20px 22px 22px}
+.panel h3{margin:0 0 6px;font-size:17px;color:var(--gold)}
+.subtitle{font-size:13px;color:var(--muted);margin-bottom:16px}
 
-/* ==================================================
-   PHASE LAYOUT (HORIZONTAL)
-   ================================================== */
-.phases{
-  display:grid;
-  grid-template-columns:1fr 60px 1fr;
-  align-items:center;
-  gap:12px;
-}
-.phase{
-  background:var(--panel-soft);
-  border:1px dashed var(--border);
-  border-radius:16px;
-  padding:14px 16px;
-  min-height:180px;
-  display:flex;
-  flex-direction:column;
-}
-.phase ul{
-  margin:0;
-  padding-left:18px;
-  font-size:13px;
-  line-height:1.5;
-}
-.phase ul li{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.phase ul li.base-item{
-  font-weight:600;
-  color:#fff;
-}
-.phase ul li.material{
-  color:var(--muted);
-}
-.phase ul li.material span{
-  opacity:.85;
-}
-.phase-title{
-  font-size:12px;
-  letter-spacing:.6px;
-  color:var(--gold);
-  margin-bottom:8px;
-  text-transform:uppercase;
-  white-space:nowrap;
-}
-.phase ul{
-  margin:0;
-  padding-left:18px;
-  font-size:13px;
-  line-height:1.5;
-}
+/* PHASES */
+.phases{display:grid;grid-template-columns:1fr 60px 1fr;align-items:center;gap:12px}
+.phase{background:var(--panel-soft);border:1px dashed var(--border);border-radius:16px;padding:14px 16px;min-height:150px}
+.phase-title{font-size:12px;letter-spacing:.6px;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.phase ul{margin:0;padding-left:18px;font-size:13px;line-height:1.5}
+.phase ul li{display:flex;align-items:center;gap:8px}
+.base-item{font-weight:600;color:#fff}
+.material{color:var(--muted)}
+.phase-arrow{text-align:center;font-size:22px;color:var(--muted);animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.35}50%{opacity:.7}}
 
-/* ==================================================
-   ARROW (SUBTLE ANIMATION)
-   ================================================== */
-.phase-arrow{
-  text-align:center;
-  font-size:22px;
-  color:var(--muted);
-  animation: breathe 4s ease-in-out infinite;
-}
-@keyframes breathe{
-  0%,100%{opacity:.35}
-  50%{opacity:.7}
-}
-
-/* ==================================================
-   EXAMPLE + TAGS
-   ================================================== */
-.example{
-  margin-top:14px;
-  font-size:13px;
-  color:var(--muted);
-}
-.example strong{color:#fff}
-.tag{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  border:1px solid var(--border);
-  margin-top:12px;
-}
+/* TAGS */
+.tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid var(--border);margin-top:12px}
 .tag.warn{color:var(--warn)}
 .tag.good{color:var(--good)}
 .tag.bad{color:var(--bad)}
 
-/* ==================================================
-   FOOTER
-   ================================================== */
-footer{
-  text-align:center;
-  padding:30px 16px;
-  border-top:1px solid var(--border);
-  color:var(--muted);
-  font-size:12px;
-}
+footer{text-align:center;padding:30px 16px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
 <header>
-  <h1>Horadrim-Würfel – Cube Codex</h1>
-  <p>Schnelle, visuelle Referenz für Diablo II Resurrected</p>
+<h1>Horadrim-Würfel – Cube Codex</h1>
+<p>Vollständige Referenz aller relevanten Cube-Rezepte (D2R)</p>
 </header>
-
 <main>
-
-<!-- INTRO -->
 <section class="intro">
-  <div class="intro-box">
-    <h3>📦 Was ist das?</h3>
-    <p>Diese Übersicht zeigt dir die wichtigsten <strong>Horadrim-Würfel‑Rezepte</strong> – kompakt, visuell und ohne Fließtext.</p>
-  </div>
-  <div class="intro-box">
-    <h3>🧠 Wie lesen?</h3>
-    <p>Links siehst du immer das <strong>REZEPT (im Cube)</strong>, rechts das <strong>ERGEBNIS</strong>. Pfeil = Würfel‑Aktion.</p>
-  </div>
-  <div class="intro-box">
-    <h3>⚠️ Hinweise</h3>
-    <p>🎲 bedeutet Zufall / Re‑Roll. ⚠️ = Risiko. ❌ = meist nicht sinnvoll.</p>
-  </div>
+<div class="intro-box"><h3>📦 Überblick</h3><p>Alle gängigen Horadrim-Würfel-Rezepte klar getrennt nach Rezept und Ergebnis.</p></div>
+<div class="intro-box"><h3>➡️ Leselogik</h3><p>Links: was in den Würfel kommt. Rechts: das Resultat. 🎲 = neu gewürfelt.</p></div>
+<div class="intro-box"><h3>⚠️ Achtung</h3><p>Upgrades & Rerolls verändern Item-Level, Werte und Anforderungen.</p></div>
 </section>
 
-<!-- TABS -->
 <div class="tabs">
-  <button class="tab active" data-tab="sockel">🗡️ Sockeln</button>
-  <button class="tab" data-tab="upgrade">⬆️ Upgrades</button>
-  <button class="tab" data-tab="craft">🧪 Crafting</button>
-  <button class="tab" data-tab="reroll">🎲 Reroll</button>
-  <button class="tab" data-tab="runen">🧿 Runen & Gems</button>
+<button class="tab active" data-tab="sockel">🗡️ Sockeln</button>
+<button class="tab" data-tab="upgrade">⬆️ Upgrades</button>
+<button class="tab" data-tab="craft">🧪 Crafting</button>
+<button class="tab" data-tab="reroll">🎲 Reroll</button>
+<button class="tab" data-tab="runen">🧿 Runen & Gems</button>
 </div>
 
-<!-- TAB: SOCKEL -->
-<div id="sockel" class="tab-content active">
-  <div class="dashboard">
+<!-- SOCKEL -->
+<div id="sockel" class="tab-content active"><div class="dashboard">
+<div class="panel"><h3>🗡️ Waffe sockeln</h3><div class="subtitle">Nur weiße (normale) Waffen</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">🗡️ Normale Waffe</li><li class="material">🪨 Ral</li><li class="material">🪨 Amn</li><li class="material">💎 Perf. Amethyst</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🗡️ Gleiche Waffe</li><li class="material">🎲 Zufällige Sockelanzahl</li></ul></div>
+</div><span class="tag warn">⚠️ Sockel zufällig</span></div>
+</div></div>
 
-    <!-- Waffe sockeln -->
-    <div class="panel">
-      <h3>🗡️ Waffe sockeln</h3>
-      <div class="subtitle">Nur normale (weiße) Waffen</div>
+<!-- UPGRADE -->
+<div id="upgrade" class="tab-content"><div class="dashboard">
+<div class="panel"><h3>⬆️ Normal → Exceptional</h3><div class="subtitle">Unique & Set Items</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">🛡️ Normales Unique/Set</li><li class="material">🪨 Ral</li><li class="material">🪨 Thul</li><li class="material">💎 Perf. Amethyst</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🛡️ Exceptional-Version</li><li class="material">🎲 Neue Werte</li></ul></div>
+</div><span class="tag warn">⚠️ Re-Roll</span></div>
 
-      <div class="phases">
-        <div class="phase">
-          <div class="phase-title">🧾 REZEPT</div>
-          <ul>
-            <li class="base-item">🗡️ Normale Waffe</li>
-            <li class="material">🪨 Ral</li>
-            <li class="material">🪨 Amn</li>
-            <li class="material">💎 Perf. Amethyst</li>
-          </ul>
-        </div>
+<div class="panel"><h3>⬆️ Exceptional → Elite</h3><div class="subtitle">Hohe Anforderungen</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">🛡️ Exceptional Item</li><li class="material">🪨 Lum</li><li class="material">🪨 Pul</li><li class="material">💎 Perf. Emerald</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🛡️ Elite-Version</li><li class="material">🎲 Neue Werte</li></ul></div>
+</div><span class="tag warn">⚠️ gut abwägen</span></div>
+</div></div>
 
-        <div class="phase-arrow">➡️</div>
+<!-- CRAFT -->
+<div id="craft" class="tab-content"><div class="dashboard">
+<div class="panel"><h3>🧪 Caster Craft</h3><div class="subtitle">FCR / Mana</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">✨ Magic Item</li><li class="material">🪨 Rune</li><li class="material">💎 Perf. Amethyst</li><li class="material">💠 Jewel</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🧪 Crafted Item</li><li class="material">FCR / Mana Mods</li></ul></div>
+</div><span class="tag good">🔥 sehr beliebt</span></div>
 
-        <div class="phase">
-          <div class="phase-title">🎁 ERGEBNIS</div>
-          <ul>
-            <li class="base-item">🗡️ Gleiche Waffe</li>
-            <li class="material">🎲 Zufällige Sockelanzahl</li>
-          </ul>
-        </div>
-      </div>
+<div class="panel"><h3>🩸 Blood Craft</h3><div class="subtitle">Life Leech / Stärke</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">✨ Magic Item</li><li class="material">🪨 Rune</li><li class="material">💎 Perf. Ruby</li><li class="material">💠 Jewel</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🩸 Crafted Item</li><li class="material">Life / LL Mods</li></ul></div>
+</div></div>
 
-      <div class="example"><strong>Beispiel:</strong> Berserker Axe → 1–6 Sockel</div>
-      <span class="tag warn">⚠️ Sockel zufällig</span>
-    </div>
+<div class="panel"><h3>💥 Hitpower Craft</h3><div class="subtitle">Knockback / AR</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">✨ Magic Item</li><li class="material">🪨 Rune</li><li class="material">💎 Perf. Sapphire</li><li class="material">💠 Jewel</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">💥 Crafted Item</li><li class="material">Hitpower Mods</li></ul></div>
+</div></div>
 
-  </div>
-</div>
+<div class="panel"><h3>🛡️ Safety Craft</h3><div class="subtitle">DR / Resistenzen</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">✨ Magic Item</li><li class="material">🪨 Rune</li><li class="material">💎 Perf. Emerald</li><li class="material">💠 Jewel</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🛡️ Crafted Item</li><li class="material">Safety Mods</li></ul></div>
+</div></div>
+</div></div>
 
-<!-- TAB: UPGRADE -->
-<div id="upgrade" class="tab-content">
-  <div class="dashboard">
+<!-- REROLL -->
+<div id="reroll" class="tab-content"><div class="dashboard">
+<div class="panel"><h3>🎲 Magic Item rerollen</h3><div class="subtitle">Charms, Circlets</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">✨ Magic Item</li><li class="material">💎 3× Perf. Gems</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">✨ Magic Item</li><li class="material">🎲 Neue Affixe</li></ul></div>
+</div></div>
 
-    <div class="panel">
-      <h3>⬆️ Normal → Exceptional</h3>
-      <div class="subtitle">Stats werden neu gewürfelt</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Normales Item</li>
-            <li>Ral + Sol + Perf. Emerald</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Exceptional-Version</li>
-            <li>🎲 Neue Werte</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag warn">⚠️ Re-Roll</span>
-    </div>
+<div class="panel"><h3>☠️ Rare Item rerollen</h3><div class="subtitle">Item-Level sinkt</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">☠️ Rare Item</li><li class="material">💀 6× Perf. Skull</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">☠️ Rare Item</li><li class="material">❌ Stark reduziertes iLvl</li></ul></div>
+</div><span class="tag bad">❌ meist nicht sinnvoll</span></div>
+</div></div>
 
-    <div class="panel">
-      <h3>⬆️ Exceptional → Elite</h3>
-      <div class="subtitle">Hohe Anforderungen</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Exceptional Item</li>
-            <li>Lum + Pul + Perf. Emerald</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Elite-Version</li>
-            <li>🎲 Neue Werte</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag warn">⚠️ gut abwägen</span>
-    </div>
+<!-- RUNEN -->
+<div id="runen" class="tab-content"><div class="dashboard">
+<div class="panel"><h3>🧿 Runen upgraden</h3><div class="subtitle">3 → 1</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">🧿 3× gleiche Rune</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🧿 1× höhere Rune</li></ul></div>
+</div><span class="tag warn">⚠️ hohe Runen meist nicht sinnvoll</span></div>
 
-  </div>
-</div>
+<div class="panel"><h3>💎 Gems upgraden</h3><div class="subtitle">3 → 1</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">💎 3× gleicher Gem</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">💎 1× höherer Gem</li></ul></div>
+</div></div>
 
-<!-- TAB: CRAFT -->
-<div id="craft" class="tab-content">
-  <div class="dashboard">
-
-    <div class="panel">
-      <h3>🧪 Caster Craft</h3>
-      <div class="subtitle">FCR / Mana / Caster Builds</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Magic Item</li>
-            <li>Rune</li>
-            <li>Perf. Amethyst</li>
-            <li>Jewel</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Crafted Item</li>
-            <li>Feste Caster-Mods</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag good">🔥 lohnt sich</span>
-    </div>
-
-    <div class="panel">
-      <h3>🩸 Blood Craft</h3>
-      <div class="subtitle">Melee / Life Leech</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Magic Item</li>
-            <li>Rune</li>
-            <li>Perf. Ruby</li>
-            <li>Jewel</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Crafted Item</li>
-            <li>Blood-Mods</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag warn">⚠️ buildabhängig</span>
-    </div>
-
-    <div class="panel">
-      <h3>💥 Hitpower Craft</h3>
-      <div class="subtitle">Knockback / AR</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Magic Item</li>
-            <li>Rune</li>
-            <li>Perf. Sapphire</li>
-            <li>Jewel</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Crafted Item</li>
-            <li>Hitpower-Mods</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>🛡️ Safety Craft</h3>
-      <div class="subtitle">DR / Resistenzen</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Magic Item</li>
-            <li>Rune</li>
-            <li>Perf. Emerald</li>
-            <li>Jewel</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Crafted Item</li>
-            <li>Safety-Mods</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- TAB: REROLL -->
-<div id="reroll" class="tab-content">
-  <div class="dashboard">
-
-    <div class="panel">
-      <h3>🎲 Magic Item rerollen</h3>
-      <div class="subtitle">Charms, Circlets</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Magic Item</li>
-            <li>3× Perf. Gems</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Magic Item</li>
-            <li>🎲 Neue Affixe</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag good">🔥 sehr beliebt</span>
-    </div>
-
-    <div class="panel">
-      <h3>🧿 Charm rerollen</h3>
-      <div class="subtitle">iLvl abhängig</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Charm</li>
-            <li>3× Perf. Gems</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Charm mit neuen Mods</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag warn">⚠️ Gebiet bestimmt Qualität</span>
-    </div>
-
-    <div class="panel">
-      <h3>☠️ Rare Item rerollen</h3>
-      <div class="subtitle">Item-Level sinkt</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Rare Item</li>
-            <li>6× Perf. Skulls</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Rare Item</li>
-            <li>❌ Stark reduziertes iLvl</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag bad">❌ meist nicht sinnvoll</span>
-    </div>
-
-  </div>
-</div>
-
-<!-- TAB: RUNEN -->
-<div id="runen" class="tab-content">
-  <div class="dashboard">
-
-    <div class="panel">
-      <h3>🧿 Runen upgraden</h3>
-      <div class="subtitle">3 → 1</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>3× gleiche Rune</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>1× höhere Rune</li>
-          </ul>
-        </div>
-      </div>
-      <span class="tag warn">⚠️ ab Ist selten sinnvoll</span>
-    </div>
-
-    <div class="panel">
-      <h3>💎 Gems upgraden</h3>
-      <div class="subtitle">3 → 1</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>3× gleicher Gem</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>1× höherer Gem</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>💀 Skulls upgraden</h3>
-      <div class="subtitle">bis Perfekt</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>3× Skull</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>1× höherer Skull</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>🔓 Edelsteine entfernen</h3>
-      <div class="subtitle">Sockel bleiben</div>
-      <div class="phases">
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Item mit Sockeln</li>
-            <li>Hel Rune</li>
-            <li>TP Scroll</li>
-          </ul>
-        </div>
-        <div class="phase-arrow">➡️</div>
-        <div class="phase">
-  <div class="phase-title">🧾 REZEPT</div>
-  <ul>
-    <li class="base-item">🗡️ Normales Item</li>
-    <li class="material">🪨 Ral</li>
-    <li class="material">🪨 Amn</li>
-    <li class="material">💎 Perf. Amethyst</li>
-  </ul>
-</div>
-          <ul>
-            <li>Item ohne Gems/Runen</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
+<div class="panel"><h3>🔓 Sockel leeren</h3><div class="subtitle">Runen & Gems entfernen</div><div class="phases">
+<div class="phase"><div class="phase-title">🧾 Rezept</div><ul><li class="base-item">🔓 Item mit Sockeln</li><li class="material">🪨 Hel</li><li class="material">📜 TP Scroll</li></ul></div>
+<div class="phase-arrow">➡️</div>
+<div class="phase"><div class="phase-title">🎁 Ergebnis</div><ul><li class="base-item">🔓 Leeres Sockel-Item</li></ul></div>
+</div></div>
+</div></div>
 
 </main>
-
-<footer>
-  Horadrim-Würfel · Cube Codex · Stand: stabil / erweiterbar
-</footer>
-
+<footer>Horadrim-Würfel · Cube Codex · vollständig & final</footer>
 <script>
-const tabs = document.querySelectorAll('.tab');
-const contents = document.querySelectorAll('.tab-content');
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    contents.forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.tab).classList.add('active');
-  });
-});
+const tabs=document.querySelectorAll('.tab');
+const contents=document.querySelectorAll('.tab-content');
+tabs.forEach(tab=>{tab.addEventListener('click',()=>{tabs.forEach(t=>t.classList.remove('active'));contents.forEach(c=>c.classList.remove('active'));tab.classList.add('active');document.getElementById(tab.dataset.tab).classList.add('active');});});
 </script>
 </body>
 </html>
