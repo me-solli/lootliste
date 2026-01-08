@@ -800,6 +800,39 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   letter-spacing:.3px;
 }
 
+/* ===== TIMELINE HOVER GLOW ===== */
+.timeline-step{
+  transition:
+    box-shadow .2s ease,
+    transform .2s ease,
+    background-color .2s ease;
+}
+
+.timeline-step:hover{
+  transform:scale(1.1);
+}
+
+/* Hover – erledigt */
+.timeline-step.done:hover{
+  box-shadow:
+    0 0 6px rgba(191,168,106,.8),
+    0 0 14px rgba(191,168,106,.4);
+}
+
+/* Hover – aktuell */
+.timeline-step.current:hover{
+  box-shadow:
+    0 0 8px rgba(245,196,81,.9),
+    0 0 18px rgba(245,196,81,.5);
+}
+
+/* Hover – Zukunft */
+.timeline-step.future:hover{
+  box-shadow:
+    0 0 6px rgba(255,255,255,.15);
+  opacity:.75;
+}
+  
   /* ===== FUTURE CONTEXT AREAS ===== */
 
 .account-shell,
