@@ -19,6 +19,7 @@ const store = {
 // Helpers
 // ------------------------------
 function getCurrentUserId() {
+  return 'user_demo_2';
   // TODO: replace with real auth
   return 'user_demo_1';
 }
