@@ -973,6 +973,39 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     given: "Vergeben"
   };
 
+  // ================================
+// LOOTLISTE CORE LOGIC (V3)
+// ================================
+
+function applyNeed(item, userId) {
+  // Guard: gültiges Item & richtiger Status
+  if (!item || item.status !== "need_open") {
+    return false;
+  }
+
+  // Absicherung: needs-Array
+  if (!Array.isArray(item.needs)) {
+    item.needs = [];
+  }
+
+  // Duplikate verhindern
+  const alreadyNeeded = item.needs.some(
+    need => need.userId === userId
+  );
+
+  if (alreadyNeeded) {
+    return false;
+  }
+
+  // Bedarf eintragen
+  item.needs.push({
+    userId: userId,
+    createdAt: Date.now()
+  });
+
+  return true;
+}
+
   /* ===== SIM MODE ===== */
 const SIM_MODE = location.hostname === "localhost";
 
