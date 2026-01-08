@@ -83,3 +83,11 @@ export function runRoll(itemId) {
 
   return executeRoll({ item, needs: needsForItem });
 }
+
+// ------------------------------
+// DEV / SIM MODE: expose helpers to window for console testing
+// ------------------------------
+window.submitItem = submitItem;
+window.clickNeed = clickNeed;
+window.tick = tick;
+window.runRoll = runRoll;
