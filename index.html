@@ -713,6 +713,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     rgba(0,0,0,0)
   );
   opacity:.85;
+  overflow:visible; /* wichtig: Tooltip darf nicht abgeschnitten werden */
 }
 
 /* Linie */
@@ -737,6 +738,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   display:flex;
   justify-content:space-between;
   align-items:center;
+  overflow:visible; /* Tooltip-Fix */
 }
 
 .timeline-step{
@@ -746,6 +748,11 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   background:#2a2a2a;
   position:relative;
   font-size:0; /* kein Text im Kreis */
+  transition:
+    box-shadow .22s ease,
+    transform .22s ease,
+    background-color .22s ease,
+    filter .22s ease;
 }
 
 /* Zustände */
@@ -777,7 +784,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   font-size:11px;
   font-weight:500;
   letter-spacing:.2px;
-  white-space:pre-line;   /* ⭐ erlaubt Zeilenumbrüche */
+  white-space:pre-line;   /* erlaubt Zeilenumbrüche */
   line-height:1.4;
   opacity:0;
   pointer-events:none;
@@ -800,36 +807,32 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   letter-spacing:.3px;
 }
 
-/* ===== TIMELINE HOVER GLOW ===== */
-.timeline-step{
-  transition:
-    box-shadow .2s ease,
-    transform .2s ease,
-    background-color .2s ease;
-}
-
+/* ===== TIMELINE HOVER GLOW (FINAL) ===== */
 .timeline-step:hover{
-  transform:scale(1.1);
+  transform:scale(1.08);
+  filter:saturate(1.25);
 }
 
-/* Hover – erledigt */
+/* Hover – DONE (Gold) */
 .timeline-step.done:hover{
   box-shadow:
-    0 0 6px rgba(191,168,106,.8),
-    0 0 14px rgba(191,168,106,.4);
+    0 0 8px rgba(255,215,140,.95),
+    0 0 18px rgba(255,195,110,.7),
+    0 0 30px rgba(255,175,80,.35);
 }
 
-/* Hover – aktuell */
+/* Hover – CURRENT (stärkerer Goldkern) */
 .timeline-step.current:hover{
   box-shadow:
-    0 0 8px rgba(245,196,81,.9),
-    0 0 18px rgba(245,196,81,.5);
+    0 0 10px rgba(255,225,160,1),
+    0 0 22px rgba(255,200,120,.85),
+    0 0 38px rgba(255,170,70,.45);
 }
 
-/* Hover – Zukunft */
+/* Hover – FUTURE (zurückhaltend) */
 .timeline-step.future:hover{
   box-shadow:
-    0 0 6px rgba(255,255,255,.15);
+    0 0 6px rgba(255,255,255,.18);
   opacity:.75;
 }
   
