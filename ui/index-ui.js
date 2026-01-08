@@ -19,7 +19,6 @@ const store = {
 // Helpers
 // ------------------------------
 function getCurrentUserId() {
-  return 'user_demo_2';
   // TODO: replace with real auth
   return 'user_demo_1';
 }
@@ -48,10 +47,28 @@ export function submitItem({ name, type, agreedFairplay }) {
 }
 
 // ------------------------------
-// Need registration (example hook)
+// Need registration (current user)
 // ------------------------------
 export function clickNeed(itemId, durationMs) {
   const userId = getCurrentUserId();
+  const item = getItemById(itemId);
+
+  const { item: updatedItem, need } = registerNeed({
+    item,
+    needs: store.needs,
+    userId,
+    durationMs,
+    submittedBy: item.submitted_by
+  });
+
+  store.needs.push(need);
+  return { item: updatedItem, need };
+}
+
+// ------------------------------
+// Need registration (TEST helper: explicit user)
+// ------------------------------
+export function clickNeedAs(itemId, durationMs, userId) {
   const item = getItemById(itemId);
 
   const { item: updatedItem, need } = registerNeed({
@@ -90,5 +107,6 @@ export function runRoll(itemId) {
 // ------------------------------
 window.submitItem = submitItem;
 window.clickNeed = clickNeed;
+window.clickNeedAs = clickNeedAs;
 window.tick = tick;
 window.runRoll = runRoll;
