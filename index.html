@@ -1377,12 +1377,13 @@ visitorCounter.innerHTML =
 /* ===== REQUEST BUTTON CLICK (DELEGATION) ===== */
 cards.addEventListener("click", e => {
 
-  // ===== V3 TEST: applyNeed (noch ohne Umbau) =====
   const btn = e.target.closest(".request-btn");
-  if (btn && !btn.classList.contains("disabled")) {
+
+  // ===== V3 TEST: applyNeed (noch ohne Umbau) =====
+  if (SIM_MODE && btn && !btn.classList.contains("disabled")) {
     const itemName = btn.dataset.item;
     const item = items.find(i => i.name === itemName);
-    if (!item) return;
+    if (!item) return; // OK: beendet nur diesen Klickpfad
 
     // TEMP: Verfügbar = need_open (nur Test!)
     if (item.status === "Verfügbar") {
@@ -1396,7 +1397,6 @@ cards.addEventListener("click", e => {
       success,
       item
     );
-    // ❗ kein return
   }
 
   // ===== ALTLOGIK: Anfrage-Modal =====
