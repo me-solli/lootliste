@@ -835,6 +835,21 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     0 0 6px rgba(255,255,255,.18);
   opacity:.75;
 }
+
+  /* ===== TOOLTIP EDGE FIX ===== */
+
+/* Erster Punkt: Tooltip nach rechts schieben */
+.timeline-step:first-child::after{
+  left:0;
+  transform:none;
+}
+
+/* Letzter Punkt: Tooltip nach links schieben */
+.timeline-step:last-child::after{
+  left:auto;
+  right:0;
+  transform:none;
+}
   
   /* ===== FUTURE CONTEXT AREAS ===== */
 
