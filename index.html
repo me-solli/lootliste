@@ -1376,6 +1376,30 @@ visitorCounter.innerHTML =
   
 /* ===== REQUEST BUTTON CLICK (DELEGATION) ===== */
 cards.addEventListener("click", e => {
+  
+    // ===== V3 TEST: applyNeed (noch ohne Umbau) =====
+  const testBtn = e.target.closest(".request-btn");
+  if (testBtn && !testBtn.classList.contains("disabled")) {
+    const itemName = testBtn.dataset.item;
+    const item = items.find(i => i.name === itemName);
+    if (!item) return;
+
+    // TEMP: Verfügbar = need_open (nur Test!)
+    if (item.status === "Verfügbar") {
+      item.status = "need_open";
+    }
+
+    const success = applyNeed(item, CURRENT_USER);
+
+    console.log(
+      "[V3 TEST] applyNeed:",
+      success,
+      item
+    );
+
+    // ❗ NICHT speichern, NICHT rendern, NICHT returnen
+  }
+
   const btn = e.target.closest(".request-btn");
   if (!btn || btn.classList.contains("disabled")) return;
 
