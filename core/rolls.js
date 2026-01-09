@@ -1,13 +1,12 @@
-// =====================================================
-// V3 ROLLS – aligned to core.js
-// Scope: rolling logic only (no state authority)
+// rolls.js — V3 Roll Logic (aligned to core.js)
+// =============================================
+// Scope: rolling / randomness ONLY
 // No UI, no DOM, no timers
-// =====================================================
+// No direct status authority (core.js owns state)
 
 import {
-  ITEM_STATES,
+  ITEM_STATUS,
   startRoll as coreStartRoll,
-  reserve,
   assert
 } from './core.js';
 
@@ -19,67 +18,48 @@ function roll1to100() {
 }
 
 // --------------------------------------------------
-// Start roll phase (delegated to core)
+// Execute roll (delegates state changes to core.js)
 // --------------------------------------------------
-export function startRoll(item) {
+// Preconditions:
+// - item.status === NEED_OPEN (core will enforce)
+// - item.needs.length >= 1
+//
+// Result (via core.js):
+// - item.roll populated
+// - item.winner set
+// - status → RESERVED
+//
+// Returns:
+// { winner, results }
+export function executeRoll(item) {
   assert(item, 'NO_ITEM');
   assert(Array.isArray(item.needs) && item.needs.length >= 1, 'NO_NEEDS');
 
-  // core enforces correct state (NEED_CLOSED)
-  return coreStartRoll(item);
+  // core.js handles:
+  // NEED_OPEN → ROLLING → RESERVED
+  coreStartRoll(item);
+
+  return {
+    winner: item.winner,
+    results: item.roll?.results || []
+  };
 }
 
 // --------------------------------------------------
-// Execute roll & determine winner
+// Pure roll helper (optional / test / simulation)
 // --------------------------------------------------
-// Rules:
-// - item must be in ROLL_PHASE
-// - rolls 1–100 per need
-// - highest roll wins
-// - ties reroll among tied users only
-//
-// Mutates (via core):
-// - item.status
-// - item.reserved_for
-// - item.rolls[]
-//
-// Returns:
-// { winner, rolls }
-export function executeRoll(item) {
-  assert(item, 'NO_ITEM');
-  assert(item.status === ITEM_STATES.ROLL_PHASE, 'INVALID_STATE');
-  assert(Array.isArray(item.needs) && item.needs.length >= 1, 'NO_NEEDS');
+// Does NOT touch item, no side effects
+export function rollForUsers(userIds = []) {
+  assert(Array.isArray(userIds) && userIds.length > 0, 'NO_USERS');
 
-  let contenders = [...item.needs];
-  let rolls = {};
+  const results = userIds.map(userId => ({
+    userId,
+    value: roll1to100()
+  }));
 
-  while (true) {
-    rolls = {};
-    let highest = 0;
+  const winner = results.reduce((a, b) =>
+    b.value > a.value ? b : a
+  );
 
-    contenders.forEach(userId => {
-      const value = roll1to100();
-      rolls[userId] = value;
-      if (value > highest) highest = value;
-    });
-
-    const top = contenders.filter(u => rolls[u] === highest);
-
-    // unique winner
-    if (top.length === 1) {
-      const winner = top[0];
-
-      // persist roll history (optional but future-proof)
-      if (!Array.isArray(item.rolls)) item.rolls = [];
-      item.rolls.push({ at: Date.now(), rolls });
-
-      // delegate reservation to core
-      reserve(item, winner);
-
-      return { winner, rolls };
-    }
-
-    // tie → reroll among tied users
-    contenders = top;
-  }
+  return { winner: winner.userId, results };
 }
