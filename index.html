@@ -834,12 +834,13 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   /* ===== TOOLTIP EDGE FIX ===== */
 
 /* Erster Punkt: Tooltip nach rechts schieben */
+.timeline-step:first-child::before,
 .timeline-step:first-child::after{
   left:0;
   transform:none;
 }
 
-/* Letzter Punkt: Tooltip nach links schieben */
+.timeline-step:last-child::before,
 .timeline-step:last-child::after{
   left:auto;
   right:0;
