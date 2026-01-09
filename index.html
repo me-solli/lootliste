@@ -797,7 +797,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 /* ===== TOOLTIP (mehrzeilig, Stichpunkte) ===== */
 .timeline-step::after{
-  content:attr(data-tip);
+  content: attr(data-tip-title) "\A" attr(data-tip-body);
   position:absolute;
   bottom:22px;
   left:50%;
@@ -826,6 +826,14 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 .timeline-step:hover::after{
   opacity:1;
+}
+
+  /* TITELZEILE im Tooltip */
+.timeline-step::after::first-line{
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-shadow: 0 0 4px rgba(245,196,81,.35);
 }
 
 /* ===== TIMELINE LABEL ===== */
