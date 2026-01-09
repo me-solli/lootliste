@@ -1,64 +1,83 @@
-// needs.js — V3 Need System (no UI, no DOM)
-// =====================================
-// Handles need registration, validation, and the trigger to open the need phase.
+/* =====================================================
+   V3 CORE – NEEDS / BEDARF
+   Scope: Bedarf anmelden & Bedarf-Phase öffnen
+   Freeze: V3-Systemregeln
+   Keine UI, kein DOM, keine Timer
+===================================================== */
 
-import { ITEM_STATES, openNeed } from './core.js';
+import { ITEM_STATUS, TIME } from './timeouts.js';
 
-// ------------------------------
-// Need Factory
-// ------------------------------
-export function createNeed({ itemId, userId }) {
-  return {
-    id: crypto.randomUUID(),
-    item_id: itemId,
-    user_id: userId,
-    created_at: Date.now()
-  };
+// --------------------------------------------------
+// Helpers
+// --------------------------------------------------
+function now() {
+  return Date.now();
 }
 
-// ------------------------------
-// Guards
-// ------------------------------
 function assert(condition, code) {
   if (!condition) throw new Error(code);
 }
 
-function hasNeed(needs, itemId, userId) {
-  return needs.some(n => n.item_id === itemId && n.user_id === userId);
+function hasNeed(item, userId) {
+  return Array.isArray(item.needs) && item.needs.includes(userId);
 }
 
-// ------------------------------
-// Register Need
-// ------------------------------
-// Params:
-// - item: item object (mutated via core transitions)
-// - needs: array of existing needs (for all items or scoped by item)
-// - userId: current user
-// - durationMs: need window duration (e.g. 12h / 24h)
-// - submittedBy: item owner (to block self-need)
+// --------------------------------------------------
+// Bedarf anmelden (Public API)
+// --------------------------------------------------
+// Regeln:
+// - nur aus "verfügbar" oder bestehendem "bedarf_offen"
+// - Einreicher darf kein Bedarf anmelden
+// - ein Bedarf pro User
+// - erster Bedarf startet die 24h-Phase
 //
-// Returns:
-// { item, need }
-export function registerNeed({ item, needs, userId, durationMs, submittedBy }) {
-  // --- State guards ---
-  assert(item.status === ITEM_STATES.ONLINE || item.status === ITEM_STATES.NEED_OPEN, 'INVALID_STATE');
+// Mutiert:
+// - item.status
+// - item.needStartedAt
+// - item.needs
+//
+// Rückgabe:
+// { item, opened: boolean }
+export function applyNeed({ item, userId, submittedBy }) {
+  assert(item, 'NO_ITEM');
+  assert(userId, 'NO_USER');
   assert(userId !== submittedBy, 'CANNOT_NEED_OWN_ITEM');
-  assert(!hasNeed(needs, item.id, userId), 'NEED_ALREADY_EXISTS');
 
-  // --- Create need ---
-  const need = createNeed({ itemId: item.id, userId });
+  // Initialisieren
+  if (!Array.isArray(item.needs)) item.needs = [];
 
-  // --- First need opens the window ---
-  if (item.status === ITEM_STATES.ONLINE) {
-    openNeed(item, durationMs);
+  // Status-Guard
+  assert(
+    item.status === ITEM_STATUS.AVAILABLE ||
+    item.status === ITEM_STATUS.NEED_OPEN,
+    'INVALID_STATE'
+  );
+
+  // Duplikat verhindern
+  assert(!hasNeed(item, userId), 'NEED_ALREADY_EXISTS');
+
+  let opened = false;
+
+  // Erster Bedarf öffnet die Phase
+  if (item.status === ITEM_STATUS.AVAILABLE) {
+    item.status = ITEM_STATUS.NEED_OPEN;
+    item.needStartedAt = now();
+    opened = true;
   }
 
-  return { item, need };
+  // Bedarf speichern (nur User-ID, minimal & backend-ready)
+  item.needs.push(userId);
+
+  return { item, opened };
 }
 
-// ------------------------------
-// Close Need (time-based helper)
-// ------------------------------
+// --------------------------------------------------
+// Bedarf schließen – reine Zustandsprüfung
+// (wird von timeouts.js genutzt)
+// --------------------------------------------------
 export function canCloseNeed(item) {
-  return item.status === ITEM_STATES.NEED_OPEN && Date.now() >= item.need_ends_at;
+  if (item.status !== ITEM_STATUS.NEED_OPEN) return false;
+  if (!item.needStartedAt) return false;
+
+  return now() - item.needStartedAt >= TIME.NEED_DURATION;
 }
