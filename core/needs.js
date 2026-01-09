@@ -1,83 +1,80 @@
-/* =====================================================
-   V3 CORE – NEEDS / BEDARF
-   Scope: Bedarf anmelden & Bedarf-Phase öffnen
-   Freeze: V3-Systemregeln
-   Keine UI, kein DOM, keine Timer
-===================================================== */
+// =====================================================
+// V3 NEEDS – aligned to core.js
+// Scope: registering needs (interest) only
+// No UI, no DOM, no direct state mutations
+// =====================================================
 
-import { ITEM_STATUS, TIME } from './timeouts.js';
+import {
+  ITEM_STATES,
+  openNeed,
+  now,
+  assert
+} from './core.js';
+
+import { TIME } from './timeouts.js';
 
 // --------------------------------------------------
 // Helpers
 // --------------------------------------------------
-function now() {
-  return Date.now();
-}
-
-function assert(condition, code) {
-  if (!condition) throw new Error(code);
-}
-
 function hasNeed(item, userId) {
   return Array.isArray(item.needs) && item.needs.includes(userId);
 }
 
 // --------------------------------------------------
-// Bedarf anmelden (Public API)
+// Apply need (public API)
 // --------------------------------------------------
-// Regeln:
-// - nur aus "verfügbar" oder bestehendem "bedarf_offen"
-// - Einreicher darf kein Bedarf anmelden
-// - ein Bedarf pro User
-// - erster Bedarf startet die 24h-Phase
+// Rules:
+// - item must be ONLINE or NEED_OPEN
+// - submitter cannot need own item
+// - one need per user
+// - first need opens NEED_OPEN via core.js
 //
-// Mutiert:
+// Mutates (indirectly via core):
 // - item.status
-// - item.needStartedAt
-// - item.needs
+// - item.need_started_at / need_ends_at
+// - item.needs[]
 //
-// Rückgabe:
-// { item, opened: boolean }
+// Returns:
+// { item, opened }
 export function applyNeed({ item, userId, submittedBy }) {
   assert(item, 'NO_ITEM');
   assert(userId, 'NO_USER');
   assert(userId !== submittedBy, 'CANNOT_NEED_OWN_ITEM');
 
-  // Initialisieren
+  // init needs array if missing
   if (!Array.isArray(item.needs)) item.needs = [];
 
-  // Status-Guard
+  // status guard
   assert(
-    item.status === ITEM_STATUS.AVAILABLE ||
-    item.status === ITEM_STATUS.NEED_OPEN,
+    item.status === ITEM_STATES.ONLINE ||
+    item.status === ITEM_STATES.NEED_OPEN,
     'INVALID_STATE'
   );
 
-  // Duplikat verhindern
+  // prevent duplicate need
   assert(!hasNeed(item, userId), 'NEED_ALREADY_EXISTS');
 
   let opened = false;
 
-  // Erster Bedarf öffnet die Phase
-  if (item.status === ITEM_STATUS.AVAILABLE) {
-    item.status = ITEM_STATUS.NEED_OPEN;
-    item.needStartedAt = now();
+  // first need opens phase via core
+  if (item.status === ITEM_STATES.ONLINE) {
+    openNeed(item, TIME.NEED_DURATION);
     opened = true;
   }
 
-  // Bedarf speichern (nur User-ID, minimal & backend-ready)
+  // register need (user id only)
   item.needs.push(userId);
 
   return { item, opened };
 }
 
 // --------------------------------------------------
-// Bedarf schließen – reine Zustandsprüfung
-// (wird von timeouts.js genutzt)
+// Pure check: can need phase be closed?
+// (caller decides when to call closeNeed)
 // --------------------------------------------------
 export function canCloseNeed(item) {
-  if (item.status !== ITEM_STATUS.NEED_OPEN) return false;
-  if (!item.needStartedAt) return false;
+  if (item.status !== ITEM_STATES.NEED_OPEN) return false;
+  if (!item.need_ends_at) return false;
 
-  return now() - item.needStartedAt >= TIME.NEED_DURATION;
+  return now() >= item.need_ends_at;
 }
