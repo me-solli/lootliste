@@ -1,74 +1,43 @@
-/* =====================================================
-   V3 CORE – TIMEOUTS / VERFALL
-   Scope: NUR Zeit- & Status-Übergänge
-   Freeze: V3-Systemregeln
-   Keine UI, kein DOM, keine Nebenwirkungen
-===================================================== */
+// =====================================================
+// V3 TIMEOUTS – aligned to core.js
+// Scope: ONLY time-based checks & triggers
+// No UI, no DOM, no state creation
+// =====================================================
+
+import { ITEM_STATES, expire, now } from './core.js';
 
 // --------------------------------------------------
-// Status (einzige erlaubte Zustände)
-// --------------------------------------------------
-export const ITEM_STATUS = Object.freeze({
-  AVAILABLE: "verfügbar",
-  NEED_OPEN: "bedarf_offen",
-  ROLL_PHASE: "würfel_phase",
-  RESERVED: "reserviert",
-  ASSIGNED: "vergeben_bestätigt"
-});
-
-// --------------------------------------------------
-// Zeitkonstanten (Single Source of Truth)
+// Time constants (single source here for timers only)
 // --------------------------------------------------
 export const TIME = {
-  NEED_DURATION: 24 * 60 * 60 * 1000,      // 24h Bedarf
-  RESERVE_DURATION: 24 * 60 * 60 * 1000    // 24h Reservierung
+  NEED_DURATION: 24 * 60 * 60 * 1000,      // 24h need window
+  RESERVE_DURATION: 24 * 60 * 60 * 1000    // 24h reservation
 };
 
 // --------------------------------------------------
-// Helpers
-// --------------------------------------------------
-function now() {
-  return Date.now();
-}
-
-// --------------------------------------------------
-// Reset → verfügbar (zentral, deterministisch)
-// --------------------------------------------------
-export function resetToAvailable(item) {
-  item.status = ITEM_STATUS.AVAILABLE;
-
-  item.needStartedAt = null;
-  item.rollStartedAt = null;
-  item.reservedAt = null;
-
-  item.needs = [];
-  item.winner = null;
-}
-
-// --------------------------------------------------
-// Verfall-Prüfung (ohne Timer, ohne Cron)
-// Rückgabe: true, wenn Status gewechselt wurde
+// Expiry check (deterministic, no reset)
+// Returns true if a transition happened
 // --------------------------------------------------
 export function checkItemExpiry(item) {
   const t = now();
 
-  // Bedarf abgelaufen → zurück zu verfügbar
+  // NEED phase expiry → closeNeed is handled elsewhere
   if (
-    item.status === ITEM_STATUS.NEED_OPEN &&
-    item.needStartedAt &&
-    t - item.needStartedAt > TIME.NEED_DURATION
+    item.status === ITEM_STATES.NEED_OPEN &&
+    item.need_ends_at &&
+    t >= item.need_ends_at
   ) {
-    resetToAvailable(item);
+    // no direct transition here; caller decides next step
     return true;
   }
 
-  // Reservierung abgelaufen → zurück zu verfügbar
+  // Reservation / handover expiry → core expire()
   if (
-    item.status === ITEM_STATUS.RESERVED &&
-    item.reservedAt &&
-    t - item.reservedAt > TIME.RESERVE_DURATION
+    (item.status === ITEM_STATES.RESERVED || item.status === ITEM_STATES.HANDED_OVER) &&
+    item.status_changed_at &&
+    t - item.status_changed_at >= TIME.RESERVE_DURATION
   ) {
-    resetToAvailable(item);
+    expire(item);
     return true;
   }
 
@@ -76,7 +45,7 @@ export function checkItemExpiry(item) {
 }
 
 // --------------------------------------------------
-// Bulk-Check (komfortabel, optional)
+// Bulk helper
 // --------------------------------------------------
 export function checkAllExpiries(items = []) {
   let changed = false;
