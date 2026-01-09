@@ -1,67 +1,53 @@
-/* =====================================================
-   V3 CORE – ROLLS / WÜRFELPHASE
-   Scope: Würfeln & Gewinnerermittlung
-   Freeze: V3-Systemregeln
-   Keine UI, kein DOM, keine Timer
-===================================================== */
+// =====================================================
+// V3 ROLLS – aligned to core.js
+// Scope: rolling logic only (no state authority)
+// No UI, no DOM, no timers
+// =====================================================
 
-import { ITEM_STATUS } from './timeouts.js';
+import {
+  ITEM_STATES,
+  startRoll as coreStartRoll,
+  reserve,
+  assert
+} from './core.js';
 
 // --------------------------------------------------
 // Helpers
 // --------------------------------------------------
-function now() {
-  return Date.now();
-}
-
-function assert(condition, code) {
-  if (!condition) throw new Error(code);
-}
-
 function roll1to100() {
   return Math.floor(Math.random() * 100) + 1;
 }
 
 // --------------------------------------------------
-// Start Roll-Phase
+// Start roll phase (delegated to core)
 // --------------------------------------------------
-// Regeln:
-// - nur aus bedarf_offen
-// - mindestens 1 Bedarf
-//
-// Mutiert:
-// - item.status
-// - item.rollStartedAt
 export function startRoll(item) {
   assert(item, 'NO_ITEM');
-  assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
   assert(Array.isArray(item.needs) && item.needs.length >= 1, 'NO_NEEDS');
 
-  item.status = ITEM_STATUS.ROLL_PHASE;
-  item.rollStartedAt = now();
-
-  return item;
+  // core enforces correct state (NEED_CLOSED)
+  return coreStartRoll(item);
 }
 
 // --------------------------------------------------
-// Execute Roll & Pick Winner
+// Execute roll & determine winner
 // --------------------------------------------------
-// Regeln:
-// - nur aus würfel_phase
-// - würfelt 1–100 pro Bedarf
-// - höchster Wurf gewinnt
-// - Gleichstand → erneut würfeln (nur zwischen Tied-Usern)
+// Rules:
+// - item must be in ROLL_PHASE
+// - rolls 1–100 per need
+// - highest roll wins
+// - ties reroll among tied users only
 //
-// Mutiert:
+// Mutates (via core):
 // - item.status
-// - item.reservedAt
-// - item.winner
+// - item.reserved_for
+// - item.rolls[]
 //
-// Rückgabe:
+// Returns:
 // { winner, rolls }
 export function executeRoll(item) {
   assert(item, 'NO_ITEM');
-  assert(item.status === ITEM_STATUS.ROLL_PHASE, 'INVALID_STATE');
+  assert(item.status === ITEM_STATES.ROLL_PHASE, 'INVALID_STATE');
   assert(Array.isArray(item.needs) && item.needs.length >= 1, 'NO_NEEDS');
 
   let contenders = [...item.needs];
@@ -79,18 +65,21 @@ export function executeRoll(item) {
 
     const top = contenders.filter(u => rolls[u] === highest);
 
-    // eindeutiger Gewinner
+    // unique winner
     if (top.length === 1) {
       const winner = top[0];
 
-      item.winner = winner;
-      item.status = ITEM_STATUS.RESERVED;
-      item.reservedAt = now();
+      // persist roll history (optional but future-proof)
+      if (!Array.isArray(item.rolls)) item.rolls = [];
+      item.rolls.push({ at: Date.now(), rolls });
+
+      // delegate reservation to core
+      reserve(item, winner);
 
       return { winner, rolls };
     }
 
-    // Gleichstand → nur mit den Tied-Usern neu würfeln
+    // tie → reroll among tied users
     contenders = top;
   }
 }
