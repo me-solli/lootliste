@@ -141,10 +141,6 @@ body{
   overflow-x:auto;
   background:linear-gradient(180deg,#141414,#0d0d0d);
   border-bottom:1px solid #222;
-
-  position:relative;
-  z-index:5;
-  
 }
 
 .icon-btn{
@@ -729,84 +725,105 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   width:12px;
   transform: translateY(-1px);
 }
-
-  /* ===== PROJECT TIMELINE (LAYER FIX) ===== */
+  
+/* ===== PROJECT TIMELINE (V3 – FINAL COMPACT) ===== */
 .project-timeline{
   padding:6px 28px 4px;
   position:relative;
-  z-index:20;
+    z-index:5;
   background:linear-gradient(
     180deg,
     rgba(0,0,0,.25),
     rgba(0,0,0,0)
   );
   opacity:.85;
-  overflow:visible; /* Tooltips dürfen raus */
+  overflow:visible; /* wichtig: Tooltip darf nicht abgeschnitten werden */
 }
-  
-/* ===== TOOLTIP (FINAL – TITEL + BODY GETRENNT) ===== */
 
-.timeline-step{
+/* Linie */
+.timeline-track{
+  height:1px;
+  background:#2a2a2a;
+  margin-bottom:6px;
   position:relative;
 }
 
-/* TITEL */
-.timeline-step::before{
-  content: attr(data-tip-title);
+.timeline-progress{
   position:absolute;
-  bottom:42px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#111;
-  border:1px solid #333;
-  border-bottom:none;
-  padding:8px 10px 6px;
-
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.4px;
-  color:var(--gold);
-  text-shadow:0 0 4px rgba(245,196,81,.35);
-
-  border-radius:8px 8px 0 0;
-  min-width:180px;
-
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .2s ease;
-  z-index:20;
+  left:0;
+  top:0;
+  height:1px;
+  width:75%;
+  background:linear-gradient(90deg,#bfa86a,#6f7f4a);
 }
 
-/* BODY */
+/* Marker */
+.timeline-steps{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  overflow:visible; /* Tooltip-Fix */
+}
+
+.timeline-step{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#2a2a2a;
+  position:relative;
+  font-size:0; /* kein Text im Kreis */
+  transition:
+    box-shadow .22s ease,
+    transform .22s ease,
+    background-color .22s ease,
+    filter .22s ease;
+}
+
+/* Zustände */
+.timeline-step.done{
+  background:#bfa86a;
+  box-shadow:0 0 4px rgba(191,168,106,.45);
+}
+
+.timeline-step.current{
+  background:#6f7f4a;
+  box-shadow:0 0 6px rgba(245,196,81,.7);
+}
+
+.timeline-step.future{
+  background:#333;
+  opacity:.5;
+}
+
+/* ===== TOOLTIP (mehrzeilig, Stichpunkte) ===== */
 .timeline-step::after{
-  content: attr(data-tip-body);
+  content:attr(data-tip);
   position:absolute;
   bottom:22px;
   left:50%;
   transform:translateX(-50%);
   background:#111;
   border:1px solid #333;
-  padding:6px 10px 8px;
-
+  padding:8px 10px;
   font-size:11px;
   font-weight:500;
   letter-spacing:.2px;
+  white-space:pre-line;   /* erlaubt Zeilenumbrüche */
   line-height:1.4;
-  white-space:pre-line;
-  color:#eaeaea;
-
-  border-radius:0 0 8px 8px;
-  min-width:180px;
-
   opacity:0;
   pointer-events:none;
   transition:opacity .2s ease;
+  border-radius:8px;
   box-shadow:0 4px 14px rgba(0,0,0,.65);
-  z-index:20;
+  min-width:180px;
 }
 
-/* Hover */
-.timeline-step:hover::before,
+  @media (max-width:480px){
+  .timeline-step::after{
+    min-width:140px;
+  }
+}
+
 .timeline-step:hover::after{
   opacity:1;
 }
@@ -852,17 +869,22 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   /* ===== TOOLTIP EDGE FIX ===== */
 
 /* Erster Punkt: Tooltip nach rechts schieben */
-.timeline-step:first-child::before,
 .timeline-step:first-child::after{
   left:0;
   transform:none;
 }
 
-.timeline-step:last-child::before,
+/* Letzter Punkt: Tooltip nach links schieben */
 .timeline-step:last-child::after{
   left:auto;
   right:0;
   transform:none;
+}
+
+.timeline-step::after::first-line{
+  color:var(--gold);
+  font-weight:600;
+  letter-spacing:.3px;
 }
   
   /* ===== FUTURE CONTEXT AREAS ===== */
@@ -877,84 +899,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   border: 1px dashed rgba(255,255,255,0.08);
   font-size: 13px;
   color: #bbb;
-}
-
-  /* ===== TIMELINE VISUAL CORE ===== */
-
-.project-timeline{
-  position:relative;
-}
-
-/* Linie */
-.timeline-track{
-  position:absolute;
-  top:22px;
-  left:28px;
-  right:28px;
-  height:4px;
-  background:linear-gradient(
-    180deg,
-    #1a1a1a,
-    #0d0d0d
-  );
-  border:1px solid #2a2a2a;
-  border-radius:4px;
-}
-
-/* Fortschritt (bis CURRENT) */
-.timeline-progress{
-  height:100%;
-  width:65%; /* ← optional später dynamisch */
-  background:linear-gradient(
-    90deg,
-    #caa24a,
-    #f5c451
-  );
-  box-shadow:0 0 12px rgba(245,196,81,.55);
-  border-radius:4px;
-}
-
-/* Steps Container */
-.timeline-steps{
-  position:relative;
-  display:flex;
-  justify-content:space-between;
-  padding:0 28px;
-  z-index:2;
-}
-
-/* Einzelner Punkt */
-.timeline-step{
-  width:16px;
-  height:16px;
-  border-radius:50%;
-  background:#444;
-  border:1px solid #333;
-  cursor:help;
-  transition:.25s;
-}
-
-/* DONE */
-.timeline-step.done{
-  background:radial-gradient(circle at top,#ffe29a,#caa24a);
-  border-color:#f5c451;
-  box-shadow:0 0 10px rgba(245,196,81,.6);
-}
-
-/* CURRENT */
-.timeline-step.current{
-  background:radial-gradient(circle at top,#fff1c2,#ffd24c);
-  border-color:#ffd24c;
-  box-shadow:
-    0 0 14px rgba(255,210,76,.9),
-    0 0 26px rgba(255,210,76,.55);
-}
-
-/* FUTURE */
-.timeline-step.future{
-  background:#2a2a2a;
-  border-color:#3a3a3a;
-  opacity:.6;
 }
 
 .account-shell strong,
@@ -1001,7 +945,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   <!-- später: Login / Profil / Spielerstatus -->
 </section>
 
-<!-- ===== PROJECT TIMELINE (INDEX – FINAL) ===== -->
+<!-- ===== PROJECT TIMELINE (INDEX) ===== -->
 
 <div class="timeline-label">
   ⓘ Projekt-Timeline · Entwicklungsstand der Lootliste
@@ -1015,46 +959,41 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
   <div class="timeline-steps">
 
-    <!-- GRUNDIDEE -->
     <div class="timeline-step done"
-      data-tip-title="GRUNDIDEE & PLANUNG"
-      data-tip-body="• Community-Lootliste
+      data-tip="Grundidee & Planung
+• Community-Lootliste
 • Fokus auf Fairness
 • Non-Ladder Konzept
 • Erste UX-Skizzen">
     </div>
 
-    <!-- VERSION I -->
     <div class="timeline-step done"
-      data-tip-title="VERSION I"
-      data-tip-body="• Grundfunktionen
+      data-tip="Version 1
+• Grundfunktionen
 • Item-Liste
 • manuelle Pflege
 • erste Tests">
     </div>
 
-    <!-- VERSION II -->
     <div class="timeline-step done"
-      data-tip-title="VERSION II"
-      data-tip-body="• Bugfixes
+      data-tip="Version 2
+• Bugfixes
 • saubere Statuslogik
 • UI-Beruhigung
 • Vorbereitung V3">
     </div>
 
-    <!-- VERSION III (AKTUELL) -->
     <div class="timeline-step current"
-      data-tip-title="VERSION III"
-      data-tip-body="• strukturierter Ablauf
+      data-tip="Version 3
+• strukturierter Ablauf
 • Bedarf anmelden
 • faire Vergabe
 • Community-Fokus">
     </div>
 
-    <!-- NÄCHSTE PHASE -->
     <div class="timeline-step future"
-      data-tip-title="NÄCHSTE PHASE"
-      data-tip-body="• Profile & Accounts
+      data-tip="Nächste Phase
+• Profile & Accounts
 • Automatisierung
 • weniger Admin-Aufwand">
     </div>
