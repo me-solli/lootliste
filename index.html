@@ -726,104 +726,69 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   transform: translateY(-1px);
 }
   
-/* ===== PROJECT TIMELINE (V3 – FINAL COMPACT) ===== */
-.project-timeline{
-  padding:6px 28px 4px;
-  position:relative;
-    z-index:5;
-  background:linear-gradient(
-    180deg,
-    rgba(0,0,0,.25),
-    rgba(0,0,0,0)
-  );
-  opacity:.85;
-  overflow:visible; /* wichtig: Tooltip darf nicht abgeschnitten werden */
-}
-
-/* Linie */
-.timeline-track{
-  height:1px;
-  background:#2a2a2a;
-  margin-bottom:6px;
-  position:relative;
-}
-
-.timeline-progress{
-  position:absolute;
-  left:0;
-  top:0;
-  height:1px;
-  width:75%;
-  background:linear-gradient(90deg,#bfa86a,#6f7f4a);
-}
-
-/* Marker */
-.timeline-steps{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  overflow:visible; /* Tooltip-Fix */
-}
+/* ===== TOOLTIP (FINAL – TITEL + BODY GETRENNT) ===== */
 
 .timeline-step{
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:#2a2a2a;
   position:relative;
-  font-size:0; /* kein Text im Kreis */
-  transition:
-    box-shadow .22s ease,
-    transform .22s ease,
-    background-color .22s ease,
-    filter .22s ease;
 }
 
-/* Zustände */
-.timeline-step.done{
-  background:#bfa86a;
-  box-shadow:0 0 4px rgba(191,168,106,.45);
+/* TITEL */
+.timeline-step::before{
+  content: attr(data-tip-title);
+  position:absolute;
+  bottom:42px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111;
+  border:1px solid #333;
+  border-bottom:none;
+  padding:8px 10px 6px;
+
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.4px;
+  color:var(--gold);
+  text-shadow:0 0 4px rgba(245,196,81,.35);
+
+  border-radius:8px 8px 0 0;
+  min-width:180px;
+
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+  z-index:20;
 }
 
-.timeline-step.current{
-  background:#6f7f4a;
-  box-shadow:0 0 6px rgba(245,196,81,.7);
-}
-
-.timeline-step.future{
-  background:#333;
-  opacity:.5;
-}
-
-/* ===== TOOLTIP (mehrzeilig, Stichpunkte) ===== */
+/* BODY */
 .timeline-step::after{
-  content: attr(data-tip-title) "\A" attr(data-tip-body);
+  content: attr(data-tip-body);
   position:absolute;
   bottom:22px;
   left:50%;
   transform:translateX(-50%);
   background:#111;
   border:1px solid #333;
-  padding:8px 10px;
+  padding:6px 10px 8px;
+
   font-size:11px;
   font-weight:500;
   letter-spacing:.2px;
-  white-space:pre-line;   /* erlaubt Zeilenumbrüche */
   line-height:1.4;
+  white-space:pre-line;
+  color:#eaeaea;
+
+  border-radius:0 0 8px 8px;
+  min-width:180px;
+
   opacity:0;
   pointer-events:none;
   transition:opacity .2s ease;
-  border-radius:8px;
   box-shadow:0 4px 14px rgba(0,0,0,.65);
-  min-width:180px;
+  z-index:20;
 }
 
-  @media (max-width:480px){
-  .timeline-step::after{
-    min-width:140px;
-  }
-}
-
+/* Hover */
+.timeline-step:hover::before,
 .timeline-step:hover::after{
   opacity:1;
 }
