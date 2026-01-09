@@ -1,56 +1,71 @@
-// =====================================================
-// V3 TIMEOUTS – aligned to core.js
-// Scope: ONLY time-based checks & triggers
-// No UI, no DOM, no state creation
-// =====================================================
+// timeouts.js — V3 Time Engine (aligned to core.js)
+// ================================================
+// Responsible ONLY for time-based checks & triggers.
+// No UI, no DOM, no state creation.
 
-import { ITEM_STATES, expire, now } from './core.js';
-
-// --------------------------------------------------
-// Time constants (single source here for timers only)
-// --------------------------------------------------
-export const TIME = {
-  NEED_DURATION: 24 * 60 * 60 * 1000,      // 24h need window
-  RESERVE_DURATION: 24 * 60 * 60 * 1000    // 24h reservation
-};
+import { ITEM_STATUS, updateItemStatus, flagItem, now } from './core.js';
 
 // --------------------------------------------------
-// Expiry check (deterministic, no reset)
-// Returns true if a transition happened
+// Time constants (single source for timers)
 // --------------------------------------------------
-export function checkItemExpiry(item) {
-  const t = now();
+export const TIME = Object.freeze({
+  NEED_DURATION: 24 * 60 * 60 * 1000,      // 24h Bedarf
+  CONFIRM_DURATION: 24 * 60 * 60 * 1000   // 24h Übergabe / Bestätigung
+});
 
-  // NEED phase expiry → closeNeed is handled elsewhere
+// --------------------------------------------------
+// Single item timeout check
+// Returns true if item changed
+// --------------------------------------------------
+export function checkItemTimeout(item, ts = now()) {
+  let changed = false;
+
+  // 1) Bedarf / Roll / Expired wird komplett von core.js entschieden
+  const beforeStatus = item.status;
+  updateItemStatus(item, ts);
+  if (item.status !== beforeStatus) changed = true;
+
+  // 2) Übergabe-Timeout (CONFIRM_PENDING)
   if (
-    item.status === ITEM_STATES.NEED_OPEN &&
-    item.need_ends_at &&
-    t >= item.need_ends_at
+    item.status === ITEM_STATUS.CONFIRM_PENDING &&
+    item.statusChangedAt &&
+    ts - item.statusChangedAt >= TIME.CONFIRM_DURATION
   ) {
-    // no direct transition here; caller decides next step
-    return true;
+    flagItem(item, 'handover_timeout');
+    changed = true;
   }
 
-  // Reservation / handover expiry → core expire()
-  if (
-    (item.status === ITEM_STATES.RESERVED || item.status === ITEM_STATES.HANDED_OVER) &&
-    item.status_changed_at &&
-    t - item.status_changed_at >= TIME.RESERVE_DURATION
-  ) {
-    expire(item);
-    return true;
-  }
-
-  return false;
+  return changed;
 }
 
 // --------------------------------------------------
-// Bulk helper
+// Bulk helper (used by global tick)
 // --------------------------------------------------
-export function checkAllExpiries(items = []) {
+export function checkAllTimeouts(items = [], ts = now()) {
   let changed = false;
-  items.forEach(item => {
-    if (checkItemExpiry(item)) changed = true;
-  });
+
+  for (const item of items) {
+    if (checkItemTimeout(item, ts)) {
+      changed = true;
+    }
+  }
+
   return changed;
+}
+
+// --------------------------------------------------
+// Optional global tick helper
+// (can be called via setInterval)
+// --------------------------------------------------
+export function startTimeoutTick({
+  items,
+  intervalMs = 30 * 1000, // 30s default
+  onChange
+}) {
+  return setInterval(() => {
+    const didChange = checkAllTimeouts(items);
+    if (didChange && typeof onChange === 'function') {
+      onChange(items);
+    }
+  }, intervalMs);
 }
