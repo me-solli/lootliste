@@ -1,80 +1,29 @@
-// =====================================================
-// V3 NEEDS – aligned to core.js
-// Scope: registering needs (interest) only
-// No UI, no DOM, no direct state mutations
-// =====================================================
-
-import {
-  ITEM_STATES,
-  openNeed,
-  now,
-  assert
-} from './core.js';
-
-import { TIME } from './timeouts.js';
+// needs.js — V3 LEGACY STUB (INTENTIONALLY MINIMAL)
+// =================================================
+// This file exists ONLY to avoid breaking old imports.
+// In V3, NEED logic lives in core.js (openNeed / addNeed).
+// Do NOT add logic here.
 
 // --------------------------------------------------
-// Helpers
+// Deprecated helpers (pass-through / safety)
 // --------------------------------------------------
-function hasNeed(item, userId) {
-  return Array.isArray(item.needs) && item.needs.includes(userId);
-}
 
-// --------------------------------------------------
-// Apply need (public API)
-// --------------------------------------------------
-// Rules:
-// - item must be ONLINE or NEED_OPEN
-// - submitter cannot need own item
-// - one need per user
-// - first need opens NEED_OPEN via core.js
-//
-// Mutates (indirectly via core):
-// - item.status
-// - item.need_started_at / need_ends_at
-// - item.needs[]
-//
-// Returns:
-// { item, opened }
-export function applyNeed({ item, userId, submittedBy }) {
-  assert(item, 'NO_ITEM');
-  assert(userId, 'NO_USER');
-  assert(userId !== submittedBy, 'CANNOT_NEED_OWN_ITEM');
-
-  // init needs array if missing
-  if (!Array.isArray(item.needs)) item.needs = [];
-
-  // status guard
-  assert(
-    item.status === ITEM_STATES.ONLINE ||
-    item.status === ITEM_STATES.NEED_OPEN,
-    'INVALID_STATE'
+export function applyNeed() {
+  throw new Error(
+    'needs.js is deprecated in V3. Use addNeed(item, userId) from core.js.'
   );
+}
 
-  // prevent duplicate need
-  assert(!hasNeed(item, userId), 'NEED_ALREADY_EXISTS');
-
-  let opened = false;
-
-  // first need opens phase via core
-  if (item.status === ITEM_STATES.ONLINE) {
-    openNeed(item, TIME.NEED_DURATION);
-    opened = true;
-  }
-
-  // register need (user id only)
-  item.needs.push(userId);
-
-  return { item, opened };
+export function canCloseNeed() {
+  return false;
 }
 
 // --------------------------------------------------
-// Pure check: can need phase be closed?
-// (caller decides when to call closeNeed)
+// NOTE
 // --------------------------------------------------
-export function canCloseNeed(item) {
-  if (item.status !== ITEM_STATES.NEED_OPEN) return false;
-  if (!item.need_ends_at) return false;
-
-  return now() >= item.need_ends_at;
-}
+// If you still import needs.js anywhere:
+// - Remove the import
+// - Call core.js directly instead
+//
+// This stub is here to make failures loud and explicit
+// instead of silently causing double-need bugs.
