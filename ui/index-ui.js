@@ -1,18 +1,25 @@
-// index-ui.js — V3 UI Hook (minimal, no polish)
-// ============================================
-// Connects DOM actions to V3 core logic.
+// index-ui.js — V3 UI Hook (CLEAN & ALIGNED)
+// ==========================================
+// Connects UI actions to V3 core logic.
+// No legacy V2 calls. No hidden state transitions.
 
-import { createSubmittedItem, toOnline } from '../core/core.js';
-import { registerNeed } from '../core/needs.js';
+import {
+  createItem,
+  openNeed,
+  addNeed,
+  startConfirmation,
+  confirm,
+  ITEM_STATUS
+} from '../core/core.js';
+
+import { checkAllTimeouts } from '../core/timeouts.js';
 import { executeRoll } from '../core/rolls.js';
-import { autoCloseNeed } from '../core/timeouts.js';
 
 // ------------------------------
-// TEMP: In-memory store (SIM MODE)
+// TEMP: In-memory store (SIM / DEV MODE)
 // ------------------------------
 const store = {
-  items: [],
-  needs: []
+  items: []
 };
 
 // ------------------------------
@@ -28,85 +35,84 @@ function getItemById(id) {
 }
 
 // ------------------------------
-// Submission (example hook)
+// Item submission
 // ------------------------------
-export function submitItem({ name, type, agreedFairplay }) {
+export function submitItem({ name, type }) {
   const userId = getCurrentUserId();
 
-  const item = createSubmittedItem({
+  const item = createItem({
     name,
     type,
-    submittedBy: userId,
-    agreedFairplay
+    donatedBy: userId
   });
 
-  toOnline(item);
   store.items.push(item);
-
   return item;
 }
 
 // ------------------------------
 // Need registration (current user)
 // ------------------------------
-export function clickNeed(itemId, durationMs) {
+export function clickNeed(itemId, durationMs = 24 * 60 * 60 * 1000) {
   const userId = getCurrentUserId();
   const item = getItemById(itemId);
 
-  const { item: updatedItem, need } = registerNeed({
-    item,
-    needs: store.needs,
-    userId,
-    durationMs,
-    submittedBy: item.submitted_by
-  });
+  if (!item) throw new Error('ITEM_NOT_FOUND');
 
-  store.needs.push(need);
-  return { item: updatedItem, need };
+  // first need opens phase
+  if (item.status === ITEM_STATUS.AVAILABLE) {
+    openNeed(item, durationMs);
+  }
+
+  addNeed(item, userId);
+  return item;
 }
 
 // ------------------------------
-// Need registration (TEST helper: explicit user)
+// Roll trigger (manual / admin / test)
 // ------------------------------
-export function clickNeedAs(itemId, durationMs, userId) {
+export function runRoll(itemId) {
   const item = getItemById(itemId);
+  if (!item) throw new Error('ITEM_NOT_FOUND');
 
-  const { item: updatedItem, need } = registerNeed({
-    item,
-    needs: store.needs,
-    userId,
-    durationMs,
-    submittedBy: item.submitted_by
-  });
+  return executeRoll(item);
+}
 
-  store.needs.push(need);
-  return { item: updatedItem, need };
+// ------------------------------
+// Start confirmation (after reserve)
+// ------------------------------
+export function startHandover(itemId) {
+  const item = getItemById(itemId);
+  if (!item) throw new Error('ITEM_NOT_FOUND');
+
+  startConfirmation(item);
+  return item;
+}
+
+// ------------------------------
+// Confirm handover
+// ------------------------------
+export function confirmHandover(itemId, role) {
+  const item = getItemById(itemId);
+  if (!item) throw new Error('ITEM_NOT_FOUND');
+
+  confirm(item, role);
+  return item;
 }
 
 // ------------------------------
 // Tick (manual or interval)
 // ------------------------------
 export function tick() {
-  store.items.forEach(item => {
-    autoCloseNeed(item);
-  });
+  checkAllTimeouts(store.items);
 }
 
 // ------------------------------
-// Roll trigger (example)
-// ------------------------------
-export function runRoll(itemId) {
-  const item = getItemById(itemId);
-  const needsForItem = store.needs.filter(n => n.item_id === itemId);
-
-  return executeRoll({ item, needs: needsForItem });
-}
-
-// ------------------------------
-// DEV / SIM MODE: expose helpers to window for console testing
+// DEV / SIM MODE: expose helpers
 // ------------------------------
 window.submitItem = submitItem;
 window.clickNeed = clickNeed;
-window.clickNeedAs = clickNeedAs;
-window.tick = tick;
 window.runRoll = runRoll;
+window.startHandover = startHandover;
+window.confirmHandover = confirmHandover;
+window.tick = tick;
