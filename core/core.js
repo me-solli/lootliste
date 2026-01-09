@@ -1,23 +1,20 @@
-// core.js — V3 Core Logic (no UI, no DOM)
+// core.js — V3 Core Logic (STATUS-ENGINE)
 // ======================================
-// This file contains ONLY state, rules, and transitions.
-// UI layers may call these functions, but must not modify state directly.
+// Single Source of Truth for item states, transitions and guards.
+// NO UI, NO DOM access. UI must only call these functions.
 
 // ------------------------------
-// State Enum
+// Status Enum (V3 – final)
 // ------------------------------
-export const ITEM_STATES = Object.freeze({
-  SUBMITTED: 'submitted',
-  ONLINE: 'online',
-  NEED_OPEN: 'need_open',
-  NEED_CLOSED: 'need_closed',
-  ROLL_PHASE: 'roll_phase',
-  RESERVED: 'reserved',
-  HANDED_OVER: 'handed_over',
-  CONFIRMED: 'confirmed',
-  EXPIRED: 'expired',
-  WITHDRAWN: 'withdrawn',
-  DISPUTE: 'dispute'
+export const ITEM_STATUS = Object.freeze({
+  AVAILABLE: 'available',              // frisch gespendet
+  NEED_OPEN: 'need_open',               // 24h Bedarf offen
+  ROLLING: 'rolling',                   // Würfelphase
+  RESERVED: 'reserved',                 // Gewinner festgelegt
+  CONFIRM_PENDING: 'confirm_pending',   // Übergabe läuft
+  ASSIGNED: 'assigned',                 // beidseitig bestätigt
+  EXPIRED: 'expired',                   // abgelaufen
+  FLAGGED: 'flagged'                    // Soft-Dupe / Auffällig
 });
 
 // ------------------------------
@@ -31,133 +28,157 @@ export function assert(condition, code) {
   if (!condition) throw new Error(code);
 }
 
+function uuid() {
+  return crypto.randomUUID();
+}
+
+function random1to100() {
+  return Math.floor(Math.random() * 100) + 1;
+}
+
 // ------------------------------
 // Item Factory
 // ------------------------------
-export function createSubmittedItem({
+export function createItem({
   name,
   type,
-  submittedBy,
-  agreedFairplay
+  donatedBy
 }) {
-  assert(agreedFairplay === true, 'FAIRPLAY_NOT_ACCEPTED');
-
   return {
-    id: crypto.randomUUID(),
+    id: uuid(),
     name,
     type,
 
-    submitted_by: submittedBy,
-    submitted_at: now(),
+    donatedBy,
+    donatedAt: now(),
 
-    agreed_fairplay: true,
-    agreed_at: now(),
-
-    status: ITEM_STATES.SUBMITTED,
-    status_changed_at: now(),
+    status: ITEM_STATUS.AVAILABLE,
+    statusChangedAt: now(),
 
     // Bedarf
-    need_started_at: null,
-    need_ends_at: null,
+    needUntil: null,
+    needs: [], // [{ userId, at }]
 
-    // Vergabe
-    reserved_for: null,
-    rolls: [],
+    // Roll / Vergabe
+    roll: null, // { at, results: [{ userId, value }] }
+    winner: null,
 
-    // Meta
+    confirmations: {
+      giver: false,
+      receiver: false
+    },
+
     flags: []
   };
 }
 
 // ------------------------------
-// State Transitions
+// Status Engine (auto transitions)
 // ------------------------------
-export function toOnline(item) {
-  assert(item.status === ITEM_STATES.SUBMITTED, 'INVALID_STATE_TRANSITION');
-  item.status = ITEM_STATES.ONLINE;
-  item.status_changed_at = now();
+export function updateItemStatus(item, ts = now()) {
+  // Bedarf abgelaufen
+  if (item.status === ITEM_STATUS.NEED_OPEN && ts > item.needUntil) {
+    if (item.needs.length > 0) {
+      startRoll(item);
+    } else {
+      setStatus(item, ITEM_STATUS.EXPIRED);
+    }
+  }
+
+  // Übergabe abgeschlossen
+  if (item.status === ITEM_STATUS.CONFIRM_PENDING) {
+    if (item.confirmations.giver && item.confirmations.receiver) {
+      setStatus(item, ITEM_STATUS.ASSIGNED);
+    }
+  }
+
   return item;
 }
 
+// ------------------------------
+// Internal helper
+// ------------------------------
+function setStatus(item, status) {
+  item.status = status;
+  item.statusChangedAt = now();
+}
+
+// ------------------------------
+// Actions / Events
+// ------------------------------
+
+// Bedarf öffnen (z. B. 24h)
 export function openNeed(item, durationMs) {
-  assert(item.status === ITEM_STATES.ONLINE, 'INVALID_STATE_TRANSITION');
+  assert(item.status === ITEM_STATUS.AVAILABLE, 'INVALID_STATE');
 
-  item.status = ITEM_STATES.NEED_OPEN;
-  item.need_started_at = now();
-  item.need_ends_at = item.need_started_at + durationMs;
-  item.status_changed_at = now();
+  setStatus(item, ITEM_STATUS.NEED_OPEN);
+  item.needUntil = now() + durationMs;
   return item;
 }
 
-export function closeNeed(item) {
-  assert(item.status === ITEM_STATES.NEED_OPEN, 'INVALID_STATE_TRANSITION');
-  assert(now() >= item.need_ends_at, 'NEED_STILL_OPEN');
+// Bedarf anmelden
+export function addNeed(item, userId) {
+  assert(item.status === ITEM_STATUS.NEED_OPEN, 'NEED_NOT_OPEN');
 
-  item.status = ITEM_STATES.NEED_CLOSED;
-  item.status_changed_at = now();
+  const exists = item.needs.some(n => n.userId === userId);
+  assert(!exists, 'ALREADY_REQUESTED');
+
+  item.needs.push({ userId, at: now() });
   return item;
 }
 
+// Würfeln starten (automatisch)
 export function startRoll(item) {
-  assert(item.status === ITEM_STATES.NEED_CLOSED, 'INVALID_STATE_TRANSITION');
-  item.status = ITEM_STATES.ROLL_PHASE;
-  item.status_changed_at = now();
-  return item;
-}
+  assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
 
-export function reserve(item, winnerUserId) {
-  assert(item.status === ITEM_STATES.ROLL_PHASE, 'INVALID_STATE_TRANSITION');
+  setStatus(item, ITEM_STATUS.ROLLING);
 
-  item.status = ITEM_STATES.RESERVED;
-  item.reserved_for = winnerUserId;
-  item.status_changed_at = now();
-  return item;
-}
+  item.roll = {
+    at: now(),
+    results: item.needs.map(n => ({
+      userId: n.userId,
+      value: random1to100()
+    }))
+  };
 
-export function markHandedOver(item, userId) {
-  assert(item.status === ITEM_STATES.RESERVED, 'INVALID_STATE_TRANSITION');
-  assert(item.reserved_for === userId, 'NOT_WINNER');
-
-  item.status = ITEM_STATES.HANDED_OVER;
-  item.status_changed_at = now();
-  return item;
-}
-
-export function confirm(item) {
-  assert(item.status === ITEM_STATES.HANDED_OVER, 'INVALID_STATE_TRANSITION');
-
-  item.status = ITEM_STATES.CONFIRMED;
-  item.status_changed_at = now();
-  return item;
-}
-
-// ------------------------------
-// Expiry / Side Paths
-// ------------------------------
-export function expire(item) {
-  assert(
-    item.status === ITEM_STATES.RESERVED || item.status === ITEM_STATES.HANDED_OVER,
-    'INVALID_STATE_TRANSITION'
+  const winner = item.roll.results.reduce((a, b) =>
+    b.value > a.value ? b : a
   );
 
-  item.status = ITEM_STATES.EXPIRED;
-  item.status_changed_at = now();
-  item.flags.push('timeout');
+  item.winner = winner.userId;
+
+  setStatus(item, ITEM_STATUS.RESERVED);
   return item;
 }
 
-export function withdraw(item) {
-  assert(item.status === ITEM_STATES.ONLINE, 'INVALID_STATE_TRANSITION');
+// Übergabe starten
+export function startConfirmation(item) {
+  assert(item.status === ITEM_STATUS.RESERVED, 'INVALID_STATE');
 
-  item.status = ITEM_STATES.WITHDRAWN;
-  item.status_changed_at = now();
+  setStatus(item, ITEM_STATUS.CONFIRM_PENDING);
   return item;
 }
 
-export function dispute(item) {
-  assert(item.status === ITEM_STATES.HANDED_OVER, 'INVALID_STATE_TRANSITION');
+// Übergabe bestätigen
+export function confirm(item, role) {
+  assert(item.status === ITEM_STATUS.CONFIRM_PENDING, 'INVALID_STATE');
+  assert(role === 'giver' || role === 'receiver', 'INVALID_ROLE');
 
-  item.status = ITEM_STATES.DISPUTE;
-  item.status_changed_at = now();
+  item.confirmations[role] = true;
+  return item;
+}
+
+// ------------------------------
+// Flags / Side paths
+// ------------------------------
+export function flagItem(item, reason) {
+  if (!item.flags.includes(reason)) {
+    item.flags.push(reason);
+  }
+
+  if (item.status !== ITEM_STATUS.ASSIGNED) {
+    setStatus(item, ITEM_STATUS.FLAGGED);
+  }
+
   return item;
 }
