@@ -1,84 +1,96 @@
-// rolls.js — V3 Roll / Dice Logic (no UI, no DOM)
-// ==========================================
-// Handles rolling, tie-breaks, and winner selection.
+/* =====================================================
+   V3 CORE – ROLLS / WÜRFELPHASE
+   Scope: Würfeln & Gewinnerermittlung
+   Freeze: V3-Systemregeln
+   Keine UI, kein DOM, keine Timer
+===================================================== */
 
-import { ITEM_STATES, startRoll, reserve } from './core.js';
+import { ITEM_STATUS } from './timeouts.js';
 
-// ------------------------------
+// --------------------------------------------------
 // Helpers
-// ------------------------------
+// --------------------------------------------------
+function now() {
+  return Date.now();
+}
+
 function assert(condition, code) {
   if (!condition) throw new Error(code);
 }
 
-function rollOnce() {
-  // Inclusive 1–100
+function roll1to100() {
   return Math.floor(Math.random() * 100) + 1;
 }
 
-// ------------------------------
-// Roll Factory
-// ------------------------------
-export function createRoll({ itemId, userId, value }) {
-  return {
-    id: crypto.randomUUID(),
-    item_id: itemId,
-    user_id: userId,
-    value,
-    created_at: Date.now()
-  };
+// --------------------------------------------------
+// Start Roll-Phase
+// --------------------------------------------------
+// Regeln:
+// - nur aus bedarf_offen
+// - mindestens 1 Bedarf
+//
+// Mutiert:
+// - item.status
+// - item.rollStartedAt
+export function startRoll(item) {
+  assert(item, 'NO_ITEM');
+  assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
+  assert(Array.isArray(item.needs) && item.needs.length >= 1, 'NO_NEEDS');
+
+  item.status = ITEM_STATUS.ROLL_PHASE;
+  item.rollStartedAt = now();
+
+  return item;
 }
 
-// ------------------------------
-// Execute Roll Phase
-// ------------------------------
-// Params:
-// - item: item object (mutated via core transitions)
-// - needs: array of needs for THIS item
+// --------------------------------------------------
+// Execute Roll & Pick Winner
+// --------------------------------------------------
+// Regeln:
+// - nur aus würfel_phase
+// - würfelt 1–100 pro Bedarf
+// - höchster Wurf gewinnt
+// - Gleichstand → erneut würfeln (nur zwischen Tied-Usern)
 //
-// Returns:
-// { item, rolls, winnerUserId }
-export function executeRoll({ item, needs }) {
-  // --- Guards ---
-  assert(item.status === ITEM_STATES.NEED_CLOSED, 'INVALID_STATE');
-  assert(needs.length >= 1, 'NO_NEEDS');
+// Mutiert:
+// - item.status
+// - item.reservedAt
+// - item.winner
+//
+// Rückgabe:
+// { winner, rolls }
+export function executeRoll(item) {
+  assert(item, 'NO_ITEM');
+  assert(item.status === ITEM_STATUS.ROLL_PHASE, 'INVALID_STATE');
+  assert(Array.isArray(item.needs) && item.needs.length >= 1, 'NO_NEEDS');
 
-  // --- Enter roll phase ---
-  startRoll(item);
+  let contenders = [...item.needs];
+  let rolls = {};
 
-  // --- Initial rolls ---
-  let rolls = needs.map(n =>
-    createRoll({
-      itemId: item.id,
-      userId: n.user_id,
-      value: rollOnce()
-    })
-  );
+  while (true) {
+    rolls = {};
+    let highest = 0;
 
-  // --- Determine highest ---
-  let max = Math.max(...rolls.map(r => r.value));
-  let top = rolls.filter(r => r.value === max);
+    contenders.forEach(userId => {
+      const value = roll1to100();
+      rolls[userId] = value;
+      if (value > highest) highest = value;
+    });
 
-  // --- Tie-break loop (immediate) ---
-  while (top.length > 1) {
-    const tieRolls = top.map(r =>
-      createRoll({
-        itemId: item.id,
-        userId: r.user_id,
-        value: rollOnce()
-      })
-    );
+    const top = contenders.filter(u => rolls[u] === highest);
 
-    rolls = rolls.concat(tieRolls);
+    // eindeutiger Gewinner
+    if (top.length === 1) {
+      const winner = top[0];
 
-    max = Math.max(...tieRolls.map(r => r.value));
-    top = tieRolls.filter(r => r.value === max);
+      item.winner = winner;
+      item.status = ITEM_STATUS.RESERVED;
+      item.reservedAt = now();
+
+      return { winner, rolls };
+    }
+
+    // Gleichstand → nur mit den Tied-Usern neu würfeln
+    contenders = top;
   }
-
-  const winnerUserId = top[0].user_id;
-
-  // --- Reserve item for winner ---
-  reserve(item, winnerUserId);
-
-  return { item, rolls, winnerUserId };
 }
