@@ -459,6 +459,53 @@ body{
   gap:6px;
   flex:1;
 }
+
+  /* ===== ITEM TIMELINE (CARD / UI ONLY) ===== */
+
+.item-timeline{
+  position:relative;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-top:12px;
+  padding:12px 6px 0;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+
+.item-timeline .timeline-line{
+  position:absolute;
+  top:22px;
+  left:0;
+  right:0;
+  height:2px;
+  background:url("img/timeline/timeline-line.png") repeat-x center;
+  opacity:.6;
+  pointer-events:none;
+}
+
+.timeline-step{
+  position:relative;
+  z-index:1;
+  width:56px;
+  text-align:center;
+  font-size:11px;
+  color:#aaa;
+}
+
+.timeline-step img{
+  width:28px;
+  height:28px;
+  display:block;
+  margin:0 auto 6px;
+  opacity:.7;
+  filter:grayscale(100%);
+}
+
+.timeline-step span{
+  display:block;
+  line-height:1.2;
+  opacity:.85;
+}
   
 /* Qualitätsfarben */
 .item-name.unique{color:#c7a44b;}   /* Unique */
