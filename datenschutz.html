@@ -2,21 +2,49 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Datenschutzerklärung</title>
+<title>Datenschutzerklärung | D2R Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body{
+  margin:0;
   background:#0b0b0b;
   color:#e6e6e6;
-  font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;
-  padding:24px;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  padding:32px 24px 60px;
 }
-h1,h2{color:#d4af37}
-a{color:#d4af37;text-decoration:none}
-p,ul{max-width:760px;line-height:1.6}
-.small{opacity:.75;font-size:13px}
+
+h1,h2{
+  color:#d4af37;
+}
+
+h1{margin-top:0}
+
+p,ul{
+  max-width:760px;
+  line-height:1.6;
+}
+
+ul{padding-left:18px}
+
+li{margin-bottom:6px}
+
+a{
+  color:#d4af37;
+  text-decoration:none;
+}
+
+.small{
+  opacity:.75;
+  font-size:13px;
+}
+
+.footer-link{
+  margin-top:36px;
+}
 </style>
 </head>
+
 <body>
 
 <h1>Datenschutzerklärung</h1>
@@ -24,7 +52,9 @@ p,ul{max-width:760px;line-height:1.6}
 <h2>1. Verantwortlicher</h2>
 <p>
 Verantwortlich für die Datenverarbeitung im Sinne der DSGVO:<br>
-Daniel S.<br>
+Daniel Soll<br>
+Ingolstädter Str. 47<br>
+80807 München<br>
 Deutschland<br>
 E-Mail: <a href="mailto:kontakt@d2r-lootliste.de">kontakt@d2r-lootliste.de</a>
 </p>
@@ -33,31 +63,33 @@ E-Mail: <a href="mailto:kontakt@d2r-lootliste.de">kontakt@d2r-lootliste.de</a>
 <p>
 Diese Website dient der Bereitstellung einer Community-Lootliste für
 <strong>Diablo II: Resurrected</strong>. Nutzer können Items einsehen
-und über ein Anfrageformular Interesse an Items bekunden.
+und ihr Interesse bzw. ihren Bedarf an Items bekunden.
 </p>
 
 <h2>3. Verarbeitete Daten</h2>
 <p>Im Rahmen der Nutzung können folgende personenbezogene Daten verarbeitet werden:</p>
 <ul>
   <li>frei gewählter Nickname</li>
-  <li>Kontaktangaben (z. B. E-Mail-Adresse oder Discord-Name)</li>
-  <li>Inhalte von Item-Anfragen</li>
+  <li>Kontaktangaben (z. B. E-Mail-Adresse oder vergleichbare Angaben)</li>
+  <li>Inhalte von Bedarfs- oder Item-Anfragen</li>
+  <li>technische Nutzungsdaten (z. B. Zeitpunkte von Aktionen)</li>
 </ul>
 
 <p>
-Diese Daten werden ausschließlich zur Organisation und Abwicklung
-von Item-Anfragen innerhalb der Community verwendet.
+Die Verarbeitung dieser Daten erfolgt ausschließlich zur Organisation
+und Abwicklung von Item-Anfragen innerhalb der Community.
 </p>
 
 <h2>4. Speicherung und technische Verarbeitung</h2>
 <ul>
   <li>
-    Bestimmte Informationen (z. B. Anfragen, Besucherzähler) werden lokal
-    im Browser mittels <code>localStorage</code> gespeichert.
+    Bestimmte Informationen (z. B. Status von Items, Bedarfsangaben,
+    Besucherzähler) werden lokal im Browser mittels <code>localStorage</code>
+    oder vergleichbarer Webspeicher-Techniken gespeichert.
   </li>
   <li>
-    Serverseitig erfolgt eine Verarbeitung von Item-Daten und Anfragen
-    über ein externes Backend (Hosting bei Railway).
+    Zur technischen Bereitstellung der Lootliste können Item-Daten
+    und Bedarfsinformationen über ein externes Backend verarbeitet werden.
   </li>
 </ul>
 
@@ -68,7 +100,7 @@ Eine Weitergabe der Daten an Dritte zu kommerziellen Zwecken erfolgt nicht.
 <h2>5. Hosting</h2>
 <ul>
   <li>Frontend: GitHub Pages</li>
-  <li>Backend/API: Railway</li>
+  <li>Backend/API: externer Hosting-Anbieter (derzeit Railway)</li>
 </ul>
 
 <p>
@@ -82,7 +114,18 @@ Diese Website verwendet keine Cookies zu Marketing- oder Tracking-Zwecken.
 Es kommen keine externen Analyse- oder Werbedienste zum Einsatz.
 </p>
 
-<h2>7. Rechte der betroffenen Personen</h2>
+<h2>7. Nutzerkonten & zukünftige Funktionen</h2>
+<p>
+Zum aktuellen Zeitpunkt sind keine verpflichtenden Nutzerkonten erforderlich.
+Für zukünftige Erweiterungen (z. B. optionale Accounts, Profile oder
+Login-Funktionen) können zusätzliche personenbezogene Daten verarbeitet werden.
+</p>
+
+<p>
+In diesem Fall wird diese Datenschutzerklärung entsprechend angepasst.
+</p>
+
+<h2>8. Rechte der betroffenen Personen</h2>
 <p>
 Nutzer haben gemäß DSGVO das Recht auf:
 </p>
@@ -98,10 +141,10 @@ Anfragen hierzu können jederzeit per E-Mail an den Verantwortlichen
 gerichtet werden.
 </p>
 
-<h2>8. Freiwilligkeit der Angaben</h2>
+<h2>9. Freiwilligkeit der Angaben</h2>
 <p>
 Die Angabe personenbezogener Daten erfolgt freiwillig.
-Ohne Angabe bestimmter Daten (z. B. Kontaktmöglichkeit)
+Ohne Angabe bestimmter Daten (z. B. einer Kontaktmöglichkeit)
 ist eine Item-Anfrage jedoch nicht möglich.
 </p>
 
@@ -109,7 +152,7 @@ ist eine Item-Anfrage jedoch nicht möglich.
 Stand: Januar 2026
 </p>
 
-<p>
+<p class="footer-link">
 <a href="index.html">← Zurück zur Lootliste</a>
 </p>
 
