@@ -1763,6 +1763,25 @@ document.addEventListener("keydown", e => {
 });
 </script>
 
+<!-- ===== QUICK START TOGGLE LOGIC ===== -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const qs = document.getElementById("quickStart");
+  const toggle = document.getElementById("quickToggle");
+
+  if (!qs || !toggle) return;
+
+  // Bei Wiederkehr einklappen
+  const seen = localStorage.getItem("quick_seen");
+  if (seen) qs.classList.add("collapsed");
+
+  toggle.addEventListener("click", () => {
+    qs.classList.toggle("collapsed");
+    localStorage.setItem("quick_seen", "1");
+  });
+});
+</script>
+  
 <script type="module" src="ui/index-ui.js?v=4"></script>
 
   </body>  
