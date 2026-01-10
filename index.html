@@ -133,7 +133,7 @@ body{
   text-decoration:underline;
 }
 
-  /* ===== QUICK START (NEU HIER?) ===== */
+/* ===== QUICK START (NEU HIER?) ===== */
 .quick-start{
   margin:18px 28px 6px;
   padding:14px 18px;
@@ -142,12 +142,6 @@ body{
   border-radius:16px;
   font-size:13px;
   opacity:.9;
-}
-
-.quick-start h3{
-  margin:0 0 8px;
-  font-size:14px;
-  color:var(--gold);
 }
 
 .quick-start ol{
@@ -163,6 +157,34 @@ body{
   margin-top:8px;
   font-size:12px;
   opacity:.7;
+}
+
+  /* ===== QUICK START TOGGLE ===== */
+.quick-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  font-weight:600;
+  color:var(--gold);
+}
+
+.quick-body{
+  margin-top:8px;
+}
+
+.quick-start.collapsed .quick-body{
+  display:none;
+}
+
+.quick-arrow{
+  opacity:.7;
+  font-size:14px;
+  transition:transform .2s ease;
+}
+
+.quick-start.collapsed .quick-arrow{
+  transform:rotate(-90deg);
 }
   
 /* ===== ICON BAR ===== */
