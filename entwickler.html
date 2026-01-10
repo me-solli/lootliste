@@ -63,7 +63,7 @@ body{
   max-width:720px;
 }
 
-/* ===== PIXEL CHAR (KUHKÖNIG EASTER EGG) ===== */
+/* ===== PIXEL CHAR ===== */
 .dev-pixel-wrap{
   position:relative;
   align-self:flex-end;
@@ -76,7 +76,7 @@ body{
   display:block;
 }
 
-/* Mini-Kuhkrone (immer sichtbar, sehr dezent) */
+/* Mini-Krone (dezentes Easter Egg) */
 .dev-pixel-wrap::after{
   content:"👑";
   position:absolute;
@@ -84,17 +84,15 @@ body{
   left:38%;
   font-size:26px;
   transform:rotate(-8deg);
-  opacity:.35;
+  opacity:.3;
   pointer-events:none;
 }
 
-/* Hover-Gag */
 .dev-pixel-wrap:hover::after{
-  opacity:.75;
+  opacity:.6;
   transform:rotate(-4deg) scale(1.05);
 }
 
-/* Tooltip */
 .dev-pixel-wrap:hover::before{
   content:"Kein Kuhkönig. Versprochen.";
   position:absolute;
@@ -140,41 +138,7 @@ footer a{
   }
 }
 
-/* ===== GOLD INTRO ===== */
-.intro-gold{
-  color:var(--gold);
-  font-size:17px;
-  font-weight:600;
-  line-height:1.6;
-  margin-bottom:24px;
-  letter-spacing:.5px;
-}
-
-/* Inline crown at end */
-.crown-inline{
-  font-size:18px;
-  vertical-align:middle;
-  opacity:.9;
-}
-
-
-/* ===== STORY LEAD TEXT ===== */
-.story-lead{
-  color: #e8d9a8; /* warm parchment-gold, softer than UI gold */
-  font-weight: 500;
-}
-
-
-
-
-
-
-
-
-
-
-
-/* ===== FLEX INTRO (PRECISION DROP CAP) ===== */
+/* ===== INTRO ===== */
 .intro-line{
   display:flex;
   align-items:flex-end;
@@ -188,7 +152,6 @@ footer a{
   font-size:40px;
   line-height:0.9;
   margin-right:-4px;
-  color:var(--gold);
 }
 
 .intro-text{
@@ -197,6 +160,16 @@ footer a{
   padding-right:6px;
 }
 
+.story-lead{
+  color:#e8d9a8;
+  font-weight:500;
+}
+
+.crown-inline{
+  font-size:18px;
+  vertical-align:middle;
+  opacity:.9;
+}
 </style>
 </head>
 
@@ -210,42 +183,43 @@ footer a{
 
   <div class="dev-content">
     <div class="dev-text">
-      <p class="intro-gold">
-        <div class="intro-line">
-  <span class="intro-letter">V</span><span class="intro-text">or langer, langer Zeit …</span>
-</div>
 
+      <div class="intro-line">
+        <span class="intro-letter">V</span><span class="intro-text">or langer, langer Zeit …</span>
+      </div>
+
+      <p>
         irgendwo zwischen Tristram, vollgestopften Mules<br>
         und einer viel zu langen Item-Liste.
       </p>
 
       <p class="story-lead">
-        Dieses Projekt ist kein Produkt, kein Start-up<br>
-        sondern ein Community-Projekt aus eigener Motivation.
+        Dieses Projekt ist kein Produkt, kein Service<br>
+        und kein kommerzielles Angebot.
       </p>
 
       <p class="story-lead">
-        Es ist entstanden aus Neugier, Lernwillen<br>
-        und der Lust, etwas Sinnvolles für eine Community zu bauen,<br>
-        die mich seit Diablo II: Lord of Destruction begleitet.
+        Es ist ein privates Community‑Projekt – entstanden aus Neugier,
+        Lernwillen und dem Wunsch, etwas Sinnvolles für eine langjährige
+        Diablo‑II‑Community zu bauen.
       </p>
 
       <p>
-        Angefangen hat alles sehr unspektakulär –<br>
-        mit einer einfachen Tabelle und der Frage:<br>
-        <em>Geht das nicht besser?</em>
+        Angefangen hat alles unspektakulär:<br>
+        mit einer einfachen Tabelle und der Frage<br>
+        <em>„Geht das nicht besser?“</em>
       </p>
 
       <p>
-        Irgendwann wurde aus der Tabelle ein System.<br>
-        Aus einer Idee ein Projekt.<br>
-        Und aus „mal schauen“ ein echtes Frontend mit Backend,<br>
-        Lernkurve inklusive (ja, auch mit Hilfe von ChatGPT).
+        Irgendwann wurde aus der Tabelle ein System.
+        Aus einer Idee ein Projekt.
+        Und aus „mal schauen“ ein echtes Frontend
+        mit angebundenem Backend – Lernkurve inklusive.
       </p>
 
       <p>
-        In D2R Non-Ladder liegen unzählige Items ungenutzt herum.<br>
-        Volle Truhen, volle Mules – und am Ende wird fast alles zu Runen.
+        In D2R Non‑Ladder liegen unzählige Items ungenutzt herum:
+        volle Truhen, volle Mules – und am Ende wird fast alles zu Runen.
       </p>
 
       <p>
@@ -254,10 +228,10 @@ footer a{
       </p>
 
       <p>
-        Diese Lootliste soll Items wieder zu dem machen,<br>
-        wofür sie gedacht sind:<br>
-        neue Builds ermöglichen, neue Charaktere starten,<br>
-        alte Twinks verbessern – ganz ohne Trading-Stress.
+        Diese Lootliste soll Items wieder zu dem machen,
+        wofür sie gedacht sind: Builds ermöglichen,
+        neue Charaktere starten, alte Twinks verbessern –
+        ganz ohne Trading‑Stress.
       </p>
 
       <p>
@@ -270,6 +244,12 @@ footer a{
         Ohne Machtspielchen.<br>
         Und ohne Kuhkönig. <span class="crown-inline">👑</span>
       </p>
+
+      <p style="opacity:.75;font-size:13px;margin-top:18px">
+        Hinweis: Es besteht kein Anspruch auf dauerhafte Verfügbarkeit,
+        Vollständigkeit oder Fehlerfreiheit dieses Projekts.
+      </p>
+
     </div>
 
     <div class="dev-pixel-wrap">
