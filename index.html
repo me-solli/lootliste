@@ -1475,6 +1475,36 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
           Spieler: ${item.contact || "-"}
         </div>
 
+        <!-- ===== ITEM TIMELINE (UI ONLY) ===== -->
+        <div class="item-timeline">
+          <div class="timeline-line"></div>
+
+          <div class="timeline-step">
+            <img src="img/timeline/step-donate.png" alt="">
+            <span>Gespendet</span>
+          </div>
+
+          <div class="timeline-step">
+            <img src="img/timeline/step-need.png" alt="">
+            <span>Bedarf</span>
+          </div>
+
+          <div class="timeline-step">
+            <img src="img/timeline/step-roll.png" alt="">
+            <span>Würfeln</span>
+          </div>
+
+          <div class="timeline-step">
+            <img src="img/timeline/step-reserved.png" alt="">
+            <span>Reserviert</span>
+          </div>
+
+          <div class="timeline-step">
+            <img src="img/timeline/step-done.png" alt="">
+            <span>Vergeben</span>
+          </div>
+        </div>
+       
 ${
   currentStatus === "Verfügbar"
     ? (
