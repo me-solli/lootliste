@@ -1,25 +1,127 @@
-// core.js — V3 Core Logic (FINAL)
+// core.js — V3 Core Logic (GUARDED & STABLE)
 // ======================================
 // Single Source of Truth for item states, transitions and guards.
 // NO UI, NO DOM access. UI must only call these functions.
 
-// ------------------------------
-// Status Enum (V3 – FINAL)
-// ------------------------------
+// --------------------------------------------------
+// Status Enum (V3 – FINAL, canonical)
+// --------------------------------------------------
 export const ITEM_STATUS = Object.freeze({
-  AVAILABLE: 'available',          // frisch gespendet
-  NEED_OPEN: 'need_open',           // Bedarf offen (24h)
-  ROLLING: 'rolling',               // Würfelphase
-  RESERVED: 'reserved',             // Gewinner festgelegt
+  AVAILABLE: 'available',              // frisch gespendet
+  NEED_OPEN: 'need_open',               // Bedarf offen (24h)
+  ROLLING: 'rolling',                   // Würfelphase
+  RESERVED: 'reserved',                 // Gewinner festgelegt
   HANDOVER_PENDING: 'handover_pending', // Übergabe läuft
-  COMPLETED: 'completed',           // beidseitig bestätigt
-  EXPIRED: 'expired',               // verfallen (terminal)
-  ABORTED: 'aborted'                // bewusst abgebrochen (terminal)
+  COMPLETED: 'completed',               // beidseitig bestätigt (terminal)
+  EXPIRED: 'expired',                   // verfallen (terminal)
+  ABORTED: 'aborted'                    // bewusst abgebrochen (terminal)
 });
 
-// ------------------------------
+// --------------------------------------------------
+// Action Enum (system-wide)
+// --------------------------------------------------
+export const ITEM_ACTIONS = Object.freeze({
+  OPEN_NEED: 'openNeed',
+  ADD_NEED: 'addNeed',
+  START_ROLL: 'startRoll',
+  START_HANDOVER: 'startHandover',
+  CONFIRM: 'confirm',
+  ABORT: 'abort'
+});
+
+// --------------------------------------------------
+// State → Allowed Actions (Single Source of Truth)
+// --------------------------------------------------
+const STATE_ACTION_MAP = Object.freeze({
+  [ITEM_STATUS.AVAILABLE]: [
+    ITEM_ACTIONS.OPEN_NEED
+  ],
+
+  [ITEM_STATUS.NEED_OPEN]: [
+    ITEM_ACTIONS.ADD_NEED,
+    ITEM_ACTIONS.START_ROLL
+  ],
+
+  [ITEM_STATUS.ROLLING]: [
+    // internal only – no direct UI action
+  ],
+
+  [ITEM_STATUS.RESERVED]: [
+    ITEM_ACTIONS.START_HANDOVER,
+    ITEM_ACTIONS.ABORT
+  ],
+
+  [ITEM_STATUS.HANDOVER_PENDING]: [
+    ITEM_ACTIONS.CONFIRM,
+    ITEM_ACTIONS.ABORT
+  ],
+
+  [ITEM_STATUS.COMPLETED]: [],
+  [ITEM_STATUS.EXPIRED]: [],
+  [ITEM_STATUS.ABORTED]: []
+});
+
+// --------------------------------------------------
+// Logging (minimal, internal)
+// --------------------------------------------------
+const LOG_LEVELS = Object.freeze({
+  INFO: 'info',
+  WARN: 'warn',
+  ERROR: 'error'
+});
+
+function logEvent(level, type, payload = {}) {
+  const entry = {
+    ts: new Date().toISOString(),
+    level,
+    type,
+    ...payload
+  };
+
+  if (level === LOG_LEVELS.ERROR) {
+    console.error('[SYSTEM]', entry);
+  } else if (level === LOG_LEVELS.WARN) {
+    console.warn('[SYSTEM]', entry);
+  } else {
+    console.info('[SYSTEM]', entry);
+  }
+}
+
+// --------------------------------------------------
+// Guards
+// --------------------------------------------------
+export function canPerformAction(item, action) {
+  if (!item || !item.status) {
+    logEvent(LOG_LEVELS.WARN, 'invalid_item', { action, item });
+    return false;
+  }
+
+  const allowed = STATE_ACTION_MAP[item.status];
+
+  if (!allowed) {
+    logEvent(LOG_LEVELS.ERROR, 'unknown_status', {
+      itemId: item.id,
+      status: item.status
+    });
+    return false;
+  }
+
+  const ok = allowed.includes(action);
+
+  if (!ok) {
+    logEvent(LOG_LEVELS.INFO, 'action_blocked', {
+      itemId: item.id,
+      status: item.status,
+      action
+    });
+  }
+
+  return ok;
+}
+
+// --------------------------------------------------
 // Helpers
-// ------------------------------
+// --------------------------------------------------
 export function now() {
   return Date.now();
 }
@@ -36,20 +138,20 @@ function random1to100() {
   return Math.floor(Math.random() * 100) + 1;
 }
 
-// ------------------------------
+// --------------------------------------------------
 // Optional completion hook (XP / Stats später)
-// ------------------------------
+// --------------------------------------------------
 let onItemCompleted = null;
 
 export function registerOnItemCompleted(fn) {
   onItemCompleted = fn;
 }
 
-// ------------------------------
+// --------------------------------------------------
 // Item Factory
-// ------------------------------
+// --------------------------------------------------
 export function createItem({ name, type, donatedBy }) {
-  return {
+  return normalizeItem({
     id: uuid(),
     name,
     type,
@@ -77,21 +179,77 @@ export function createItem({ name, type, donatedBy }) {
     // Sichtbarkeit / Archiv
     archived: false,
     visible: true
-  };
+  });
 }
 
-// ------------------------------
-// Internal status setter
-// ------------------------------
+// --------------------------------------------------
+// Status setter (logging enforced)
+// --------------------------------------------------
 function setStatus(item, status) {
+  const from = item.status;
   item.status = status;
   item.statusChangedAt = now();
+
+  logEvent(LOG_LEVELS.INFO, 'status_changed', {
+    itemId: item.id,
+    from,
+    to: status
+  });
 }
 
-// ------------------------------
+// --------------------------------------------------
+// Self-Healing / Normalization
+// --------------------------------------------------
+const DEFAULT_STATUS = ITEM_STATUS.AVAILABLE;
+
+export function normalizeItem(item) {
+  if (!item) return null;
+
+  if (!item.status || !STATE_ACTION_MAP[item.status]) {
+    logEvent(LOG_LEVELS.WARN, 'status_normalized', {
+      itemId: item.id,
+      from: item.status,
+      to: DEFAULT_STATUS
+    });
+    item.status = DEFAULT_STATUS;
+    item.statusChangedAt = now();
+  }
+
+  return item;
+}
+
+export function reconcileItem(item) {
+  if (!item) return item;
+
+  if (item.status === ITEM_STATUS.ROLLING && (!item.needs || item.needs.length === 0)) {
+    logEvent(LOG_LEVELS.WARN, 'state_reconciled', {
+      itemId: item.id,
+      from: ITEM_STATUS.ROLLING,
+      to: ITEM_STATUS.EXPIRED,
+      reason: 'no_needs'
+    });
+    expireItem(item);
+  }
+
+  if (item.status === ITEM_STATUS.HANDOVER_PENDING && !item.winner) {
+    logEvent(LOG_LEVELS.WARN, 'state_reconciled', {
+      itemId: item.id,
+      from: ITEM_STATUS.HANDOVER_PENDING,
+      to: ITEM_STATUS.EXPIRED,
+      reason: 'missing_winner'
+    });
+    expireItem(item);
+  }
+
+  return item;
+}
+
+// --------------------------------------------------
 // Central transition handler (Phase 5–7)
-// ------------------------------
+// --------------------------------------------------
 export function transitionItem(item, event) {
+  normalizeItem(item);
+
   const status = item.status;
 
   if (status === ITEM_STATUS.RESERVED) {
@@ -129,13 +287,12 @@ export function transitionItem(item, event) {
   return item; // no-op
 }
 
-// ------------------------------
+// --------------------------------------------------
 // Lifecycle helpers
-// ------------------------------
+// --------------------------------------------------
 function expireItem(item) {
   setStatus(item, ITEM_STATUS.EXPIRED);
 
-  // Cleanup – keine Datenleichen
   item.winner = null;
   item.roll = null;
   item.confirmations.giver = false;
@@ -162,10 +319,12 @@ function abortItem(item) {
   item.visible = false;
 }
 
-// ------------------------------
+// --------------------------------------------------
 // Phase 1–4 Logic (auto)
-// ------------------------------
+// --------------------------------------------------
 export function updateItemStatus(item, ts = now()) {
+  normalizeItem(item);
+
   if (item.status === ITEM_STATUS.NEED_OPEN && ts > item.needUntil) {
     if (item.needs.length > 0) {
       startRoll(item);
@@ -177,12 +336,11 @@ export function updateItemStatus(item, ts = now()) {
   return item;
 }
 
-// ------------------------------
-// Actions / Events (UI calls only these)
-// ------------------------------
-
+// --------------------------------------------------
+// Actions / Events (UI must call only these)
+// --------------------------------------------------
 export function openNeed(item, durationMs) {
-  assert(item.status === ITEM_STATUS.AVAILABLE, 'INVALID_STATE');
+  if (!canPerformAction(item, ITEM_ACTIONS.OPEN_NEED)) return item;
 
   setStatus(item, ITEM_STATUS.NEED_OPEN);
   item.needUntil = now() + durationMs;
@@ -190,7 +348,7 @@ export function openNeed(item, durationMs) {
 }
 
 export function addNeed(item, userId) {
-  assert(item.status === ITEM_STATUS.NEED_OPEN, 'NEED_NOT_OPEN');
+  if (!canPerformAction(item, ITEM_ACTIONS.ADD_NEED)) return item;
 
   const exists = item.needs.some(n => n.userId === userId);
   assert(!exists, 'ALREADY_REQUESTED');
@@ -200,7 +358,7 @@ export function addNeed(item, userId) {
 }
 
 export function startRoll(item) {
-  assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
+  if (!canPerformAction(item, ITEM_ACTIONS.START_ROLL)) return item;
 
   setStatus(item, ITEM_STATUS.ROLLING);
 
@@ -223,13 +381,14 @@ export function startRoll(item) {
 }
 
 export function startHandover(item) {
-  assert(item.status === ITEM_STATUS.RESERVED, 'INVALID_STATE');
+  if (!canPerformAction(item, ITEM_ACTIONS.START_HANDOVER)) return item;
+
   transitionItem(item, 'select_handover');
   return item;
 }
 
 export function confirm(item, role) {
-  assert(item.status === ITEM_STATUS.HANDOVER_PENDING, 'INVALID_STATE');
+  if (!canPerformAction(item, ITEM_ACTIONS.CONFIRM)) return item;
   assert(role === 'giver' || role === 'receiver', 'INVALID_ROLE');
 
   item.confirmations[role] = true;
@@ -238,6 +397,8 @@ export function confirm(item, role) {
 }
 
 export function abort(item) {
+  if (!canPerformAction(item, ITEM_ACTIONS.ABORT)) return item;
+
   transitionItem(item, 'abort');
   return item;
 }
