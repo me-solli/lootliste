@@ -37,6 +37,15 @@ function random1to100() {
 }
 
 // ------------------------------
+// Optional completion hook (XP / Stats später)
+// ------------------------------
+let onItemCompleted = null;
+
+export function registerOnItemCompleted(fn) {
+  onItemCompleted = fn;
+}
+
+// ------------------------------
 // Item Factory
 // ------------------------------
 export function createItem({ name, type, donatedBy }) {
@@ -72,14 +81,6 @@ export function createItem({ name, type, donatedBy }) {
 }
 
 // ------------------------------
-// Transition Map (bindend)
-// ------------------------------
-const TRANSITIONS = {
-  reserved: ['select_handover', 'timeout', 'abort'],
-  handover_pending: ['confirm', 'timeout', 'abort']
-};
-
-// ------------------------------
 // Internal status setter
 // ------------------------------
 function setStatus(item, status) {
@@ -88,12 +89,11 @@ function setStatus(item, status) {
 }
 
 // ------------------------------
-// Central transition handler
+// Central transition handler (Phase 5–7)
 // ------------------------------
 export function transitionItem(item, event) {
   const status = item.status;
 
-  // RESERVED
   if (status === ITEM_STATUS.RESERVED) {
     if (event === 'select_handover') {
       setStatus(item, ITEM_STATUS.HANDOVER_PENDING);
@@ -109,7 +109,6 @@ export function transitionItem(item, event) {
     }
   }
 
-  // HANDOVER_PENDING
   if (status === ITEM_STATUS.HANDOVER_PENDING) {
     if (event === 'confirm') {
       if (item.confirmations.giver && item.confirmations.receiver) {
@@ -127,7 +126,7 @@ export function transitionItem(item, event) {
     }
   }
 
-  return item; // no-op for invalid transitions
+  return item; // no-op
 }
 
 // ------------------------------
@@ -148,8 +147,13 @@ function expireItem(item) {
 
 function completeItem(item) {
   setStatus(item, ITEM_STATUS.COMPLETED);
+
   item.archived = true;
   item.visible = false;
+
+  if (typeof onItemCompleted === 'function') {
+    onItemCompleted(item);
+  }
 }
 
 function abortItem(item) {
@@ -162,7 +166,6 @@ function abortItem(item) {
 // Phase 1–4 Logic (auto)
 // ------------------------------
 export function updateItemStatus(item, ts = now()) {
-  // Bedarf abgelaufen
   if (item.status === ITEM_STATUS.NEED_OPEN && ts > item.needUntil) {
     if (item.needs.length > 0) {
       startRoll(item);
@@ -175,10 +178,9 @@ export function updateItemStatus(item, ts = now()) {
 }
 
 // ------------------------------
-// Actions / Events
+// Actions / Events (UI calls only these)
 // ------------------------------
 
-// Bedarf öffnen
 export function openNeed(item, durationMs) {
   assert(item.status === ITEM_STATUS.AVAILABLE, 'INVALID_STATE');
 
@@ -187,7 +189,6 @@ export function openNeed(item, durationMs) {
   return item;
 }
 
-// Bedarf anmelden
 export function addNeed(item, userId) {
   assert(item.status === ITEM_STATUS.NEED_OPEN, 'NEED_NOT_OPEN');
 
@@ -198,7 +199,6 @@ export function addNeed(item, userId) {
   return item;
 }
 
-// Würfeln starten (automatisch)
 export function startRoll(item) {
   assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
 
@@ -222,14 +222,12 @@ export function startRoll(item) {
   return item;
 }
 
-// Übergabe starten
 export function startHandover(item) {
   assert(item.status === ITEM_STATUS.RESERVED, 'INVALID_STATE');
   transitionItem(item, 'select_handover');
   return item;
 }
 
-// Übergabe bestätigen
 export function confirm(item, role) {
   assert(item.status === ITEM_STATUS.HANDOVER_PENDING, 'INVALID_STATE');
   assert(role === 'giver' || role === 'receiver', 'INVALID_ROLE');
@@ -239,7 +237,6 @@ export function confirm(item, role) {
   return item;
 }
 
-// Abbruch (bewusst)
 export function abort(item) {
   transitionItem(item, 'abort');
   return item;
