@@ -510,23 +510,26 @@ body{
   opacity:.85;
 }
   
-  /* ===== ITEM TIMELINE STATES (PREP / CSS ONLY) ===== */
+/* ===== ITEM TIMELINE STATES (PREP / CSS ONLY) ===== */
 
 /* abgeschlossene Schritte */
-.timeline-step.is-done img{
+.timeline-step.is-done img,
+.item-timeline-step.is-done img{
   filter:none;
   opacity:0.9;
 }
 
 /* aktueller Schritt */
-.timeline-step.is-active img{
+.timeline-step.is-active img,
+.item-timeline-step.is-active img{
   filter:none;
   opacity:1;
   box-shadow:0 0 6px rgba(245,196,81,.45);
 }
 
 /* finaler Schritt */
-.timeline-step.is-final img{
+.timeline-step.is-final img,
+.item-timeline-step.is-final img{
   filter:none;
   opacity:1;
 }
