@@ -116,6 +116,19 @@ export function openNeed(item, durationMs) {
   return item;
 }
 
+// ------------------------------
+// Phase 3 (LIGHT): Würfeln visuell starten
+// KEIN RNG, KEIN Timer, NUR Statuswechsel
+// ------------------------------
+export function startRollingVisual(item) {
+  assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
+
+  item.status = ITEM_STATUS.ROLLING;
+  item.statusChangedAt = now();
+
+  return item;
+}
+
 // Bedarf anmelden
 export function addNeed(item, userId) {
   assert(item.status === ITEM_STATUS.NEED_OPEN, 'NEED_NOT_OPEN');
