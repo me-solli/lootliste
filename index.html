@@ -1460,6 +1460,16 @@ status: getSimStatus(
     items = [];
   }
 }
+
+  function canShowRequestButton(item) {
+  // Status muss verfügbar sein
+  if (item.status !== "Verfügbar") return false;
+
+  // User darf nur einmal Bedarf anmelden
+  if (hasRequested(item.name)) return false;
+
+  return true;
+}
   
 function render() {
   cards.innerHTML = "";
