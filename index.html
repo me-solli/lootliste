@@ -1623,17 +1623,15 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 </div>
 
 ${
-  currentStatus === "Verfügbar"
-    ? (
-        hasRequested(item.name)
-          ? `<button class="request-btn disabled" disabled>
-               Bedarf angemeldet
-             </button>`
-          : `<button class="request-btn" data-item="${item.name}">
-               📩 Bedarf anmelden
-             </button>`
-      )
-    : ``
+  canShowRequestButton(item)
+    ? `<button class="request-btn" data-item="${item.name}">
+         📩 Bedarf anmelden
+       </button>`
+    : hasRequested(item.name)
+      ? `<button class="request-btn disabled" disabled>
+           Bedarf angemeldet
+         </button>`
+      : ``
 }
 
       </div>
