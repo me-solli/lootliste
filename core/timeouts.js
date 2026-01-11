@@ -14,7 +14,7 @@ export const TIME = Object.freeze({
 });
 
 // --------------------------------------------------
-// Helper: does status have timeout?
+// Helper: timeout duration per status
 // --------------------------------------------------
 function getTimeoutDuration(status) {
   switch (status) {
@@ -29,12 +29,10 @@ function getTimeoutDuration(status) {
 
 // --------------------------------------------------
 // Single item timeout check
-// Returns true if item changed
 // --------------------------------------------------
 export function checkItemTimeout(item, ts = now()) {
   const duration = getTimeoutDuration(item.status);
   if (!duration) return false;
-
   if (!item.statusChangedAt) return false;
 
   if (ts - item.statusChangedAt >= duration) {
@@ -46,7 +44,7 @@ export function checkItemTimeout(item, ts = now()) {
 }
 
 // --------------------------------------------------
-// Bulk helper (used by global tick)
+// Bulk helper
 // --------------------------------------------------
 export function checkAllTimeouts(items = [], ts = now()) {
   let changed = false;
@@ -65,7 +63,7 @@ export function checkAllTimeouts(items = [], ts = now()) {
 // --------------------------------------------------
 export function startTimeoutTick({
   items,
-  intervalMs = 30 * 1000, // 30s default
+  intervalMs = 30 * 1000,
   onChange
 }) {
   return setInterval(() => {
