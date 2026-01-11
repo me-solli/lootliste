@@ -1547,13 +1547,13 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 <div class="item-timeline">
   <div class="timeline-line"></div>
 
-  <div class="timeline-step">
-    <img src="img/timeline/step-inactive.png" alt="">
+  <div class="timeline-step ${currentStatus === "Verfügbar" ? "is-done" : ""}">
+    <img src="img/timeline/${currentStatus === "Verfügbar" ? "step-active.png" : "step-inactive.png"}" alt="">
     <span>Gespendet</span>
   </div>
 
-  <div class="timeline-step">
-    <img src="img/timeline/step-inactive.png" alt="">
+  <div class="timeline-step ${currentStatus === "Verfügbar" ? "is-active" : ""}">
+    <img src="img/timeline/${currentStatus === "Verfügbar" ? "step-active.png" : "step-inactive.png"}" alt="">
     <span>Bedarf</span>
   </div>
 
