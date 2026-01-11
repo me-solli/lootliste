@@ -1214,11 +1214,13 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 </div>
 
 <script type="module">
-  const STATUS_MAP = {
-    approved: "Verfügbar",
-    reserved: "Reserviert",
-    given: "Vergeben"
-  };
+const STATUS_MAP = {
+  approved: "Verfügbar",
+  need_open: "need_open",
+  rolling: "rolling",
+  reserved: "reserved",
+  given: "Vergeben"
+};
 
   // ================================
 // LOOTLISTE CORE LOGIC (V3)
