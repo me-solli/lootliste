@@ -1553,32 +1553,55 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 <div class="item-timeline">
   <div class="timeline-line"></div>
 
-  <div class="item-timeline-step ${currentStatus === "Verfügbar" ? "is-done" : ""}">
-    <img src="img/timeline/${currentStatus === "Verfügbar" ? "step-active.png" : "step-inactive.png"}" alt="">
+  <!-- Gespendet -->
+  <div class="item-timeline-step ${
+    currentStatus !== "Verfügbar" ? "is-done" : "is-active"
+  }">
+    <img src="img/timeline/step-active.png" alt="">
     <span>Gespendet</span>
   </div>
 
-  <div class="item-timeline-step ${currentStatus === "Verfügbar" ? "is-active" : ""}">
-    <img src="img/timeline/${currentStatus === "Verfügbar" ? "step-active.png" : "step-inactive.png"}" alt="">
+  <!-- Bedarf -->
+  <div class="item-timeline-step ${
+    currentStatus === "need_open"
+      ? "is-active"
+      : currentStatus === "rolling"
+        ? "is-done"
+        : ""
+  }">
+    <img src="img/timeline/${
+      currentStatus === "need_open" || currentStatus === "rolling"
+        ? "step-active.png"
+        : "step-inactive.png"
+    }" alt="">
     <span>Bedarf</span>
   </div>
 
-  <div class="item-timeline-step">
-    <img src="img/timeline/step-inactive.png" alt="">
+  <!-- Würfeln -->
+  <div class="item-timeline-step ${
+    currentStatus === "rolling" ? "is-active" : ""
+  }">
+    <img src="img/timeline/${
+      currentStatus === "rolling"
+        ? "step-active.png"
+        : "step-inactive.png"
+    }" alt="">
     <span>Würfeln</span>
   </div>
 
+  <!-- Reserviert (future) -->
   <div class="item-timeline-step">
     <img src="img/timeline/step-inactive.png" alt="">
     <span>Reserviert</span>
   </div>
 
+  <!-- Vergeben (final, später) -->
   <div class="item-timeline-step">
     <img src="img/timeline/step-final.png" alt="">
     <span>Vergeben</span>
   </div>
 </div>
-       
+
 ${
   currentStatus === "Verfügbar"
     ? (
