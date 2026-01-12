@@ -1594,16 +1594,22 @@ const matchesStatus =
 });
 
 const total = items.length;
-const frei = items.filter(i => i.status === "Verfügbar").length;
-const res = items.filter(i => i.status === "Reserviert").length;
-const weg = items.filter(i => i.status === "Vergeben").length;
+  
+const frei = items.filter(i => i.status === "available").length;
+const need = items.filter(i => i.status === "need_open").length;
+const roll = items.filter(i => i.status === "rolling").length;
+const res  = items.filter(i => i.status === "reserved").length;
+const weg  = items.filter(i => i.status === "completed").length;
 
-  heroStats.innerHTML = `
-    <div>📦 ${total} Items</div>
-    <div style="color:var(--green)">🟢 ${frei} verfügbar</div>
-    <div style="color:var(--yellow)">🟡 ${res} reserviert</div>
-    <div style="color:var(--red)">🔴 ${weg} vergeben</div>
-  `;
+
+heroStats.innerHTML = `
+  <div>📦 ${total} Items</div>
+  <div style="color:var(--green)">🟢 ${frei} verfügbar</div>
+  <div style="opacity:.85">🔵 ${need} Bedarf</div>
+  <div style="opacity:.85">🎲 ${roll} Würfeln</div>
+  <div style="color:var(--yellow)">🟡 ${res} reserviert</div>
+  <div style="color:var(--red)">🔴 ${weg} vergeben</div>
+`;
 
 document.getElementById("metaStats").textContent =
   `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
