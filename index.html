@@ -1503,60 +1503,6 @@ function getTimelineIndex(status) {
 }
 
 function renderStars(rating = 0) {
-  // ===== UI STATE (READ ONLY FROM CORE) =====
-function getUIState(item) {
-  switch (item.status) {
-
-    case "available":
-      return {
-        tech: "verfuegbar",
-        label: "Verfügbar",
-        timelineIndex: 0,
-        canRequest: true
-      };
-
-    case "need_open":
-      return {
-        tech: "need_open",
-        label: "Bedarf",
-        timelineIndex: 1,
-        canRequest: true
-      };
-
-    case "rolling":
-      return {
-        tech: "rolling",
-        label: "Würfeln",
-        timelineIndex: 2,
-        canRequest: false
-      };
-
-    case "reserved":
-      return {
-        tech: "reserved",
-        label: "Reserviert",
-        timelineIndex: 3,
-        canRequest: false
-      };
-
-    case "completed":
-      return {
-        tech: "vergeben",
-        label: "Vergeben",
-        timelineIndex: 4,
-        canRequest: false
-      };
-
-    default:
-      return {
-        tech: "verfuegbar",
-        label: "Verfügbar",
-        timelineIndex: 0,
-        canRequest: false
-      };
-  }
-}
-
   const full = Math.floor(rating);
   const empty = 5 - full;
 
