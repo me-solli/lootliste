@@ -1485,6 +1485,16 @@ function getTimelineIndex(status) {
   const i = TIMELINE_ORDER.indexOf(status);
   return i === -1 ? null : i;
 }
+
+  function renderStars(rating = 0) {
+  const full = Math.floor(rating);
+  const empty = 5 - full;
+
+  return `
+    ${"★".repeat(full)}
+    ${"☆".repeat(empty)}
+  `;
+}
   
 function render() {
   cards.innerHTML = "";
