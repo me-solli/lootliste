@@ -1064,6 +1064,51 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 .admin-context strong {
   color: #f5c451;
 }
+
+  /* ============================= */
+/* V3 – Timeline & Button States */
+/* ============================= */
+
+/* Buttons */
+.btn.locked,
+.btn.disabled {
+  background: #2a2a2a;
+  color: #777;
+  cursor: not-allowed;
+}
+
+/* Timeline Container */
+.card-timeline {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Timeline Step */
+.timeline-step {
+  flex: 1;
+  text-align: center;
+  padding: 6px 4px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: #666;
+  border: 1px solid #2a2a2a;
+}
+
+/* Aktueller Schritt */
+.timeline-step.active {
+  background: #2b2414;
+  border-color: #c8aa6e;
+  color: #e6d3a3;
+}
+
+/* Abgeschlossen */
+.timeline-step.done {
+  background: #141414;
+  border-color: #3a3a3a;
+  color: #999;
+}
   
 </style>
 </head>
