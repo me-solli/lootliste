@@ -1490,13 +1490,13 @@ function getTimelineIndex(status) {
   return i === -1 ? null : i;
 }
 
-  function renderStars(rating = 0) {
+function renderStars(rating = 0) {
   const full = Math.floor(rating);
   const empty = 5 - full;
 
   return `
-    ${"★".repeat(full)}
-    ${"☆".repeat(empty)}
+    <span class="stars-filled">${"★".repeat(full)}</span>
+    <span class="stars-empty">${"☆".repeat(empty)}</span>
   `;
 }
   
