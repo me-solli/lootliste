@@ -8,7 +8,7 @@ import {
   ITEM_STATUS,
   isNeedOpen,
   isNeedFull
-} from './core/core.js';
+} from '/lootliste/core/core.js';
 
 // --------------------------------------------------
 // Render Entry
