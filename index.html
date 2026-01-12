@@ -1239,6 +1239,27 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   </div>
 </div>
 
+<!-- ===== AUTH MODAL (UI ONLY / STUB) ===== -->
+<div id="authModal" style="display:none">
+  <div class="backdrop"></div>
+
+  <div class="modal auth-modal">
+    <strong id="authTitle">Login erforderlich</strong>
+
+    <input id="authUser" placeholder="Benutzername">
+    <input id="authPass" type="password" placeholder="Passwort">
+
+    <div class="modal-actions">
+      <button id="authLogin">Login (Demo)</button>
+      <button id="authCancel">Abbrechen</button>
+    </div>
+
+    <div style="font-size:11px;opacity:.65">
+      ⓘ Demo-Modus – echtes Login folgt
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { openNeed, requireAuth } from "./core/core.js";
 
