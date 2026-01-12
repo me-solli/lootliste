@@ -1654,7 +1654,7 @@ cards.innerHTML += `
 
       ${(() => {
         const labels = ["Gespendet", "Bedarf", "Würfeln", "Reserviert", "Vergeben"];
-        const activeIndex = getTimelineIndex(techStatus);
+ const activeIndex = ui.timelineIndex;
 
         return labels.map((label, idx) => {
           let cls = "item-timeline-step";
