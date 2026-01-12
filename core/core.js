@@ -142,7 +142,6 @@ function random1to100() {
 // AUTH GATE (V3 – UI-agnostic)
 // --------------------------------------------------
 // UI must call requireAuth(() => action())
-// openAuthModal is provided later by UI layer
 
 export async function requireAuth(action) {
   const token = localStorage.getItem('auth_token');
@@ -353,6 +352,27 @@ export function updateItemStatus(item, ts = now()) {
 }
 
 // --------------------------------------------------
+// Bedarf-Limit Helpers (V3)
+// --------------------------------------------------
+export function countOpenNeeds(items, userId) {
+  return items.filter(item => {
+    if (!Array.isArray(item.needs)) return false;
+
+    const hasNeed = item.needs.some(n => n.userId === userId);
+    if (!hasNeed) return false;
+
+    if (item.status === ITEM_STATUS.NEED_OPEN) return true;
+    if (item.status === ITEM_STATUS.ROLLING) return true;
+
+    if (item.status === ITEM_STATUS.RESERVED && item.winner === userId) {
+      return true;
+    }
+
+    return false;
+  }).length;
+}
+
+// --------------------------------------------------
 // Actions / Events (UI must call only these)
 // --------------------------------------------------
 export function openNeed(item, durationMs) {
@@ -363,11 +383,14 @@ export function openNeed(item, durationMs) {
   return item;
 }
 
-export function addNeed(item, userId) {
+export function addNeed(item, userId, allItems = []) {
   if (!canPerformAction(item, ITEM_ACTIONS.ADD_NEED)) return item;
 
   const exists = item.needs.some(n => n.userId === userId);
   assert(!exists, 'ALREADY_REQUESTED');
+
+  const openCount = countOpenNeeds(allItems, userId);
+  assert(openCount < 3, 'NEED_LIMIT_REACHED');
 
   item.needs.push({ userId, at: now() });
   return item;
