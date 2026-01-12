@@ -400,5 +400,5 @@ export function abort(item) {
   if (!canPerformAction(item, ITEM_ACTIONS.ABORT)) return item;
 
   transitionItem(item, 'abort');
-  return it
+  return item;
 }
