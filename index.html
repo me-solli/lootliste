@@ -1723,17 +1723,17 @@ cards.innerHTML += `
       })()}
     </div>
 
-    ${
-      canShowRequestButton(item)
-        ? `<button class="request-btn" data-item="${item.name}">
-             📩 Bedarf anmelden
-           </button>`
-        : hasRequested(item.name)
-          ? `<button class="request-btn disabled" disabled>
-               Bedarf angemeldet ✓
-             </button>`
-          : ``
-    }
+${
+  ui.canRequest && !hasRequested(item.name)
+    ? `<button class="request-btn" data-item="${item.name}">
+         📩 Bedarf anmelden
+       </button>`
+    : hasRequested(item.name)
+      ? `<button class="request-btn disabled" disabled>
+           Bedarf angemeldet ✓
+         </button>`
+      : ``
+}
 
   </div>
 </div>
