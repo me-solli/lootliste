@@ -61,10 +61,9 @@ export async function runSimulation() {
   log('after_need_timeout', item);
 
   // 5) Start confirmation
-  if (item.status === ITEM_STATUS.RESERVED) {
-    startConfirmation(item);
-    log('confirm_pending', item);
-  }
+if (item.status === ITEM_STATUS.RESERVED) {
+  log('confirm_pending', item);
+}
 
   // 6) Both sides confirm
   confirm(item, 'giver');
