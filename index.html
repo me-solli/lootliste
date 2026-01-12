@@ -1471,6 +1471,20 @@ status: getSimStatus(
 
   return true;
 }
+
+// ===== D2 TIMELINE MAPPING (UI ONLY) =====
+const TIMELINE_ORDER = [
+  "Verfügbar",
+  "need_open",
+  "rolling",
+  "reserved",
+  "Vergeben"
+];
+
+function getTimelineIndex(status) {
+  const i = TIMELINE_ORDER.indexOf(status);
+  return i === -1 ? null : i;
+}
   
 function render() {
   cards.innerHTML = "";
