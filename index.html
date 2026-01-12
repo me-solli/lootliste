@@ -1569,7 +1569,9 @@ cards.innerHTML += `
     <div class="card-content">
 
       <div class="item-main">
-        <img class="item-image" src="${item.image}" alt="${item.name}">
+        <img class="item-image"
+     src="img/icons/${item.weaponType || item.type || 'sonstiges'}.png"
+     alt="${item.name}">
       </div>
 
       <div class="item-info">
