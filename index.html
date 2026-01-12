@@ -1528,105 +1528,80 @@ const weg = items.filter(i => i.status === "Vergeben").length;
 document.getElementById("metaStats").textContent =
   `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
-  filtered.forEach(item => {
-const currentStatus = item.status;
+filtered.forEach(item => {
 
-const s =
-  currentStatus === "Reserviert" ? "reserved" :
-  currentStatus === "Vergeben" ? "vergeben" :
-  "verfuegbar";
+  // ===== STATUS-TRENNUNG (FINAL) =====
+  const techStatus =
+    item.status === "need_open" ? "need_open" :
+    item.status === "rolling"   ? "rolling" :
+    item.status === "reserved"  ? "reserved" :
+    item.status === "Vergeben"  ? "vergeben" :
+    "verfuegbar";
 
+  const uiStatus =
+    techStatus === "need_open" ? "Bedarf" :
+    techStatus === "rolling"   ? "Würfeln" :
+    techStatus === "reserved"  ? "Reserviert" :
+    techStatus === "vergeben"  ? "Vergeben" :
+    "Verfügbar";
+
+  // ===== CARD RENDER =====
   cards.innerHTML += `
-<div class="card ${s}" data-item="${item.name}">
-      <span class="status-badge ${s}">${currentStatus}</span>
+    <div class="card ${techStatus}">
+      <span class="status-badge ${techStatus}">${uiStatus}</span>
 
-      <div class="card-image"
-        ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
-        <img src="img/icons/${
-          item.type === "waffe" && item.weaponType
-            ? (WEAPON_ICONS[item.weaponType] || "waffe")
-            : (ICONS[item.type] || "default")
-        }.png">
+      <!-- ITEM CONTENT -->
+
+      <div class="item-timeline" data-status="${techStatus}">
+        <div class="timeline-line"></div>
+
+        ${(() => {
+          const labels = ["Gespendet", "Bedarf", "Würfeln", "Reserviert", "Vergeben"];
+          const activeIndex = getTimelineIndex(techStatus);
+
+          return labels.map((label, idx) => {
+            let cls = "item-timeline-step";
+
+            if (activeIndex === null) {
+              cls += " is-done";
+            } else if (idx < activeIndex) {
+              cls += " is-done";
+            } else if (idx === activeIndex) {
+              cls += " is-active";
+            }
+
+            return `
+              <div class="${cls}">
+                <img src="img/timeline/${
+                  idx === labels.length - 1
+                    ? "step-final.png"
+                    : "step-active.png"
+                }" alt="">
+                <span>${label}</span>
+              </div>
+            `;
+          }).join("");
+        })()}
       </div>
 
-      <div class="card-body">
-      
-<div class="item-name ${item.quality || ""}">
-  ${item.name}
-</div>
-
-<div class="item-sub">
-  ${
-    item.type === "waffe"
-      ? `Waffe · ${item.weaponType}`
-      : (TYPE_LABELS[item.type] || "")
-  }
-</div>
-
-${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
-
-<div class="stars">
-  <span class="stars-filled">${"★".repeat(item.rating)}</span>
-  <span class="stars-empty">${"☆".repeat(5 - item.rating)}</span>
-  <span class="stars-sep">|</span>
-  <span class="stars-num">${item.rating}/5</span>
-</div>
-
-        <div class="player">
-          Spieler: ${item.contact || "-"}
-        </div>
-
-<div class="item-timeline" data-status="${s}">
-  <div class="timeline-line"></div>
-
-  ${(() => {
-    const labels = ["Gespendet", "Bedarf", "Würfeln", "Reserviert", "Vergeben"];
-    const activeIndex = getTimelineIndex(s);
-
-    return labels.map((label, idx) => {
-      let cls = "item-timeline-step";
-
-      if (activeIndex === null) {
-        cls += " is-done";
-      } else if (idx < activeIndex) {
-        cls += " is-done";
-      } else if (idx === activeIndex) {
-        cls += " is-active";
+      ${
+        getTimelineIndex(techStatus) === null
+          ? `<div class="item-status-text">Kein weiterer Schritt geplant</div>`
+          : ``
       }
 
-      return `
-        <div class="${cls}">
-          <img src="img/timeline/${
-            idx === labels.length - 1
-              ? "step-final.png"
-              : "step-active.png"
-          }" alt="">
-          <span>${label}</span>
-        </div>
-      `;
-    }).join("");
-  })()}
-</div>
+      ${
+        canShowRequestButton(item)
+          ? `<button class="request-btn" data-item="${item.name}">
+               📩 Bedarf anmelden
+             </button>`
+          : hasRequested(item.name)
+            ? `<button class="request-btn disabled" disabled>
+                 Bedarf angemeldet
+               </button>`
+            : ``
+      }
 
-${
-  getTimelineIndex(s) === null
-    ? `<div class="item-status-text">Kein weiterer Schritt geplant</div>`
-    : ``
-}
-
-${
-  canShowRequestButton(item)
-    ? `<button class="request-btn" data-item="${item.name}">
-         📩 Bedarf anmelden
-       </button>`
-    : hasRequested(item.name)
-      ? `<button class="request-btn disabled" disabled>
-           Bedarf angemeldet
-         </button>`
-      : ``
-}
-
-      </div>
     </div>
   `;
 });
