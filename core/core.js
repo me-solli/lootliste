@@ -10,7 +10,6 @@ export const ITEM_STATUS = Object.freeze({
   AVAILABLE: 'available',      // inkl. Bedarf-Phase
   RESERVED: 'reserved',        // Gewinner festgelegt
   COMPLETED: 'completed',      // beidseitig bestätigt (terminal)
-  EXPIRED: 'expired',          // verfallen (terminal)
   ABORTED: 'aborted'           // abgebrochen (terminal)
 });
 
@@ -39,7 +38,6 @@ const STATE_ACTION_MAP = Object.freeze({
   ],
 
   [ITEM_STATUS.COMPLETED]: [],
-  [ITEM_STATUS.EXPIRED]: [],
   [ITEM_STATUS.ABORTED]: []
 });
 
@@ -95,11 +93,16 @@ export function createItem({ name, type, donatedBy }) {
 }
 
 // --------------------------------------------------
-// Bedarf-Helper
+// Bedarf-Helper (UI & Timeline Source)
 // --------------------------------------------------
 export function isNeedOpen(item) {
   return item.status === ITEM_STATUS.AVAILABLE
       && item.needs.length < NEED_LIMIT;
+}
+
+export function isNeedFull(item) {
+  return item.status === ITEM_STATUS.AVAILABLE
+      && item.needs.length >= NEED_LIMIT;
 }
 
 export function countOpenNeeds(items, userId) {
