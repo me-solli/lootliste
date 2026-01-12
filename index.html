@@ -1559,81 +1559,73 @@ filtered.forEach(item => {
 cards.innerHTML += `
 <div class="card ${techStatus}" data-item="${item.name}">
 
-  <div class="card-header">
+  <!-- IMAGE -->
+  <div class="card-image"
+       ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
+    <img src="img/icons/${item.type || "sonstiges"}.png" alt="${item.name}">
+  </div>
+
+  <!-- BODY -->
+  <div class="card-body">
+
     <h3 class="item-name">${item.name}</h3>
+    <div class="item-sub">${item.type}</div>
+
+    ${item.roll ? `<div class="item-stats">${item.roll}</div>` : ""}
+
+    <div class="stars">
+      ${renderStars(item.rating)}
+      <span class="stars-num">${item.rating}/5</span>
+    </div>
+
+    <div class="player">Spieler: ${item.contact || "–"}</div>
+
     <span class="status-badge ${techStatus}">${uiStatus}</span>
-  </div>
 
-  <div class="card-content">
+    <!-- TIMELINE -->
+    <div class="item-timeline" data-status="${techStatus}">
+      <div class="timeline-line"></div>
 
-    <div class="item-main">
-      <img
-        class="item-image"
-        src="img/icons/${item.weaponType || item.type || 'sonstiges'}.png"
-        alt="${item.name}">
+      ${(() => {
+        const labels = ["Gespendet", "Bedarf", "Würfeln", "Reserviert", "Vergeben"];
+        const activeIndex = getTimelineIndex(techStatus);
+
+        return labels.map((label, idx) => {
+          let cls = "item-timeline-step";
+
+          if (activeIndex === null || idx < activeIndex) {
+            cls += " is-done";
+          } else if (idx === activeIndex) {
+            cls += " is-active";
+          }
+
+          return `
+            <div class="${cls}">
+              <img src="img/timeline/${
+                idx === labels.length - 1
+                  ? "step-final.png"
+                  : "step-active.png"
+              }">
+              <span>${label}</span>
+            </div>
+          `;
+        }).join("");
+      })()}
     </div>
 
-    <div class="item-info">
-      <div class="item-type">${item.type}</div>
-
-      <div class="item-stats">
-        ${item.roll || ""}
-      </div>
-
-      <div class="item-rating">
-        ${renderStars(item.rating)}
-        <span class="rating-text">${item.rating}/5</span>
-      </div>
-
-      <div class="item-owner">
-        Spieler: ${item.contact || "–"}
-      </div>
-    </div>
-
-  </div>
-
-  <div class="item-timeline" data-status="${techStatus}">
-    <div class="timeline-line"></div>
-
-    ${(() => {
-      const labels = ["Gespendet", "Bedarf", "Würfeln", "Reserviert", "Vergeben"];
-      const activeIndex = getTimelineIndex(techStatus);
-
-      return labels.map((label, idx) => {
-        let cls = "item-timeline-step";
-
-        if (activeIndex === null || idx < activeIndex) {
-          cls += " is-done";
-        } else if (idx === activeIndex) {
-          cls += " is-active";
-        }
-
-        return `
-          <div class="${cls}">
-            <img src="img/timeline/${
-              idx === labels.length - 1
-                ? "step-final.png"
-                : "step-active.png"
-            }">
-            <span>${label}</span>
-          </div>
-        `;
-      }).join("");
-    })()}
-  </div>
-
-  ${
-    canShowRequestButton(item)
-      ? `<button class="request-btn" data-item="${item.name}">
-           📩 Bedarf anmelden
-         </button>`
-      : hasRequested(item.name)
-        ? `<button class="request-btn disabled" disabled>
-             Bedarf angemeldet
+    ${
+      canShowRequestButton(item)
+        ? `<button class="request-btn" data-item="${item.name}">
+             📩 Bedarf anmelden
            </button>`
-        : ``
-  }
+        : hasRequested(item.name)
+          ? `<button class="request-btn disabled" disabled>
+               Bedarf angemeldet
+             </button>`
+          : ``
+    }
 
+  </div>
 </div>
 `;
   
