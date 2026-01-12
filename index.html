@@ -1557,7 +1557,7 @@ filtered.forEach(item => {
 
 // ===== CARD RENDER =====
 cards.innerHTML += `
-<div class="card ${techStatus}" data-item="${item.name}">
+  <div class="card ${techStatus}" data-item="${item.name}">
 
     <!-- HEADER -->
     <div class="card-header">
@@ -1569,14 +1569,19 @@ cards.innerHTML += `
     <div class="card-content">
 
       <div class="item-main">
-        <img class="item-image"
-     src="img/icons/${item.weaponType || item.type || 'sonstiges'}.png"
-     alt="${item.name}">
+        <img
+          class="item-image"
+          src="img/icons/${item.weaponType || item.type || 'sonstiges'}.png"
+          alt="${item.name}"
+        >
       </div>
 
       <div class="item-info">
         <div class="item-type">${item.type}</div>
-<div class="item-stats">${item.roll || ""}</div>
+
+        <div class="item-stats">
+          ${item.roll || ""}
+        </div>
 
         <div class="item-rating">
           ${renderStars(item.rating)}
@@ -1584,7 +1589,7 @@ cards.innerHTML += `
         </div>
 
         <div class="item-owner">
-  Spieler: ${item.contact || "–"}
+          Spieler: ${item.contact || "–"}
         </div>
       </div>
 
@@ -1629,7 +1634,7 @@ cards.innerHTML += `
         : ``
     }
 
-    <!-- BUTTONS -->
+    <!-- ACTIONS -->
     <div class="card-actions">
       ${
         canShowRequestButton(item)
