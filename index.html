@@ -1565,6 +1565,7 @@ document.getElementById("metaStats").textContent =
   `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
 filtered.forEach(item => {
+  const ui = getUIState(item);
 
 // ===== UI STATE (READ ONLY FROM CORE) =====
 function getUIState(item) {
