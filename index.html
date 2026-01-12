@@ -1576,66 +1576,44 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
           Spieler: ${item.contact || "-"}
         </div>
 
-<!-- ===== ITEM TIMELINE (UI ONLY) ===== -->
-<div class="item-timeline">
+<!-- ===== ITEM TIMELINE (D2 FINAL) ===== -->
+<div class="item-timeline" data-status="${currentStatus}">
   <div class="timeline-line"></div>
 
-  <!-- Gespendet -->
-  <div class="item-timeline-step ${
-    currentStatus === "Verfügbar"
-      ? "is-active"
-      : "is-done"
-  }">
-    <img src="img/timeline/step-active.png" alt="">
-    <span>Gespendet</span>
-  </div>
+  ${(() => {
+    const labels = ["Gespendet", "Bedarf", "Würfeln", "Reserviert", "Vergeben"];
+    const activeIndex = getTimelineIndex(currentStatus);
 
-  <!-- Bedarf -->
-  <div class="item-timeline-step ${
-    currentStatus === "need_open"
-      ? "is-active"
-      : currentStatus === "rolling"
-        ? "is-done"
-        : ""
-  }">
-    <img src="img/timeline/${
-      currentStatus === "need_open" || currentStatus === "rolling"
-        ? "step-active.png"
-        : "step-inactive.png"
-    }" alt="">
-    <span>Bedarf</span>
-  </div>
+    return labels.map((label, idx) => {
+      let cls = "item-timeline-step";
 
-  <!-- Würfeln -->
-  <div class="item-timeline-step ${
-    currentStatus === "rolling" ? "is-active" : ""
-  }">
-    <img src="img/timeline/${
-      currentStatus === "rolling"
-        ? "step-active.png"
-        : "step-inactive.png"
-    }" alt="">
-    <span>Würfeln</span>
-  </div>
+      if (activeIndex === null) {
+        cls += " is-done";
+      } else if (idx < activeIndex) {
+        cls += " is-done";
+      } else if (idx === activeIndex) {
+        cls += " is-active";
+      }
 
-<!-- Reserviert -->
-<div class="item-timeline-step ${
-  currentStatus === "reserved" ? "is-active" : ""
-}">
-  <img src="img/timeline/${
-    currentStatus === "reserved"
-      ? "step-active.png"
-      : "step-inactive.png"
-  }" alt="">
-  <span>Reserviert</span>
+      return `
+        <div class="${cls}">
+          <img src="img/timeline/${
+            idx === labels.length - 1
+              ? "step-final.png"
+              : "step-active.png"
+          }" alt="">
+          <span>${label}</span>
+        </div>
+      `;
+    }).join("");
+  })()}
 </div>
 
-  <!-- Vergeben (future / final) -->
-  <div class="item-timeline-step">
-    <img src="img/timeline/step-final.png" alt="">
-    <span>Vergeben</span>
-  </div>
-</div>
+${
+  getTimelineIndex(currentStatus) === null
+    ? `<div class="item-status-text">Kein weiterer Schritt geplant</div>`
+    : ``
+}
 
 ${
   canShowRequestButton(item)
