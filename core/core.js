@@ -1,4 +1,4 @@
-// core.js — V3 Core Logic (GUARDED & STABLE)
+// core/core.js — V3 Core Logic (GUARDED & STABLE)
 // ======================================
 // Single Source of Truth for item states, transitions and guards.
 // NO UI, NO DOM access. UI must only call these functions.
@@ -136,6 +136,22 @@ function uuid() {
 
 function random1to100() {
   return Math.floor(Math.random() * 100) + 1;
+}
+
+// --------------------------------------------------
+// AUTH GATE (V3 – UI-agnostic)
+// --------------------------------------------------
+// UI must call requireAuth(() => action())
+// openAuthModal is provided later by UI layer
+
+export async function requireAuth(action) {
+  const token = localStorage.getItem('auth_token');
+
+  if (!token) {
+    throw new Error('AUTH_REQUIRED');
+  }
+
+  return await action();
 }
 
 // --------------------------------------------------
