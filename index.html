@@ -1693,15 +1693,24 @@ if(localStorage.getItem(D)!==today){
 visitorCounter.innerHTML =
   '&#128065; Besucher gesamt: <b>' + localStorage.getItem(K) + '</b>';
   
-/* ===== REQUEST BUTTON CLICK (DELEGATION) ===== */
+/* ===== REQUEST BUTTON CLICK (CORE) ===== */
 cards.addEventListener("click", e => {
 
   const btn = e.target.closest(".request-btn");
-
-  // ===== ALTLOGIK: Anfrage-Modal =====
   if (!btn || btn.classList.contains("disabled")) return;
 
-  currentItem = btn.dataset.item;
+  const itemName = btn.dataset.item;
+  const item = items.find(i => i.name === itemName);
+  if (!item) return;
+
+  // 👉 Core entscheidet (24h Bedarf)
+  openNeed(item, 24 * 60 * 60 * 1000);
+
+  // UI aktualisieren
+  render();
+
+  // Modal wie bisher
+  currentItem = itemName;
   modalItem.textContent = currentItem;
   modal.style.display = "block";
 });
