@@ -3,7 +3,7 @@
 // Page wiring: Events + Render
 
 import { renderItemCard } from './card-render.js';
-import { addNeed } from '../core/core.js';
+import { addNeed } from '/lootliste/core/core.js';
 
 // --------------------------------------------------
 // State (vereinfachter Frontend-Store)
