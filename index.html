@@ -1756,15 +1756,25 @@ cards.addEventListener("click", e => {
   if (!item) return;
 
   // 👉 Core entscheidet (24h Bedarf)
+requireAuth(() => {
+
   openNeed(item, 24 * 60 * 60 * 1000);
 
-  // UI aktualisieren
   render();
 
-  // Modal wie bisher
   currentItem = itemName;
   modalItem.textContent = currentItem;
   modal.style.display = "block";
+
+}).catch(err => {
+
+  if (err.message === "AUTH_REQUIRED") {
+    alert("Bitte einloggen, um Bedarf anzumelden.");
+    // später: openAuthModal(item)
+  }
+
+});
+
 });
 
 /* ===== REQUEST FEED CLICK (HIGHLIGHT ITEM) ===== */
