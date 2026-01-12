@@ -7,7 +7,6 @@ import {
   createItem,
   openNeed,
   addNeed,
-  startConfirmation,
   confirm,
   ITEM_STATUS
 } from './core.js';
