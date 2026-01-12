@@ -1,117 +1,89 @@
-// index-ui.js — V3 UI Hook (CLEAN & ALIGNED)
-// ==========================================
-// Connects UI actions to V3 core logic.
-// No legacy V2 calls. No hidden state transitions.
+// ui/index-ui.js
+// =====================================
+// Page wiring: Events + Render
 
-import {
-  createItem,
-  openNeed,
-  addNeed,
-  confirm,
-  ITEM_STATUS
-} from '../core/core.js';
+import { renderItemCard } from './card-render.js';
+import { addNeed } from '../core.js';
 
-import { checkAllTimeouts } from '../core/timeouts.js';
-import { executeRoll } from '../core/rolls.js';
-
-// ------------------------------
-// TEMP: In-memory store (SIM / DEV MODE)
-// ------------------------------
-const store = {
-  items: []
+// --------------------------------------------------
+// State (vereinfachter Frontend-Store)
+// --------------------------------------------------
+let items = [];
+let auth = {
+  isLoggedIn: false,
+  userId: null
 };
 
-// ------------------------------
-// Helpers
-// ------------------------------
-function getCurrentUserId() {
-  // TODO: replace with real auth
-  return 'user_demo_1';
+const cardsEl = document.getElementById('cards');
+
+// --------------------------------------------------
+// Initial Render
+// --------------------------------------------------
+export function initUI(initialItems, initialAuth) {
+  items = initialItems;
+  auth = initialAuth;
+  render();
 }
 
-function getItemById(id) {
-  return store.items.find(i => i.id === id);
+function render() {
+  cardsEl.innerHTML = items
+    .map(item => renderItemCard(item, auth))
+    .join('');
 }
 
-// ------------------------------
-// Item submission
-// ------------------------------
-export function submitItem({ name, type }) {
-  const userId = getCurrentUserId();
+// --------------------------------------------------
+// Global Click Handling (Event Delegation)
+// --------------------------------------------------
+cardsEl.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
 
-  const item = createItem({
-    name,
-    type,
-    donatedBy: userId
-  });
+  const action = btn.dataset.action;
 
-  store.items.push(item);
-  return item;
-}
-
-// ------------------------------
-// Need registration (current user)
-// ------------------------------
-export function clickNeed(itemId, durationMs = 24 * 60 * 60 * 1000) {
-  const userId = getCurrentUserId();
-  const item = getItemById(itemId);
-
-  if (!item) throw new Error('ITEM_NOT_FOUND');
-
-  // first need opens phase
-  if (item.status === ITEM_STATUS.AVAILABLE) {
-    openNeed(item, durationMs);
+  // -------------------------------
+  // AUTH
+  // -------------------------------
+  if (action === 'auth') {
+    openAuthModal();
+    return;
   }
 
-  addNeed(item, userId);
-  return item;
+  // -------------------------------
+  // ADD NEED
+  // -------------------------------
+  if (action === 'need') {
+    const itemId = btn.dataset.item;
+    const item = items.find(i => i.id === itemId);
+    if (!item) return;
+
+    try {
+      addNeed(item, auth.userId, items);
+      render();
+    } catch (err) {
+      handleNeedError(err);
+    }
+  }
+});
+
+// --------------------------------------------------
+// Helpers
+// --------------------------------------------------
+function openAuthModal() {
+  document.dispatchEvent(new CustomEvent('auth:open'));
 }
 
-// ------------------------------
-// Roll trigger (manual / admin / test)
-// ------------------------------
-export function runRoll(itemId) {
-  const item = getItemById(itemId);
-  if (!item) throw new Error('ITEM_NOT_FOUND');
-
-  return executeRoll(item);
+function handleNeedError(err) {
+  switch (err.message) {
+    case 'USER_NEED_LIMIT':
+      alert('Du hast bereits zu viele offene Bedarfe.');
+      break;
+    case 'ALREADY_REQUESTED':
+      alert('Du hast hier bereits Bedarf angemeldet.');
+      break;
+    case 'NEED_CLOSED':
+      alert('Der Bedarf ist bereits abgeschlossen.');
+      break;
+    default:
+      console.error(err);
+  }
 }
-
-// ------------------------------
-// Start confirmation (after reserve)
-// ------------------------------
-export function startHandover(itemId) {
-  const item = getItemById(itemId);
-  if (!item) throw new Error('ITEM_NOT_FOUND');
-
-  startConfirmation(item);
-  return item;
-}
-
-// ------------------------------
-// Confirm handover
-// ------------------------------
-export function confirmHandover(itemId, role) {
-  const item = getItemById(itemId);
-  if (!item) throw new Error('ITEM_NOT_FOUND');
-
-  confirm(item, role);
-  return item;
-}
-
-// ------------------------------
-// Tick (manual or interval)
-// ------------------------------
-export function tick() {
-  checkAllTimeouts(store.items);
-}
-
-// ------------------------------
-// DEV / SIM MODE: expose helpers
-// ------------------------------
-window.submitItem = submitItem;
-window.clickNeed = clickNeed;
-window.runRoll = runRoll;
-window.startHandover = startHandover;
-window.confirmHandover = confirmHandover;
-window.tick = tick;
