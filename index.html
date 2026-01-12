@@ -1576,12 +1576,12 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
           Spieler: ${item.contact || "-"}
         </div>
 
-<div class="item-timeline" data-status="${currentStatus}">
+<div class="item-timeline" data-status="${s}">
   <div class="timeline-line"></div>
 
   ${(() => {
     const labels = ["Gespendet", "Bedarf", "Würfeln", "Reserviert", "Vergeben"];
-    const activeIndex = getTimelineIndex(currentStatus);
+    const activeIndex = getTimelineIndex(s);
 
     return labels.map((label, idx) => {
       let cls = "item-timeline-step";
