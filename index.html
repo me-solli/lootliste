@@ -1241,6 +1241,16 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 <script type="module">
 import { openNeed, requireAuth } from "./core/core.js";
+
+// ===== AUTH MODAL STUB (V3 PREP) =====
+let pendingAuthAction = null;
+
+function openAuthModal(action) {
+  pendingAuthAction = action;
+  alert("🔒 Login / Registrierung erforderlich (Stub)");
+  // später: echtes Auth-Modal öffnen
+}
+  
 const STATUS_MAP = {
   approved: "available",
   need_open: "need_open",
