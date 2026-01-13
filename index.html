@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lootliste V3</title>
 
-  <!-- Base Styles -->
+  <!-- Base Styles (korrekte Pfade) -->
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/cards.css" />
 
-  <!-- UI Controller -->
-<script type="module" src="ui/index-ui.js"></script>
+  <!-- UI Controller (korrekter Pfad) -->
+  <script type="module" src="ui/index-ui.js"></script>
 
-  <!-- Fallback -->
+  <!-- No-JS Fallback -->
   <noscript>
     <style>body{display:none}</style>
     <div style="padding:2rem;color:#ccc;background:#111;">
@@ -26,47 +26,35 @@
   <!-- ===== HEADER ===== -->
   <header class="app-header">
     <div class="header-left">
-      <img src="img/logo.png" alt="Lootliste" class="logo" />
+      <!-- vorhandenes Logo im Repo -->
+      <img src="img/logo_d2r.png" alt="Lootliste" class="logo" />
     </div>
 
     <div class="header-right">
-      <!-- Auth Placeholder (V3) -->
       <button class="btn ghost" id="loginBtn">Login</button>
       <button class="btn primary" id="registerBtn">Registrieren</button>
     </div>
   </header>
 
-
   <!-- ===== HERO / STATS ===== -->
-  <section id="heroStats" class="hero-stats">
-    <!-- Rendered by index-ui.js -->
-  </section>
-
+  <section id="heroStats" class="hero-stats"></section>
 
   <!-- ===== CATEGORY BAR ===== -->
-  <nav id="categoryBar" class="category-bar">
-    <!-- Rendered by index-ui.js -->
-  </nav>
-
+  <nav id="categoryBar" class="category-bar"></nav>
 
   <!-- ===== MAIN CONTENT ===== -->
   <main class="main-content">
 
-    <!-- CARDS -->
-    <section id="cards" class="card-grid">
-      <!-- Item cards rendered by index-ui.js / card-render.js -->
-    </section>
+    <!-- ITEM CARDS -->
+    <section id="cards" class="card-grid"></section>
 
     <!-- REQUEST FEED -->
     <aside class="request-feed">
       <h2>Letzte Anfragen</h2>
-      <div id="requestFeed">
-        <!-- Rendered by index-ui.js -->
-      </div>
+      <div id="requestFeed"></div>
     </aside>
 
   </main>
-
 
   <!-- ===== FOOTER ===== -->
   <footer class="app-footer">
