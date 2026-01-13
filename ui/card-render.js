@@ -9,7 +9,7 @@ import {
   NEED_LIMIT,
   ITEM_STATUS,
   isNeedOpen
-} from '/lootliste/core/core.js';
+} from '../core/core.js';
 
 // --------------------------------------------------
 // UI Mappings (Core → Anzeige)
@@ -17,13 +17,15 @@ import {
 const STATUS_LABELS = {
   [ITEM_STATUS.AVAILABLE]: 'Verfügbar',
   [ITEM_STATUS.RESERVED]: 'Reserviert',
-  [ITEM_STATUS.COMPLETED]: 'Vergeben'
+  [ITEM_STATUS.COMPLETED]: 'Vergeben',
+  [ITEM_STATUS.ABORTED]: 'Abgebrochen'
 };
 
 const STATUS_CLASSES = {
   [ITEM_STATUS.AVAILABLE]: 'verfuegbar',
   [ITEM_STATUS.RESERVED]: 'reserviert',
-  [ITEM_STATUS.COMPLETED]: 'vergeben'
+  [ITEM_STATUS.COMPLETED]: 'vergeben',
+  [ITEM_STATUS.ABORTED]: 'vergeben' // neutral/dunkel
 };
 
 // --------------------------------------------------
@@ -62,24 +64,20 @@ export function renderItemCard(item, auth) {
 // Bedarf Button (Status → Auth → Core)
 // --------------------------------------------------
 function renderNeedButton(item, auth) {
-  // Status blockiert immer
   if (item.status !== ITEM_STATUS.AVAILABLE) {
     return `<button class="btn disabled" disabled>Bedarf nicht möglich</button>`;
   }
 
-  // Bedarf-Phase geschlossen
   if (!isNeedOpen(item)) {
     return `<button class="btn locked" disabled>Bedarf abgeschlossen</button>`;
   }
 
-  // Nicht eingeloggt
   if (!auth || auth.isLoggedIn !== true) {
     return `<button class="btn primary" data-action="auth">
       Login für Bedarf
     </button>`;
   }
 
-  // Eingeloggt → Bedarf anmelden
   return `<button
     class="btn primary"
     data-action="need"
@@ -105,7 +103,10 @@ function renderTimeline(item) {
     step2 = 'active';
   }
 
-  if (item.status === ITEM_STATUS.COMPLETED) {
+  if (
+    item.status === ITEM_STATUS.COMPLETED ||
+    item.status === ITEM_STATUS.ABORTED
+  ) {
     step1 = 'done';
     step2 = 'done';
     step3 = 'active';
