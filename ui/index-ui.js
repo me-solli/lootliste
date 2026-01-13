@@ -3,6 +3,7 @@
 // Public Index UI – V3 (FINAL)
 // - Direkte Button-Events (robust)
 // - CORS-Fallback (Dummy Items)
+// - Hero-Stats angebunden
 // - Core = Single Source of Truth
 // =====================================
 
@@ -30,6 +31,7 @@ function render() {
     .map(item => renderItemCard(item, auth))
     .join('');
 
+  renderHeroStats(items);
   bindButtons();
 }
 
@@ -54,6 +56,36 @@ function bindButtons() {
   cardsEl.querySelectorAll('button[data-action="auth"]').forEach(btn => {
     btn.onclick = () => alert('Login folgt in Phase: Accounts');
   });
+}
+
+// --------------------------------------------------
+// Hero Stats (sichtbares Leben im Header)
+// --------------------------------------------------
+function renderHeroStats(items) {
+  const el = document.getElementById('heroStats');
+  if (!el) return;
+
+  const total = items.length;
+  const available = items.filter(i => i.status === 'available').length;
+  const needsTotal = items.reduce(
+    (sum, i) => sum + (Array.isArray(i.needs) ? i.needs.length : 0),
+    0
+  );
+
+  el.innerHTML = `
+    <div class="hero-stat">
+      <strong>${total}</strong>
+      <span>Items gesamt</span>
+    </div>
+    <div class="hero-stat">
+      <strong>${available}</strong>
+      <span>Verfügbar</span>
+    </div>
+    <div class="hero-stat">
+      <strong>${needsTotal}</strong>
+      <span>Bedarfe</span>
+    </div>
+  `;
 }
 
 // --------------------------------------------------
