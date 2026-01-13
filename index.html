@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lootliste V3</title>
 
-  <!-- Base Styles (korrekte Pfade) -->
+  <!-- Styles -->
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/cards.css" />
 
-  <!-- UI Controller (korrekter Pfad) -->
+  <!-- UI Controller -->
   <script type="module" src="ui/index-ui.js"></script>
 
-  <!-- No-JS Fallback -->
   <noscript>
     <style>body{display:none}</style>
     <div style="padding:2rem;color:#ccc;background:#111;">
@@ -26,18 +25,30 @@
   <!-- ===== HEADER ===== -->
   <header class="app-header">
     <div class="header-left">
-      <!-- vorhandenes Logo im Repo -->
       <img src="img/logo_d2r.png" alt="Lootliste" class="logo" />
     </div>
-
     <div class="header-right">
       <button class="btn ghost" id="loginBtn">Login</button>
       <button class="btn primary" id="registerBtn">Registrieren</button>
     </div>
   </header>
 
-  <!-- ===== HERO / STATS ===== -->
-  <section id="heroStats" class="hero-stats"></section>
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <img src="img/banner_diablo.png" alt="Diablo Banner" class="hero-bg" />
+
+    <div class="hero-overlay">
+      <h1>D2R · Lootliste</h1>
+      <p class="subtitle">Community Lootliste · Diablo II Resurrected</p>
+      <p class="mode">
+        Aktueller Modus: <strong>NON-LADDER</strong>
+        <span class="muted">· Ladder in Vorbereitung</span>
+      </p>
+
+      <!-- Stats werden von index-ui.js gerendert -->
+      <div id="heroStats" class="hero-stats"></div>
+    </div>
+  </section>
 
   <!-- ===== CATEGORY BAR ===== -->
   <nav id="categoryBar" class="category-bar"></nav>
