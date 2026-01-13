@@ -32,6 +32,7 @@ function render() {
     .join('');
 
   renderHeroStats(items);
+  renderRequestFeed(items);
   bindButtons();
 }
 
@@ -86,6 +87,38 @@ function renderHeroStats(items) {
       <span>Bedarfe</span>
     </div>
   `;
+}
+
+// --------------------------------------------------
+// Letzte Anfragen (Request Feed)
+// --------------------------------------------------
+function renderRequestFeed(items) {
+  const feed = document.getElementById('requestFeed');
+  if (!feed) return;
+
+  // Sammle letzte Needs (max 5)
+  const entries = items
+    .flatMap(item =>
+      (Array.isArray(item.needs) ? item.needs : []).map(n => ({
+        itemName: item.name,
+        userId: n.userId,
+        at: n.at || Date.now()
+      }))
+    )
+    .sort((a, b) => b.at - a.at)
+    .slice(0, 5);
+
+  if (entries.length === 0) {
+    feed.innerHTML = '<div class="empty">Noch keine Anfragen</div>';
+    return;
+  }
+
+  feed.innerHTML = entries.map(e => `
+    <div class="feed-item">
+      <span class="item">${e.itemName}</span>
+      <span class="user">${e.userId}</span>
+    </div>
+  `).join('');
 }
 
 // --------------------------------------------------
