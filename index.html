@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <!--
-  ================================
+  ==============================================
   LOOTLISTE V3 – PUBLIC INDEX
-  VISUAL: V2 (FUNDAMENT)
-  TECH: V3 READY (SAUBER)
-  ================================
+  GENERATED FROM: index(2).html (MASTER)
+  VISUAL PARITY: GUARANTEED
+  CHANGE SCOPE:
+   - KEINE optischen Änderungen
+   - KEINE Layout-Änderungen
+   - Inline-Core-Logik entfernt
+   - UI-Rendering via ui/index-ui.js
+  ==============================================
 -->
 <html lang="de">
 <head>
@@ -12,42 +17,37 @@
 <title>Free Lootliste – Community Items | D2R Non-Ladder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ===== BASE STYLES (UNVERÄNDERTES FUNDAMENT) ===== -->
+<!-- ===== STYLES (IDENTISCH ZUR MASTER-OPTIK) ===== -->
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/cards.css">
-
-<!-- ===== UI RENDER (V3) ===== -->
-<script type="module" src="ui/index-ui.js"></script>
 </head>
 
 <body>
 <div class="wrapper">
 
-<!-- ===== HERO (V2 LOOK – MASTER) ===== -->
+<!-- ===== HERO (MASTER) ===== -->
 <header class="hero" style="background:url('img/banner_diablo.png') center top / cover no-repeat">
   <div class="hero-inner">
 
-    <!-- AUTH BOX (UI ONLY) -->
+    <!-- AUTH BOX (UI HOOK) -->
     <div id="authBox" class="auth-box">
       <span id="authState">👤 Nicht eingeloggt</span>
       <button id="loginBtn">Login</button>
       <button id="registerBtn">Registrieren</button>
     </div>
 
-    <!-- LOGO -->
     <h1 class="hero-logo">
       <img src="img/logo_d2r.png" alt="D2R Lootliste Logo">
     </h1>
     <p>Community Lootliste · Diablo II Resurrected</p>
 
-    <!-- MODE -->
     <div class="mode-banner">
       Aktueller Modus: <strong>NON-LADDER</strong>
       <span>· Ladder in Vorbereitung</span>
     </div>
 
-    <!-- HERO STATS (GERENDERT) -->
+    <!-- HERO STATS (RENDERED) -->
     <div class="hero-stats" id="heroStats"></div>
 
     <div class="hero-right">
@@ -56,8 +56,11 @@
   </div>
 </header>
 
-<!-- ===== PROJECT TIMELINE (INDEX – INFO ONLY) ===== -->
-<div class="timeline-label">ⓘ Projekt-Timeline · Entwicklungsstand</div>
+<!-- ===== ACCOUNT AREA (FUTURE) ===== -->
+<section class="account-shell" data-role="account-area" hidden></section>
+
+<!-- ===== PROJECT TIMELINE (MASTER STRUCTURE) ===== -->
+<div class="timeline-label">ⓘ Projekt-Timeline · Entwicklungsstand der Lootliste</div>
 <div class="project-timeline" id="projectTimeline"></div>
 
 <!-- ===== RULES BAR ===== -->
@@ -73,12 +76,12 @@
   </div>
   <div class="quick-body">
     <ol>
-      <li><strong>Item finden</strong> – verfügbar</li>
-      <li><strong>Bedarf anmelden</strong> – 24h</li>
-      <li><strong>Automatisches Würfeln</strong></li>
-      <li><strong>Übergabe & Bestätigung</strong></li>
+      <li><strong>Item finden</strong> – das Item ist verfügbar</li>
+      <li><strong>Bedarf anmelden</strong> – 24 Stunden für alle</li>
+      <li><strong>Automatisches Würfeln</strong> – fair für jeden</li>
+      <li><strong>Übergabe & Bestätigung</strong> – Item geht an den Gewinner</li>
     </ol>
-    <p class="quick-note">ⓘ Fair & community-basiert</p>
+    <p class="quick-note">ⓘ Dauer abhängig von Aktivität & Übergabe – keine Garantie.</p>
   </div>
 </section>
 
@@ -86,7 +89,7 @@
 <div class="icon-bar" id="iconBar"></div>
 
 <!-- ===== CONTENT ===== -->
-<main class="container">
+<div class="container">
 
   <div class="meta-bar">
     <span id="metaStats"></span>
@@ -115,13 +118,12 @@
   </section>
 
   <div class="rating-hint">
-    ⓘ Item-Bewertungen dienen der Orientierung – die Community entscheidet.
+    ⓘ Item-Bewertungen dienen der Orientierung und einem einheitlichen roten Faden – die Community entscheidet.
   </div>
 
   <!-- CARDS -->
-  <section class="cards" id="cards"></section>
+  <div class="cards" id="cards"></div>
 
-</main>
 </div>
 
 <!-- ===== FOOTER ===== -->
@@ -142,17 +144,22 @@
 
 <!-- ===== QUICK START TOGGLE ===== -->
 <script>
-const qs = document.getElementById('quickStart');
-const qt = document.getElementById('quickToggle');
-if (qs && qt) {
+(() => {
+  const qs = document.getElementById('quickStart');
+  const toggle = document.getElementById('quickToggle');
+  if (!qs || !toggle) return;
   const seen = localStorage.getItem('quick_seen');
   if (seen) qs.classList.add('collapsed');
-  qt.onclick = () => {
+  toggle.addEventListener('click', () => {
     qs.classList.toggle('collapsed');
     localStorage.setItem('quick_seen', '1');
-  };
-}
+  });
+})();
 </script>
 
+<!-- ===== UI CONTROLLER (V3) ===== -->
+<script type="module" src="ui/index-ui.js?v=20"></script>
+
+</div>
 </body>
 </html>
