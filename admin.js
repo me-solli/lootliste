@@ -73,8 +73,6 @@ async function loadItems(list) {
         </div>
 
         <div class="meta">
-
-          <!-- 🔥 KLARER ITEM-NAME (kein UNDEFINED mehr) -->
           <div style="font-weight:600;margin-bottom:4px;">
             ${item.name || "Unbenanntes Item"}
           </div>
@@ -90,75 +88,39 @@ async function loadItems(list) {
           <div><b>Rating:</b> ${ratingStars(item.rating)}</div>
 
           <div class="edit" data-item-id="${item.id}">
-
-            <input
-              data-field="name"
-              data-default="${DEFAULTS.name}"
-              value="${item.name || DEFAULTS.name}"
-            >
+            <input data-field="name" data-default="${DEFAULTS.name}" value="${item.name || DEFAULTS.name}">
 
             <select data-field="type">
               <option value="">– Typ –</option>
-              ${[
-                "waffe","schild","helm","ruestung",
-                "handschuhe","guertel","stiefel",
-                "amulet","ring","charm","rune","sonstiges"
-              ].map(t =>
+              ${["waffe","schild","helm","ruestung","handschuhe","guertel","stiefel","amulet","ring","charm","rune","sonstiges"].map(t =>
                 `<option value="${t}" ${item.type===t?"selected":""}>${t}</option>`
               ).join("")}
             </select>
 
-            <select
-              data-field="weaponType"
-              ${item.type !== "waffe" ? "disabled" : ""}
-            >
+            <select data-field="weaponType" ${item.type !== "waffe" ? "disabled" : ""}>
               <option value="">– WeaponType –</option>
-              ${[
-                "Schwert","Axt","Keule","Dolch","Klaue",
-                "Stab","Zauberstab","Zepter","Speer",
-                "Sense","Bogen","Armbrust","Wurfwaffe"
-              ].map(w =>
+              ${["Schwert","Axt","Keule","Dolch","Klaue","Stab","Zauberstab","Zepter","Speer","Sense","Bogen","Armbrust","Wurfwaffe"].map(w =>
                 `<option value="${w}" ${item.weaponType===w?"selected":""}>${w}</option>`
               ).join("")}
             </select>
 
-            <input
-              data-field="roll"
-              data-default="${DEFAULTS.roll}"
-              value="${item.roll || DEFAULTS.roll}"
-            >
+            <input data-field="roll" data-default="${DEFAULTS.roll}" value="${item.roll || DEFAULTS.roll}">
 
             <select data-field="rating">
               <option value="">– Sterne –</option>
               ${[1,2,3,4,5].map(n =>
-                `<option value="${n}" ${item.rating==n?"selected":""}>
-                  ${"⭐".repeat(n)}
-                </option>`
+                `<option value="${n}" ${item.rating==n?"selected":""}>${"⭐".repeat(n)}</option>`
               ).join("")}
             </select>
 
-            <!-- 🧠 Interne Admin-Notiz -->
-            <textarea
-              data-field="admin_note"
-              placeholder="Interne Admin-Notiz (nicht öffentlich)"
-              style="
-                width:100%;
-                min-height:38px;
-                margin-top:6px;
-                background:#181818;
-                color:#ccc;
-                border:1px dashed #333;
-                font-size:12px;
-              "
-            >${item.admin_note || ""}</textarea>
+            <textarea data-field="admin_note" placeholder="Interne Admin-Notiz (nicht öffentlich)">${item.admin_note || ""}</textarea>
 
             <div class="actions">
               <button data-action="save" data-id="${item.id}">💾 Speichern</button>
-              <button data-action="status" data-status="approved" data-id="${item.id}">✅ Freigeben</button>
+              <button data-action="approve" data-id="${item.id}">✅ Freigeben</button>
               <button data-action="status" data-status="hidden" data-id="${item.id}">👁 Verstecken</button>
               <button data-action="status" data-status="rejected" data-id="${item.id}">❌ Ablehnen</button>
             </div>
-
           </div>
         </div>
       </div>
@@ -195,8 +157,17 @@ async function saveItem(container) {
 }
 
 /* ================================
-   UPDATE STATUS
+   UPDATE STATUS (FIXED)
 ================================ */
+async function approveItem(id) {
+  await fetch(`${API_BASE}/api/admin/items/${id}/approve`, {
+    method: "POST",
+    headers: {
+      "x-admin-token": ADMIN_TOKEN
+    }
+  });
+}
+
 async function updateStatus(id, status) {
   await fetch(API_BASE + "/api/admin/items/" + id + "/status", {
     method: "PUT",
@@ -235,12 +206,19 @@ document.addEventListener("DOMContentLoaded", () => {
         showInlineFeedback(edit, "✔ gespeichert");
       }
 
+      if (btn.dataset.action === "approve") {
+        await approveItem(btn.dataset.id);
+        showInlineFeedback(edit, "✔ freigegeben");
+        loadItems(list);
+      }
+
       if (btn.dataset.action === "status") {
         await updateStatus(btn.dataset.id, btn.dataset.status);
         showInlineFeedback(edit, "✔ Status geändert");
         loadItems(list);
       }
-    } catch {
+    } catch (err) {
+      console.error(err);
       alert("Aktion fehlgeschlagen");
     }
   };
@@ -248,8 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
   list.onchange = e => {
     const type = e.target.closest('[data-field="type"]');
     if (!type) return;
-    const weapon = type.closest(".edit")
-      .querySelector('[data-field="weaponType"]');
+    const weapon = type.closest(".edit").querySelector('[data-field="weaponType"]');
     weapon.disabled = type.value !== "waffe";
     if (weapon.disabled) weapon.value = "";
   };
