@@ -1658,6 +1658,31 @@ visitorCounter.innerHTML =
 cards.addEventListener("click", e => {
 
   const btn = e.target.closest(".request-btn");
+if (!btn || btn.classList.contains("disabled")) return;
+
+const itemName = btn.dataset.item;
+const item = items.find(i => i.name === itemName);
+if (!item) return;
+
+// ===== SYSTEM: Bedarf starten oder erweitern =====
+if (item.status === "Verfügbar") {
+  item.status = "Bedarf";
+  item.needStartedAt = Date.now();
+  item.needEndsAt = item.needStartedAt + NEED_DURATION;
+  item.needs = [];
+}
+
+// Bedarf hinzufügen (keine Duplikate)
+if (!item.needs.includes(CURRENT_USER)) {
+  item.needs.push(CURRENT_USER);
+}
+
+// Button sofort sperren
+btn.classList.add("disabled");
+btn.textContent = "Bedarf angemeldet";
+
+// UI neu rendern
+render();
 
   // ===== ALTLOGIK: Anfrage-Modal =====
   if (!btn || btn.classList.contains("disabled")) return;
