@@ -1,7 +1,7 @@
 // ui/index-ui.js
 // =====================================
 // Page wiring: Events + Render (V3 – FINAL, backend-driven)
-// Keine Test-Items. Kein Inline-Renderer. Ein Einstiegspunkt.
+// Fake-Login aktiv (dev-user). Keine Test-Items. Ein Einstiegspunkt.
 
 import { renderItemCard } from './card-render.js';
 import { addNeed } from '/lootliste/core/core.js';
@@ -11,8 +11,8 @@ import { addNeed } from '/lootliste/core/core.js';
 // --------------------------------------------------
 let items = [];
 let auth = {
-  isLoggedIn: false,
-  userId: null
+  isLoggedIn: true,
+  userId: 'dev-user'
 };
 
 const cardsEl = document.getElementById('cards');
@@ -22,7 +22,7 @@ const cardsEl = document.getElementById('cards');
 // --------------------------------------------------
 export function initUI(initialItems, initialAuth) {
   items = Array.isArray(initialItems) ? initialItems : [];
-  auth = initialAuth || { isLoggedIn: false, userId: null };
+  auth = initialAuth || auth;
   render();
 }
 
@@ -40,7 +40,6 @@ async function loadItemsFromBackend() {
   const res = await fetch(
     'https://content-connection-production-ea07.up.railway.app/api/items/public'
   );
-
   const data = await res.json();
 
   // V3-minimales Mapping (UI/Core-kompatibel)
@@ -116,9 +115,5 @@ function handleNeedError(err) {
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
   const backendItems = await loadItemsFromBackend();
-
-initUI(backendItems, {
-  isLoggedIn: true,
-  userId: 'dev-user'
-});
+  initUI(backendItems, auth);
 });
