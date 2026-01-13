@@ -2,7 +2,7 @@
 // =====================================
 // UI-Layer für Item-Cards (V3 – FINAL)
 // Core = Single Source of Truth
-// UI übersetzt & visualisiert NUR
+// UI visualisiert den Zustand korrekt
 // =====================================
 
 import {
@@ -25,14 +25,15 @@ const STATUS_CLASSES = {
   [ITEM_STATUS.AVAILABLE]: 'verfuegbar',
   [ITEM_STATUS.RESERVED]: 'reserviert',
   [ITEM_STATUS.COMPLETED]: 'vergeben',
-  [ITEM_STATUS.ABORTED]: 'vergeben' // neutral/dunkel
+  [ITEM_STATUS.ABORTED]: 'vergeben'
 };
 
 // --------------------------------------------------
 // Render Entry
 // --------------------------------------------------
 export function renderItemCard(item, auth) {
-  const needCount = Array.isArray(item.needs) ? item.needs.length : 0;
+  const needs = Array.isArray(item.needs) ? item.needs : [];
+  const needCount = needs.length;
 
   const statusLabel = STATUS_LABELS[item.status] || item.status;
   const statusClass = STATUS_CLASSES[item.status] || '';
@@ -49,7 +50,7 @@ export function renderItemCard(item, auth) {
       <div class="need-info">
         Bedarf: <strong>${needCount} / ${NEED_LIMIT}</strong>
       </div>
-      ${renderNeedButton(item, auth)}
+      ${renderNeedButton(item, auth, needs)}
     </div>
 
     <div class="card-timeline">
@@ -61,23 +62,43 @@ export function renderItemCard(item, auth) {
 }
 
 // --------------------------------------------------
-// Bedarf Button (Status → Auth → Core)
+// Bedarf Button (UX FINAL)
 // --------------------------------------------------
-function renderNeedButton(item, auth) {
+function renderNeedButton(item, auth, needs) {
+
+  // Status blockiert immer
   if (item.status !== ITEM_STATUS.AVAILABLE) {
-    return `<button class="btn disabled" disabled>Bedarf nicht möglich</button>`;
+    return `<button class="btn disabled" disabled>
+      Bedarf nicht möglich
+    </button>`;
   }
 
+  // Bedarf-Phase geschlossen
   if (!isNeedOpen(item)) {
-    return `<button class="btn locked" disabled>Bedarf abgeschlossen</button>`;
+    return `<button class="btn locked" disabled>
+      Bedarf abgeschlossen
+    </button>`;
   }
 
+  // Nicht eingeloggt
   if (!auth || auth.isLoggedIn !== true) {
     return `<button class="btn primary" data-action="auth">
       Login für Bedarf
     </button>`;
   }
 
+  // 🔥 USER HAT BEREITS BEDARF
+  const alreadyRequested = needs.some(
+    n => n.userId === auth.userId
+  );
+
+  if (alreadyRequested) {
+    return `<button class="btn locked" disabled>
+      Bedarf angemeldet
+    </button>`;
+  }
+
+  // Normaler CTA
   return `<button
     class="btn primary"
     data-action="need"
@@ -87,7 +108,7 @@ function renderNeedButton(item, auth) {
 }
 
 // --------------------------------------------------
-// Timeline (UI-States sauber)
+// Timeline (UI-States)
 // --------------------------------------------------
 function renderTimeline(item) {
   let step1 = 'future';
