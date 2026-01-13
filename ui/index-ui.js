@@ -117,8 +117,8 @@ function handleNeedError(err) {
 document.addEventListener('DOMContentLoaded', async () => {
   const backendItems = await loadItemsFromBackend();
 
-  initUI(backendItems, {
-    isLoggedIn: false,
-    userId: null
-  });
+initUI(backendItems, {
+  isLoggedIn: true,
+  userId: 'dev-user'
+});
 });
