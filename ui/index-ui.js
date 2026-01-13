@@ -1,7 +1,7 @@
-// index-ui.js — V3 UI Hook (CLEAN & ALIGNED)
-// ==========================================
-// Connects UI actions to V3 core logic.
-// No legacy V2 calls. No hidden state transitions.
+// index-ui.js — V3 UI Hook (STATE-STABIL)
+// =====================================
+// UI layer only. No state authority.
+// Loads persisted items, forwards user actions to core.
 
 import {
   createItem,
@@ -10,29 +10,30 @@ import {
   startConfirmation,
   confirm,
   ITEM_STATUS,
-  hydrateItem,
-  updateItemStatus
+  updateItemStatus,
+  loadAllItems
 } from '../core/core.js';
 
 import { checkAllTimeouts } from '../core/timeouts.js';
 import { executeRoll } from '../core/rolls.js';
 
 // ------------------------------
-// In-memory store (UI layer only)
+// In-memory store (UI cache only)
 // ------------------------------
 const store = {
   items: []
 };
 
 // ------------------------------
-// Init / Hydration (V3)
+// Init / Load from persistence
 // ------------------------------
-export function initStore(items = []) {
+export function initStore() {
+  const items = loadAllItems();
+
   store.items = items;
 
   store.items.forEach(item => {
-    hydrateItem(item);        // restore persisted state
-    updateItemStatus(item);   // apply auto transitions once
+    updateItemStatus(item); // apply auto transitions once
   });
 
   return store.items;
@@ -42,7 +43,7 @@ export function initStore(items = []) {
 // Helpers
 // ------------------------------
 function getCurrentUserId() {
-  // TODO: replace with real auth
+  // DEV stub – later replaced by auth
   return 'user_demo_1';
 }
 
@@ -51,7 +52,7 @@ function getItemById(id) {
 }
 
 // ------------------------------
-// Item submission
+// Item submission (REAL creation)
 // ------------------------------
 export function submitItem({ name, type }) {
   const userId = getCurrentUserId();
@@ -75,7 +76,6 @@ export function clickNeed(itemId, durationMs = 24 * 60 * 60 * 1000) {
 
   if (!item) throw new Error('ITEM_NOT_FOUND');
 
-  // first need opens phase
   if (item.status === ITEM_STATUS.AVAILABLE) {
     openNeed(item, durationMs);
   }
@@ -124,7 +124,7 @@ export function tick() {
 }
 
 // ------------------------------
-// DEV / SIM MODE: expose helpers
+// DEV helpers
 // ------------------------------
 window.initStore = initStore;
 window.submitItem = submitItem;
