@@ -1,8 +1,10 @@
 // ui/index-ui.js
 // =====================================
-// Public Index UI – V3 CLEAN
-// - Keine Alt-UI
-// - Ruhiger Default-State
+// Public Index UI – V3 CLEAN (REBUILD 1:1)
+// Zweck:
+// - 1:1 Ersatz für aktuelle Version
+// - ruhiger Default-State (nicht eingeloggt)
+// - keine Alt-UI, keine Filter, keine Suche
 // - index.html = passive Bühne
 // =====================================
 
@@ -16,16 +18,16 @@ console.log('INDEX-UI LOADED (V3 CLEAN)');
 // --------------------------------------------------
 let items = [];
 
-// DEV / PUBLIC DEFAULT: NICHT eingeloggt
-let auth = {
+// Public Default: NICHT eingeloggt
+const auth = {
   isLoggedIn: false,
   userId: null
 };
 
-let cardsEl;
+let cardsEl = null;
 
 // --------------------------------------------------
-// Main Render
+// Render Orchestrator
 // --------------------------------------------------
 function render() {
   if (!cardsEl) return;
@@ -41,15 +43,17 @@ function render() {
 }
 
 // --------------------------------------------------
-// Card Actions
+// Card Actions (nur wenn eingeloggt)
 // --------------------------------------------------
 function bindCardActions() {
   if (!auth.isLoggedIn) return;
 
-  cardsEl.querySelectorAll('[data-action="need"]').forEach(btn => {
+  const needButtons = cardsEl.querySelectorAll('[data-action="need"]');
+
+  needButtons.forEach(btn => {
     btn.onclick = () => {
       const itemId = btn.dataset.item;
-      const item = items.find(i => String(i.id) === itemId);
+      const item = items.find(i => String(i.id) === String(itemId));
       if (!item) return;
 
       try {
@@ -71,7 +75,10 @@ function renderHeroStats() {
 
   const total = items.length;
   const available = items.filter(i => i.status === 'available').length;
-  const needs = items.reduce((sum, i) => sum + (i.needs?.length || 0), 0);
+  const needs = items.reduce(
+    (sum, i) => sum + (Array.isArray(i.needs) ? i.needs.length : 0),
+    0
+  );
 
   el.innerHTML = `
     <div class="hero-stat">
@@ -98,7 +105,7 @@ function renderRequestFeed() {
 
   const entries = items
     .flatMap(item =>
-      (item.needs || []).map(n => ({
+      (Array.isArray(item.needs) ? item.needs : []).map(n => ({
         item: item.name,
         user: n.userId,
         at: n.at || 0
@@ -121,7 +128,7 @@ function renderRequestFeed() {
 }
 
 // --------------------------------------------------
-// Load Items (Backend + Fallback)
+// Load Items (Backend + DEV-Fallback)
 // --------------------------------------------------
 async function loadItems() {
   const API = 'https://content-connection-production-ea07.up.railway.app/api/items/public';
@@ -141,8 +148,8 @@ async function loadItems() {
       status: i.status || 'available',
       needs: Array.isArray(i.needs) ? i.needs : []
     }));
-  } catch {
-    // DEV FALLBACK
+  } catch (err) {
+    // DEV-FALLBACK (sichtbar, stabil)
     return [
       {
         id: 'dummy-1',
@@ -165,7 +172,7 @@ async function loadItems() {
 }
 
 // --------------------------------------------------
-// Errors
+// Error Handling
 // --------------------------------------------------
 function handleNeedError(err) {
   switch (err.message) {
