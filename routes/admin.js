@@ -169,24 +169,24 @@ router.post("/items/:id/approve", requireAdmin, async (req, res) => {
     const earliest = new Date(now.getTime() + 60 * 60 * 1000); // +60 Min
     const latest = new Date(now.getTime() + 6 * 60 * 60 * 1000); // +6 Std
 
-    await db.run(
-      `
-      UPDATE items
-      SET
-        published_at = ?,
-        earliest_assign_at = ?,
-        latest_assign_at = ?,
-        status = ?
-      WHERE id = ?
-      `,
-      [
-        now.toISOString(),
-        earliest.toISOString(),
-        latest.toISOString(),
-        ASSIGN_STATUS.OPEN,
-        item.id
-      ]
-    );
+await db.run(
+  `
+  UPDATE items
+  SET
+    published_at = ?,
+    earliest_assign_at = ?,
+    latest_assign_at = ?,
+    status = ?
+  WHERE id = ?
+  `,
+  [
+    now.toISOString(),
+    earliest.toISOString(),
+    latest.toISOString(),
+    "available",   // 🔥 DAS ist der Fix
+    item.id
+  ]
+);
 
     res.json({ ok: true });
   } catch (err) {
