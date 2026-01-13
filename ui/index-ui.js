@@ -126,6 +126,12 @@ export function tick() {
 // ------------------------------
 // DEV helpers
 // ------------------------------
+
+// ------------------------------
+// APP START (ENTRY POINT)
+// ------------------------------
+initStore();
+
 window.initStore = initStore;
 window.submitItem = submitItem;
 window.clickNeed = clickNeed;
