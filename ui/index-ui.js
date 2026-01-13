@@ -1,19 +1,18 @@
 // ui/index-ui.js
 // =====================================
-// Page wiring: Events + Render
-// V3 – Core-driven (Single Source of Truth)
-// UI rendert ausschließlich Core-State
+// Public Index UI – V3
+// Core = Single Source of Truth
 // =====================================
 
 import { renderItemCard } from './card-render.js';
-import { addNeed } from '/lootliste/core/core.js';
+import { addNeed } from '../core/core.js';
 
 // --------------------------------------------------
-// Frontend State (nur Referenzen, keine Logik)
+// State (Frontend)
 // --------------------------------------------------
 let items = [];
 let auth = {
-  isLoggedIn: true,   // DEV / Fake-Login
+  isLoggedIn: true,     // DEV / Fake-Login
   userId: 'dev-user'
 };
 
@@ -24,36 +23,45 @@ let cardsEl = null;
 // --------------------------------------------------
 function render() {
   if (!cardsEl) return;
+
   cardsEl.innerHTML = items
     .map(item => renderItemCard(item, auth))
     .join('');
 }
 
 // --------------------------------------------------
-// Backend Load (Single Source of Data)
+// Load Items (Backend = einzige Datenquelle)
 // --------------------------------------------------
-async function loadItemsFromBackend() {
-  const res = await fetch(
-    'https://content-connection-production-ea07.up.railway.app/api/items/public'
-  );
-  const data = await res.json();
+async function loadItems() {
+  try {
+    const res = await fetch(
+      'https://content-connection-production-ea07.up.railway.app/api/items/public'
+    );
 
-  return Array.isArray(data)
-    ? data.map(i => ({
-        id: i.id,
-        name: i.name,
-        type: i.type,
-        rating: Number(i.rating) || 0,
-        status: i.status || 'available',
-        needs: Array.isArray(i.needs) ? i.needs : []
-      }))
-    : [];
+    if (!res.ok) throw new Error('ITEM_FETCH_FAILED');
+
+    const data = await res.json();
+
+    if (!Array.isArray(data)) return [];
+
+    return data.map(i => ({
+      id: i.id,
+      name: i.name,
+      type: i.type,
+      rating: Number(i.rating) || 0,
+      status: i.status || 'available',
+      needs: Array.isArray(i.needs) ? i.needs : []
+    }));
+  } catch (err) {
+    console.error('Load Items Error:', err);
+    return [];
+  }
 }
 
 // --------------------------------------------------
 // Click Handling (Event Delegation)
 // --------------------------------------------------
-function bindClickHandler() {
+function bindEvents() {
   if (!cardsEl) return;
 
   cardsEl.addEventListener('click', e => {
@@ -61,6 +69,14 @@ function bindClickHandler() {
     if (!btn) return;
 
     const action = btn.dataset.action;
+
+    // -----------------------------
+    // Login (Stub)
+    // -----------------------------
+    if (action === 'auth') {
+      alert('Login folgt in Phase: Accounts');
+      return;
+    }
 
     // -----------------------------
     // Bedarf anmelden
@@ -74,7 +90,6 @@ function bindClickHandler() {
         // 🔒 EINZIGE Mutation: Core
         addNeed(item, auth.userId, items);
 
-        // UI rendert nur Ergebnis
         render();
       } catch (err) {
         handleNeedError(err);
@@ -95,7 +110,7 @@ function handleNeedError(err) {
       alert('Du hast für dieses Item bereits Bedarf angemeldet.');
       break;
     case 'NEED_CLOSED':
-      alert('Der Bedarf für dieses Item ist geschlossen.');
+      alert('Der Bedarf für dieses Item ist bereits geschlossen.');
       break;
     default:
       console.error('Need Error:', err);
@@ -107,9 +122,13 @@ function handleNeedError(err) {
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
   cardsEl = document.getElementById('cards');
+  if (!cardsEl) {
+    console.error('Cards container (#cards) not found');
+    return;
+  }
 
-  bindClickHandler();
+  bindEvents();
 
-  items = await loadItemsFromBackend();
+  items = await loadItems();
   render();
 });
