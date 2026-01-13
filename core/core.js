@@ -25,6 +25,11 @@ export function persistItem(item) {
   const store = loadStore();
 
   store[item.id] = {
+    name: item.name,
+    type: item.type,
+    donatedBy: item.donatedBy,
+    donatedAt: item.donatedAt,
+
     status: item.status,
     statusChangedAt: item.statusChangedAt,
 
@@ -43,27 +48,30 @@ export function persistItem(item) {
   saveStore(store);
 }
 
-export function hydrateItem(item) {
+// ------------------------------
+// Load all persisted items
+// ------------------------------
+export function loadAllItems() {
   const store = loadStore();
-  const saved = store[item.id];
-  if (!saved) return item;
 
-  Object.assign(item, saved);
-  return item;
+  return Object.entries(store).map(([id, data]) => ({
+    id,
+    ...data
+  }));
 }
 
 // ------------------------------
 // Status Enum (V3 – final)
 // ------------------------------
 export const ITEM_STATUS = Object.freeze({
-  AVAILABLE: 'available',              // frisch gespendet
-  NEED_OPEN: 'need_open',               // 24h Bedarf offen
-  ROLLING: 'rolling',                   // Würfelphase
-  RESERVED: 'reserved',                 // Gewinner festgelegt
-  CONFIRM_PENDING: 'confirm_pending',   // Übergabe läuft
-  ASSIGNED: 'assigned',                 // beidseitig bestätigt
-  EXPIRED: 'expired',                   // abgelaufen
-  FLAGGED: 'flagged'                    // Soft-Dupe / Auffällig
+  AVAILABLE: 'available',
+  NEED_OPEN: 'need_open',
+  ROLLING: 'rolling',
+  RESERVED: 'reserved',
+  CONFIRM_PENDING: 'confirm_pending',
+  ASSIGNED: 'assigned',
+  EXPIRED: 'expired',
+  FLAGGED: 'flagged'
 });
 
 // ------------------------------
@@ -86,30 +94,23 @@ function random1to100() {
 }
 
 // ------------------------------
-// Item Factory
+// Item Factory (REAL creation only)
 // ------------------------------
-export function createItem({
-  name,
-  type,
-  donatedBy
-}) {
+export function createItem({ name, type, donatedBy }) {
   const item = {
     id: uuid(),
     name,
     type,
-
     donatedBy,
     donatedAt: now(),
 
     status: ITEM_STATUS.AVAILABLE,
     statusChangedAt: now(),
 
-    // Bedarf
     needUntil: null,
-    needs: [], // [{ userId, at }]
+    needs: [],
 
-    // Roll / Vergabe
-    roll: null, // { at, results: [{ userId, value }] }
+    roll: null,
     winner: null,
 
     confirmations: {
@@ -128,8 +129,7 @@ export function createItem({
 // Status Engine (auto transitions)
 // ------------------------------
 export function updateItemStatus(item, ts = now()) {
-  // Bedarf abgelaufen
-  if (item.status === ITEM_STATUS.NEED_OPEN && ts > item.needUntil) {
+  if (item.status === ITEM_STATUS.NEED_OPEN && item.needUntil && ts > item.needUntil) {
     if (item.needs.length > 0) {
       startRoll(item);
     } else {
@@ -137,7 +137,6 @@ export function updateItemStatus(item, ts = now()) {
     }
   }
 
-  // Übergabe abgeschlossen
   if (item.status === ITEM_STATUS.CONFIRM_PENDING) {
     if (item.confirmations.giver && item.confirmations.receiver) {
       setStatus(item, ITEM_STATUS.ASSIGNED);
@@ -160,7 +159,6 @@ function setStatus(item, status) {
 // Actions / Events
 // ------------------------------
 
-// Bedarf öffnen (z. B. 24h)
 export function openNeed(item, durationMs) {
   assert(item.status === ITEM_STATUS.AVAILABLE, 'INVALID_STATE');
 
@@ -171,7 +169,6 @@ export function openNeed(item, durationMs) {
   return item;
 }
 
-// Bedarf anmelden
 export function addNeed(item, userId) {
   assert(item.status === ITEM_STATUS.NEED_OPEN, 'NEED_NOT_OPEN');
 
@@ -184,7 +181,6 @@ export function addNeed(item, userId) {
   return item;
 }
 
-// Würfeln starten (automatisch)
 export function startRoll(item) {
   assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
 
@@ -198,9 +194,7 @@ export function startRoll(item) {
     }))
   };
 
-  const winner = item.roll.results.reduce((a, b) =>
-    b.value > a.value ? b : a
-  );
+  const winner = item.roll.results.reduce((a, b) => (b.value > a.value ? b : a));
 
   item.winner = winner.userId;
 
@@ -210,17 +204,14 @@ export function startRoll(item) {
   return item;
 }
 
-// Übergabe starten
 export function startConfirmation(item) {
   assert(item.status === ITEM_STATUS.RESERVED, 'INVALID_STATE');
 
   setStatus(item, ITEM_STATUS.CONFIRM_PENDING);
-
   persistItem(item);
   return item;
 }
 
-// Übergabe bestätigen
 export function confirm(item, role) {
   assert(item.status === ITEM_STATUS.CONFIRM_PENDING, 'INVALID_STATE');
   assert(role === 'giver' || role === 'receiver', 'INVALID_ROLE');
@@ -232,7 +223,7 @@ export function confirm(item, role) {
 }
 
 // ------------------------------
-// Flags / Side paths
+// Flags
 // ------------------------------
 export function flagItem(item, reason) {
   if (!item.flags.includes(reason)) {
@@ -246,12 +237,3 @@ export function flagItem(item, reason) {
   persistItem(item);
   return item;
 }
-
-export function loadAllItems() {
-  const store = JSON.parse(localStorage.getItem('lootliste_v3_items')) || {};
-  return Object.entries(store).map(([id, data]) => ({
-    id,
-    ...data
-  }));
-}
-
