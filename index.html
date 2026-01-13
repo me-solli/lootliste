@@ -33,8 +33,8 @@
     </div>
   </header>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero">
+    <!-- ===== HERO (RUHIG & KOMPAKT) ===== -->
+  <section class="hero hero-compact">
     <img src="img/banner_diablo.png" alt="Diablo Banner" class="hero-bg" />
 
     <div class="hero-overlay">
@@ -45,26 +45,18 @@
         <span class="muted">· Ladder in Vorbereitung</span>
       </p>
 
-      <!-- HERO STATS (von index-ui.js gerendert) -->
-      <div id="heroStats" class="hero-stats"></div>
-
-      <!-- ===== TIMELINE (statisch, UI-only) ===== -->
-      <div class="hero-timeline">
-        <div class="timeline-step active">
-          <span class="step-dot"></span>
-          <span class="step-label">Item spenden</span>
-        </div>
-        <div class="timeline-step">
-          <span class="step-dot"></span>
-          <span class="step-label">24h Bedarf</span>
-        </div>
-        <div class="timeline-step">
-          <span class="step-dot"></span>
-          <span class="step-label">Würfeln & Vergabe</span>
-        </div>
-      </div>
-
+      <!-- HERO STATS (minimal, von index-ui.js gerendert) -->
+      <div id="heroStats" class="hero-stats compact"></div>
     </div>
+  </section>
+
+  <!-- ===== SYSTEM FLOW (SEPARAT, SCHMAL) ===== -->
+  <section class="system-flow">
+    <div class="flow-step">Item spenden</div>
+    <div class="flow-sep">›</div>
+    <div class="flow-step">24h Bedarf</div>
+    <div class="flow-sep">›</div>
+    <div class="flow-step">Würfeln & Vergabe</div>
   </section>
 
   <!-- ===== CATEGORY BAR ===== -->
