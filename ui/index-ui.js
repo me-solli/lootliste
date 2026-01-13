@@ -1,7 +1,7 @@
 // ui/index-ui.js
 // =====================================
 // Page wiring: Events + Render (V3 – FINAL, backend-driven)
-// Fake-Login aktiv (dev-user). Keine Test-Items. Ein Einstiegspunkt.
+// Fake-Login aktiv (dev-user). Sichtbares Bedarf-Feedback. Ein Einstiegspunkt.
 
 import { renderItemCard } from './card-render.js';
 import { addNeed } from '/lootliste/core/core.js';
@@ -78,7 +78,18 @@ if (cardsEl) {
       if (!item) return;
 
       try {
+        // Core-Logik (Validierung / Limits)
         addNeed(item, auth.userId, items);
+
+        // ---------- UI-SICHERHEIT ----------
+        // Falls Core (noch) nichts in needs schreibt,
+        // erzwingen wir ein sichtbares UI-Update.
+        if (!Array.isArray(item.needs)) item.needs = [];
+        if (!item.needs.find(n => n.userId === auth.userId)) {
+          item.needs.push({ userId: auth.userId, at: Date.now() });
+        }
+        // -----------------------------------
+
         render();
       } catch (err) {
         handleNeedError(err);
