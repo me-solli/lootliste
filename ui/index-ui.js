@@ -2,6 +2,7 @@
 // =====================================
 // Public Index UI – V3
 // Core = Single Source of Truth
+// FINAL: ID-Typ-Bug gefixt
 // =====================================
 
 import { renderItemCard } from './card-render.js';
@@ -41,11 +42,10 @@ async function loadItems() {
     if (!res.ok) throw new Error('ITEM_FETCH_FAILED');
 
     const data = await res.json();
-
     if (!Array.isArray(data)) return [];
 
     return data.map(i => ({
-      id: i.id,
+      id: i.id, // ⚠️ Typ egal (string | number)
       name: i.name,
       type: i.type,
       rating: Number(i.rating) || 0,
@@ -82,8 +82,8 @@ function bindEvents() {
     // Bedarf anmelden
     // -----------------------------
     if (action === 'need') {
-      const itemId = btn.dataset.item;
-      const item = items.find(i => i.id === itemId);
+      const itemId = btn.dataset.item; // STRING
+      const item = items.find(i => String(i.id) === itemId); // ✅ FIX
       if (!item) return;
 
       try {
