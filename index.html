@@ -2,128 +2,126 @@
 <!--
   ================================
   LOOTLISTE V3 – PUBLIC INDEX
-  VISUAL: ALT / GRAFISCH (V2-LIKE)
-  LOGIK: NEU (index-ui.js)
+  VISUAL: V2 (FUNDAMENT)
+  TECH: V3 READY (SAUBER)
   ================================
 -->
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Free Lootliste – Community Items | D2R Non-Ladder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Free Lootliste – Community Items | D2R Non-Ladder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- ===== BASIS STILE (ALT / GRAFISCH) ===== -->
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/cards.css" />
+<!-- ===== BASE STYLES (UNVERÄNDERTES FUNDAMENT) ===== -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/cards.css">
 
-  <!-- ===== UI / RENDER ===== -->
-  <script type="module" src="ui/index-ui.js"></script>
+<!-- ===== UI RENDER (V3) ===== -->
+<script type="module" src="ui/index-ui.js"></script>
 </head>
 
 <body>
 <div class="wrapper">
 
-  <!-- ===== HERO (ALT-STYLE) ===== -->
-  <header class="hero" style="background:url('img/banner_diablo.png') center top / cover no-repeat">
-    <div class="hero-inner">
+<!-- ===== HERO (V2 LOOK – MASTER) ===== -->
+<header class="hero" style="background:url('img/banner_diablo.png') center top / cover no-repeat">
+  <div class="hero-inner">
 
-      <!-- AUTH BOX (UI ONLY) -->
-      <div class="auth-box" id="authBox">
-        <span id="authState">👤 Nicht eingeloggt</span>
-        <button id="loginBtn">Login</button>
-        <button id="registerBtn">Registrieren</button>
-      </div>
-
-      <!-- LOGO / TITLE -->
-      <h1 class="hero-logo">
-        <img src="img/logo_d2r.png" alt="D2R Lootliste" />
-      </h1>
-      <p>Community Lootliste · Diablo II Resurrected</p>
-
-      <!-- MODE STATUS -->
-      <div class="mode-banner">
-        Aktueller Modus: <strong>NON-LADDER</strong>
-        <span>· Ladder in Vorbereitung</span>
-      </div>
-
-      <!-- HERO STATS (GERENDERT) -->
-      <div class="hero-stats" id="heroStats"></div>
-
-      <div class="hero-right">
-        <div id="visitorCounter">👁 Besucher gesamt: …</div>
-      </div>
+    <!-- AUTH BOX (UI ONLY) -->
+    <div id="authBox" class="auth-box">
+      <span id="authState">👤 Nicht eingeloggt</span>
+      <button id="loginBtn">Login</button>
+      <button id="registerBtn">Registrieren</button>
     </div>
-  </header>
 
-  <!-- ===== PROJECT STATUS (ALT TIMELINE – RUHIG) ===== -->
-  <div class="timeline-label">ⓘ Entwicklungsstand der Lootliste</div>
-  <div class="project-timeline" id="projectTimeline"></div>
+    <!-- LOGO -->
+    <h1 class="hero-logo">
+      <img src="img/logo_d2r.png" alt="D2R Lootliste Logo">
+    </h1>
+    <p>Community Lootliste · Diablo II Resurrected</p>
 
-  <!-- ===== RULES ===== -->
-  <div class="rules-bar">
-    <a href="verfahren.html">ⓘ Ablauf & Regeln der Lootliste</a>
+    <!-- MODE -->
+    <div class="mode-banner">
+      Aktueller Modus: <strong>NON-LADDER</strong>
+      <span>· Ladder in Vorbereitung</span>
+    </div>
+
+    <!-- HERO STATS (GERENDERT) -->
+    <div class="hero-stats" id="heroStats"></div>
+
+    <div class="hero-right">
+      <div id="visitorCounter">👁 Besucher gesamt: …</div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== PROJECT TIMELINE (INDEX – INFO ONLY) ===== -->
+<div class="timeline-label">ⓘ Projekt-Timeline · Entwicklungsstand</div>
+<div class="project-timeline" id="projectTimeline"></div>
+
+<!-- ===== RULES BAR ===== -->
+<div class="rules-bar">
+  <a href="verfahren.html">ⓘ Ablauf & Regeln der Lootliste</a>
+</div>
+
+<!-- ===== QUICK START ===== -->
+<section class="quick-start" id="quickStart">
+  <div class="quick-head" id="quickToggle">
+    <span>Neu hier? Ein Item gesehen?</span>
+    <span class="quick-arrow">▾</span>
+  </div>
+  <div class="quick-body">
+    <ol>
+      <li><strong>Item finden</strong> – verfügbar</li>
+      <li><strong>Bedarf anmelden</strong> – 24h</li>
+      <li><strong>Automatisches Würfeln</strong></li>
+      <li><strong>Übergabe & Bestätigung</strong></li>
+    </ol>
+    <p class="quick-note">ⓘ Fair & community-basiert</p>
+  </div>
+</section>
+
+<!-- ===== ICON BAR ===== -->
+<div class="icon-bar" id="iconBar"></div>
+
+<!-- ===== CONTENT ===== -->
+<main class="container">
+
+  <div class="meta-bar">
+    <span id="metaStats"></span>
   </div>
 
-  <!-- ===== QUICK START ===== -->
-  <section class="quick-start" id="quickStart">
-    <div class="quick-head" id="quickToggle">
-      <span>Neu hier? Ein Item gesehen?</span>
-      <span class="quick-arrow">▾</span>
-    </div>
+  <div class="filter-panel">
+    <input id="search" placeholder="Item suchen…">
 
-    <div class="quick-body">
-      <ol>
-        <li><strong>Item finden</strong> – verfügbar</li>
-        <li><strong>Bedarf anmelden</strong> – 24h</li>
-        <li><strong>Automatisches Würfeln</strong></li>
-        <li><strong>Übergabe & Bestätigung</strong></li>
-      </ol>
-      <p class="quick-note">ⓘ Fair & community-basiert</p>
-    </div>
+    <select id="statusFilter">
+      <option value="">Alle Status</option>
+      <option value="available">Verfügbar</option>
+      <option value="reserved">Reserviert</option>
+      <option value="completed">Vergeben</option>
+    </select>
+
+    <select id="sortRating">
+      <option value="desc">Rating ↓</option>
+      <option value="asc">Rating ↑</option>
+    </select>
+  </div>
+
+  <!-- REQUEST FEED -->
+  <section class="request-feed">
+    <h3>📬 Letzte Anfragen</h3>
+    <div id="requestFeed"></div>
   </section>
 
-  <!-- ===== ICON BAR (ALT LOOK) ===== -->
-  <div class="icon-bar" id="iconBar"></div>
+  <div class="rating-hint">
+    ⓘ Item-Bewertungen dienen der Orientierung – die Community entscheidet.
+  </div>
 
-  <!-- ===== CONTENT ===== -->
-  <main class="container">
+  <!-- CARDS -->
+  <section class="cards" id="cards"></section>
 
-    <div class="meta-bar">
-      <span id="metaStats"></span>
-    </div>
-
-    <div class="filter-panel">
-      <input id="search" placeholder="Item suchen…" />
-
-      <select id="statusFilter">
-        <option value="">Alle Status</option>
-        <option value="available">Verfügbar</option>
-        <option value="reserved">Reserviert</option>
-        <option value="completed">Vergeben</option>
-      </select>
-
-      <select id="sortRating">
-        <option value="desc">Rating ↓</option>
-        <option value="asc">Rating ↑</option>
-      </select>
-    </div>
-
-    <!-- REQUEST FEED -->
-    <section class="request-feed">
-      <h3>📬 Letzte Anfragen</h3>
-      <div id="requestFeed"></div>
-    </section>
-
-    <div class="rating-hint">
-      ⓘ Item-Bewertungen dienen der Orientierung – die Community entscheidet.
-    </div>
-
-    <!-- CARDS -->
-    <section class="cards" id="cards"></section>
-
-  </main>
-
+</main>
 </div>
 
 <!-- ===== FOOTER ===== -->
@@ -133,6 +131,8 @@
     <span class="sep">·</span>
     <a href="entwickler.html">Über den Entwickler</a>
     <span class="sep">·</span>
+    <a href="cube.html">Cube Guide</a>
+    <span class="sep">·</span>
     <a href="impressum.html">Impressum</a>
     <span class="sep">·</span>
     <a href="datenschutz.html">Datenschutz</a>
@@ -140,7 +140,7 @@
   <div class="footer-copy">© 2026 D2R Lootliste</div>
 </footer>
 
-<!-- QUICK START TOGGLE -->
+<!-- ===== QUICK START TOGGLE ===== -->
 <script>
 const qs = document.getElementById('quickStart');
 const qt = document.getElementById('quickToggle');
