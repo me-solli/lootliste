@@ -1,7 +1,9 @@
 // ui/card-render.js
 // =====================================
 // UI-Layer für Item-Cards (V3 – FINAL)
-// Entscheidet NUR Darstellung. Logik kommt aus Core & Auth-State.
+// Core = Single Source of Truth
+// UI übersetzt & visualisiert NUR
+// =====================================
 
 import {
   NEED_LIMIT,
@@ -10,30 +12,46 @@ import {
 } from '/lootliste/core/core.js';
 
 // --------------------------------------------------
+// UI Mappings (Core → Anzeige)
+// --------------------------------------------------
+const STATUS_LABELS = {
+  [ITEM_STATUS.AVAILABLE]: 'Verfügbar',
+  [ITEM_STATUS.RESERVED]: 'Reserviert',
+  [ITEM_STATUS.COMPLETED]: 'Vergeben'
+};
+
+const STATUS_CLASSES = {
+  [ITEM_STATUS.AVAILABLE]: 'verfuegbar',
+  [ITEM_STATUS.RESERVED]: 'reserviert',
+  [ITEM_STATUS.COMPLETED]: 'vergeben'
+};
+
+// --------------------------------------------------
 // Render Entry
 // --------------------------------------------------
 export function renderItemCard(item, auth) {
   const needCount = Array.isArray(item.needs) ? item.needs.length : 0;
 
-  const needInfo = `Bedarf: <strong>${needCount} / ${NEED_LIMIT}</strong>`;
-  const needButton = renderNeedButton(item, auth);
-  const timeline = renderTimeline(item);
+  const statusLabel = STATUS_LABELS[item.status] || item.status;
+  const statusClass = STATUS_CLASSES[item.status] || '';
 
   return `
-  <div class="card ${item.status}">
+  <div class="card ${statusClass}">
 
     <div class="card-header">
       <h3 class="item-name">${item.name}</h3>
-      <span class="status-badge ${item.status}">${item.status}</span>
+      <span class="status-badge ${statusClass}">${statusLabel}</span>
     </div>
 
     <div class="card-body">
-      <div class="need-info">${needInfo}</div>
-      ${needButton}
+      <div class="need-info">
+        Bedarf: <strong>${needCount} / ${NEED_LIMIT}</strong>
+      </div>
+      ${renderNeedButton(item, auth)}
     </div>
 
     <div class="card-timeline">
-      ${timeline}
+      ${renderTimeline(item)}
     </div>
 
   </div>
@@ -41,7 +59,7 @@ export function renderItemCard(item, auth) {
 }
 
 // --------------------------------------------------
-// Bedarf Button (AUTH entscheidet, sonst Status)
+// Bedarf Button (Status → Auth → Core)
 // --------------------------------------------------
 function renderNeedButton(item, auth) {
   // Status blockiert immer
@@ -54,22 +72,29 @@ function renderNeedButton(item, auth) {
     return `<button class="btn locked" disabled>Bedarf abgeschlossen</button>`;
   }
 
-  // Nicht eingeloggt → Login
+  // Nicht eingeloggt
   if (!auth || auth.isLoggedIn !== true) {
-    return `<button class="btn primary" data-action="auth">Login für Bedarf</button>`;
+    return `<button class="btn primary" data-action="auth">
+      Login für Bedarf
+    </button>`;
   }
 
   // Eingeloggt → Bedarf anmelden
-  return `<button class="btn primary" data-action="need" data-item="${item.id}">Bedarf anmelden</button>`;
+  return `<button
+    class="btn primary"
+    data-action="need"
+    data-item="${item.id}">
+    Bedarf anmelden
+  </button>`;
 }
 
 // --------------------------------------------------
-// Timeline (neutral & korrekt)
+// Timeline (UI-States sauber)
 // --------------------------------------------------
 function renderTimeline(item) {
-  let step1 = 'inactive';
-  let step2 = 'inactive';
-  let step3 = 'inactive';
+  let step1 = 'future';
+  let step2 = 'future';
+  let step3 = 'future';
 
   if (item.status === ITEM_STATUS.AVAILABLE) {
     step1 = isNeedOpen(item) ? 'active' : 'done';
