@@ -1,22 +1,27 @@
 // ui/index-ui.js
 // =====================================
-// Public Index UI – V3
-// HARD FIX: direkte Button-Events
+// Public Index UI – V3 (FINAL)
+// - Direkte Button-Events (robust)
+// - CORS-Fallback (Dummy Items)
+// - Core = Single Source of Truth
 // =====================================
 
 import { renderItemCard } from './card-render.js';
 import { addNeed } from '../core/core.js';
 
+// --------------------------------------------------
+// State
+// --------------------------------------------------
 let items = [];
 let auth = {
-  isLoggedIn: true,
+  isLoggedIn: true,   // DEV
   userId: 'dev-user'
 };
 
 let cardsEl = null;
 
 // --------------------------------------------------
-// Render + Event Bind
+// Render + Events
 // --------------------------------------------------
 function render() {
   if (!cardsEl) return;
@@ -25,18 +30,14 @@ function render() {
     .map(item => renderItemCard(item, auth))
     .join('');
 
-  bindNeedButtons(); // 🔥 WICHTIG
+  bindButtons();
 }
 
-// --------------------------------------------------
-// DIREKTE BUTTON-BINDUNG (kein Delegation)
-// --------------------------------------------------
-function bindNeedButtons() {
-  const buttons = cardsEl.querySelectorAll('button[data-action="need"]');
-
-  buttons.forEach(btn => {
+function bindButtons() {
+  // Bedarf
+  cardsEl.querySelectorAll('button[data-action="need"]').forEach(btn => {
     btn.onclick = () => {
-      const itemId = btn.dataset.item;
+      const itemId = btn.dataset.item; // STRING
       const item = items.find(i => String(i.id) === itemId);
       if (!item) return;
 
@@ -49,25 +50,24 @@ function bindNeedButtons() {
     };
   });
 
-  const authButtons = cardsEl.querySelectorAll('button[data-action="auth"]');
-  authButtons.forEach(btn => {
-    btn.onclick = () => {
-      alert('Login folgt in Phase: Accounts');
-    };
+  // Auth Stub
+  cardsEl.querySelectorAll('button[data-action="auth"]').forEach(btn => {
+    btn.onclick = () => alert('Login folgt in Phase: Accounts');
   });
 }
 
 // --------------------------------------------------
-// Load Items
+// Load Items (CORS-safe mit Fallback)
 // --------------------------------------------------
 async function loadItems() {
-  try {
-    const res = await fetch(
-      'https://content-connection-production-ea07.up.railway.app/api/items/public'
-    );
-    const data = await res.json();
+  const API = 'https://content-connection-production-ea07.up.railway.app/api/items/public';
 
-    if (!Array.isArray(data)) return [];
+  try {
+    const res = await fetch(API, { credentials: 'omit' });
+    if (!res.ok) throw new Error('FETCH_FAILED');
+
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('INVALID_DATA');
 
     return data.map(i => ({
       id: i.id,
@@ -77,9 +77,28 @@ async function loadItems() {
       status: i.status || 'available',
       needs: Array.isArray(i.needs) ? i.needs : []
     }));
-  } catch (e) {
-    console.error(e);
-    return [];
+  } catch (err) {
+    console.warn('⚠ Backend/CORS blockt – Dummy-Daten aktiv', err);
+
+    // 🔥 DEV-FALLBACK (sofort sichtbar & klickbar)
+    return [
+      {
+        id: 'dummy-1',
+        name: 'Natalyas Mal',
+        type: 'waffe',
+        rating: 4,
+        status: 'available',
+        needs: []
+      },
+      {
+        id: 'dummy-2',
+        name: 'Lidlose Wand',
+        type: 'schild',
+        rating: 3,
+        status: 'available',
+        needs: []
+      }
+    ];
   }
 }
 
@@ -107,7 +126,10 @@ function handleNeedError(err) {
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
   cardsEl = document.getElementById('cards');
-  if (!cardsEl) return;
+  if (!cardsEl) {
+    console.error('Cards container (#cards) not found');
+    return;
+  }
 
   items = await loadItems();
   render();
