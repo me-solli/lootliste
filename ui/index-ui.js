@@ -1,48 +1,54 @@
 // ui/index-ui.js
 // =====================================
-// Public Index UI – V3 (FINAL)
-// - Direkte Button-Events (robust)
-// - CORS-Fallback (Dummy Items)
-// - Hero-Stats angebunden
-// - Core = Single Source of Truth
+// Public Index UI – V3 CLEAN
+// - Keine Alt-UI
+// - Ruhiger Default-State
+// - index.html = passive Bühne
 // =====================================
 
 import { renderItemCard } from './card-render.js';
 import { addNeed } from '../core/core.js';
 
-console.log('🔥 INDEX-UI LOADED (NEW VERSION)');
+console.log('INDEX-UI LOADED (V3 CLEAN)');
 
 // --------------------------------------------------
 // State
 // --------------------------------------------------
 let items = [];
+
+// DEV / PUBLIC DEFAULT: NICHT eingeloggt
 let auth = {
-  isLoggedIn: true,   // DEV
-  userId: 'dev-user'
+  isLoggedIn: false,
+  userId: null
 };
 
-let cardsEl = null;
+let cardsEl;
 
 // --------------------------------------------------
-// Render + Events
+// Main Render
 // --------------------------------------------------
 function render() {
   if (!cardsEl) return;
 
+  // Cards
   cardsEl.innerHTML = items
     .map(item => renderItemCard(item, auth))
     .join('');
 
-  renderHeroStats(items);
-  renderRequestFeed(items);
-  bindButtons();
+  renderHeroStats();
+  renderRequestFeed();
+  bindCardActions();
 }
 
-function bindButtons() {
-  // Bedarf
-  cardsEl.querySelectorAll('button[data-action="need"]').forEach(btn => {
+// --------------------------------------------------
+// Card Actions
+// --------------------------------------------------
+function bindCardActions() {
+  if (!auth.isLoggedIn) return;
+
+  cardsEl.querySelectorAll('[data-action="need"]').forEach(btn => {
     btn.onclick = () => {
-      const itemId = btn.dataset.item; // STRING
+      const itemId = btn.dataset.item;
       const item = items.find(i => String(i.id) === itemId);
       if (!item) return;
 
@@ -54,57 +60,48 @@ function bindButtons() {
       }
     };
   });
-
-  // Auth Stub
-  cardsEl.querySelectorAll('button[data-action="auth"]').forEach(btn => {
-    btn.onclick = () => alert('Login folgt in Phase: Accounts');
-  });
 }
 
 // --------------------------------------------------
-// Hero Stats (sichtbares Leben im Header)
+// Hero Stats
 // --------------------------------------------------
-function renderHeroStats(items) {
+function renderHeroStats() {
   const el = document.getElementById('heroStats');
   if (!el) return;
 
   const total = items.length;
   const available = items.filter(i => i.status === 'available').length;
-  const needsTotal = items.reduce(
-    (sum, i) => sum + (Array.isArray(i.needs) ? i.needs.length : 0),
-    0
-  );
+  const needs = items.reduce((sum, i) => sum + (i.needs?.length || 0), 0);
 
   el.innerHTML = `
     <div class="hero-stat">
       <strong>${total}</strong>
-      <span>Items gesamt</span>
+      <span>Items</span>
     </div>
     <div class="hero-stat">
       <strong>${available}</strong>
       <span>Verfügbar</span>
     </div>
     <div class="hero-stat">
-      <strong>${needsTotal}</strong>
+      <strong>${needs}</strong>
       <span>Bedarfe</span>
     </div>
   `;
 }
 
 // --------------------------------------------------
-// Letzte Anfragen (Request Feed)
+// Request Feed (letzte Bedarfe)
 // --------------------------------------------------
-function renderRequestFeed(items) {
+function renderRequestFeed() {
   const feed = document.getElementById('requestFeed');
   if (!feed) return;
 
-  // Sammle letzte Needs (max 5)
   const entries = items
     .flatMap(item =>
-      (Array.isArray(item.needs) ? item.needs : []).map(n => ({
-        itemName: item.name,
-        userId: n.userId,
-        at: n.at || Date.now()
+      (item.needs || []).map(n => ({
+        item: item.name,
+        user: n.userId,
+        at: n.at || 0
       }))
     )
     .sort((a, b) => b.at - a.at)
@@ -117,14 +114,14 @@ function renderRequestFeed(items) {
 
   feed.innerHTML = entries.map(e => `
     <div class="feed-item">
-      <span class="item">${e.itemName}</span>
-      <span class="user">${e.userId}</span>
+      <span class="item">${e.item}</span>
+      <span class="user">${e.user}</span>
     </div>
   `).join('');
 }
 
 // --------------------------------------------------
-// Load Items (CORS-safe mit Fallback)
+// Load Items (Backend + Fallback)
 // --------------------------------------------------
 async function loadItems() {
   const API = 'https://content-connection-production-ea07.up.railway.app/api/items/public';
@@ -144,10 +141,8 @@ async function loadItems() {
       status: i.status || 'available',
       needs: Array.isArray(i.needs) ? i.needs : []
     }));
-  } catch (err) {
-    console.warn('⚠ Backend/CORS blockt – Dummy-Daten aktiv', err);
-
-    // 🔥 DEV-FALLBACK (sofort sichtbar & klickbar)
+  } catch {
+    // DEV FALLBACK
     return [
       {
         id: 'dummy-1',
@@ -175,13 +170,13 @@ async function loadItems() {
 function handleNeedError(err) {
   switch (err.message) {
     case 'USER_NEED_LIMIT':
-      alert('Du hast bereits zu viele offene Bedarfe.');
+      alert('Zu viele offene Bedarfe.');
       break;
     case 'ALREADY_REQUESTED':
-      alert('Du hast hier bereits Bedarf angemeldet.');
+      alert('Bereits Bedarf angemeldet.');
       break;
     case 'NEED_CLOSED':
-      alert('Der Bedarf ist geschlossen.');
+      alert('Bedarf geschlossen.');
       break;
     default:
       console.error(err);
@@ -193,10 +188,7 @@ function handleNeedError(err) {
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
   cardsEl = document.getElementById('cards');
-  if (!cardsEl) {
-    console.error('Cards container (#cards) not found');
-    return;
-  }
+  if (!cardsEl) return;
 
   items = await loadItems();
   render();
