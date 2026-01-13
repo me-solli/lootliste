@@ -1,85 +1,158 @@
 <!DOCTYPE html>
+<!--
+  ================================
+  LOOTLISTE V3 – PUBLIC INDEX
+  VISUAL: ALT / GRAFISCH (V2-LIKE)
+  LOGIK: NEU (index-ui.js)
+  ================================
+-->
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
+  <title>Free Lootliste – Community Items | D2R Non-Ladder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lootliste V3</title>
 
-  <!-- Styles -->
+  <!-- ===== BASIS STILE (ALT / GRAFISCH) ===== -->
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/cards.css" />
 
-  <!-- UI Controller -->
+  <!-- ===== UI / RENDER ===== -->
   <script type="module" src="ui/index-ui.js"></script>
-
-  <noscript>
-    <style>body{display:none}</style>
-    <div style="padding:2rem;color:#ccc;background:#111;">
-      Diese Anwendung benötigt JavaScript.
-    </div>
-  </noscript>
 </head>
-<body>
 
-  <!-- ===== HEADER ===== -->
-  <header class="app-header">
-    <div class="header-left">
-      <img src="img/logo_d2r.png" alt="Lootliste" class="logo" />
-    </div>
-    <div class="header-right">
-      <button class="btn ghost" id="loginBtn">Login</button>
-      <button class="btn primary" id="registerBtn">Registrieren</button>
+<body>
+<div class="wrapper">
+
+  <!-- ===== HERO (ALT-STYLE) ===== -->
+  <header class="hero" style="background:url('img/banner_diablo.png') center top / cover no-repeat">
+    <div class="hero-inner">
+
+      <!-- AUTH BOX (UI ONLY) -->
+      <div class="auth-box" id="authBox">
+        <span id="authState">👤 Nicht eingeloggt</span>
+        <button id="loginBtn">Login</button>
+        <button id="registerBtn">Registrieren</button>
+      </div>
+
+      <!-- LOGO / TITLE -->
+      <h1 class="hero-logo">
+        <img src="img/logo_d2r.png" alt="D2R Lootliste" />
+      </h1>
+      <p>Community Lootliste · Diablo II Resurrected</p>
+
+      <!-- MODE STATUS -->
+      <div class="mode-banner">
+        Aktueller Modus: <strong>NON-LADDER</strong>
+        <span>· Ladder in Vorbereitung</span>
+      </div>
+
+      <!-- HERO STATS (GERENDERT) -->
+      <div class="hero-stats" id="heroStats"></div>
+
+      <div class="hero-right">
+        <div id="visitorCounter">👁 Besucher gesamt: …</div>
+      </div>
     </div>
   </header>
 
-    <!-- ===== HERO (RUHIG & KOMPAKT) ===== -->
-  <section class="hero hero-compact">
-    <img src="img/banner_diablo.png" alt="Diablo Banner" class="hero-bg" />
+  <!-- ===== PROJECT STATUS (ALT TIMELINE – RUHIG) ===== -->
+  <div class="timeline-label">ⓘ Entwicklungsstand der Lootliste</div>
+  <div class="project-timeline" id="projectTimeline"></div>
 
-    <div class="hero-overlay">
-      <h1>D2R · Lootliste</h1>
-      <p class="subtitle">Community Lootliste · Diablo II Resurrected</p>
-      <p class="mode">
-        Aktueller Modus: <strong>NON-LADDER</strong>
-        <span class="muted">· Ladder in Vorbereitung</span>
-      </p>
+  <!-- ===== RULES ===== -->
+  <div class="rules-bar">
+    <a href="verfahren.html">ⓘ Ablauf & Regeln der Lootliste</a>
+  </div>
 
-      <!-- HERO STATS (minimal, von index-ui.js gerendert) -->
-      <div id="heroStats" class="hero-stats compact"></div>
+  <!-- ===== QUICK START ===== -->
+  <section class="quick-start" id="quickStart">
+    <div class="quick-head" id="quickToggle">
+      <span>Neu hier? Ein Item gesehen?</span>
+      <span class="quick-arrow">▾</span>
+    </div>
+
+    <div class="quick-body">
+      <ol>
+        <li><strong>Item finden</strong> – verfügbar</li>
+        <li><strong>Bedarf anmelden</strong> – 24h</li>
+        <li><strong>Automatisches Würfeln</strong></li>
+        <li><strong>Übergabe & Bestätigung</strong></li>
+      </ol>
+      <p class="quick-note">ⓘ Fair & community-basiert</p>
     </div>
   </section>
 
-  <!-- ===== SYSTEM FLOW (SEPARAT, SCHMAL) ===== -->
-  <section class="system-flow">
-    <div class="flow-step">Item spenden</div>
-    <div class="flow-sep">›</div>
-    <div class="flow-step">24h Bedarf</div>
-    <div class="flow-sep">›</div>
-    <div class="flow-step">Würfeln & Vergabe</div>
-  </section>
+  <!-- ===== ICON BAR (ALT LOOK) ===== -->
+  <div class="icon-bar" id="iconBar"></div>
 
-  <!-- ===== CATEGORY BAR ===== -->
-  <nav id="categoryBar" class="category-bar"></nav>
+  <!-- ===== CONTENT ===== -->
+  <main class="container">
 
-  <!-- ===== MAIN CONTENT ===== -->
-  <main class="main-content">
+    <div class="meta-bar">
+      <span id="metaStats"></span>
+    </div>
 
-    <!-- ITEM CARDS -->
-    <section id="cards" class="card-grid"></section>
+    <div class="filter-panel">
+      <input id="search" placeholder="Item suchen…" />
+
+      <select id="statusFilter">
+        <option value="">Alle Status</option>
+        <option value="available">Verfügbar</option>
+        <option value="reserved">Reserviert</option>
+        <option value="completed">Vergeben</option>
+      </select>
+
+      <select id="sortRating">
+        <option value="desc">Rating ↓</option>
+        <option value="asc">Rating ↑</option>
+      </select>
+    </div>
 
     <!-- REQUEST FEED -->
-    <aside class="request-feed">
-      <h2>Letzte Anfragen</h2>
+    <section class="request-feed">
+      <h3>📬 Letzte Anfragen</h3>
       <div id="requestFeed"></div>
-    </aside>
+    </section>
+
+    <div class="rating-hint">
+      ⓘ Item-Bewertungen dienen der Orientierung – die Community entscheidet.
+    </div>
+
+    <!-- CARDS -->
+    <section class="cards" id="cards"></section>
 
   </main>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="app-footer">
-    <span>Lootliste V3 · Community-System</span>
-  </footer>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="ueber-das-projekt.html">Über das Projekt</a>
+    <span class="sep">·</span>
+    <a href="entwickler.html">Über den Entwickler</a>
+    <span class="sep">·</span>
+    <a href="impressum.html">Impressum</a>
+    <span class="sep">·</span>
+    <a href="datenschutz.html">Datenschutz</a>
+  </div>
+  <div class="footer-copy">© 2026 D2R Lootliste</div>
+</footer>
+
+<!-- QUICK START TOGGLE -->
+<script>
+const qs = document.getElementById('quickStart');
+const qt = document.getElementById('quickToggle');
+if (qs && qt) {
+  const seen = localStorage.getItem('quick_seen');
+  if (seen) qs.classList.add('collapsed');
+  qt.onclick = () => {
+    qs.classList.toggle('collapsed');
+    localStorage.setItem('quick_seen', '1');
+  };
+}
+</script>
 
 </body>
 </html>
