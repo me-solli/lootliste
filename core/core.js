@@ -1,7 +1,56 @@
 // core.js — V3 Core Logic (STATUS-ENGINE)
 // ======================================
 // Single Source of Truth for item states, transitions and guards.
-// NO UI, NO DOM access. UI must only call these functions.
+// NO UI, NO DOM access (except localStorage for persistence).
+// UI must only call these functions.
+
+// ------------------------------
+// Storage (V3)
+// ------------------------------
+const STORAGE_KEY = 'lootliste_v3_items';
+
+function loadStore() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveStore(store) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+}
+
+export function persistItem(item) {
+  const store = loadStore();
+
+  store[item.id] = {
+    status: item.status,
+    statusChangedAt: item.statusChangedAt,
+
+    // Bedarf
+    needUntil: item.needUntil,
+    needs: item.needs,
+
+    // Roll / Vergabe
+    roll: item.roll,
+    winner: item.winner,
+
+    confirmations: item.confirmations,
+    flags: item.flags
+  };
+
+  saveStore(store);
+}
+
+export function hydrateItem(item) {
+  const store = loadStore();
+  const saved = store[item.id];
+  if (!saved) return item;
+
+  Object.assign(item, saved);
+  return item;
+}
 
 // ------------------------------
 // Status Enum (V3 – final)
@@ -44,7 +93,7 @@ export function createItem({
   type,
   donatedBy
 }) {
-  return {
+  const item = {
     id: uuid(),
     name,
     type,
@@ -70,6 +119,9 @@ export function createItem({
 
     flags: []
   };
+
+  persistItem(item);
+  return item;
 }
 
 // ------------------------------
@@ -92,6 +144,7 @@ export function updateItemStatus(item, ts = now()) {
     }
   }
 
+  persistItem(item);
   return item;
 }
 
@@ -113,6 +166,8 @@ export function openNeed(item, durationMs) {
 
   setStatus(item, ITEM_STATUS.NEED_OPEN);
   item.needUntil = now() + durationMs;
+
+  persistItem(item);
   return item;
 }
 
@@ -124,6 +179,8 @@ export function addNeed(item, userId) {
   assert(!exists, 'ALREADY_REQUESTED');
 
   item.needs.push({ userId, at: now() });
+
+  persistItem(item);
   return item;
 }
 
@@ -148,6 +205,8 @@ export function startRoll(item) {
   item.winner = winner.userId;
 
   setStatus(item, ITEM_STATUS.RESERVED);
+
+  persistItem(item);
   return item;
 }
 
@@ -156,6 +215,8 @@ export function startConfirmation(item) {
   assert(item.status === ITEM_STATUS.RESERVED, 'INVALID_STATE');
 
   setStatus(item, ITEM_STATUS.CONFIRM_PENDING);
+
+  persistItem(item);
   return item;
 }
 
@@ -165,6 +226,8 @@ export function confirm(item, role) {
   assert(role === 'giver' || role === 'receiver', 'INVALID_ROLE');
 
   item.confirmations[role] = true;
+
+  persistItem(item);
   return item;
 }
 
@@ -180,5 +243,6 @@ export function flagItem(item, reason) {
     setStatus(item, ITEM_STATUS.FLAGGED);
   }
 
+  persistItem(item);
   return item;
 }
