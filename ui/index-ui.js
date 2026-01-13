@@ -1,6 +1,7 @@
 // ui/index-ui.js
 // =====================================
-// Page wiring: Events + Render (V3)
+// Page wiring: Events + Render (V3 – FINAL, backend-driven)
+// Keine Test-Items. Kein Inline-Renderer. Ein Einstiegspunkt.
 
 import { renderItemCard } from './card-render.js';
 import { addNeed } from '/lootliste/core/core.js';
@@ -17,7 +18,7 @@ let auth = {
 const cardsEl = document.getElementById('cards');
 
 // --------------------------------------------------
-// Public Init
+// Init & Render
 // --------------------------------------------------
 export function initUI(initialItems, initialAuth) {
   items = Array.isArray(initialItems) ? initialItems : [];
@@ -30,6 +31,29 @@ function render() {
   cardsEl.innerHTML = items
     .map(item => renderItemCard(item, auth))
     .join('');
+}
+
+// --------------------------------------------------
+// Backend Load (einzige Datenquelle)
+// --------------------------------------------------
+async function loadItemsFromBackend() {
+  const res = await fetch(
+    'https://content-connection-production-ea07.up.railway.app/api/items/public'
+  );
+
+  const data = await res.json();
+
+  // V3-minimales Mapping (UI/Core-kompatibel)
+  return Array.isArray(data)
+    ? data.map(i => ({
+        id: i.id,
+        name: i.name,
+        type: i.type,
+        rating: Number(i.rating) || 0,
+        status: i.status || 'available',
+        needs: [] // Bedarf startet leer (V3)
+      }))
+    : [];
 }
 
 // --------------------------------------------------
@@ -88,29 +112,13 @@ function handleNeedError(err) {
 }
 
 // --------------------------------------------------
-// DEV BOOTSTRAP (temporary – shows cards & timeline)
+// Bootstrap (FINAL)
 // --------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  const demoItems = [
-    {
-      id: 'demo1',
-      name: 'Test-Item #1',
-      status: 'available',
-      needs: []
-    },
-    {
-      id: 'demo2',
-      name: 'Test-Item #2',
-      status: 'reserved',
-      needs: [{ userId: 'u1', at: Date.now() }]
-    },
-    {
-      id: 'demo3',
-      name: 'Test-Item #3',
-      status: 'completed',
-      needs: [{ userId: 'u2', at: Date.now() }]
-    }
-  ];
+document.addEventListener('DOMContentLoaded', async () => {
+  const backendItems = await loadItemsFromBackend();
 
-  initUI(demoItems, { isLoggedIn: false, userId: null });
+  initUI(backendItems, {
+    isLoggedIn: false,
+    userId: null
+  });
 });
