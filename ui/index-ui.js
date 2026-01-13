@@ -86,31 +86,3 @@ function handleNeedError(err) {
       console.error(err);
   }
 }
-
-// --------------------------------------------------
-// DEV BOOTSTRAP (temporary – shows cards & timeline)
-// --------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  const demoItems = [
-    {
-      id: 'demo1',
-      name: 'Test-Item #1',
-      status: 'available',
-      needs: []
-    },
-    {
-      id: 'demo2',
-      name: 'Test-Item #2',
-      status: 'reserved',
-      needs: [{ userId: 'u1', at: Date.now() }]
-    },
-    {
-      id: 'demo3',
-      name: 'Test-Item #3',
-      status: 'completed',
-      needs: [{ userId: 'u2', at: Date.now() }]
-    }
-  ];
-
-  initUI(demoItems, { isLoggedIn: false, userId: null });
-});
