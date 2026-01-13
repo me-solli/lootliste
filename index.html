@@ -1463,6 +1463,18 @@ status: getSimStatus(
 }
   
 function render() {
+
+  // ===== BEDARF TIMER CHECK =====
+items.forEach(item => {
+  if (
+    item.status === "Bedarf" &&
+    item.needEndsAt &&
+    Date.now() >= item.needEndsAt
+  ) {
+    item.status = "Würfeln";
+  }
+});
+
   cards.innerHTML = "";
 
   const filtered = items
