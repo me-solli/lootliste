@@ -1,23 +1,21 @@
-// card-render.js
-// ===============================
-// UI-Layer für Item-Cards
-// Liest NUR aus dem Core – keine eigene Logik
+// ui/card-render.js
+// =====================================
+// UI-Layer für Item-Cards (V3 – FINAL)
+// Entscheidet NUR Darstellung. Logik kommt aus Core & Auth-State.
 
 import {
   NEED_LIMIT,
   ITEM_STATUS,
-  isNeedOpen,
-  isNeedFull
+  isNeedOpen
 } from '/lootliste/core/core.js';
 
 // --------------------------------------------------
 // Render Entry
 // --------------------------------------------------
 export function renderItemCard(item, auth) {
-  const needCount = item.needs.length;
+  const needCount = Array.isArray(item.needs) ? item.needs.length : 0;
 
   const needInfo = `Bedarf: <strong>${needCount} / ${NEED_LIMIT}</strong>`;
-
   const needButton = renderNeedButton(item, auth);
   const timeline = renderTimeline(item);
 
@@ -43,26 +41,30 @@ export function renderItemCard(item, auth) {
 }
 
 // --------------------------------------------------
-// Bedarf Button
+// Bedarf Button (AUTH entscheidet, sonst Status)
 // --------------------------------------------------
 function renderNeedButton(item, auth) {
+  // Status blockiert immer
   if (item.status !== ITEM_STATUS.AVAILABLE) {
     return `<button class="btn disabled" disabled>Bedarf nicht möglich</button>`;
   }
 
+  // Bedarf-Phase geschlossen
   if (!isNeedOpen(item)) {
     return `<button class="btn locked" disabled>Bedarf abgeschlossen</button>`;
   }
 
-  if (!auth?.isLoggedIn) {
+  // Nicht eingeloggt → Login
+  if (!auth || auth.isLoggedIn !== true) {
     return `<button class="btn primary" data-action="auth">Login für Bedarf</button>`;
   }
 
+  // Eingeloggt → Bedarf anmelden
   return `<button class="btn primary" data-action="need" data-item="${item.id}">Bedarf anmelden</button>`;
 }
 
 // --------------------------------------------------
-// Timeline (minimal & korrekt)
+// Timeline (neutral & korrekt)
 // --------------------------------------------------
 function renderTimeline(item) {
   let step1 = 'inactive';
