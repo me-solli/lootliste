@@ -1,55 +1,31 @@
-// core.js — V3 Core Logic (GUARDED & STABLE)
+// core.js — V3 Core Logic (STATUS-ENGINE)
 // ======================================
 // Single Source of Truth for item states, transitions and guards.
-// Bedarf ist eine PHASE innerhalb von AVAILABLE (kein eigener Status).
+// NO UI, NO DOM access. UI must only call these functions.
 
-// --------------------------------------------------
-// Status Enum (V3 – FINAL)
-// --------------------------------------------------
+// ------------------------------
+// Status Enum (V3 – final)
+// ------------------------------
 export const ITEM_STATUS = Object.freeze({
-  AVAILABLE: 'available',      // inkl. Bedarf-Phase
-  RESERVED: 'reserved',        // Gewinner festgelegt
-  COMPLETED: 'completed',      // beidseitig bestätigt (terminal)
-  ABORTED: 'aborted'           // abgebrochen (terminal)
+  AVAILABLE: 'available',              // frisch gespendet
+  NEED_OPEN: 'need_open',               // 24h Bedarf offen
+  ROLLING: 'rolling',                   // Würfelphase
+  RESERVED: 'reserved',                 // Gewinner festgelegt
+  CONFIRM_PENDING: 'confirm_pending',   // Übergabe läuft
+  ASSIGNED: 'assigned',                 // beidseitig bestätigt
+  EXPIRED: 'expired',                   // abgelaufen
+  FLAGGED: 'flagged'                    // Soft-Dupe / Auffällig
 });
 
-// --------------------------------------------------
-// Action Enum
-// --------------------------------------------------
-export const ITEM_ACTIONS = Object.freeze({
-  ADD_NEED: 'addNeed',
-  START_ROLL: 'startRoll',
-  CONFIRM: 'confirm',
-  ABORT: 'abort'
-});
-
-// --------------------------------------------------
-// State → Allowed Actions
-// --------------------------------------------------
-const STATE_ACTION_MAP = Object.freeze({
-  [ITEM_STATUS.AVAILABLE]: [
-    ITEM_ACTIONS.ADD_NEED,
-    ITEM_ACTIONS.START_ROLL
-  ],
-
-  [ITEM_STATUS.RESERVED]: [
-    ITEM_ACTIONS.CONFIRM,
-    ITEM_ACTIONS.ABORT
-  ],
-
-  [ITEM_STATUS.COMPLETED]: [],
-  [ITEM_STATUS.ABORTED]: []
-});
-
-// --------------------------------------------------
-// Guards / Utils
-// --------------------------------------------------
-export function canPerformAction(item, action) {
-  return !!STATE_ACTION_MAP[item.status]?.includes(action);
-}
-
+// ------------------------------
+// Helpers
+// ------------------------------
 export function now() {
   return Date.now();
+}
+
+export function assert(condition, code) {
+  if (!condition) throw new Error(code);
 }
 
 function uuid() {
@@ -60,20 +36,19 @@ function random1to100() {
   return Math.floor(Math.random() * 100) + 1;
 }
 
-// --------------------------------------------------
-// Bedarf-Konstanten
-// --------------------------------------------------
-export const NEED_LIMIT = 5;      // max. Bedarf pro Item
-export const USER_NEED_LIMIT = 3; // max. offene Bedarfe pro User
-
-// --------------------------------------------------
+// ------------------------------
 // Item Factory
-// --------------------------------------------------
-export function createItem({ name, type, donatedBy }) {
+// ------------------------------
+export function createItem({
+  name,
+  type,
+  donatedBy
+}) {
   return {
     id: uuid(),
     name,
     type,
+
     donatedBy,
     donatedAt: now(),
 
@@ -81,88 +56,129 @@ export function createItem({ name, type, donatedBy }) {
     statusChangedAt: now(),
 
     // Bedarf
+    needUntil: null,
     needs: [], // [{ userId, at }]
 
     // Roll / Vergabe
-    roll: null,
+    roll: null, // { at, results: [{ userId, value }] }
     winner: null,
 
-    archived: false,
-    visible: true
+    confirmations: {
+      giver: false,
+      receiver: false
+    },
+
+    flags: []
   };
 }
 
-// --------------------------------------------------
-// Bedarf-Helper (UI & Timeline Source)
-// --------------------------------------------------
-export function isNeedOpen(item) {
-  return item.status === ITEM_STATUS.AVAILABLE
-      && item.needs.length < NEED_LIMIT;
+// ------------------------------
+// Status Engine (auto transitions)
+// ------------------------------
+export function updateItemStatus(item, ts = now()) {
+  // Bedarf abgelaufen
+  if (item.status === ITEM_STATUS.NEED_OPEN && ts > item.needUntil) {
+    if (item.needs.length > 0) {
+      startRoll(item);
+    } else {
+      setStatus(item, ITEM_STATUS.EXPIRED);
+    }
+  }
+
+  // Übergabe abgeschlossen
+  if (item.status === ITEM_STATUS.CONFIRM_PENDING) {
+    if (item.confirmations.giver && item.confirmations.receiver) {
+      setStatus(item, ITEM_STATUS.ASSIGNED);
+    }
+  }
+
+  return item;
 }
 
-export function isNeedFull(item) {
-  return item.status === ITEM_STATUS.AVAILABLE
-      && item.needs.length >= NEED_LIMIT;
+// ------------------------------
+// Internal helper
+// ------------------------------
+function setStatus(item, status) {
+  item.status = status;
+  item.statusChangedAt = now();
 }
 
-export function countOpenNeeds(items, userId) {
-  return items.filter(item => {
-    if (item.status !== ITEM_STATUS.AVAILABLE) return false;
-    return item.needs.some(n => n.userId === userId);
-  }).length;
+// ------------------------------
+// Actions / Events
+// ------------------------------
+
+// Bedarf öffnen (z. B. 24h)
+export function openNeed(item, durationMs) {
+  assert(item.status === ITEM_STATUS.AVAILABLE, 'INVALID_STATE');
+
+  setStatus(item, ITEM_STATUS.NEED_OPEN);
+  item.needUntil = now() + durationMs;
+  return item;
 }
 
-// --------------------------------------------------
-// Actions
-// --------------------------------------------------
-export function addNeed(item, userId, allItems = []) {
-  if (!canPerformAction(item, ITEM_ACTIONS.ADD_NEED)) return item;
-
-  if (!isNeedOpen(item)) throw new Error('NEED_CLOSED');
+// Bedarf anmelden
+export function addNeed(item, userId) {
+  assert(item.status === ITEM_STATUS.NEED_OPEN, 'NEED_NOT_OPEN');
 
   const exists = item.needs.some(n => n.userId === userId);
-  if (exists) throw new Error('ALREADY_REQUESTED');
-
-  const openCount = countOpenNeeds(allItems, userId);
-  if (openCount >= USER_NEED_LIMIT) throw new Error('USER_NEED_LIMIT');
+  assert(!exists, 'ALREADY_REQUESTED');
 
   item.needs.push({ userId, at: now() });
   return item;
 }
 
+// Würfeln starten (automatisch)
 export function startRoll(item) {
-  if (!canPerformAction(item, ITEM_ACTIONS.START_ROLL)) return item;
-  if (item.needs.length === 0) throw new Error('NO_NEEDS');
+  assert(item.status === ITEM_STATUS.NEED_OPEN, 'INVALID_STATE');
 
-  item.roll = item.needs.map(n => ({
-    userId: n.userId,
-    value: random1to100()
-  }));
+  setStatus(item, ITEM_STATUS.ROLLING);
 
-  const winner = item.roll.reduce((a, b) => b.value > a.value ? b : a);
+  item.roll = {
+    at: now(),
+    results: item.needs.map(n => ({
+      userId: n.userId,
+      value: random1to100()
+    }))
+  };
+
+  const winner = item.roll.results.reduce((a, b) =>
+    b.value > a.value ? b : a
+  );
+
   item.winner = winner.userId;
 
-  item.status = ITEM_STATUS.RESERVED;
-  item.statusChangedAt = now();
+  setStatus(item, ITEM_STATUS.RESERVED);
   return item;
 }
 
-export function confirm(item) {
-  if (!canPerformAction(item, ITEM_ACTIONS.CONFIRM)) return item;
+// Übergabe starten
+export function startConfirmation(item) {
+  assert(item.status === ITEM_STATUS.RESERVED, 'INVALID_STATE');
 
-  item.status = ITEM_STATUS.COMPLETED;
-  item.statusChangedAt = now();
-  item.archived = true;
-  item.visible = false;
+  setStatus(item, ITEM_STATUS.CONFIRM_PENDING);
   return item;
 }
 
-export function abort(item) {
-  if (!canPerformAction(item, ITEM_ACTIONS.ABORT)) return item;
+// Übergabe bestätigen
+export function confirm(item, role) {
+  assert(item.status === ITEM_STATUS.CONFIRM_PENDING, 'INVALID_STATE');
+  assert(role === 'giver' || role === 'receiver', 'INVALID_ROLE');
 
-  item.status = ITEM_STATUS.ABORTED;
-  item.statusChangedAt = now();
-  item.archived = true;
-  item.visible = false;
+  item.confirmations[role] = true;
+  return item;
+}
+
+// ------------------------------
+// Flags / Side paths
+// ------------------------------
+export function flagItem(item, reason) {
+  if (!item.flags.includes(reason)) {
+    item.flags.push(reason);
+  }
+
+  if (item.status !== ITEM_STATUS.ASSIGNED) {
+    setStatus(item, ITEM_STATUS.FLAGGED);
+  }
+
   return item;
 }

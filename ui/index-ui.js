@@ -1,202 +1,118 @@
-// ui/index-ui.js
-// =====================================
-// Public Index UI – V3 CLEAN (REBUILD 1:1)
-// Zweck:
-// - 1:1 Ersatz für aktuelle Version
-// - ruhiger Default-State (nicht eingeloggt)
-// - keine Alt-UI, keine Filter, keine Suche
-// - index.html = passive Bühne
-// =====================================
+// index-ui.js — V3 UI Hook (CLEAN & ALIGNED)
+// ==========================================
+// Connects UI actions to V3 core logic.
+// No legacy V2 calls. No hidden state transitions.
 
-import { renderItemCard } from './card-render.js';
-import { addNeed } from '../core/core.js';
+import {
+  createItem,
+  openNeed,
+  addNeed,
+  startConfirmation,
+  confirm,
+  ITEM_STATUS
+} from '../core/core.js';
 
-console.log('INDEX-UI LOADED (V3 CLEAN)');
+import { checkAllTimeouts } from '../core/timeouts.js';
+import { executeRoll } from '../core/rolls.js';
 
-// --------------------------------------------------
-// State
-// --------------------------------------------------
-let items = [];
-
-// Public Default: NICHT eingeloggt
-const auth = {
-  isLoggedIn: false,
-  userId: null
+// ------------------------------
+// TEMP: In-memory store (SIM / DEV MODE)
+// ------------------------------
+const store = {
+  items: []
 };
 
-let cardsEl = null;
-
-// --------------------------------------------------
-// Render Orchestrator
-// --------------------------------------------------
-function render() {
-  if (!cardsEl) return;
-
-  // Cards
-  cardsEl.innerHTML = items
-    .map(item => renderItemCard(item, auth))
-    .join('');
-
-  renderHeroStats();
-  renderRequestFeed();
-  bindCardActions();
+// ------------------------------
+// Helpers
+// ------------------------------
+function getCurrentUserId() {
+  // TODO: replace with real auth
+  return 'user_demo_1';
 }
 
-// --------------------------------------------------
-// Card Actions (nur wenn eingeloggt)
-// --------------------------------------------------
-function bindCardActions() {
-  if (!auth.isLoggedIn) return;
+function getItemById(id) {
+  return store.items.find(i => i.id === id);
+}
 
-  const needButtons = cardsEl.querySelectorAll('[data-action="need"]');
+// ------------------------------
+// Item submission
+// ------------------------------
+export function submitItem({ name, type }) {
+  const userId = getCurrentUserId();
 
-  needButtons.forEach(btn => {
-    btn.onclick = () => {
-      const itemId = btn.dataset.item;
-      const item = items.find(i => String(i.id) === String(itemId));
-      if (!item) return;
-
-      try {
-        addNeed(item, auth.userId, items);
-        render();
-      } catch (err) {
-        handleNeedError(err);
-      }
-    };
+  const item = createItem({
+    name,
+    type,
+    donatedBy: userId
   });
+
+  store.items.push(item);
+  return item;
 }
 
-// --------------------------------------------------
-// Hero Stats
-// --------------------------------------------------
-function renderHeroStats() {
-  const el = document.getElementById('heroStats');
-  if (!el) return;
+// ------------------------------
+// Need registration (current user)
+// ------------------------------
+export function clickNeed(itemId, durationMs = 24 * 60 * 60 * 1000) {
+  const userId = getCurrentUserId();
+  const item = getItemById(itemId);
 
-  const total = items.length;
-  const available = items.filter(i => i.status === 'available').length;
-  const needs = items.reduce(
-    (sum, i) => sum + (Array.isArray(i.needs) ? i.needs.length : 0),
-    0
-  );
+  if (!item) throw new Error('ITEM_NOT_FOUND');
 
-  el.innerHTML = `
-    <div class="hero-stat">
-      <strong>${total}</strong>
-      <span>Items</span>
-    </div>
-    <div class="hero-stat">
-      <strong>${available}</strong>
-      <span>Verfügbar</span>
-    </div>
-    <div class="hero-stat">
-      <strong>${needs}</strong>
-      <span>Bedarfe</span>
-    </div>
-  `;
-}
-
-// --------------------------------------------------
-// Request Feed (letzte Bedarfe)
-// --------------------------------------------------
-function renderRequestFeed() {
-  const feed = document.getElementById('requestFeed');
-  if (!feed) return;
-
-  const entries = items
-    .flatMap(item =>
-      (Array.isArray(item.needs) ? item.needs : []).map(n => ({
-        item: item.name,
-        user: n.userId,
-        at: n.at || 0
-      }))
-    )
-    .sort((a, b) => b.at - a.at)
-    .slice(0, 5);
-
-  if (entries.length === 0) {
-    feed.innerHTML = '<div class="empty">Noch keine Anfragen</div>';
-    return;
+  // first need opens phase
+  if (item.status === ITEM_STATUS.AVAILABLE) {
+    openNeed(item, durationMs);
   }
 
-  feed.innerHTML = entries.map(e => `
-    <div class="feed-item">
-      <span class="item">${e.item}</span>
-      <span class="user">${e.user}</span>
-    </div>
-  `).join('');
+  addNeed(item, userId);
+  return item;
 }
 
-// --------------------------------------------------
-// Load Items (Backend + DEV-Fallback)
-// --------------------------------------------------
-async function loadItems() {
-  const API = 'https://content-connection-production-ea07.up.railway.app/api/items/public';
+// ------------------------------
+// Roll trigger (manual / admin / test)
+// ------------------------------
+export function runRoll(itemId) {
+  const item = getItemById(itemId);
+  if (!item) throw new Error('ITEM_NOT_FOUND');
 
-  try {
-    const res = await fetch(API, { credentials: 'omit' });
-    if (!res.ok) throw new Error('FETCH_FAILED');
-
-    const data = await res.json();
-    if (!Array.isArray(data)) throw new Error('INVALID_DATA');
-
-    return data.map(i => ({
-      id: i.id,
-      name: i.name,
-      type: i.type,
-      rating: Number(i.rating) || 0,
-      status: i.status || 'available',
-      needs: Array.isArray(i.needs) ? i.needs : []
-    }));
-  } catch (err) {
-    // DEV-FALLBACK (sichtbar, stabil)
-    return [
-      {
-        id: 'dummy-1',
-        name: 'Natalyas Mal',
-        type: 'waffe',
-        rating: 4,
-        status: 'available',
-        needs: []
-      },
-      {
-        id: 'dummy-2',
-        name: 'Lidlose Wand',
-        type: 'schild',
-        rating: 3,
-        status: 'available',
-        needs: []
-      }
-    ];
-  }
+  return executeRoll(item);
 }
 
-// --------------------------------------------------
-// Error Handling
-// --------------------------------------------------
-function handleNeedError(err) {
-  switch (err.message) {
-    case 'USER_NEED_LIMIT':
-      alert('Zu viele offene Bedarfe.');
-      break;
-    case 'ALREADY_REQUESTED':
-      alert('Bereits Bedarf angemeldet.');
-      break;
-    case 'NEED_CLOSED':
-      alert('Bedarf geschlossen.');
-      break;
-    default:
-      console.error(err);
-  }
+// ------------------------------
+// Start confirmation (after reserve)
+// ------------------------------
+export function startHandover(itemId) {
+  const item = getItemById(itemId);
+  if (!item) throw new Error('ITEM_NOT_FOUND');
+
+  startConfirmation(item);
+  return item;
 }
 
-// --------------------------------------------------
-// Bootstrap
-// --------------------------------------------------
-document.addEventListener('DOMContentLoaded', async () => {
-  cardsEl = document.getElementById('cards');
-  if (!cardsEl) return;
+// ------------------------------
+// Confirm handover
+// ------------------------------
+export function confirmHandover(itemId, role) {
+  const item = getItemById(itemId);
+  if (!item) throw new Error('ITEM_NOT_FOUND');
 
-  items = await loadItems();
-  render();
-});
+  confirm(item, role);
+  return item;
+}
+
+// ------------------------------
+// Tick (manual or interval)
+// ------------------------------
+export function tick() {
+  checkAllTimeouts(store.items);
+}
+
+// ------------------------------
+// DEV / SIM MODE: expose helpers
+// ------------------------------
+window.submitItem = submitItem;
+window.clickNeed = clickNeed;
+window.runRoll = runRoll;
+window.startHandover = startHandover;
+window.confirmHandover = confirmHandover;
+window.tick = tick;

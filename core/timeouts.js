@@ -1,50 +1,45 @@
-// timeouts.js — V3 Time Engine (FINAL)
+// timeouts.js — V3 Time Engine (aligned to core.js)
 // ================================================
 // Responsible ONLY for time-based checks & triggers.
 // No UI, no DOM, no state creation.
 
-import { ITEM_STATUS, transitionItem, now } from './core.js';
+import { ITEM_STATUS, updateItemStatus, flagItem, now } from './core.js';
 
 // --------------------------------------------------
 // Time constants (single source for timers)
 // --------------------------------------------------
 export const TIME = Object.freeze({
-  RESERVED_DURATION: 48 * 60 * 60 * 1000,         // 48h Reservierung
-  HANDOVER_DURATION: 48 * 60 * 60 * 1000          // 48h Übergabe
+  NEED_DURATION: 24 * 60 * 60 * 1000,      // 24h Bedarf
+  CONFIRM_DURATION: 24 * 60 * 60 * 1000   // 24h Übergabe / Bestätigung
 });
 
 // --------------------------------------------------
-// Helper: timeout duration per status
-// --------------------------------------------------
-function getTimeoutDuration(status) {
-  switch (status) {
-    case ITEM_STATUS.RESERVED:
-      return TIME.RESERVED_DURATION;
-    case ITEM_STATUS.HANDOVER_PENDING:
-      return TIME.HANDOVER_DURATION;
-    default:
-      return null;
-  }
-}
-
-// --------------------------------------------------
 // Single item timeout check
+// Returns true if item changed
 // --------------------------------------------------
 export function checkItemTimeout(item, ts = now()) {
-  const duration = getTimeoutDuration(item.status);
-  if (!duration) return false;
-  if (!item.statusChangedAt) return false;
+  let changed = false;
 
-  if (ts - item.statusChangedAt >= duration) {
-    transitionItem(item, 'timeout'); // → expired
-    return true;
+  // 1) Bedarf / Roll / Expired wird komplett von core.js entschieden
+  const beforeStatus = item.status;
+  updateItemStatus(item, ts);
+  if (item.status !== beforeStatus) changed = true;
+
+  // 2) Übergabe-Timeout (CONFIRM_PENDING)
+  if (
+    item.status === ITEM_STATUS.CONFIRM_PENDING &&
+    item.statusChangedAt &&
+    ts - item.statusChangedAt >= TIME.CONFIRM_DURATION
+  ) {
+    flagItem(item, 'handover_timeout');
+    changed = true;
   }
 
-  return false;
+  return changed;
 }
 
 // --------------------------------------------------
-// Bulk helper
+// Bulk helper (used by global tick)
 // --------------------------------------------------
 export function checkAllTimeouts(items = [], ts = now()) {
   let changed = false;
@@ -59,11 +54,12 @@ export function checkAllTimeouts(items = [], ts = now()) {
 }
 
 // --------------------------------------------------
-// Global tick helper
+// Optional global tick helper
+// (can be called via setInterval)
 // --------------------------------------------------
 export function startTimeoutTick({
   items,
-  intervalMs = 30 * 1000,
+  intervalMs = 30 * 1000, // 30s default
   onChange
 }) {
   return setInterval(() => {
