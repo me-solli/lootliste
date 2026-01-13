@@ -1,7 +1,7 @@
 // ui/index-ui.js
 // =====================================
 // Page wiring: Events + Render (V3 – FINAL, backend-driven)
-// Fake-Login aktiv (dev-user). Sichtbares Bedarf-Feedback. Ein Einstiegspunkt.
+// DOM-sicherer Click-Handler, Fake-Login aktiv, sichtbares Bedarf-Feedback
 
 import { renderItemCard } from './card-render.js';
 import { addNeed } from '/lootliste/core/core.js';
@@ -11,11 +11,11 @@ import { addNeed } from '/lootliste/core/core.js';
 // --------------------------------------------------
 let items = [];
 let auth = {
-  isLoggedIn: true,
+  isLoggedIn: true,        // Fake-Login (DEV)
   userId: 'dev-user'
 };
 
-const cardsEl = document.getElementById('cards');
+let cardsEl = null; // wird erst nach DOMContentLoaded gesetzt
 
 // --------------------------------------------------
 // Init & Render
@@ -42,7 +42,6 @@ async function loadItemsFromBackend() {
   );
   const data = await res.json();
 
-  // V3-minimales Mapping (UI/Core-kompatibel)
   return Array.isArray(data)
     ? data.map(i => ({
         id: i.id,
@@ -50,15 +49,17 @@ async function loadItemsFromBackend() {
         type: i.type,
         rating: Number(i.rating) || 0,
         status: i.status || 'available',
-        needs: [] // Bedarf startet leer (V3)
+        needs: []
       }))
     : [];
 }
 
 // --------------------------------------------------
-// Global Click Handling (Event Delegation)
+// Click Handling (Event Delegation) – DOM-sicher
 // --------------------------------------------------
-if (cardsEl) {
+function bindClickHandler() {
+  if (!cardsEl) return;
+
   cardsEl.addEventListener('click', e => {
     const btn = e.target.closest('button[data-action]');
     if (!btn) return;
@@ -78,17 +79,14 @@ if (cardsEl) {
       if (!item) return;
 
       try {
-        // Core-Logik (Validierung / Limits)
+        // Core-Validierung (Limits, Regeln)
         addNeed(item, auth.userId, items);
 
-        // ---------- UI-SICHERHEIT ----------
-        // Falls Core (noch) nichts in needs schreibt,
-        // erzwingen wir ein sichtbares UI-Update.
+        // Sichtbares UI-Feedback (Fallback)
         if (!Array.isArray(item.needs)) item.needs = [];
         if (!item.needs.find(n => n.userId === auth.userId)) {
           item.needs.push({ userId: auth.userId, at: Date.now() });
         }
-        // -----------------------------------
 
         render();
       } catch (err) {
@@ -125,6 +123,9 @@ function handleNeedError(err) {
 // Bootstrap (FINAL)
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () => {
+  cardsEl = document.getElementById('cards');
+  bindClickHandler();
+
   const backendItems = await loadItemsFromBackend();
   initUI(backendItems, auth);
 });
