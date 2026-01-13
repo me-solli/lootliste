@@ -246,3 +246,12 @@ export function flagItem(item, reason) {
   persistItem(item);
   return item;
 }
+
+export function loadAllItems() {
+  const store = JSON.parse(localStorage.getItem('lootliste_v3_items')) || {};
+  return Object.entries(store).map(([id, data]) => ({
+    id,
+    ...data
+  }));
+}
+
