@@ -10,6 +10,8 @@
 import { renderItemCard } from './card-render.js';
 import { addNeed } from '../core/core.js';
 
+console.log('🔥 INDEX-UI LOADED (NEW VERSION)');
+
 // --------------------------------------------------
 // State
 // --------------------------------------------------
