@@ -9,18 +9,34 @@ import {
   addNeed,
   startConfirmation,
   confirm,
-  ITEM_STATUS
+  ITEM_STATUS,
+  hydrateItem,
+  updateItemStatus
 } from '../core/core.js';
 
 import { checkAllTimeouts } from '../core/timeouts.js';
 import { executeRoll } from '../core/rolls.js';
 
 // ------------------------------
-// TEMP: In-memory store (SIM / DEV MODE)
+// In-memory store (UI layer only)
 // ------------------------------
 const store = {
   items: []
 };
+
+// ------------------------------
+// Init / Hydration (V3)
+// ------------------------------
+export function initStore(items = []) {
+  store.items = items;
+
+  store.items.forEach(item => {
+    hydrateItem(item);        // restore persisted state
+    updateItemStatus(item);   // apply auto transitions once
+  });
+
+  return store.items;
+}
 
 // ------------------------------
 // Helpers
@@ -110,6 +126,7 @@ export function tick() {
 // ------------------------------
 // DEV / SIM MODE: expose helpers
 // ------------------------------
+window.initStore = initStore;
 window.submitItem = submitItem;
 window.clickNeed = clickNeed;
 window.runRoll = runRoll;
