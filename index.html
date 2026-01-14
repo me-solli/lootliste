@@ -1377,12 +1377,6 @@ const filtered = items
       ? (a.rating || 0) - (b.rating || 0)
       : (b.rating || 0) - (a.rating || 0);
   });
-    
-   .sort((a, b) => {
-  return sortRating.value === "asc"
-    ? (a.rating || 0) - (b.rating || 0)
-    : (b.rating || 0) - (a.rating || 0);
-});
 
 const total = filtered.length;
 
