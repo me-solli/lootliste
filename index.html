@@ -1457,14 +1457,6 @@ if(localStorage.getItem(D)!==today){
 visitorCounter.innerHTML =
   '&#128065; Besucher gesamt: <b>' + localStorage.getItem(K) + '</b>';
   
-  // ===== ALTLOGIK: Anfrage-Modal =====
-  if (!btn || btn.classList.contains("disabled")) return;
-
-  currentItem = btn.dataset.item;
-  modalItem.textContent = currentItem;
-  modal.style.display = "block";
-});
-
 /* ===== REQUEST FEED CLICK (HIGHLIGHT ITEM) ===== */
 requestFeed.addEventListener("click", e => {
   const entry = e.target.closest(".request-entry");
