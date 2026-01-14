@@ -1402,6 +1402,9 @@ document.getElementById("metaStats").textContent =
 
 filtered.forEach(item => {
 
+    const currentStatus = "Verfügbar";
+  const s = "verfuegbar";
+
   cards.innerHTML += `
 <div class="card ${s}" data-item="${item.name}">
   <span class="status-badge ${s}">${currentStatus}</span>
