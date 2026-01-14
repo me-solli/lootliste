@@ -1339,11 +1339,18 @@ name: i.name || ("item_" + i.id),
         quality: i.quality || "",
         roll: i.roll || "",
 
-        contact: i.contact || "",
-        
-status: "Verfügbar",
+contact: i.contact || "",
 
-        screenshot: i.screenshot || ""
+status: (() => {
+  const s = String(i.status || "").toLowerCase();
+  if (s === "approved" || s === "verfuegbar" || s === "available") return "Verfügbar";
+  if (s === "reserved" || s === "reserviert") return "Reserviert";
+  if (s === "given" || s === "vergeben") return "Vergeben";
+  return "Verfügbar";
+})(),
+
+screenshot: i.screenshot || ""
+
       };
     })
   : [];
