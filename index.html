@@ -1744,13 +1744,10 @@ search.oninput=render;
 statusFilter.onchange=render;
 sortRating.onchange=render;
 loadItems().then(() => {
-  render();
+  updateUI();
 });
 
-
-
 </script>
-
 
 <!-- ===== AUTH (FINAL / LOCAL BACKEND) ===== -->
 <!-- DISABLED AUTH BLOCK (DEV MODE) 
