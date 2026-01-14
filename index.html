@@ -1408,9 +1408,11 @@ function render() {
     `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
   filtered.forEach(item => {
-    // 👉 MINIMAL: fixer Status, keine V3-Logik
-    const currentStatus = "Verfügbar";
-    const s = "verfuegbar";
+const currentStatus = item.status;
+const s =
+  currentStatus === "Reserviert" ? "reserviert" :
+  currentStatus === "Vergeben"   ? "vergeben"   :
+                                   "verfuegbar";
 
     cards.innerHTML += `
 <div class="card ${s}" data-item="${item.name}">
