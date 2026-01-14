@@ -1357,55 +1357,55 @@ status: STATUS_MAP[i.status] === "Verfügbar" ? "Verfügbar" : "HIDDEN",
 function render() {
   cards.innerHTML = "";
 
-const filtered = items
-  .filter(i => i.status === "Verfügbar")
-  .filter(i => {
-    const q = search.value.toLowerCase();
+  const filtered = items
+    .filter(i => i.status === "Verfügbar")
+    .filter(i => {
+      const q = search.value.toLowerCase();
 
-    const matchesSearch =
-      !q ||
-      (i.name || "").toLowerCase().includes(q) ||
-      (i.type || "").toLowerCase().includes(q);
+      const matchesSearch =
+        !q ||
+        (i.name || "").toLowerCase().includes(q) ||
+        (i.type || "").toLowerCase().includes(q);
 
-    const matchesType =
-      !activeType || i.type === activeType;
+      const matchesType =
+        !activeType || i.type === activeType;
 
-    return matchesSearch && matchesType;
-  })
-  .sort((a, b) => {
-    return sortRating.value === "asc"
-      ? (a.rating || 0) - (b.rating || 0)
-      : (b.rating || 0) - (a.rating || 0);
-  });
+      return matchesSearch && matchesType;
+    })
+    .sort((a, b) => {
+      return sortRating.value === "asc"
+        ? (a.rating || 0) - (b.rating || 0)
+        : (b.rating || 0) - (a.rating || 0);
+    });
 
-const total = filtered.length;
+  const total = filtered.length;
 
-const avgRating =
-  total === 0
-    ? "–"
-    : (
-        filtered.reduce((s, i) => s + (i.rating || 0), 0) / total
-      ).toFixed(1);
+  const avgRating =
+    total === 0
+      ? "–"
+      : (
+          filtered.reduce((s, i) => s + (i.rating || 0), 0) / total
+        ).toFixed(1);
 
-const uniquePlayers = new Set(
-  filtered.map(i => i.contact).filter(Boolean)
-).size;
+  const uniquePlayers = new Set(
+    filtered.map(i => i.contact).filter(Boolean)
+  ).size;
 
-heroStats.innerHTML = `
-  <div>📦 ${total} Drops</div>
-  <div>⭐ Ø ${avgRating}</div>
-  <div>🧍 ${uniquePlayers} Spender</div>
-`;
+  heroStats.innerHTML = `
+    <div>📦 ${total} Drops</div>
+    <div>⭐ Ø ${avgRating}</div>
+    <div>🧍 ${uniquePlayers} Spender</div>
+  `;
 
-document.getElementById("metaStats").textContent =
-  `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
+  document.getElementById("metaStats").textContent =
+    `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
-filtered.forEach(item => {
-
+  filtered.forEach(item => {
+    // 👉 MINIMAL: fixer Status, keine V3-Logik
     const currentStatus = "Verfügbar";
-  const s = "verfuegbar";
+    const s = "verfuegbar";
 
-  cards.innerHTML += `
+    cards.innerHTML += `
 <div class="card ${s}" data-item="${item.name}">
   <span class="status-badge ${s}">${currentStatus}</span>
 
@@ -1447,8 +1447,9 @@ filtered.forEach(item => {
 
   </div>
 </div>
-`; // ✅ TEMPLATE STRING SAUBER GESCHLOSSEN
-});
+`;
+  });
+}
   
 /* ===== VISITOR COUNTER ===== */
 const K="lootliste_visitors",D="lootliste_last_visit";
