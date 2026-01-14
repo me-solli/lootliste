@@ -1740,9 +1740,9 @@ setTimeout(() => {
 });
 
 /* ===== INIT ===== */
-search.oninput=render;
-statusFilter.onchange=render;
-sortRating.onchange=render;
+search.oninput = updateUI;
+statusFilter.onchange = updateUI;
+sortRating.onchange = updateUI;
 loadItems().then(() => {
   updateUI();
 });
