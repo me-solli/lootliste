@@ -1328,23 +1328,6 @@ btn.onclick = () => {
   return JSON.parse(localStorage.getItem("loot_requests") || "[]");
 }
 
-function hasRequested(itemName){
-  const data = loadRequests();
-  return data.some(
-    r => r.item === itemName && r.user === CURRENT_USER
-  );
-}
-
-  function renderRequestFeed(){
-  const data = loadRequests();
-  requestFeed.innerHTML = "";
-
-  if (!data.length) {
-    requestFeed.innerHTML =
-      `<div class="request-entry">Noch keine Anfragen</div>`;
-    return;
-  }
-
   // Neueste zuerst, maximal 5 Einträge
   data
     .slice()
