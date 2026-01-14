@@ -1683,7 +1683,7 @@ if (!item) return;
 
 // ===== SYSTEM: Bedarf starten oder erweitern =====
 if (item.status === "Verfügbar") {
-  item.status = "Bedarf";
+  item.status = "Reserviert";
   item.needStartedAt = Date.now();
   item.needEndsAt = item.needStartedAt + NEED_DURATION;
   item.needs = [];
