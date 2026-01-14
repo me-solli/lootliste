@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Mein Profil – Community Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#0b0b0b;
+  --panel:#141414;
+  --border:#2a2a2a;
+  --gold:#f5c451;
+  --text:#eaeaea;
+  --muted:#999;
+  --green:#4cff4c;
+  --yellow:#ffd24c;
+  --red:#ff5c5c;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
+  color:var(--text);
+}
+
+.wrapper{
+  max-width:900px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+}
+
+h1{
+  margin:0 0 10px;
+  color:var(--gold);
+}
+
+.sub{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.items{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+
+.item{
+  background:#0f0f0f;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+}
+
+.item img{
+  width:100%;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.meta{
+  margin-top:10px;
+  font-size:13px;
+}
+
+.status{
+  font-weight:600;
+}
+
+.status.eingereicht{color:var(--yellow)}
+.status.verfuegbar{color:var(--green)}
+.status.vergeben{color:var(--red)}
+
+.empty{
+  padding:20px;
+  color:var(--muted);
+  font-size:14px;
+  border:1px dashed var(--border);
+  border-radius:10px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+a.back{
+  color:var(--gold);
+  text-decoration:none;
+  font-size:14px;
+}
+a.back:hover{text-decoration:underline}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <div class="panel">
+
+    <div class="topbar">
+      <div>
+        <h1>Mein Profil</h1>
+        <div class="sub" id="usernameLine"></div>
+      </div>
+      <a href="index.html" class="back">← Zur Lootliste</a>
+    </div>
+
+    <div id="itemsContainer" class="items"></div>
+    <div id="emptyState" class="empty" style="display:none">
+      Du hast noch keine Items eingereicht.
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ===============================
+   Profil – Read-Only
+================================ */
+
+const user = JSON.parse(localStorage.getItem("currentUser"));
+const allItems = JSON.parse(localStorage.getItem("submittedItems") || "[]");
+
+if(!user){
+  document.body.innerHTML = "<p style='padding:40px;color:#999'>Nicht eingeloggt.</p>";
+  throw new Error("Kein User");
+}
+
+document.getElementById("usernameLine").textContent =
+  "Benutzer: " + user.username;
+
+const myItems = allItems.filter(i => i.submittedBy?.id === user.id);
+const container = document.getElementById("itemsContainer");
+const emptyState = document.getElementById("emptyState");
+
+if(myItems.length === 0){
+  emptyState.style.display = "block";
+}else{
+  myItems
+    .sort((a,b)=>new Date(b.submittedAt)-new Date(a.submittedAt))
+    .forEach(item=>{
+      const div = document.createElement("div");
+      div.className = "item";
+
+      const statusClass =
+        item.status === "vergeben" ? "vergeben" :
+        item.status === "verfügbar" ? "verfuegbar" :
+        "eingereicht";
+
+      div.innerHTML = `
+        <img src="${item.screenshot}" alt="Item Screenshot">
+        <div class="meta">
+          <div class="status ${statusClass}">
+            Status: ${item.status}
+          </div>
+          <div>
+            Eingereicht: ${new Date(item.submittedAt).toLocaleString()}
+          </div>
+        </div>
+      `;
+
+      div.querySelector("img").addEventListener("click",()=>{
+        window.open(item.screenshot,"_blank");
+      });
+
+      container.appendChild(div);
+    });
+}
+</script>
+</body>
+</html>

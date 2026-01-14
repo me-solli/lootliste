@@ -1,0 +1,13 @@
+[
+  {
+    "id": "admin-1",
+    "username": "me_solli",
+    "password": "$2b$10$LMp22vEqxR8dfn80vw4bAuE4hk4CwmLxnR/63KFt5otJPuptqjN/u",
+    "role": "admin",
+    "createdAt": "2025-12-23T23:09:42.275Z",
+    "xp": 0,
+    "level": 1,
+    "itemsGiven": 0,
+    "itemsReceived": 0
+  }
+]
