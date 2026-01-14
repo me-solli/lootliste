@@ -94,7 +94,7 @@ function render() {
 }
 
 function renderItem(item) {
-  const status = item.status;
+  const status = item.status || "available";
   const isAvailable = status === "available";
   const isNeed = status === "need_open";
 
