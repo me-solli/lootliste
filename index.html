@@ -1448,19 +1448,8 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
           Spieler: ${item.contact || "-"}
         </div>
        
-${
-  currentStatus === "Verfügbar"
-    ? (
-
-      </div>
-    </div>
-  `;
 });
   
-  renderRequestFeed();
-
-  }
-
 /* ===== VISITOR COUNTER ===== */
 const K="lootliste_visitors",D="lootliste_last_visit";
 const today=new Date().toDateString();
@@ -1472,7 +1461,6 @@ visitorCounter.innerHTML =
   '&#128065; Besucher gesamt: <b>' + localStorage.getItem(K) + '</b>';
   
 /* ===== REQUEST BUTTON CLICK (DELEGATION) ===== */
-cards.addEventListener("click", e => {
 
   const btn = e.target.closest(".request-btn");
 
