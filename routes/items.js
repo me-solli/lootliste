@@ -62,7 +62,7 @@ const upload = multer({
 
 /* =====================================================
    GET /api/items/public
-   PUBLIC – freigegebene Items + Interest-Count (V3)
+   PUBLIC – freigegebene Items (STABIL, OHNE GROUP BY)
 ===================================================== */
 router.get("/public", async (req, res) => {
   try {
@@ -70,33 +70,36 @@ router.get("/public", async (req, res) => {
       `
       SELECT
         i.id,
-        i.name          AS name,
-        i.type          AS type,
-        i.quality       AS quality,
+        i.name,
+        i.type,
+        i.quality,
         i.weapon_type   AS weaponType,
         i.roll,
         i.owner_user_id AS contact,
         i.screenshot,
         i.created_at,
-        i.rating        AS rating,
+        i.rating,
 
-        -- V3 Felder
-        i.published_at,
+        -- V3 Flow
+        COALESCE(i.status, 'available') AS status,
         i.earliest_assign_at,
         i.latest_assign_at,
-        i.status         AS status,
 
-        s.status         AS admin_status,
+        -- Admin-Status
+        s.status AS admin_status,
 
-        COUNT(ii.id)     AS interestCount
+        -- Interesse sauber per Subquery
+        (
+          SELECT COUNT(*)
+          FROM item_interest ii
+          WHERE ii.item_id = i.id
+        ) AS interestCount
 
       FROM items i
-      JOIN item_status s ON s.item_id = i.id
-      LEFT JOIN item_interest ii ON ii.item_id = i.id
+      JOIN item_status s
+        ON s.item_id = i.id
+       AND s.status = ?
 
-      WHERE s.status = ?
-
-      GROUP BY i.id
       ORDER BY i.created_at DESC
       `,
       [ITEM_STATUS.APPROVED]
@@ -185,16 +188,15 @@ router.post("/:id/need", async (req, res) => {
     const now = new Date();
     const needUntil = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-    // Nur freigegebene Items
     const item = await db.get(
       `
-      SELECT i.id, i.status
+      SELECT i.id, COALESCE(i.status, ?) AS status
       FROM items i
       JOIN item_status s ON s.item_id = i.id
       WHERE i.id = ?
         AND s.status = ?
       `,
-      [itemId, ITEM_STATUS.APPROVED]
+      [ASSIGN_STATUS.AVAILABLE, itemId, ITEM_STATUS.APPROVED]
     );
 
     if (!item) {
