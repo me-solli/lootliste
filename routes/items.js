@@ -27,6 +27,16 @@ const ITEM_STATUS = {
 };
 
 /* =========================
+   ASSIGN / FLOW STATUS (V3)
+========================= */
+const ASSIGN_STATUS = {
+  AVAILABLE: "available",
+  NEED_OPEN: "need_open",
+  RESERVED: "reserved",
+  ASSIGNED: "assigned"
+};
+
+/* =========================
    UPLOAD-ORDNER (RAILWAY SAFE)
 ========================= */
 const UPLOAD_DIR = "/data/uploads";
@@ -70,22 +80,19 @@ router.get("/public", async (req, res) => {
         i.created_at,
         i.rating        AS rating,
 
-        -- V3 Felder (read-only)
+        -- V3 Felder
         i.published_at,
         i.earliest_assign_at,
         i.latest_assign_at,
-        i.status         AS assign_status,
+        i.status         AS status,
 
         s.status         AS admin_status,
 
-        -- 🆕 Interest
         COUNT(ii.id)     AS interestCount
 
       FROM items i
-      JOIN item_status s
-        ON s.item_id = i.id
-      LEFT JOIN item_interest ii
-        ON ii.item_id = i.id
+      JOIN item_status s ON s.item_id = i.id
+      LEFT JOIN item_interest ii ON ii.item_id = i.id
 
       WHERE s.status = ?
 
@@ -98,9 +105,7 @@ router.get("/public", async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error("GET /api/items/public ERROR:", err);
-    res.status(500).json({
-      error: "Öffentliche Items konnten nicht geladen werden"
-    });
+    res.status(500).json({ error: "Öffentliche Items konnten nicht geladen werden" });
   }
 });
 
@@ -108,19 +113,16 @@ router.get("/public", async (req, res) => {
    POST /api/items
    Einreichen (Screenshot Pflicht, DEV erlaubt)
 ===================================================== */
-
 router.post(
   "/",
   devAuth,
   upload.any(),
   async (req, res) => {
-
     if (!req.user?.id) {
       return res.status(401).json({ error: "Nicht eingeloggt" });
     }
 
     try {
-
       const itemCount = Number(req.body.item_count || 0);
 
       if (!itemCount || itemCount < 1 || itemCount > 3) {
@@ -128,12 +130,9 @@ router.post(
       }
 
       if (!req.files || req.files.length !== itemCount) {
-        return res.status(400).json({
-          error: "Anzahl Screenshots passt nicht zur Item-Anzahl"
-        });
+        return res.status(400).json({ error: "Anzahl Screenshots passt nicht zur Item-Anzahl" });
       }
 
-      // 🔥 SCHRITT 4: Multi-Insert
       const createdItems = [];
 
       for (let i = 0; i < itemCount; i++) {
@@ -141,13 +140,10 @@ router.post(
 
         const result = await db.run(
           `
-          INSERT INTO items (owner_user_id, screenshot, created_at)
-          VALUES (?, ?, datetime('now'))
+          INSERT INTO items (owner_user_id, screenshot, created_at, status)
+          VALUES (?, ?, datetime('now'), ?)
           `,
-          [
-            req.user.id,
-            `/uploads/${file.filename}`
-          ]
+          [req.user.id, `/uploads/${file.filename}`, ASSIGN_STATUS.AVAILABLE]
         );
 
         await db.run(
@@ -167,13 +163,66 @@ router.post(
         item_ids: createdItems,
         status: ITEM_STATUS.SUBMITTED
       });
-
     } catch (err) {
       console.error("POST /api/items ERROR:", err);
       res.status(500).json({ error: "Item konnte nicht gespeichert werden" });
     }
   }
 );
+
+/* =====================================================
+   POST /api/items/:id/need
+   PUBLIC – Bedarf anmelden (V3 CORE)
+===================================================== */
+router.post("/:id/need", async (req, res) => {
+  try {
+    const itemId = Number(req.params.id);
+
+    if (!itemId) {
+      return res.status(400).json({ error: "Invalid item id" });
+    }
+
+    const now = new Date();
+    const needUntil = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+    // Nur freigegebene Items
+    const item = await db.get(
+      `
+      SELECT i.id, i.status
+      FROM items i
+      JOIN item_status s ON s.item_id = i.id
+      WHERE i.id = ?
+        AND s.status = ?
+      `,
+      [itemId, ITEM_STATUS.APPROVED]
+    );
+
+    if (!item) {
+      return res.status(404).json({ error: "Item not found or not public" });
+    }
+
+    if (item.status !== ASSIGN_STATUS.AVAILABLE) {
+      return res.status(409).json({ error: "Item not available" });
+    }
+
+    await db.run(
+      `
+      UPDATE items
+      SET
+        status = ?,
+        earliest_assign_at = ?,
+        latest_assign_at = ?
+      WHERE id = ?
+      `,
+      [ASSIGN_STATUS.NEED_OPEN, now.toISOString(), needUntil.toISOString(), itemId]
+    );
+
+    res.json({ ok: true, status: ASSIGN_STATUS.NEED_OPEN });
+  } catch (err) {
+    console.error("POST /api/items/:id/need ERROR:", err);
+    res.status(500).json({ error: "Bedarf konnte nicht gesetzt werden" });
+  }
+});
 
 /* =====================================================
    POST /api/items/:id/interest
@@ -188,7 +237,6 @@ router.post("/:id/interest", async (req, res) => {
       return res.status(400).json({ error: "Invalid item or user" });
     }
 
-    // Nur freigegebene Items
     const item = await db.get(
       `
       SELECT i.id
@@ -204,7 +252,6 @@ router.post("/:id/interest", async (req, res) => {
       return res.status(404).json({ error: "Item not found or not public" });
     }
 
-    // Interesse setzen (idempotent)
     await db.run(
       `
       INSERT OR IGNORE INTO item_interest (item_id, user_id)
