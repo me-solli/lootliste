@@ -1463,15 +1463,7 @@ status: getSimStatus(
 }
 
 function tickState() {
-  items.forEach(item => {
-    if (
-      item.status === "Bedarf" &&
-      item.needEndsAt &&
-      Date.now() >= item.needEndsAt
-    ) {
-      item.status = "Würfeln";
-    }
-  });
+  // TEMPORÄR DEAKTIVIERT
 }
 
   function updateUI() {
