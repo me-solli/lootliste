@@ -1220,15 +1220,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     given: "Vergeben"
   };
 
-  /* ===== SIM MODE ===== */
-const SIM_MODE = location.hostname === "localhost";
-
-  function getSimStatus(itemName, fallback){
-    if(!SIM_MODE) return fallback;
-    return localStorage.getItem("sim_status_" + itemName) || fallback;
-  }
-
-      /* ===== CURRENT USER (LOCAL / DEV) ===== */
+/* ===== CURRENT USER (LOCAL / DEV) ===== */
   const CURRENT_USER =
     localStorage.getItem("loot_current_user")
     || ("guest_" + Math.random().toString(36).slice(2));
