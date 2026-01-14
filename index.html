@@ -111,50 +111,50 @@ body{
 /* ===== ICON BAR ===== */
 .icon-bar{
   display:flex;
-  gap:18px;                          /* etwas mehr Luft */
-  padding:28px 24px;                 /* mehr Höhe → Leiste wirkt voll */
+  gap:16px;                          /* vorher 18px */
+  padding:25px 24px;                 /* vorher 28px */
   overflow-x:auto;
   background:linear-gradient(180deg,#141414,#0d0d0d);
   border-bottom:1px solid #222;
 }
 
 .icon-btn{
-  min-width:120px;                   /* breiter */
+  min-width:108px;                   /* vorher 120px */
   text-align:center;
   cursor:pointer;
-  padding:18px 10px;                 /* größere Klickfläche */
+  padding:16px 8px;                  /* vorher 18px 10px */
   border-radius:18px;
   border:1px solid transparent;
   transition:.25s;
 }
 
 .icon-btn img{
-  width:56px;                        /* deutlich größere Icons */
-  height:56px;
+  width:52px;                        /* vorher 56px */
+  height:52px;
   filter:
-    drop-shadow(0 0 10px rgba(245,196,81,.45));
+    drop-shadow(0 0 9px rgba(245,196,81,.45));
 }
 
 .icon-btn span{
   display:block;
-  margin-top:10px;                   /* mehr Abstand Icon → Text */
-  font-size:13px;                    /* etwas präsenter */
+  margin-top:9px;                    /* vorher 10px */
+  font-size:12.5px;                  /* minimal kleiner */
   font-weight:500;
-  letter-spacing:.4px;
+  letter-spacing:.35px;
   opacity:.95;
 }
 
 .icon-btn:hover{
   border-color:var(--gold);
   box-shadow:
-    0 0 20px rgba(245,196,81,.28);
+    0 0 18px rgba(245,196,81,.26);
 }
 
 .icon-btn.active{
   border-color:var(--gold);
   background:rgba(245,196,81,.10);
   box-shadow:
-    0 0 26px rgba(245,196,81,.55);
+    0 0 24px rgba(245,196,81,.52);
 }
 
 /* ===== CONTENT ===== */
