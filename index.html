@@ -1400,54 +1400,51 @@ heroStats.innerHTML = `
 document.getElementById("metaStats").textContent =
   `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
-  filtered.forEach(item => {
-const currentStatus = item.status;
-
-const s =
-  currentStatus === "Reserviert" ? "reserviert" :
-  currentStatus === "Vergeben" ? "vergeben" :
-  "verfuegbar";
+filtered.forEach(item => {
 
   cards.innerHTML += `
 <div class="card ${s}" data-item="${item.name}">
-      <span class="status-badge ${s}">${currentStatus}</span>
+  <span class="status-badge ${s}">${currentStatus}</span>
 
-      <div class="card-image"
-        ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
-        <img src="img/icons/${
-          item.type === "waffe" && item.weaponType
-            ? (WEAPON_ICONS[item.weaponType] || "waffe")
-            : (ICONS[item.type] || "default")
-        }.png">
-      </div>
+  <div class="card-image"
+    ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
+    <img src="img/icons/${
+      item.type === "waffe" && item.weaponType
+        ? (WEAPON_ICONS[item.weaponType] || "waffe")
+        : (ICONS[item.type] || "default")
+    }.png">
+  </div>
 
-      <div class="card-body">
-      
-<div class="item-name ${item.quality || ""}">
-  ${item.name}
+  <div class="card-body">
+
+    <div class="item-name ${item.quality || ""}">
+      ${item.name}
+    </div>
+
+    <div class="item-sub">
+      ${
+        item.type === "waffe"
+          ? `Waffe · ${item.weaponType}`
+          : (TYPE_LABELS[item.type] || "")
+      }
+    </div>
+
+    ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
+
+    <div class="stars">
+      <span class="stars-filled">${"★".repeat(item.rating)}</span>
+      <span class="stars-empty">${"☆".repeat(5 - item.rating)}</span>
+      <span class="stars-sep">|</span>
+      <span class="stars-num">${item.rating}/5</span>
+    </div>
+
+    <div class="player">
+      Spieler: ${item.contact || "-"}
+    </div>
+
+  </div>
 </div>
-
-<div class="item-sub">
-  ${
-    item.type === "waffe"
-      ? `Waffe · ${item.weaponType}`
-      : (TYPE_LABELS[item.type] || "")
-  }
-</div>
-
-${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
-
-<div class="stars">
-  <span class="stars-filled">${"★".repeat(item.rating)}</span>
-  <span class="stars-empty">${"☆".repeat(5 - item.rating)}</span>
-  <span class="stars-sep">|</span>
-  <span class="stars-num">${item.rating}/5</span>
-</div>
-
-        <div class="player">
-          Spieler: ${item.contact || "-"}
-        </div>
-       
+`; // ✅ TEMPLATE STRING SAUBER GESCHLOSSEN
 });
   
 /* ===== VISITOR COUNTER ===== */
