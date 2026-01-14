@@ -1443,10 +1443,7 @@ name: i.name || ("item_" + i.id),
 
         contact: i.contact || "",
         
-status: getSimStatus(
-  i.name,
-  STATUS_MAP[i.status] || "Verfügbar"
-),
+status: STATUS_MAP[i.status] === "Verfügbar" ? "Verfügbar" : "HIDDEN",
 
         screenshot: i.screenshot || ""
       };
