@@ -1451,16 +1451,6 @@ ${item.roll ? `<div class="roll">${item.roll}</div>` : ""}
 ${
   currentStatus === "Verfügbar"
     ? (
-        hasRequested(item.name)
-          ? `<button class="request-btn disabled" disabled>
-               Bedarf angemeldet
-             </button>`
-          : `<button class="request-btn" data-item="${item.name}">
-               📩 Bedarf anmelden
-             </button>`
-      )
-    : ``
-}
 
       </div>
     </div>
