@@ -1457,30 +1457,6 @@ if(localStorage.getItem(D)!==today){
 visitorCounter.innerHTML =
   '&#128065; Besucher gesamt: <b>' + localStorage.getItem(K) + '</b>';
   
-/* ===== REQUEST BUTTON CLICK (DELEGATION) ===== */
-
-  const btn = e.target.closest(".request-btn");
-
-  // ===== V3 TEST: applyNeed (noch ohne Umbau) =====
-  if (SIM_MODE && btn && !btn.classList.contains("disabled")) {
-    const itemName = btn.dataset.item;
-    const item = items.find(i => i.name === itemName);
-    if (!item) return; // OK: beendet nur diesen Klickpfad
-
-    // TEMP: Verfügbar = need_open (nur Test!)
-    if (item.status === "Verfügbar") {
-      item.status = "need_open";
-    }
-
-    const success = applyNeed(item, CURRENT_USER);
-
-    console.log(
-      "[V3 TEST] applyNeed:",
-      success,
-      item
-    );
-  }
-
   // ===== ALTLOGIK: Anfrage-Modal =====
   if (!btn || btn.classList.contains("disabled")) return;
 
