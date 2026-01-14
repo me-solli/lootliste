@@ -1745,7 +1745,7 @@ statusFilter.onchange = updateUI;
 sortRating.onchange = updateUI;
   
 loadItems().then(() => {
-  // 🔒 UI-Startzustand erzwingen
+  // 🔒 expliziter Startzustand
   activeType = "";
 
   document
@@ -1754,7 +1754,7 @@ loadItems().then(() => {
 
   updateUI();
 
-  // 🧱 zweiter stabilisierender Render
+  // 🧱 stabiler zweiter Render nach Layout
   requestAnimationFrame(() => {
     updateUI();
   });
