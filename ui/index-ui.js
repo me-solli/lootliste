@@ -1,141 +1,148 @@
-// index-ui.js — V3 UI Hook (STATE-STABIL)
-// =====================================
-// UI layer only. No state authority.
-// Loads persisted items, forwards user actions to core.
+// index-ui.js — V3 UI (BACKEND SOURCE OF TRUTH)
+// ==================================================
+// 1:1 replacement – full file
+// - Items are loaded from backend API
+// - Bedarf (need_open) is handled via backend, not localStorage
+// - UI never sets item.status directly
+// - Reload-safe
 
-import {
-  createItem,
-  openNeed,
-  addNeed,
-  startConfirmation,
-  confirm,
-  ITEM_STATUS,
-  updateItemStatus,
-  loadAllItems
-} from '../core/core.js';
+const API_BASE = "https://content-connection-production-ea07.up.railway.app";
 
-import { checkAllTimeouts } from '../core/timeouts.js';
-import { executeRoll } from '../core/rolls.js';
-
-// ------------------------------
-// In-memory store (UI cache only)
-// ------------------------------
+// --------------------------------------------------
+// In-memory store (UI cache ONLY)
+// --------------------------------------------------
 const store = {
   items: []
 };
 
-// ------------------------------
-// Init / Load from persistence
-// ------------------------------
-export function initStore() {
-  const items = loadAllItems();
+// --------------------------------------------------
+// INIT / LOAD (Backend is source of truth)
+// --------------------------------------------------
+export async function initStore() {
+  try {
+    const res = await fetch(`${API_BASE}/api/items`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-  store.items = items;
+    const items = await res.json();
+    store.items = Array.isArray(items) ? items : [];
 
-  store.items.forEach(item => {
-    updateItemStatus(item); // apply auto transitions once
-  });
-
-  return store.items;
+    render();
+    return store.items;
+  } catch (err) {
+    console.error("initStore failed", err);
+    store.items = [];
+    render();
+    return store.items;
+  }
 }
 
-// ------------------------------
-// Helpers
-// ------------------------------
-function getCurrentUserId() {
-  // DEV stub – later replaced by auth
-  return 'user_demo_1';
-}
-
+// --------------------------------------------------
+// HELPERS
+// --------------------------------------------------
 function getItemById(id) {
-  return store.items.find(i => i.id === id);
+  return store.items.find(i => String(i.id) === String(id));
 }
 
-// ------------------------------
-// Item submission (REAL creation)
-// ------------------------------
-export function submitItem({ name, type }) {
-  const userId = getCurrentUserId();
-
-  const item = createItem({
-    name,
-    type,
-    donatedBy: userId
-  });
-
-  store.items.push(item);
-  return item;
+function getCurrentUserId() {
+  // DEV stub – später Auth
+  return "user_demo_1";
 }
 
-// ------------------------------
-// Need registration (current user)
-// ------------------------------
-export function clickNeed(itemId, durationMs = 24 * 60 * 60 * 1000) {
-  const userId = getCurrentUserId();
+// --------------------------------------------------
+// ACTIONS
+// --------------------------------------------------
+
+// Bedarf anmelden (BACKEND)
+export async function clickNeed(itemId) {
   const item = getItemById(itemId);
+  if (!item) throw new Error("ITEM_NOT_FOUND");
 
-  if (!item) throw new Error('ITEM_NOT_FOUND');
+  try {
+    const res = await fetch(`${API_BASE}/api/items/${itemId}/need`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId: getCurrentUserId() })
+    });
 
-  if (item.status === ITEM_STATUS.AVAILABLE) {
-    openNeed(item, durationMs);
+    if (!res.ok) {
+      console.error("Need request failed", res.status);
+      return;
+    }
+
+    // reload from backend (single source of truth)
+    await initStore();
+  } catch (err) {
+    console.error("clickNeed error", err);
+  }
+}
+
+// --------------------------------------------------
+// RENDER
+// --------------------------------------------------
+function render() {
+  const container = document.getElementById("cards");
+  if (!container) return;
+
+  if (!store.items.length) {
+    container.innerHTML = '<div class="empty">Keine Items verfügbar</div>';
+    return;
   }
 
-  addNeed(item, userId);
-  return item;
+  container.innerHTML = store.items.map(item => renderItem(item)).join("");
 }
 
-// ------------------------------
-// Roll trigger (manual / admin / test)
-// ------------------------------
-export function runRoll(itemId) {
-  const item = getItemById(itemId);
-  if (!item) throw new Error('ITEM_NOT_FOUND');
+function renderItem(item) {
+  const status = item.status;
+  const isAvailable = status === "available";
+  const isNeed = status === "need_open";
 
-  return executeRoll(item);
+  return `
+    <div class="card status-${status}">
+      <div class="card-header">
+        <h3>${item.name || "Unbenanntes Item"}</h3>
+        <span class="status">${uiStatusLabel(status)}</span>
+      </div>
+
+      <div class="card-body">
+        ${renderAction(item, isAvailable, isNeed)}
+      </div>
+    </div>
+  `;
 }
 
-// ------------------------------
-// Start confirmation (after reserve)
-// ------------------------------
-export function startHandover(itemId) {
-  const item = getItemById(itemId);
-  if (!item) throw new Error('ITEM_NOT_FOUND');
+function renderAction(item, isAvailable, isNeed) {
+  if (isAvailable) {
+    return `<button onclick="clickNeed('${item.id}')">Bedarf anmelden</button>`;
+  }
 
-  startConfirmation(item);
-  return item;
+  if (isNeed) {
+    return `<div class="need-info">Bedarf läuft</div>`;
+  }
+
+  return `<div class="info">Status: ${item.status}</div>`;
 }
 
-// ------------------------------
-// Confirm handover
-// ------------------------------
-export function confirmHandover(itemId, role) {
-  const item = getItemById(itemId);
-  if (!item) throw new Error('ITEM_NOT_FOUND');
-
-  confirm(item, role);
-  return item;
+function uiStatusLabel(status) {
+  switch (status) {
+    case "available": return "Verfügbar";
+    case "need_open": return "Bedarf";
+    case "reserved": return "Reserviert";
+    case "assigned": return "Vergeben";
+    default: return status || "–";
+  }
 }
 
-// ------------------------------
-// Tick (manual or interval)
-// ------------------------------
-export function tick() {
-  checkAllTimeouts(store.items);
-}
+// --------------------------------------------------
+// APP START
+// --------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  initStore();
+});
 
-// ------------------------------
-// DEV helpers
-// ------------------------------
-
-// ------------------------------
-// APP START (ENTRY POINT)
-// ------------------------------
-initStore();
-
+// --------------------------------------------------
+// DEV EXPORTS
+// --------------------------------------------------
 window.initStore = initStore;
-window.submitItem = submitItem;
 window.clickNeed = clickNeed;
-window.runRoll = runRoll;
-window.startHandover = startHandover;
-window.confirmHandover = confirmHandover;
-window.tick = tick;
