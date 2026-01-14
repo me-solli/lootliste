@@ -20,7 +20,7 @@ const store = {
 // --------------------------------------------------
 export async function initStore() {
   try {
-    const res = await fetch(`${API_BASE}/api/items`);
+    const res = await fetch(`${API_BASE}/api/items/public`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const items = await res.json();
