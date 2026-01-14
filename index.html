@@ -1220,13 +1220,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
     given: "Vergeben"
   };
 
-/* ===== CURRENT USER (LOCAL / DEV) ===== */
-  const CURRENT_USER =
-    localStorage.getItem("loot_current_user")
-    || ("guest_" + Math.random().toString(36).slice(2));
-
-  localStorage.setItem("loot_current_user", CURRENT_USER);
-
 /* ===== ICON MAPPING ===== */
 const ICONS = {
   waffe: "waffe",
