@@ -1464,25 +1464,26 @@ closeReq.onclick = () => {
 };
 
 confirmReq.onclick = async () => {
-  if (!pendingItemName) return;
+  if (!pendingItemId) return;
 
   try {
     await fetch(
-      "https://content-connection-production-ea07.up.railway.app/api/requests",
+      `https://content-connection-production-ea07.up.railway.app/api/items/${pendingItemId}/give`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          item: pendingItemName
-        })
+        credentials: "include"
       }
     );
   } catch (e) {
-    console.warn("Request fehlgeschlagen", e);
+    console.warn("Item konnte nicht vergeben werden", e);
   }
 
+  // 🔥 ITEM AUS DER LISTE ENTFERNEN
+  items = items.filter(i => String(i.id) !== String(pendingItemId));
+  render();
+
   requestModal.style.display = "none";
+  pendingItemId = null;
   pendingItemName = null;
 };
   
