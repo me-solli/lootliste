@@ -1,37 +1,47 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Mein Profil – Lootliste</title>
+  <meta charset="UTF-8">
+  <title>Mein Profil – Lootliste</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<h2>Profil (Test)</h2>
+  <h2>Mein Profil</h2>
 
-<div id="state">Lade…</div>
+  <div id="profileState">Lade…</div>
 
-<button id="logoutBtn">Logout</button>
+  <p>
+    <button id="logoutBtn">Logout</button>
+  </p>
 
-<script type="module">
-  import { getUser, logout } from "./auth.js";
+  <p>
+    <a href="../index.html">← Zur Lootliste</a>
+  </p>
 
-  const state = document.getElementById("state");
-  const user = getUser();
+  <script type="module">
+    import { getUser, logout } from "./auth.js";
 
-  if (!user) {
-    state.textContent = "❌ Nicht eingeloggt";
-  } else {
-    state.innerHTML = `
-      ✅ Eingeloggt als <strong>${user.name}</strong><br>
-      ⏱ Login: ${new Date(user.loginAt).toLocaleString("de-DE")}
-    `;
-  }
+    const state = document.getElementById("profileState");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const user = getUser();
 
-  document.getElementById("logoutBtn").onclick = () => {
-    logout();
-    location.reload();
-  };
-</script>
+    if (!user || !user.name) {
+      // Nicht eingeloggt → zurück zum Login
+      location.href = "login.html";
+    } else {
+      state.innerHTML = `
+        <strong>Username:</strong> ${user.name}<br>
+        <strong>Eingeloggt seit:</strong>
+        ${new Date(user.loginAt).toLocaleString("de-DE")}
+      `;
+    }
+
+    logoutBtn.onclick = () => {
+      logout();
+      location.href = "../index.html";
+    };
+  </script>
 
 </body>
 </html>
