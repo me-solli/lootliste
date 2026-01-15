@@ -1337,13 +1337,10 @@ screenshot: i.screenshot || ""
 }
   
 function render() {
-  cards.innerHTML = "";
+  const q = search.value.toLowerCase();
 
-const filtered = items
-  .filter(i => {
-
-      const q = search.value.toLowerCase();
-
+  const filtered = items
+    .filter(i => {
       const matchesSearch =
         !q ||
         (i.name || "").toLowerCase().includes(q) ||
@@ -1382,16 +1379,18 @@ const filtered = items
   document.getElementById("metaStats").textContent =
     `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
-  filtered.forEach(item => {
-const currentStatus = item.status;
-const s =
-  currentStatus === "Reserviert" ? "reserviert" :
-  currentStatus === "Vergeben"   ? "vergeben"   :
-                                   "verfuegbar";
+  /* ===== FAST CARD RENDER ===== */
+  let html = "";
 
-    cards.innerHTML += `
+  for (const item of filtered) {
+    const s =
+      item.status === "Reserviert" ? "reserviert" :
+      item.status === "Vergeben"   ? "vergeben"   :
+                                     "verfuegbar";
+
+    html += `
 <div class="card ${s}" data-item="${item.name}" data-id="${item.id}">
-  <span class="status-badge ${s}">${currentStatus}</span>
+  <span class="status-badge ${s}">${item.status}</span>
 
   <div class="card-image"
     ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
@@ -1430,13 +1429,14 @@ const s =
     </div>
 
     <button class="request-btn">
-  📨 Bedarf anmelden
-</button>
+      📨 Bedarf anmelden
+    </button>
 
   </div>
-</div>
-`;
-  });
+</div>`;
+  }
+
+  cards.innerHTML = html;
 }
   
 /* ===== VISITOR COUNTER ===== */
