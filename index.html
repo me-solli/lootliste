@@ -1606,7 +1606,7 @@ document.addEventListener("keydown", e => {
   import { getUser } from "./auth/auth.js";
 
   const box = document.getElementById("authBox");
-  if (!box) return;
+  if (!box) {
 
   const nameEl = box.querySelector(".account-name");
   const linkEl = box.querySelector(".account-link");
