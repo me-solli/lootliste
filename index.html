@@ -1603,5 +1603,22 @@ document.addEventListener("keydown", e => {
   
 <script type="module" src="ui/index-ui.js?v=4"></script>
 
+  <script type="module">
+  import { getUser } from "./auth/auth.js";
+
+  const box = document.getElementById("authBox");
+  if (!box) return;
+
+  const nameEl = box.querySelector(".account-name");
+  const user = getUser();
+
+  if (!user || !user.name) {
+    box.style.display = "none";
+  } else {
+    nameEl.textContent = user.name;
+    box.style.display = "flex";
+  }
+</script>
+
   </body>  
 </html>
