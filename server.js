@@ -31,7 +31,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, x-login-id, x-admin-token"
+    "Content-Type, Authorization, x-login-id, x-admin-token"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   );
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // wichtig für Firefox
+    return res.sendStatus(200);
   }
 
   next();
@@ -83,7 +83,7 @@ function requireAuth(req, res, next) {
 ================================ */
 const itemRoutes = require("./routes/items");
 const adminRoutes = require("./routes/admin");
-const itemRequestRoutes = require("./routes/itemRequests"); // ← NEU
+const itemRequestRoutes = require("./routes/itemRequests");
 
 /* ================================
    ITEMS
@@ -91,7 +91,7 @@ const itemRequestRoutes = require("./routes/itemRequests"); // ← NEU
 app.use("/api/items", itemRoutes);
 
 /* ================================
-   ITEM REQUESTS (NEU)
+   ITEM REQUESTS
 ================================ */
 app.use("/api/item-requests", itemRequestRoutes);
 
