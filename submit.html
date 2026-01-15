@@ -255,23 +255,25 @@ button[type="submit"]{
 </div>
 
 <script>
-/* DEIN BESTEHENDES SCRIPT – UNVERÄNDERT */
-const API="https://content-connection-production-ea07.up.railway.app";
-const MAX=3;
-let count=0;
+const API = "https://content-connection-production-ea07.up.railway.app";
+const MAX = 3;
+let count = 0;
 
-const items=document.getElementById("items");
-const addBtn=document.getElementById("addItemBtn");
-const progress=document.querySelector(".progress");
-const bar=progress.firstElementChild;
+const items     = document.getElementById("items");
+const addBtn    = document.getElementById("addItemBtn");
+const progress  = document.querySelector(".progress");
+const bar       = progress.firstElementChild;
+const msgSuccess = document.getElementById("msgSuccess");
+const msgError   = document.getElementById("msgError");
+const itemCountInput = document.getElementById("itemCount");
 
-function addItem(){
-  if(count>=MAX) return;
+function addItem() {
+  if (count >= MAX) return;
   count++;
 
-  const div=document.createElement("div");
-  div.className="item-block";
-  div.innerHTML=`
+  const div = document.createElement("div");
+  div.className = "item-block";
+  div.innerHTML = `
     <div class="screenshot-box">
       <label>Item ${count} – Screenshot *
         <span class="tooltip">?
@@ -292,34 +294,43 @@ function addItem(){
         placeholder="z. B. Mule xyz / MF Sorc / Char: xyz">
     </div>
   `;
+
   items.appendChild(div);
 
-  const input=div.querySelector("input[type=file]");
-  const preview=div.querySelector(".preview");
-  const img=preview.querySelector("img");
+  const input   = div.querySelector("input[type=file]");
+  const preview = div.querySelector(".preview");
+  const img     = preview.querySelector("img");
 
-  input.addEventListener("change",()=>{
-    const f=input.files[0];
-    if(!f || f.size>10*1024*1024) return alert("Bild max. 10 MB");
-    const r=new FileReader();
-    r.onload=e=>{img.src=e.target.result;preview.style.display="block";}
+  input.addEventListener("change", () => {
+    const f = input.files[0];
+    if (!f || f.size > 10 * 1024 * 1024) {
+      input.value = "";
+      return alert("Bild max. 10 MB");
+    }
+    const r = new FileReader();
+    r.onload = e => {
+      img.src = e.target.result;
+      preview.style.display = "block";
+    };
     r.readAsDataURL(f);
   });
 
-  if(count===MAX) addBtn.style.display="none";
+  if (count === MAX) addBtn.style.display = "none";
 }
 
-addBtn.onclick=addItem;
+addBtn.onclick = addItem;
 addItem();
 
-document.getElementById("submitForm").onsubmit=async e=>{
+document.getElementById("submitForm").onsubmit = async e => {
   e.preventDefault();
-  progress.style.display="block";
-  bar.style.width="10%";
+  if (count === 0) return;
 
-  document.getElementById("itemCount").value = count;
+  itemCountInput.value = count;
+  progress.style.display = "block";
+  bar.style.width = "10%";
 
   const xhr = new XMLHttpRequest();
+
   xhr.upload.onprogress = e => {
     if (e.lengthComputable) {
       bar.style.width = (e.loaded / e.total * 100) + "%";
@@ -329,6 +340,7 @@ document.getElementById("submitForm").onsubmit=async e=>{
   xhr.onload = () => {
     progress.style.display = "none";
     bar.style.width = "0%";
+
     if (xhr.status >= 200 && xhr.status < 300) {
       msgSuccess.style.display = "block";
       msgError.style.display = "none";
