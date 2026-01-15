@@ -27,11 +27,10 @@ const app = express();
 /* ================================
    PORT (RAILWAY SAFE)
 ================================ */
-// 🚑 WICHTIG: Fallback, sonst SIGTERM bei Railway
 const PORT = process.env.PORT || 8080;
 
 /* ================================
-   CORS (GitHub Pages → Railway)
+   CORS
 ================================ */
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://me-solli.github.io");
@@ -60,7 +59,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /* ================================
-   UPLOADS (RAILWAY SAFE)
+   HEALTH / ROOT (RAILWAY!)
+================================ */
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
+/* ================================
+   UPLOADS
 ================================ */
 const UPLOAD_DIR = "/data/uploads";
 
@@ -72,50 +82,18 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ================================
-   DEV AUTH (TEMP)
-================================ */
-function requireAuth(req, res, next) {
-  const loginId = req.headers["x-login-id"];
-
-  if (loginId === "dev-admin") {
-    req.user = { id: "dev-admin", role: "admin" };
-    return next();
-  }
-
-  return res.status(401).json({ error: "Nicht eingeloggt" });
-}
-
-/* ================================
    ROUTES
 ================================ */
 const itemRoutes = require("./routes/items");
 const adminRoutes = require("./routes/admin");
 const itemRequestRoutes = require("./routes/itemRequests");
 
-/* ================================
-   ITEMS
-================================ */
 app.use("/api/items", itemRoutes);
-
-/* ================================
-   ITEM REQUESTS
-================================ */
 app.use("/api/item-requests", itemRequestRoutes);
-
-/* ================================
-   ADMIN
-================================ */
 app.use("/api/admin", adminRoutes);
 
 /* ================================
-   HEALTH (Railway Healthcheck)
-================================ */
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
-
-/* ================================
-   GLOBAL EXPRESS ERROR HANDLER
+   ERROR HANDLER
 ================================ */
 app.use((err, req, res, next) => {
   console.error("❌ EXPRESS ERROR:", err);
