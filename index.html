@@ -523,9 +523,12 @@ body{
 
 /* ===== REQUEST BUTTON ===== */
 .request-btn{
-  width:100%;
-  margin-top:6px;
-  padding:6px 10px;
+  position:absolute;
+  right:14px;
+  bottom:14px;
+
+  padding:6px 12px;
+  min-width:140px;
 
   background:linear-gradient(#2a2218,#1a140c);
   border:1px solid #3a2f1f;
@@ -535,13 +538,25 @@ body{
   font-size:12px;
   font-weight:500;
   cursor:pointer;
+
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(4px);
+  transition:opacity .15s ease, transform .15s ease, background .15s ease;
 }
-  
-  .request-btn.disabled{
-  opacity:.6;
+
+.card:hover .request-btn{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+
+.request-btn.disabled{
+  opacity:.5;
   cursor:default;
+  pointer-events:none;
 }
-  
+
 .request-btn:not(.disabled):hover{
   background:linear-gradient(#2f2618,#1d170e);
   color:#f0e3c2;
