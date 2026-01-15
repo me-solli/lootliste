@@ -39,49 +39,35 @@ db.allAsync = (sql, params = []) =>
   });
 
 // ================================
-// TABELLEN + AUTO-MIGRATION
-// ================================
+// TABELLEN + AUTO-MIGRATION (V3)
+ // ================================
 db.serialize(() => {
 
   // ================================
-  // ITEMS (Basis)
+  // ITEMS (V3 FINAL)
   // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS items (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
+      name TEXT,
       type TEXT,
+      weapon_type TEXT,
       quality TEXT,
       roll TEXT,
       rating INTEGER DEFAULT 0,
       contact TEXT,
       status TEXT DEFAULT 'Verfügbar',
       screenshot TEXT,
+
+      owner_user_id TEXT,
+
+      published_at DATETIME,
+      earliest_assign_at DATETIME,
+      latest_assign_at DATETIME,
+
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
-
-  // ================================
-  // MIGRATION: owner_user_id
-  // ================================
-  db.run(`
-    ALTER TABLE items ADD COLUMN owner_user_id TEXT
-  `, err => {
-    if (err && !err.message.includes("duplicate column")) {
-      console.error("❌ owner_user_id:", err.message);
-    }
-  });
-
-  // ================================
-  // MIGRATION: weapon_type (V3)
-  // ================================
-  db.run(`
-    ALTER TABLE items ADD COLUMN weapon_type TEXT
-  `, err => {
-    if (err && !err.message.includes("duplicate column")) {
-      console.error("❌ weapon_type:", err.message);
-    }
-  });
 
   // ================================
   // ITEM STATUS
