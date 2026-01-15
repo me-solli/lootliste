@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Mein Profil – Lootliste</title>
+</head>
+<body>
+
+<h2>Profil (Test)</h2>
+
+<div id="state">Lade…</div>
+
+<button id="logoutBtn">Logout</button>
+
+<script type="module">
+  import { getUser, logout } from "./auth.js";
+
+  const state = document.getElementById("state");
+  const user = getUser();
+
+  if (!user) {
+    state.textContent = "❌ Nicht eingeloggt";
+  } else {
+    state.innerHTML = `
+      ✅ Eingeloggt als <strong>${user.name}</strong><br>
+      ⏱ Login: ${new Date(user.loginAt).toLocaleString("de-DE")}
+    `;
+  }
+
+  document.getElementById("logoutBtn").onclick = () => {
+    logout();
+    location.reload();
+  };
+</script>
+
+</body>
+</html>
