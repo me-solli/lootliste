@@ -39,12 +39,12 @@ db.allAsync = (sql, params = []) =>
   });
 
 // ================================
-// TABELLEN + AUTO-MIGRATION (V3)
- // ================================
+// TABELLEN + AUTO-MIGRATION (V3 FINAL)
+// ================================
 db.serialize(() => {
 
   // ================================
-  // ITEMS (V3 FINAL)
+  // ITEMS (V3)
   // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS items (
@@ -70,13 +70,13 @@ db.serialize(() => {
   `);
 
   // ================================
-  // ITEM STATUS
+  // ITEM STATUS (V3 FINAL)
   // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS item_status (
       item_id INTEGER PRIMARY KEY,
       status TEXT,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      status_since DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
