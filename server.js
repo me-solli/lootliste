@@ -1,4 +1,4 @@
-console.log("SERVER.JS wird geladen");555
+console.log("SERVER.JS wird geladen");
 
 /* ================================
    GLOBAL CRASH PROTECTION
