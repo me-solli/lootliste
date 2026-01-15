@@ -1133,16 +1133,19 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 <div class="cards" id="cards"></div>
 </div> <!-- container -->
 
-<!-- ===== REQUEST MODAL ===== -->
-<div id="requestModal">
+<!-- ===== REQUEST CONFIRM MODAL ===== -->
+<div id="requestModal" style="display:none">
   <div class="backdrop"></div>
   <div class="modal">
     <strong id="modalItem"></strong>
-    <input id="reqName" placeholder="Dein Nickname *">
-    <input id="reqContact" placeholder="Kontakt (Mail oder Discord) *">
-    <textarea id="reqMsg" placeholder="Nachricht (optional)"></textarea>
+
+    <p style="font-size:13px;opacity:.85;line-height:1.4">
+      Deine Anfrage wird an den Spender weitergeleitet.<br>
+      Die weitere Absprache erfolgt privat.
+    </p>
+
     <div class="modal-actions">
-      <button id="sendReq">Anfrage senden</button>
+      <button id="confirmReq">Bestätigen</button>
       <button id="closeReq">Abbrechen</button>
     </div>
   </div>
