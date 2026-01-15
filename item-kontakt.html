@@ -35,11 +35,11 @@
 
   </div>
 
-  <!-- ===== STEP 2 + 3: REQUEST-ID LESEN & LOGIN PRÜFEN ===== -->
+  <!-- ===== STEP 2–4: REQUEST-ID, LOGIN, REQUEST LADEN ===== -->
   <script type="module">
     import { getUser } from "./auth/auth.js";
 
-    // Request-ID aus URL
+    // ----- STEP 2: Request-ID -----
     const params = new URLSearchParams(window.location.search);
     const requestId = params.get("request");
 
@@ -48,15 +48,54 @@
       window.location.href = "index.html";
     }
 
-    // Login prüfen
+    // ----- STEP 3: Login prüfen -----
     const user = getUser();
     if (!user) {
       window.location.href = "auth/login.html";
     }
 
-    // Debug – später entfernbar
-    console.log("Aktive Request-ID:", requestId);
-    console.log("Eingeloggter Nutzer:", user);
+    // ----- DOM -----
+    const itemNameEl = document.getElementById("itemName");
+    const itemMetaEl = document.getElementById("itemMeta");
+
+    // ----- STEP 4: Request & Item laden -----
+    async function loadRequest() {
+      try {
+        const res = await fetch(
+          `/api/item-requests/${requestId}`,
+          { credentials: "include" }
+        );
+
+        if (!res.ok) {
+          alert("Kein Zugriff auf diese Anfrage.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        const data = await res.json();
+
+        // Erwartete Struktur:
+        // data = {
+        //   status,
+        //   item: { name, type },
+        //   requester: { id, name },
+        //   owner: { id, name }
+        // }
+
+        itemNameEl.textContent = data.item?.name || "Item";
+        itemMetaEl.textContent = `Status: ${data.status}`;
+
+        // Debug
+        console.log("Request-Daten:", data);
+      } catch (err) {
+        console.error("Fehler beim Laden der Anfrage", err);
+        alert("Fehler beim Laden der Anfrage.");
+        window.location.href = "index.html";
+      }
+    }
+
+    // Init
+    loadRequest();
   </script>
 
 </body>
