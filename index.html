@@ -1287,9 +1287,12 @@ screenshot: i.screenshot || ""
 function render() {
   cards.innerHTML = "";
 
-  const filtered = items
-    .filter(i => i.status === "Verfügbar")
-    .filter(i => {
+const filtered = items
+  .filter(i => {
+    return !statusFilter.value || i.status === statusFilter.value;
+  })
+  .filter(i => {
+
       const q = search.value.toLowerCase();
 
       const matchesSearch =
