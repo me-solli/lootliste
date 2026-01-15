@@ -1451,7 +1451,8 @@ const itemId = card.dataset.id;
   }
 
   // ✅ eingeloggt → Bestätigung
-  pendingItemName = itemName;
+pendingItemName = itemName;
+pendingItemId = itemId;
   modalItem.textContent = `Bedarf anmelden für: ${itemName}`;
   requestModal.style.display = "block";
 });
