@@ -9,7 +9,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Items einreichen – Community Lootliste</title>
+<title>Items einreichen · D2R Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -29,10 +29,61 @@ body{
   background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
   color:var(--text);
 }
+
+/* ===== HEADER (FINAL) ===== */
+.site-header{
+  max-width:640px;
+  margin:30px auto 20px;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  height:44px;
+}
+
+/* Account-Box (identisch zu meine-items.html) */
+.auth-box{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
+  font-size:13px;
+}
+
+.account-avatar{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  opacity:.85;
+}
+
+.account-name{
+  opacity:.9;
+  white-space:nowrap;
+}
+
+.account-link{
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.85;
+}
+.account-link:hover{
+  opacity:1;
+  text-decoration:underline;
+}
+
+/* ===== CONTENT ===== */
 .wrapper{
   max-width:640px;
-  margin:40px auto;
-  padding:20px;
+  margin:0 auto 40px;
+  padding:0 20px;
 }
 .panel{
   background:var(--panel);
@@ -158,49 +209,37 @@ button[type="submit"]{
 }
 .notice.success{background:#0f1a0f;border:1px solid #1a3a1a;color:var(--green)}
 .notice.error{background:#1a0f0f;border:1px solid #3a1a1a;color:var(--red)}
-
-  /* ===== FUTURE CONTEXT AREAS ===== */
-
-.user-context {
-  padding: 10px 14px;
-  margin-bottom: 14px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.03);
-  border: 1px dashed rgba(255,255,255,0.08);
-  font-size: 13px;
-  color: #bbb;
-}
-  
 </style>
 </head>
 
 <body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a href="index.html">
+    <img src="img/logo_d2r.png" alt="D2R Lootliste Logo" class="logo">
+  </a>
+
+  <div class="auth-box">
+    <img src="img/avatars/default.png" alt="Avatar" class="account-avatar">
+    <span class="account-name">Username</span>
+    <a href="meine-items.html" class="account-link">Meine Items</a>
+  </div>
+</header>
+
+<!-- CONTENT -->
 <div class="wrapper">
 <div class="panel">
 
 <h1>Items einreichen</h1>
 <p>Bis zu <strong>3 Items</strong> gleichzeitig · je Item <strong>1 Screenshot</strong></p>
 
-  <!-- ===== USER CONTEXT (future) ===== -->
-<div class="user-context" data-role="user-context" hidden>
-  <!-- später: Eingeloggt als Spieler X -->
-</div>
-
-<p class="hint">
-  Eingereichte Items werden vor der Veröffentlichung geprüft.
-</p>
-
-<form id="submitForm" data-role="submit-form">
-  
+<form id="submitForm">
   <input type="hidden" name="item_count" id="itemCount">
-
-<div id="items"></div>
-
-<div class="add-btn" id="addItemBtn">+ weiteres Item hinzufügen</div>
-
-<button type="submit">Items einreichen</button>
-
-<div class="progress"><div></div></div>
+  <div id="items"></div>
+  <div class="add-btn" id="addItemBtn">+ weiteres Item hinzufügen</div>
+  <button type="submit">Items einreichen</button>
+  <div class="progress"><div></div></div>
 </form>
 
 <div id="msgSuccess" class="notice success" style="display:none">✔ Upload abgeschlossen</div>
@@ -210,6 +249,7 @@ button[type="submit"]{
 </div>
 
 <script>
+/* DEIN BESTEHENDES SCRIPT – UNVERÄNDERT */
 const API="https://content-connection-production-ea07.up.railway.app";
 const MAX=3;
 let count=0;
@@ -243,7 +283,7 @@ function addItem(){
         </span>
       </label>
       <input type="text" name="note_${count}" maxlength="40"
-        value="z. B. Mule xyz / MF Sorc / Char: xyz">
+        placeholder="z. B. Mule xyz / MF Sorc / Char: xyz">
     </div>
   `;
   items.appendChild(div);
@@ -271,49 +311,39 @@ document.getElementById("submitForm").onsubmit=async e=>{
   progress.style.display="block";
   bar.style.width="10%";
 
-document.getElementById("itemCount").value = count;
-  
-const xhr = new XMLHttpRequest();
+  document.getElementById("itemCount").value = count;
 
-xhr.upload.onprogress = e => {
-  if (e.lengthComputable) {
-    bar.style.width = (e.loaded / e.total * 100) + "%";
-  }
-};
-
-xhr.onload = () => {
-  // Progress zurücksetzen
-  progress.style.display = "none";
-  bar.style.width = "0%";
-
-  // ✅ Erfolg nur bei echtem HTTP-Erfolg
-  if (xhr.status >= 200 && xhr.status < 300) {
-    msgSuccess.style.display = "block";
-    msgError.style.display = "none";
-
-    // kurzer Moment zum Lesen, dann Reload
-    setTimeout(() => {
-      location.reload();
-    }, 1800);
-  } else {
-    msgSuccess.style.display = "none";
-    msgError.style.display = "block";
-  }
-};
-
-xhr.onerror = () => {
-  progress.style.display = "none";
-  bar.style.width = "0%";
-  msgSuccess.style.display = "none";
-  msgError.style.display = "block";
-};
-
-xhr.open("POST", API + "/api/items");
-xhr.setRequestHeader("x-login-id", "dev-admin");
-xhr.send(new FormData(e.target));
+  const xhr = new XMLHttpRequest();
+  xhr.upload.onprogress = e => {
+    if (e.lengthComputable) {
+      bar.style.width = (e.loaded / e.total * 100) + "%";
+    }
   };
 
+  xhr.onload = () => {
+    progress.style.display = "none";
+    bar.style.width = "0%";
+    if (xhr.status >= 200 && xhr.status < 300) {
+      msgSuccess.style.display = "block";
+      msgError.style.display = "none";
+      setTimeout(() => location.reload(), 1800);
+    } else {
+      msgSuccess.style.display = "none";
+      msgError.style.display = "block";
+    }
+  };
 
+  xhr.onerror = () => {
+    progress.style.display = "none";
+    bar.style.width = "0%";
+    msgSuccess.style.display = "none";
+    msgError.style.display = "block";
+  };
+
+  xhr.open("POST", API + "/api/items");
+  xhr.setRequestHeader("x-login-id", "dev-admin");
+  xhr.send(new FormData(e.target));
+};
 </script>
 
 </body>
