@@ -5,28 +5,49 @@
   <title>Kontakt – Lootliste</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
   <div class="wrapper">
 
-    <!-- Item-Kopf -->
+    <!-- ITEM INFO -->
     <section id="itemHeader">
       <h2 id="itemName">Item</h2>
       <div id="itemMeta"></div>
     </section>
 
-    <!-- Nachrichten -->
-    <section id="messages"></section>
+    <!-- NACHRICHTEN -->
+    <section id="messages">
+      <!-- Nachrichten kommen hier rein -->
+    </section>
 
-    <!-- Antwort -->
+    <!-- ANTWORT -->
     <section id="replyBox">
-      <textarea id="messageInput"
+      <textarea
+        id="messageInput"
         placeholder="Nachricht schreiben…"
         rows="3"></textarea>
-      <button id="sendMessage">Senden</button>
+
+      <button id="sendMessage">
+        Senden
+      </button>
     </section>
 
   </div>
+
+  <!-- ===== STEP 2: REQUEST-ID AUS URL LESEN ===== -->
+  <script type="module">
+    const params = new URLSearchParams(window.location.search);
+    const requestId = params.get("request");
+
+    if (!requestId) {
+      alert("Ungültiger Zugriff auf die Kontaktseite.");
+      window.location.href = "index.html";
+    }
+
+    // Debug – kann später entfernt werden
+    console.log("Aktive Request-ID:", requestId);
+  </script>
 
 </body>
 </html>
