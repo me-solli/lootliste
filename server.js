@@ -1,6 +1,17 @@
 console.log("SERVER.JS wird geladen");
 
 /* ================================
+   GLOBAL CRASH PROTECTION
+================================ */
+process.on("unhandledRejection", (reason) => {
+  console.error("❌ UNHANDLED REJECTION:", reason);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("❌ UNCAUGHT EXCEPTION:", err);
+});
+
+/* ================================
    IMPORTS
 ================================ */
 const express = require("express");
@@ -105,6 +116,15 @@ app.use("/api/admin", adminRoutes);
 ================================ */
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
+});
+
+/* ================================
+   GLOBAL EXPRESS ERROR HANDLER
+   (MUSS GANZ AM ENDE SEIN)
+================================ */
+app.use((err, req, res, next) => {
+  console.error("❌ EXPRESS ERROR:", err);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 /* ================================
