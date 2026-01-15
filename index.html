@@ -1607,19 +1607,19 @@ document.addEventListener("keydown", e => {
 
   const box = document.getElementById("authBox");
   if (!box) {
+    // nichts tun
+  }
 
   const nameEl = box.querySelector(".account-name");
   const linkEl = box.querySelector(".account-link");
   const user = getUser();
 
   if (!user || !user.name) {
-    // 🔓 ausgeloggt
     nameEl.textContent = "";
     linkEl.textContent = "Login";
     linkEl.href = "auth/login.html";
     box.style.display = "flex";
   } else {
-    // 👤 eingeloggt
     nameEl.textContent = user.name;
     linkEl.textContent = "Profil";
     linkEl.href = "auth/profile.html";
