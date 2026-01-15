@@ -632,7 +632,7 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 
 
 
-/* ===== AUTH BOX ===== */
+/* ===== AUTH BOX (ACCOUNT PLACEHOLDER) ===== */
 .hero{ position:relative; }
 
 .auth-box{
@@ -649,19 +649,33 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   font-size:13px;
   z-index:5;
 }
-.auth-box button{
-  padding:6px 12px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:#151515;
-  color:#fff;
-  cursor:pointer;
-}
-.auth-box button:hover{
-  border-color:var(--gold);
-  color:var(--gold);
+
+/* Avatar */
+.auth-box .account-avatar{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  opacity:.85;
 }
 
+/* Username */
+.auth-box .account-name{
+  opacity:.9;
+  white-space:nowrap;
+}
+
+/* Link */
+.auth-box .account-link{
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.8;
+}
+
+.auth-box .account-link:hover{
+  opacity:1;
+  text-decoration:underline;
+}
 
 /* ===== AUTH MODAL ===== */
 .auth-modal{
