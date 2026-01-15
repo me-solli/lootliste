@@ -1425,17 +1425,22 @@ if (requestFeed) {
 }
 
 /* ===== INIT ===== */
-search.oninput=render;
-statusFilter.onchange=render;
-sortRating.onchange=render;
+search.oninput = render;
+statusFilter.onchange = render;
+sortRating.onchange = render;
+
 loadItems().then(() => {
   render();
+
+  // ===== REQUEST FEED VISIBILITY =====
+  const feedWrapper = document.querySelector(".request-feed");
+  if (feedWrapper && requestFeed) {
+    const hasEntries = requestFeed.children.length > 0;
+    feedWrapper.style.display = hasEntries ? "block" : "none";
+  }
 });
 
-
-
 </script>
-
 
 <!-- ===== AUTH (FINAL / LOCAL BACKEND) ===== -->
 <!-- DISABLED AUTH BLOCK (DEV MODE) 
