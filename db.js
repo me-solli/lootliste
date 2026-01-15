@@ -44,14 +44,13 @@ db.allAsync = (sql, params = []) =>
 db.serialize(() => {
 
   // ================================
-  // ITEMS
+  // ITEMS (Basis)
   // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS items (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       type TEXT,
-      weaponType TEXT,
       quality TEXT,
       roll TEXT,
       rating INTEGER DEFAULT 0,
@@ -63,19 +62,26 @@ db.serialize(() => {
   `);
 
   // ================================
-  // MIGRATION: owner_user_id (V3)
+  // MIGRATION: owner_user_id
   // ================================
-  db.run(
-    `
-    ALTER TABLE items
-    ADD COLUMN owner_user_id TEXT
-    `,
-    err => {
-      if (err && !err.message.includes("duplicate column")) {
-        console.error("❌ Migration owner_user_id fehlgeschlagen:", err.message);
-      }
+  db.run(`
+    ALTER TABLE items ADD COLUMN owner_user_id TEXT
+  `, err => {
+    if (err && !err.message.includes("duplicate column")) {
+      console.error("❌ owner_user_id:", err.message);
     }
-  );
+  });
+
+  // ================================
+  // MIGRATION: weapon_type (V3)
+  // ================================
+  db.run(`
+    ALTER TABLE items ADD COLUMN weapon_type TEXT
+  `, err => {
+    if (err && !err.message.includes("duplicate column")) {
+      console.error("❌ weapon_type:", err.message);
+    }
+  });
 
   // ================================
   // ITEM STATUS
@@ -89,7 +95,7 @@ db.serialize(() => {
   `);
 
   // ================================
-  // ITEM INTEREST (V3)
+  // ITEM INTEREST
   // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS item_interest (
@@ -102,7 +108,7 @@ db.serialize(() => {
   `);
 
   // ================================
-  // ITEM REQUESTS (Kontakt / Bedarf)
+  // ITEM REQUESTS
   // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS item_requests (
@@ -113,29 +119,6 @@ db.serialize(() => {
       status TEXT NOT NULL DEFAULT 'open',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       closed_at DATETIME
-    )
-  `);
-
-  // ================================
-  // DEV TEST REQUEST (TEMP)
-  // ================================
-  db.run(`
-    INSERT INTO item_requests (
-      item_id,
-      requester_user_id,
-      owner_user_id,
-      status
-    )
-    SELECT
-      1,
-      'dev-admin',
-      'dev-admin',
-      'open'
-    WHERE NOT EXISTS (
-      SELECT 1 FROM item_requests
-      WHERE item_id = 1
-        AND requester_user_id = 'dev-admin'
-        AND owner_user_id = 'dev-admin'
     )
   `);
 
