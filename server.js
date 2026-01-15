@@ -83,15 +83,17 @@ function requireAuth(req, res, next) {
 ================================ */
 const itemRoutes = require("./routes/items");
 const adminRoutes = require("./routes/admin");
+const itemRequestRoutes = require("./routes/itemRequests"); // ← NEU
 
 /* ================================
    ITEMS
 ================================ */
-// 🔥 RICHTIG:
-// /api/items/public  → router.get("/public")
-// /api/items          → router.get("/"), router.post("/")
-
 app.use("/api/items", itemRoutes);
+
+/* ================================
+   ITEM REQUESTS (NEU)
+================================ */
+app.use("/api/item-requests", itemRequestRoutes);
 
 /* ================================
    ADMIN
