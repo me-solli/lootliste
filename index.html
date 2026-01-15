@@ -220,8 +220,8 @@ body{
   grid-template-columns:repeat(3,1fr);
   gap:22px;
 
-  /* optionaler Container-Fix bei vielen Items */
-  contain: layout paint;
+  margin-top:8px;            /* ← NEU: Luft für Hover */
+  contain: layout paint;     /* Performance bleibt */
 }
 
 @media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
