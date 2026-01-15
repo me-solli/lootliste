@@ -219,6 +219,9 @@ body{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:22px;
+
+  /* optionaler Container-Fix bei vielen Items */
+  contain: layout paint;
 }
 
 @media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
@@ -230,10 +233,17 @@ body{
   border:1px solid var(--border);
   border-radius:20px;
   overflow:hidden;
-  transition:.25s;
   position:relative;
+
+  /* ===== PERFORMANCE ===== */
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 320px 180px;
+
+  will-change: transform;
+  transition: transform .25s ease, box-shadow .25s ease;
 }
-  
+
 /* ================================
    DIABLO ITEM STATUS – METALL RAND
    ================================ */
