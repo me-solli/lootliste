@@ -1606,30 +1606,29 @@ document.addEventListener("keydown", e => {
   import { getUser, logout } from "./auth/auth.js";
 
   const box = document.getElementById("authBox");
+  if (!box) return;
 
-  if (!box) {
-    // Auth-Box existiert nicht → nichts tun
+  const nameEl = box.querySelector(".account-name");
+  const linkEl = box.querySelector(".account-link");
+  const user = getUser();
+
+  if (!user || !user.name) {
+    // 🔓 NICHT eingeloggt → Login anzeigen
+    nameEl.textContent = "";
+    linkEl.textContent = "Login";
+    linkEl.href = "auth/login.html";
+    box.style.display = "flex";
   } else {
-    const nameEl = box.querySelector(".account-name");
-    const linkEl = box.querySelector(".account-link");
-    const user = getUser();
-
-    if (!user || !user.name) {
-      box.style.display = "none";
-    } else {
-      // Anzeige
-      nameEl.textContent = user.name;
-      box.style.display = "flex";
-
-      // Logout
-      linkEl.textContent = "Logout";
-      linkEl.href = "#";
-      linkEl.onclick = (e) => {
-        e.preventDefault();
-        logout();
-        location.reload();
-      };
-    }
+    // 👤 Eingeloggt → Username + Logout
+    nameEl.textContent = user.name;
+    linkEl.textContent = "Logout";
+    linkEl.href = "#";
+    linkEl.onclick = (e) => {
+      e.preventDefault();
+      logout();
+      location.reload();
+    };
+    box.style.display = "flex";
   }
 </script>
 
