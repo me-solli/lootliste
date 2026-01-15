@@ -1464,8 +1464,8 @@ search.oninput = render;
 sortRating.onchange = render;
 
 loadItems().then(() => {
+  search.value = "";   // ← NEU: Suchfeld reset bei Reload
   render();
-
 });
 
 import { getUser } from "./auth/auth.js";
