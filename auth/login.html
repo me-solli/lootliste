@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Login – Lootliste</title>
+</head>
+<body>
+
+<h2>Login (Testphase)</h2>
+
+<input id="name" placeholder="Username">
+<button id="loginBtn">Login</button>
+
+<script type="module">
+  import { login } from "./auth.js";
+
+  document.getElementById("loginBtn").onclick = () => {
+    const name = document.getElementById("name").value.trim();
+    if (!name) return alert("Name fehlt");
+    login(name);
+    location.href = "../index.html";
+  };
+</script>
+
+</body>
+</html>
