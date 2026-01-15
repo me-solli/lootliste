@@ -1467,9 +1467,10 @@ const closeReq = document.getElementById("closeReq");
 
 let pendingItemId = null;
 let pendingItemName = null;
+/* ===== REQUEST BUTTON HANDLER (OPTIMIZED) ===== */
+let cachedUser = null;
 
-/* ===== REQUEST BUTTON HANDLER ===== */
-document.addEventListener("click", e => {
+cards.addEventListener("click", e => {
   const btn = e.target.closest(".request-btn");
   if (!btn) return;
 
@@ -1477,8 +1478,10 @@ document.addEventListener("click", e => {
   if (!card) return;
 
   const itemName = card.dataset.item;
-const itemId = card.dataset.id;
-  const user = getUser();
+  const itemId = card.dataset.id;
+
+  cachedUser ??= getUser();
+  const user = cachedUser;
 
   // ❌ nicht eingeloggt → Login
   if (!user) {
@@ -1487,8 +1490,8 @@ const itemId = card.dataset.id;
   }
 
   // ✅ eingeloggt → Bestätigung
-pendingItemName = itemName;
-pendingItemId = itemId;
+  pendingItemName = itemName;
+  pendingItemId = itemId;
   modalItem.textContent = `Bedarf anmelden für: ${itemName}`;
   requestModal.style.display = "block";
 });
