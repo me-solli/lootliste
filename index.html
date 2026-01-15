@@ -1008,29 +1008,6 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 <header class="hero">
   <div class="hero-inner">
 
-<div id="authBox" class="auth-box">
-  <img src="img/avatars/default.png" alt="Avatar" class="account-avatar">
-  <span class="account-name">Username</span>
-  <a href="meine-items.html" class="account-link">Meine Items</a>
-</div>
-
-    <script type="module">
-  import { getUser } from "./auth/auth.js";
-
-  const box = document.getElementById("authBox");
-  if (!box) return;
-
-  const nameEl = box.querySelector(".account-name");
-  const user = getUser();
-
-  if (!user || !user.name) {
-    box.style.display = "none";
-  } else {
-    nameEl.textContent = user.name;
-    box.style.display = "flex";
-  }
-</script>
-
     <h1 class="hero-logo"><img src="img/logo_d2r.png" alt="D2R Lootliste Logo"></h1>
     <p>Community Lootliste · Diablo II Resurrected</p>
 
