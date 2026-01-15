@@ -25,9 +25,14 @@ const db = require("./db");
 const app = express();
 
 /* ================================
-   PORT (RAILWAY SAFE)
+   PORT (RAILWAY – STRICT)
 ================================ */
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
+
+if (!PORT) {
+  console.error("❌ FATAL: process.env.PORT ist NICHT gesetzt");
+  process.exit(1);
+}
 
 /* ================================
    CORS
@@ -59,7 +64,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /* ================================
-   HEALTH / ROOT (RAILWAY!)
+   ROOT + HEALTH (RAILWAY CHECK)
 ================================ */
 app.get("/", (req, res) => {
   res.status(200).json({ status: "ok" });
