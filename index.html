@@ -1507,6 +1507,11 @@ closeReq.onclick = () => {
 confirmReq.onclick = async () => {
   if (!pendingItemId) return;
 
+  // 🔒 Doppelklick verhindern
+  confirmReq.classList.add("is-loading");
+  const oldLabel = confirmReq.innerHTML;
+  confirmReq.innerHTML = "⏳ Wird gesendet …";
+
   try {
     await fetch(
       `https://content-connection-production-ea07.up.railway.app/api/items/${pendingItemId}/give`,
@@ -1519,10 +1524,13 @@ confirmReq.onclick = async () => {
     console.warn("Item konnte nicht vergeben werden", e);
   }
 
-  // 🔥 ITEM AUS DER LISTE ENTFERNEN
+  // 🔥 Item aus der Liste entfernen
   items = items.filter(i => String(i.id) !== String(pendingItemId));
   render();
 
+  // 🧹 Reset
+  confirmReq.classList.remove("is-loading");
+  confirmReq.innerHTML = oldLabel;
   requestModal.style.display = "none";
   pendingItemId = null;
   pendingItemName = null;
