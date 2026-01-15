@@ -995,17 +995,40 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
   text-decoration:underline;
 }
 
-/* ===== CONFIRM BUTTON ACCENT ===== */
+/* ===== MODAL BUTTONS (FINAL, SUBTLE) ===== */
+
+/* Primär: Bestätigen */
 .btn-confirm{
-  background:linear-gradient(#2a2218,#1a140c);
-  border:1px solid #6f7f4a;
-  color:#f0e3c2;
-  font-weight:600;
+  background:linear-gradient(
+    180deg,
+    rgba(245,196,81,.28),
+    rgba(120,90,30,.22)
+  );
+  border:1px solid rgba(245,196,81,.55);
+  color:#f3ead2;
+  font-weight:400; /* Schrift bewusst ruhig */
 }
 
 .btn-confirm:hover{
-  background:linear-gradient(#2f2618,#1d170e);
+  background:linear-gradient(
+    180deg,
+    rgba(245,196,81,.45),
+    rgba(140,100,35,.35)
+  );
   border-color:#f5c451;
+  color:#fff;
+}
+
+/* Sekundär: Abbrechen */
+.btn-cancel{
+  background:#151515;
+  border:1px solid #2a2a2a;
+  color:#cfcfcf;
+  font-weight:400;
+}
+
+.btn-cancel:hover{
+  border-color:#555;
   color:#fff;
 }
   
