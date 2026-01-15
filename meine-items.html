@@ -14,6 +14,55 @@
       color:#e6e6e6;
     }
 
+    /* ===== HEADER ===== */
+    .site-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:40px;
+    }
+
+    .logo{
+      height:46px;
+    }
+
+    /* ===== ACCOUNT BOX ===== */
+    .auth-box{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:14px;
+      background:rgba(0,0,0,.55);
+      font-size:13px;
+    }
+
+    .account-avatar{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      opacity:.85;
+    }
+
+    .account-name{
+      opacity:.9;
+      white-space:nowrap;
+    }
+
+    .account-link{
+      font-size:12px;
+      color:#d2b46c;
+      text-decoration:none;
+      opacity:.85;
+    }
+
+    .account-link:hover{
+      opacity:1;
+      text-decoration:underline;
+    }
+
+    /* ===== CONTENT ===== */
     h1{
       font-size:28px;
       margin-bottom:10px;
@@ -37,6 +86,20 @@
 
 <body>
 
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="index.html">
+      <img src="img/logo_d2r.png" alt="D2R Lootliste Logo" class="logo">
+    </a>
+
+    <div class="auth-box">
+      <img src="img/avatars/default.png" alt="Avatar" class="account-avatar">
+      <span class="account-name">Username</span>
+      <a href="meine-items.html" class="account-link">Meine Items</a>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
   <h1>Meine Items</h1>
 
   <p class="hint">
