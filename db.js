@@ -63,13 +63,41 @@ db.serialize(() => {
   `);
 
   // ================================
-  // ITEM STATUS (optional / future)
+  // MIGRATION: owner_user_id (V3)
+  // ================================
+  db.run(
+    `
+    ALTER TABLE items
+    ADD COLUMN owner_user_id TEXT
+    `,
+    err => {
+      if (err && !err.message.includes("duplicate column")) {
+        console.error("❌ Migration owner_user_id fehlgeschlagen:", err.message);
+      }
+    }
+  );
+
+  // ================================
+  // ITEM STATUS
   // ================================
   db.run(`
     CREATE TABLE IF NOT EXISTS item_status (
       item_id INTEGER PRIMARY KEY,
       status TEXT,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ================================
+  // ITEM INTEREST (V3)
+  // ================================
+  db.run(`
+    CREATE TABLE IF NOT EXISTS item_interest (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      item_id INTEGER NOT NULL,
+      user_id TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(item_id, user_id)
     )
   `);
 
