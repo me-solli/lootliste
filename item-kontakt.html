@@ -35,8 +35,11 @@
 
   </div>
 
-  <!-- ===== STEP 2: REQUEST-ID AUS URL LESEN ===== -->
+  <!-- ===== STEP 2 + 3: REQUEST-ID LESEN & LOGIN PRÜFEN ===== -->
   <script type="module">
+    import { getUser } from "./auth/auth.js";
+
+    // Request-ID aus URL
     const params = new URLSearchParams(window.location.search);
     const requestId = params.get("request");
 
@@ -45,8 +48,15 @@
       window.location.href = "index.html";
     }
 
-    // Debug – kann später entfernt werden
+    // Login prüfen
+    const user = getUser();
+    if (!user) {
+      window.location.href = "auth/login.html";
+    }
+
+    // Debug – später entfernbar
     console.log("Aktive Request-ID:", requestId);
+    console.log("Eingeloggter Nutzer:", user);
   </script>
 
 </body>
