@@ -1603,33 +1603,27 @@ document.addEventListener("keydown", e => {
 </script>
   
 <script type="module">
-  import { getUser, logout } from "./auth/auth.js";
+  import { getUser } from "./auth/auth.js";
 
   const box = document.getElementById("authBox");
+  if (!box) return;
 
-  if (box) {
-    const nameEl = box.querySelector(".account-name");
-    const linkEl = box.querySelector(".account-link");
-    const user = getUser();
+  const nameEl = box.querySelector(".account-name");
+  const linkEl = box.querySelector(".account-link");
+  const user = getUser();
 
-    if (!user || !user.name) {
-      // 🔓 NICHT eingeloggt → Login anzeigen
-      nameEl.textContent = "";
-      linkEl.textContent = "Login";
-      linkEl.href = "auth/login.html";
-      box.style.display = "flex";
-    } else {
-      // 👤 Eingeloggt → Username + Logout
-      nameEl.textContent = user.name;
-      linkEl.textContent = "Logout";
-      linkEl.href = "#";
-      linkEl.onclick = (e) => {
-        e.preventDefault();
-        logout();
-        location.reload();
-      };
-      box.style.display = "flex";
-    }
+  if (!user || !user.name) {
+    // 🔓 ausgeloggt
+    nameEl.textContent = "";
+    linkEl.textContent = "Login";
+    linkEl.href = "auth/login.html";
+    box.style.display = "flex";
+  } else {
+    // 👤 eingeloggt
+    nameEl.textContent = user.name;
+    linkEl.textContent = "Profil";
+    linkEl.href = "auth/profile.html";
+    box.style.display = "flex";
   }
 </script>
 
