@@ -1441,6 +1441,7 @@ document.addEventListener("click", e => {
   if (!card) return;
 
   const itemName = card.dataset.item;
+const itemId = card.dataset.id;
   const user = getUser();
 
   // ❌ nicht eingeloggt → Login
