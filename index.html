@@ -1496,6 +1496,7 @@ pendingItemId = itemId;
 /* ===== MODAL BUTTONS ===== */
 closeReq.onclick = () => {
   requestModal.style.display = "none";
+  pendingItemId = null;
   pendingItemName = null;
 };
 
@@ -1523,13 +1524,22 @@ confirmReq.onclick = async () => {
   items = items.filter(i => String(i.id) !== String(pendingItemId));
   render();
 
-  // 🧹 Reset
+  // 🧹 Reset & Close
   confirmReq.classList.remove("is-loading");
   confirmReq.innerHTML = oldLabel;
   requestModal.style.display = "none";
   pendingItemId = null;
   pendingItemName = null;
 };
+
+/* ===== ESC CLOSE REQUEST MODAL ===== */
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && requestModal.style.display === "block") {
+    requestModal.style.display = "none";
+    pendingItemId = null;
+    pendingItemName = null;
+  }
+});
   
 </script>
 
