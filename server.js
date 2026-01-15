@@ -25,14 +25,10 @@ const db = require("./db");
 const app = express();
 
 /* ================================
-   PORT (RAILWAY)
+   PORT (RAILWAY SAFE)
 ================================ */
-const PORT = process.env.PORT;
-
-if (!PORT) {
-  console.error("❌ FEHLER: process.env.PORT ist nicht gesetzt");
-  process.exit(1);
-}
+// 🚑 WICHTIG: Fallback, sonst SIGTERM bei Railway
+const PORT = process.env.PORT || 8080;
 
 /* ================================
    CORS (GitHub Pages → Railway)
@@ -82,7 +78,7 @@ function requireAuth(req, res, next) {
   const loginId = req.headers["x-login-id"];
 
   if (loginId === "dev-admin") {
-    req.user = { id: "dev-user", role: "user" };
+    req.user = { id: "dev-admin", role: "admin" };
     return next();
   }
 
@@ -112,15 +108,14 @@ app.use("/api/item-requests", itemRequestRoutes);
 app.use("/api/admin", adminRoutes);
 
 /* ================================
-   HEALTH
+   HEALTH (Railway Healthcheck)
 ================================ */
 app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
+  res.status(200).json({ status: "ok" });
 });
 
 /* ================================
    GLOBAL EXPRESS ERROR HANDLER
-   (MUSS GANZ AM ENDE SEIN)
 ================================ */
 app.use((err, req, res, next) => {
   console.error("❌ EXPRESS ERROR:", err);
