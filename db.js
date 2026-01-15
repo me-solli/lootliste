@@ -1,87 +1,14 @@
-const fs = require("fs");
-const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
 
-// ================================
-// DB PFAD (RAILWAY PERSISTENT)
-// ================================
-const DATA_DIR = "/data";
-const DB_PATH = path.join(DATA_DIR, "lootliste.db");
+const DB_PATH = path.join(__dirname, "lootliste.db");
 
-// 🔒 /data sicherstellen (Railway erstellt das NICHT automatisch)
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-  console.log("📁 /data Verzeichnis erstellt");
-}
-
-// ================================
-// DB INITIALISIEREN
-// ================================
-const db = new sqlite3.Database(DB_PATH, (err) => {
+const db = new sqlite3.Database(DB_PATH, err => {
   if (err) {
-    console.error("❌ DB Verbindung fehlgeschlagen:", err);
-    process.exit(1);
+    console.error("❌ Fehler beim Öffnen der Datenbank", err);
+  } else {
+    console.log("✅ SQLite DB verbunden:", DB_PATH);
   }
-  console.log("✅ SQLite DB verbunden:", DB_PATH);
-});
-
-// ================================
-// TABELLEN + AUTO-MIGRATION
-// ================================
-db.serialize(() => {
-
-  // ================================
-  // ITEMS (Basis)
-  // ================================
-  db.run(`
-    CREATE TABLE IF NOT EXISTS items (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      owner_user_id TEXT,
-      title TEXT,
-      type TEXT,
-      weapon_type TEXT,
-      screenshot TEXT NOT NULL,
-      visibility TEXT DEFAULT 'private',
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  // ================================
-  // ITEM STATUS
-  // ================================
-  db.run(`
-    CREATE TABLE IF NOT EXISTS item_status (
-      item_id INTEGER PRIMARY KEY,
-      status TEXT NOT NULL DEFAULT 'submitted',
-      status_since DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
-    )
-  `);
-
-  // ================================
-  // AUTO-MIGRATION: ITEM-MASKE (B1)
-  // ================================
-  db.all(`PRAGMA table_info(items)`, (err, columns) => {
-    if (err) {
-      console.error("❌ PRAGMA table_info fehlgeschlagen:", err);
-      return;
-    }
-
-    const existing = columns.map(c => c.name);
-
-    const addColumn = (name, type) => {
-      if (!existing.includes(name)) {
-        db.run(`ALTER TABLE items ADD COLUMN ${name} ${type}`);
-        console.log(`➕ Spalte '${name}' (${type}) ergänzt`);
-      }
-    };
-
-    // 🧱 Neue Item-Felder (optional, V3-ready)
-    addColumn("name", "TEXT");        // Item-Name
-    addColumn("quality", "TEXT");     // unique / set / rare / magic / rune
-    addColumn("roll", "TEXT");        // Kurzwerte
-    addColumn("rating", "INTEGER");   // ⭐ 1–5
-  });
 });
 
 // ================================
@@ -112,10 +39,55 @@ db.allAsync = (sql, params = []) =>
   });
 
 // ================================
-// EXPORT
+// TABELLEN + AUTO-MIGRATION
 // ================================
-module.exports = {
-  run: db.runAsync,
-  get: db.getAsync,
-  all: db.allAsync
-};
+db.serialize(() => {
+
+  // ================================
+  // ITEMS
+  // ================================
+  db.run(`
+    CREATE TABLE IF NOT EXISTS items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      type TEXT,
+      weaponType TEXT,
+      quality TEXT,
+      roll TEXT,
+      rating INTEGER DEFAULT 0,
+      contact TEXT,
+      status TEXT DEFAULT 'Verfügbar',
+      screenshot TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ================================
+  // ITEM STATUS (optional / future)
+  // ================================
+  db.run(`
+    CREATE TABLE IF NOT EXISTS item_status (
+      item_id INTEGER PRIMARY KEY,
+      status TEXT,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ================================
+  // ITEM REQUESTS (Kontakt / Bedarf)
+  // ================================
+  db.run(`
+    CREATE TABLE IF NOT EXISTS item_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      item_id INTEGER NOT NULL,
+      requester_user_id TEXT NOT NULL,
+      owner_user_id TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'open',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      closed_at DATETIME
+    )
+  `);
+
+});
+
+module.exports = db;
