@@ -520,13 +520,12 @@ body{
   cursor:pointer;
 }
 .cta:hover{border-color:var(--gold);color:var(--gold)}
-
 /* ===== REQUEST BUTTON ===== */
 .request-btn{
   position:absolute;
   right:14px;
   bottom:14px;
-    z-index:3;
+  z-index:3;
 
   padding:6px 12px;
   min-width:140px;
@@ -546,18 +545,21 @@ body{
   transition:opacity .15s ease, transform .15s ease, background .15s ease;
 }
 
+/* erscheint NUR bei Hover auf der Card */
 .card:hover .request-btn{
   opacity:1;
   pointer-events:auto;
   transform:translateY(0);
 }
 
+/* disabled state */
 .request-btn.disabled{
   opacity:.5;
   cursor:default;
   pointer-events:none;
 }
 
+/* hover auf dem Button selbst */
 .request-btn:not(.disabled):hover{
   background:linear-gradient(#2f2618,#1d170e);
   color:#f0e3c2;
