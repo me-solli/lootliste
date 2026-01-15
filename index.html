@@ -1602,50 +1602,35 @@ document.addEventListener("keydown", e => {
 });
 </script>
   
-<script type="module" src="ui/index-ui.js?v=4"></script>
-
 <script type="module">
   import { getUser, logout } from "./auth/auth.js";
 
   const box = document.getElementById("authBox");
-  
-if (!box) {
-  // Auth-Box existiert nicht → nichts tun
-} else {
-  const nameEl = box.querySelector(".account-name");
-  const linkEl = box.querySelector(".account-link");
-  const user = getUser();
 
-  if (!user || !user.name) {
-    box.style.display = "none";
+  if (!box) {
+    // Auth-Box existiert nicht → nichts tun
   } else {
-    // Anzeige
-    nameEl.textContent = user.name;
-    box.style.display = "flex";
+    const nameEl = box.querySelector(".account-name");
+    const linkEl = box.querySelector(".account-link");
+    const user = getUser();
 
-    // Logout
-    linkEl.textContent = "Logout";
-    linkEl.href = "#";
-    linkEl.onclick = (e) => {
-      e.preventDefault();
-      logout();
-      location.reload();
-    };
+    if (!user || !user.name) {
+      box.style.display = "none";
+    } else {
+      // Anzeige
+      nameEl.textContent = user.name;
+      box.style.display = "flex";
+
+      // Logout
+      linkEl.textContent = "Logout";
+      linkEl.href = "#";
+      linkEl.onclick = (e) => {
+        e.preventDefault();
+        logout();
+        location.reload();
+      };
+    }
   }
-}
-
-  // Anzeige
-  nameEl.textContent = user.name;
-  box.style.display = "flex";
-
-  // Logout per Klick
-  linkEl.textContent = "Logout";
-  linkEl.href = "#";
-  linkEl.onclick = (e) => {
-    e.preventDefault();
-    logout();
-    location.reload();
-  };
 </script>
 
   </body>  
