@@ -1,7 +1,7 @@
 console.log("SERVER.JS wird geladen");
 
 /* ================================
-   GLOBAL CRASH PROTECTION
+   GLOBAL SAFETY
 ================================ */
 process.on("unhandledRejection", (reason) => {
   console.error("❌ UNHANDLED REJECTION:", reason);
@@ -17,7 +17,7 @@ process.on("uncaughtException", (err) => {
 const express = require("express");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
-const db = require("./db");
+require("./db"); // nur laden, NICHT abbrechen
 
 /* ================================
    APP
@@ -25,14 +25,10 @@ const db = require("./db");
 const app = express();
 
 /* ================================
-   PORT (RAILWAY – STRICT)
+   PORT (Railway tolerant)
 ================================ */
-const PORT = process.env.PORT;
-
-if (!PORT) {
-  console.error("❌ FATAL: process.env.PORT ist NICHT gesetzt");
-  process.exit(1);
-}
+const PORT = process.env.PORT || 8080;
+console.log("🌐 Using PORT =", PORT);
 
 /* ================================
    CORS
@@ -48,11 +44,7 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
+  if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
 
@@ -64,7 +56,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /* ================================
-   ROOT + HEALTH (RAILWAY CHECK)
+   ROOT + HEALTH
 ================================ */
 app.get("/", (req, res) => {
   res.status(200).json({ status: "ok" });
@@ -78,24 +70,17 @@ app.get("/health", (req, res) => {
    UPLOADS
 ================================ */
 const UPLOAD_DIR = "/data/uploads";
-
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-  console.log("📁 /data/uploads erstellt");
 }
-
 app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ================================
    ROUTES
 ================================ */
-const itemRoutes = require("./routes/items");
-const adminRoutes = require("./routes/admin");
-const itemRequestRoutes = require("./routes/itemRequests");
-
-app.use("/api/items", itemRoutes);
-app.use("/api/item-requests", itemRequestRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/items", require("./routes/items"));
+app.use("/api/item-requests", require("./routes/itemRequests"));
+app.use("/api/admin", require("./routes/admin"));
 
 /* ================================
    ERROR HANDLER
