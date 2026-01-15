@@ -1130,19 +1130,23 @@ footer a{color:var(--gold);margin-right:18px;text-decoration:none}
 <!-- ===== REQUEST CONFIRM MODAL ===== -->
 <div id="requestModal" style="display:none">
   <div class="backdrop"></div>
+
   <div class="modal">
     <strong id="modalItem"></strong>
 
-    <p style="font-size:13px;opacity:.85;line-height:1.4">
+    <p class="modal-text">
       Deine Anfrage wird an den Spender weitergeleitet.<br>
       Die weitere Absprache erfolgt privat.
     </p>
 
     <div class="modal-actions">
       <button id="confirmReq" class="btn-confirm">
-  📨 Bestätigen
-</button>
-      <button id="closeReq">Abbrechen</button>
+        📨 Bestätigen
+      </button>
+
+      <button id="closeReq" class="btn-cancel">
+        Abbrechen
+      </button>
     </div>
   </div>
 </div>
