@@ -88,6 +88,29 @@ db.serialize(() => {
     )
   `);
 
+  // ================================
+  // DEV TEST REQUEST (TEMP)
+  // ================================
+  db.run(`
+    INSERT INTO item_requests (
+      item_id,
+      requester_user_id,
+      owner_user_id,
+      status
+    )
+    SELECT
+      1,
+      'dev-admin',
+      'dev-admin',
+      'open'
+    WHERE NOT EXISTS (
+      SELECT 1 FROM item_requests
+      WHERE item_id = 1
+        AND requester_user_id = 'dev-admin'
+        AND owner_user_id = 'dev-admin'
+    )
+  `);
+
 });
 
 module.exports = db;
