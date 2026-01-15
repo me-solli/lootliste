@@ -1420,6 +1420,67 @@ loadItems().then(() => {
   }
 });
 
+import { getUser } from "./auth/auth.js";
+
+const requestModal = document.getElementById("requestModal");
+const modalItem = document.getElementById("modalItem");
+const confirmReq = document.getElementById("confirmReq");
+const closeReq = document.getElementById("closeReq");
+
+let pendingItemName = null;
+
+/* ===== REQUEST BUTTON HANDLER ===== */
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".request-btn");
+  if (!btn) return;
+
+  const card = btn.closest(".card");
+  if (!card) return;
+
+  const itemName = card.dataset.item;
+  const user = getUser();
+
+  // ❌ nicht eingeloggt → Login
+  if (!user) {
+    window.location.href = "auth/login.html";
+    return;
+  }
+
+  // ✅ eingeloggt → Bestätigung
+  pendingItemName = itemName;
+  modalItem.textContent = `Bedarf anmelden für: ${itemName}`;
+  requestModal.style.display = "block";
+});
+
+/* ===== MODAL BUTTONS ===== */
+closeReq.onclick = () => {
+  requestModal.style.display = "none";
+  pendingItemName = null;
+};
+
+confirmReq.onclick = async () => {
+  if (!pendingItemName) return;
+
+  try {
+    await fetch(
+      "https://content-connection-production-ea07.up.railway.app/api/requests",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          item: pendingItemName
+        })
+      }
+    );
+  } catch (e) {
+    console.warn("Request fehlgeschlagen", e);
+  }
+
+  requestModal.style.display = "none";
+  pendingItemName = null;
+};
+  
 </script>
 
 <!-- ===== AUTH (FINAL / LOCAL BACKEND) ===== -->
