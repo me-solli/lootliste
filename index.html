@@ -1281,9 +1281,6 @@ function render() {
 
 const filtered = items
   .filter(i => {
-    return !statusFilter.value || i.status === statusFilter.value;
-  })
-  .filter(i => {
 
       const q = search.value.toLowerCase();
 
