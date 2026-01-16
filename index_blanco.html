@@ -1,19 +1,29 @@
 <!DOCTYPE html>
+<!--
+  ================================
+  LOOTLISTE – BLANCO V2 (CLEAN BASE)
+  Basis: alte index.html (OPTIK)
+  Ziel: saubere Struktur + FAKE-Blöcke
+  Keine aktive Logik
+  ================================
+-->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Free Lootliste – Community Items | D2R</title>
+<title>Free Lootliste – Community Items | D2R Non-Ladder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 /* ================================
-   GLOBALS / RESET
+   DESIGN TOKENS (aus alter index)
 ================================ */
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
+  --soft:#1a1a1a;
+  --green:#4cff4c;
 }
 
 *{box-sizing:border-box}
@@ -21,345 +31,259 @@
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:#0b0b0b;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
 
-/* ================================
-   LAYOUT / WRAPPER
-================================ */
-.wrapper{
-  max-width:1500px;
-  margin:0 auto;
-}
+.wrapper{max-width:1500px;margin:0 auto}
 
 /* ================================
-   HERO
+   HERO (OPTIK FINAL)
 ================================ */
 .hero{
-  background:#111;
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:260px;
+  position:relative;
 }
+
 .hero-inner{
-  padding:40px 32px;
+  padding:44px 36px;
+  background: linear-gradient(to bottom, rgba(0,0,0,.28), rgba(0,0,0,.70));
 }
+
 .hero-logo img{
   max-width:420px;
   width:100%;
+  filter:brightness(.82) contrast(1.05)
+          drop-shadow(0 0 10px rgba(0,0,0,.6));
 }
 
-/* ================================
-   MODE / STATUS BANNER
-================================ */
+.hero p{margin:10px 0 18px;opacity:.9}
+
 .mode-banner{
-  margin-top:12px;
+  margin:-6px 0 22px;
   font-size:13px;
+  letter-spacing:.3px;
+  color:#dcdcdc;
 }
-.mode-banner strong{color:#4cff4c}
+.mode-banner strong{color:var(--green)}
+.mode-banner span{opacity:.7;font-size:12px}
 
-/* ================================
-   HERO STATS
-================================ */
 .hero-stats{
   display:flex;
-  gap:16px;
-  margin-top:14px;
+  gap:18px;
+  flex-wrap:wrap;
+  font-size:14px;
+}
+.hero-stats div{
+  padding:8px 14px;
+  background:rgba(0,0,0,.4);
+  border:1px solid var(--border);
+  border-radius:999px;
 }
 
-/* ================================
-   AUTH BOX
-================================ */
 .auth-box{
   position:absolute;
-  top:20px;
+  top:22px;
   right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
+  font-size:13px;
 }
 
 /* ================================
-   PROJECT TIMELINE
+   PROJECT TIMELINE (OPTIK)
 ================================ */
-.project-timeline{
-  padding:16px 24px;
-  border-bottom:1px solid var(--border);
+.timeline-label{
+  padding:4px 28px 0;
+  font-size:12px;
+  color:#bfa86a;
+  opacity:.75;
 }
 
+.project-timeline{
+  padding:6px 28px 4px;
+  background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,0));
+}
+.timeline-track{height:1px;background:#2a2a2a;position:relative}
+.timeline-progress{position:absolute;left:0;top:0;height:1px;width:75%;background:linear-gradient(90deg,#bfa86a,#6f7f4a)}
+.timeline-steps{display:flex;justify-content:space-between}
+.timeline-step{width:14px;height:14px;border-radius:50%;background:#2a2a2a}
+.timeline-step.done{background:#bfa86a}
+.timeline-step.current{background:#6f7f4a}
+.timeline-step.future{background:#333;opacity:.5}
+
 /* ================================
-   ICON BAR
+   ICON BAR (OPTIK)
 ================================ */
 .icon-bar{
   display:flex;
-  gap:14px;
-  padding:18px 24px;
-  border-bottom:1px solid var(--border);
+  gap:16px;
+  padding:25px 24px;
+  overflow-x:auto;
+  background:linear-gradient(180deg,#141414,#0d0d0d);
+  border-bottom:1px solid #222;
 }
-
-/* ================================
-   META BAR
-================================ */
-.meta-bar{
-  padding:12px 24px;
-  font-size:13px;
-  opacity:.85;
-}
-
-/* ================================
-   FILTER PANEL
-================================ */
-.filter-panel{
-  padding:16px 24px;
-  border:1px solid var(--border);
-  margin-bottom:18px;
-}
-
-/* ================================
-   DROP FEED / CARDS GRID
-================================ */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:22px;
-}
-
-/* ================================
-   CARD BASIS
-================================ */
-.card{
-  background:#121212;
-  border:1px solid var(--border);
+.icon-btn{
+  min-width:108px;
+  text-align:center;
+  padding:16px 8px;
   border-radius:18px;
-  padding:16px;
+  border:1px solid transparent;
 }
+.icon-btn img{width:52px;height:52px}
+.icon-btn span{display:block;margin-top:9px;font-size:12.5px}
 
 /* ================================
-   RATING (STERNE)
+   CONTENT / META / FILTER
 ================================ */
+.container{padding:30px}
+.meta-bar{display:flex;gap:18px;margin-bottom:18px;font-size:13px}
+.filter-panel{background:#121212;border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:18px}
+.filter-panel input,.filter-panel select{padding:10px 12px;background:#111;border:1px solid #333;color:#fff;border-radius:10px}
+
+/* ================================
+   CARDS (OPTIK BASIS)
+================================ */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{display:flex;background:linear-gradient(180deg,#191919,#0f0f0f);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.card-image{width:120px;background:#0b0b0b;display:flex;align-items:center;justify-content:center}
+.card-image img{width:72px;height:72px}
+.card-body{padding:16px;display:flex;flex-direction:column;gap:6px}
+.item-name{font-size:16px;font-weight:600}
+.item-sub{font-size:11px;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase}
 .stars{color:var(--gold)}
+.player{font-size:13px;opacity:.85}
+
+/* ================================
+   FAKE BLOCKS (VISUAL)
+================================ */
+.fake-block{
+  margin:16px 0;
+  padding:14px 16px;
+  border:1px dashed rgba(255,255,255,.15);
+  border-radius:12px;
+  font-size:13px;
+  color:#bbb;
+  background:rgba(255,255,255,.03);
+}
+.fake-block strong{color:var(--gold)}
 
 /* ================================
    FOOTER
 ================================ */
-.footer{
-  padding:24px;
-  text-align:center;
-  font-size:12px;
-  border-top:1px solid var(--border);
-}
+.footer{margin-top:50px;padding:22px;border-top:1px solid #222;font-size:13px;text-align:center}
+.footer a{color:var(--gold);text-decoration:none}
 </style>
 </head>
 
 <body>
-
-<!-- ================================
-     WRAPPER
-================================ -->
 <div class="wrapper">
 
+<!-- ================================
+     HERO
+================================ -->
+<header class="hero">
+  <div class="hero-inner">
+
+    <div class="auth-box">
+      <!-- FAKE: AUTH_BOX_LOGIC -->
+      <strong>[FAKE]</strong> Auth Box (Login / Profil)
+    </div>
+
+    <h1 class="hero-logo"><img src="img/logo_d2r.png" alt="D2R Lootliste Logo"></h1>
+    <p>Community Lootliste · Diablo II Resurrected</p>
+
+    <div class="mode-banner">
+      Aktueller Modus: <strong>NON-LADDER</strong>
+      <span>· Ladder in Vorbereitung</span>
+    </div>
+
+    <div class="hero-stats">
+      <!-- FAKE: HERO_STATS_UPDATE -->
+      <div class="fake-block"><strong>[FAKE]</strong> Hero Stats</div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ================================
+     PROJECT TIMELINE
+================================ -->
+<div class="timeline-label">ⓘ Projekt-Timeline · Entwicklungsstand</div>
+<section class="project-timeline">
+  <div class="timeline-track"><div class="timeline-progress"></div></div>
+  <div class="timeline-steps">
+    <div class="timeline-step done"></div>
+    <div class="timeline-step done"></div>
+    <div class="timeline-step done"></div>
+    <div class="timeline-step current"></div>
+    <div class="timeline-step future"></div>
+  </div>
+
+  <!-- FAKE: TIMELINE_LOGIC -->
+  <div class="fake-block"><strong>[FAKE]</strong> Timeline Status / Tooltips</div>
+</section>
+
+<!-- ================================
+     ICON BAR
+================================ -->
+<nav class="icon-bar">
+  <!-- FAKE: ICON_BAR_BUILD -->
+  <div class="fake-block"><strong>[FAKE]</strong> Icon-Bar Build & Filter</div>
+</nav>
+
+<!-- ================================
+     CONTENT
+================================ -->
+<div class="container">
+
+  <div class="meta-bar">
+    <!-- FAKE: META_STATS_UPDATE -->
+    <div class="fake-block"><strong>[FAKE]</strong> Meta Stats</div>
+  </div>
+
+  <div class="filter-panel">
+    <!-- FAKE: FILTER_LOGIC -->
+    <div class="fake-block"><strong>[FAKE]</strong> Filter & Sort</div>
+  </div>
+
   <!-- ================================
-       HERO
+       CARDS
   ================================ -->
-  <header class="hero">
-    <div class="hero-inner">
-      <div id="authBox" class="auth-box">Login</div>
-      <h1 class="hero-logo"><img src="img/logo_d2r.png" alt="D2R Lootliste"></h1>
-      <p>Community Lootliste · Diablo II Resurrected</p>
-      <div class="mode-banner">
-        Aktueller Modus: <strong>NON-LADDER</strong>
-      </div>
-      <div class="hero-stats">
-        <div>📦 … Drops</div>
-        <div>⭐ Ø …</div>
-        <div>🧍 … Spender</div>
-      </div>
-    </div>
-  </header>
+  <section class="cards">
 
-  <!-- ================================
-       PROJECT TIMELINE
-  ================================ -->
-  <section class="project-timeline">
-
-    <div class="timeline-label">
-      ⓘ Projekt-Timeline · Entwicklungsstand der Lootliste
-    </div>
-
-    <div class="timeline-track">
-      <div class="timeline-progress"></div>
-    </div>
-
-    <div class="timeline-steps">
-      <div class="timeline-step done"
-           data-tip="Grundidee & Planung
-• Community-Lootliste
-• Fokus auf Übersicht
-• Non-Ladder Konzept">
-      </div>
-
-      <div class="timeline-step done"
-           data-tip="Version 1
-• Grundfunktionen
-• Item-Übersicht
-• erste Tests">
-      </div>
-
-      <div class="timeline-step done"
-           data-tip="Version 2
-• Bugfixes
-• UI-Beruhigung
-• Stabilisierung">
-      </div>
-
-      <div class="timeline-step current"
-           data-tip="Version 3
-• reine Anzeige
-• Drop-Feed
-• kein Vergabesystem">
-      </div>
-
-      <div class="timeline-step future"
-           data-tip="Nächste Phase
-• optionale Accounts
-• Komfortfunktionen">
-      </div>
-    </div>
+    <!-- FAKE: CARDS_RENDER -->
+    <div class="fake-block"><strong>[FAKE]</strong> Cards Render (Drop-Feed)</div>
 
   </section>
 
-  <!-- ================================
-       ICON BAR
-  ================================ -->
-  <nav class="icon-bar">
-
-    <!-- ICON BUTTON: WAFFE -->
-    <div class="icon-btn active" data-type="waffe">
-      <img src="img/icons/waffe.png" alt="Waffe">
-      <span>Waffen</span>
-    </div>
-
-    <!-- ICON BUTTON: HELM -->
-    <div class="icon-btn" data-type="helm">
-      <img src="img/icons/helm.png" alt="Helm">
-      <span>Helme</span>
-    </div>
-
-    <!-- ICON BUTTON: RÜSTUNG -->
-    <div class="icon-btn" data-type="ruestung">
-      <img src="img/icons/ruestung.png" alt="Rüstung">
-      <span>Rüstungen</span>
-    </div>
-
-    <!-- ICON BUTTON: SCHILD -->
-    <div class="icon-btn" data-type="schild">
-      <img src="img/icons/schild.png" alt="Schild">
-      <span>Schilde</span>
-    </div>
-
-    <!-- ICON BUTTON: SCHMUCK -->
-    <div class="icon-btn" data-type="schmuck">
-      <img src="img/icons/amulett.png" alt="Schmuck">
-      <span>Schmuck</span>
-    </div>
-
-    <!-- ICON BUTTON: CHARMS -->
-    <div class="icon-btn" data-type="charm">
-      <img src="img/icons/charm.png" alt="Charm">
-      <span>Charms</span>
-    </div>
-
-    <!-- ICON BUTTON: RUNEN -->
-    <div class="icon-btn" data-type="rune">
-      <img src="img/icons/rune.png" alt="Rune">
-      <span>Runen</span>
-    </div>
-
-    <!-- ICON BUTTON: SONSTIGES -->
-    <div class="icon-btn" data-type="sonstiges">
-      <img src="img/icons/sonstiges.png" alt="Sonstiges">
-      <span>Sonstiges</span>
-    </div>
-
-  </nav>
-
-  <!-- ================================
-       CONTENT
-  ================================ -->
-  <main class="container">
-
-    <!-- ================================
-         META BAR
-    ================================ -->
-    <div class="meta-bar">
-      <span class="meta-left">📦 <strong>0</strong> Items</span>
-      <span class="meta-right">🕒 Stand: <span id="metaDate">heute</span></span>
-    </div>
-
-    <!-- ================================
-         FILTER PANEL
-    ================================ -->
-    <div class="filter-panel">
-
-      <div class="filter-group">
-        <input type="text" id="search" placeholder="Item suchen …">
-      </div>
-
-      <div class="filter-group">
-        <label for="sortRating">Sortierung</label>
-        <select id="sortRating">
-          <option value="desc">Rating ↓</option>
-          <option value="asc">Rating ↑</option>
-        </select>
-      </div>
-
-    </div>
-
-    <!-- ================================
-         DROP FEED / CARDS
-    ================================ -->
-    <section class="cards">
-
-      <!-- CARD (DUMMY / STRUKTUR) -->
-      <article class="card">
-
-        <!-- CARD IMAGE / ICON -->
-        <div class="card-image">
-          <img src="img/icons/waffe.png" alt="Item Icon">
-        </div>
-
-        <!-- CARD BODY -->
-        <div class="card-body">
-
-          <!-- ITEM NAME -->
-          <div class="item-name">Beispiel Itemname</div>
-
-          <!-- ITEM SUB / TYPE -->
-          <div class="item-sub">Waffe · Schwert</div>
-
-          <!-- ITEM ROLL -->
-          <div class="item-roll">+200% ed · +20 str</div>
-
-          <!-- RATING -->
-          <div class="stars">
-            <span class="stars-filled">★★★★☆</span>
-            <span class="stars-num">4/5</span>
-          </div>
-
-          <!-- PLAYER / SOURCE -->
-          <div class="player">Spender: BeispielName</div>
-
-        </div>
-
-      </article>
-
-    </section>
-
-  </main>
-
-  <!-- ================================
-       FOOTER
-  ================================ -->
-  <footer class="footer">
-    © 2026 D2R Lootliste
-  </footer>
-
 </div>
 
+<!-- ================================
+     FOOTER
+================================ -->
+<footer class="footer">
+  <a href="#">Über das Projekt</a> ·
+  <a href="#">Impressum</a> ·
+  <a href="#">Datenschutz</a>
+
+  <!-- FAKE: FOOTER_DYNAMIC -->
+  <div class="fake-block"><strong>[FAKE]</strong> Footer Dynamic Content</div>
+</footer>
+
+<!-- ================================
+     FAKE: SCREENSHOT_OVERLAY
+================================ -->
+<div class="fake-block"><strong>[FAKE]</strong> Screenshot Overlay Logic</div>
+
+</div>
 </body>
 </html>
