@@ -9,53 +9,51 @@ const RARITIES = ["","normal","magic","rare","set","unique"];
 
 let currentStatus = "submitted";
 
-/* ================================
-   HELPERS
-================================ */
-function resolveImageSrc(s) {
-  if (!s) return "";
-  if (s.startsWith("http")) return s;
-  return API_BASE + s;
-}
-
-async function api(url, opts = {}) {
-  const res = await fetch(API_BASE + url, {
-    ...opts,
+/* =========================
+   API HELPER
+========================= */
+async function api(path, options = {}) {
+  const res = await fetch(API_BASE + path, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       "x-admin-token": ADMIN_TOKEN,
-      ...(opts.headers || {})
+      ...(options.headers || {})
     }
   });
-  if (!res.ok) throw new Error(res.status);
+
+  if (!res.ok) {
+    console.error("API ERROR", res.status);
+    throw new Error(res.status);
+  }
+
   return res.json();
 }
 
-/* ================================
-   LOAD
-================================ */
+/* =========================
+   LOAD & RENDER
+========================= */
 async function loadItems() {
   const list = document.getElementById("list");
   list.innerHTML = "Lade Items…";
 
   const items = await api("/api/items/admin");
-  const filtered = items.filter(i => i.status === currentStatus);
+  const visible = items.filter(i => i.status === currentStatus);
 
-  if (!filtered.length) {
+  if (!visible.length) {
     list.innerHTML = "<div class='empty'>Keine Items vorhanden.</div>";
     return;
   }
 
-  list.innerHTML = filtered.map(item => `
+  list.innerHTML = visible.map(item => `
     <div class="item">
       <div class="thumb">
-        <img src="${resolveImageSrc(item.screenshot)}">
+        <img src="${API_BASE + item.screenshot}">
       </div>
 
       <div class="meta">
-        <input placeholder="Anzeigename"
-          data-field="display_name"
-          data-id="${item.id}"
+        <input data-field="display_name" data-id="${item.id}"
+          placeholder="Anzeigename"
           value="${item.display_name || ""}">
 
         <select data-field="item_type" data-id="${item.id}">
@@ -70,9 +68,8 @@ async function loadItems() {
           ).join("")}
         </select>
 
-        <input placeholder="Roll / Notiz"
-          data-field="roll"
-          data-id="${item.id}"
+        <input data-field="roll" data-id="${item.id}"
+          placeholder="Roll / Notiz"
           value="${item.roll || ""}">
 
         <select data-field="rating" data-id="${item.id}">
@@ -82,46 +79,57 @@ async function loadItems() {
         </select>
 
         <div class="actions">
-          <button data-status="approved" data-id="${item.id}">Freigeben</button>
-          <button data-status="hidden" data-id="${item.id}">Verstecken</button>
-          <button data-status="rejected" data-id="${item.id}">Ablehnen</button>
-          <button data-save data-id="${item.id}">Speichern</button>
+          <button data-action="status" data-value="approved" data-id="${item.id}">Freigeben</button>
+          <button data-action="status" data-value="hidden" data-id="${item.id}">Verstecken</button>
+          <button data-action="status" data-value="rejected" data-id="${item.id}">Ablehnen</button>
+          <button data-action="save" data-id="${item.id}">Speichern</button>
         </div>
       </div>
     </div>
   `).join("");
 }
 
-/* ================================
+/* =========================
    INIT
-================================ */
+========================= */
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("[data-tab]").forEach(btn => {
-    btn.onclick = () => {
+
+  // Tabs
+  document.querySelectorAll("#tabs button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#tabs button")
+        .forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
       currentStatus = btn.dataset.tab;
       loadItems();
-    };
+    });
   });
 
-  document.getElementById("list").addEventListener("click", async e => {
+  // Item-Actions
+  document.getElementById("list").addEventListener("click", async (e) => {
     const id = e.target.dataset.id;
+    if (!id) return;
 
-    if (e.target.dataset.status) {
+    // Status ändern
+    if (e.target.dataset.action === "status") {
       await api(`/api/items/${id}`, {
         method: "PATCH",
-        body: JSON.stringify({ status: e.target.dataset.status })
+        body: JSON.stringify({ status: e.target.dataset.value })
       });
       loadItems();
     }
 
-    if (e.target.dataset.save) {
-      const fields = {};
-      document.querySelectorAll(`[data-id="${id}"][data-field]`).forEach(el => {
-        fields[el.dataset.field] = el.value;
-      });
+    // Speichern
+    if (e.target.dataset.action === "save") {
+      const data = {};
+      document
+        .querySelectorAll(`[data-id="${id}"][data-field]`)
+        .forEach(el => data[el.dataset.field] = el.value);
+
       await api(`/api/items/${id}`, {
         method: "PATCH",
-        body: JSON.stringify(fields)
+        body: JSON.stringify(data)
       });
       loadItems();
     }
