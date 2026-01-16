@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, x-login-id"
+    "Content-Type, x-login-id, x-admin-token"
   );
 
   if (req.method === "OPTIONS") {
@@ -123,9 +123,14 @@ app.post("/api/items", upload.any(), (req, res) => {
 });
 
 /* ================================
-   ADMIN: STATUS UPDATE
+   ADMIN: STATUS UPDATE (geschützt)
 ================================ */
 app.patch("/api/items/:id/status", (req, res) => {
+  const adminToken = req.headers["x-admin-token"];
+  if (adminToken !== "lootliste-admin-2025") {
+    return res.status(403).json({ error: "FORBIDDEN" });
+  }
+
   const { id } = req.params;
   const { status } = req.body;
 
@@ -147,11 +152,11 @@ app.patch("/api/items/:id/status", (req, res) => {
 });
 
 /* ================================
-   PUBLIC ITEMS (noch ungefiltert)
+   PUBLIC ITEMS (nur freigegeben)
 ================================ */
 app.get("/api/items/public", (req, res) => {
   db.all(
-    "SELECT * FROM items ORDER BY created_at DESC",
+    "SELECT * FROM items WHERE status = 'approved' ORDER BY created_at DESC",
     [],
     (err, rows) => {
       if (err) {
