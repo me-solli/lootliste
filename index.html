@@ -905,40 +905,45 @@ body{
 ================================ -->
 <div class="container">
 
+  <!-- META / RESULTS -->
   <div class="meta-bar">
-    <!-- FAKE: META_STATS_UPDATE -->
-<div class="meta-left">
-  📦 <strong id="metaItemCount">0</strong> Items
-</div>
 
-<div class="meta-right">
-  🕒 Stand: <span id="metaDate">–</span>
-</div>
+    <div class="meta-left">
+      📦 <strong id="metaItemCount">0</strong> Items
+    </div>
+
+    <div class="meta-right">
+      🕒 Stand: <span id="metaDate">–</span>
+    </div>
 
     <div id="resultsInfo" class="results-info">
-    <span id="resultsCount">0</span> Items gefunden
-  </div>
+      <span id="resultsCount">0</span> Items gefunden
+    </div>
 
   </div>
 
+  <!-- FILTER -->
   <div class="filter-panel">
-<div class="filter-row">
-  <input
-    type="text"
-    id="filterSearch"
-    placeholder="Item suchen …"
-    autocomplete="off"
-  >
+    <div class="filter-row">
 
-  <select id="filterSort">
-    <option value="rating-desc">Rating ↓</option>
-    <option value="rating-asc">Rating ↑</option>
-    <option value="name-asc">Name A–Z</option>
-    <option value="name-desc">Name Z–A</option>
-  </select>
-</div>
+      <input
+        type="text"
+        id="filterSearch"
+        placeholder="Item suchen …"
+        autocomplete="off"
+      >
 
+      <select id="filterSort">
+        <option value="rating-desc">Rating ↓</option>
+        <option value="rating-asc">Rating ↑</option>
+        <option value="name-asc">Name A–Z</option>
+        <option value="name-desc">Name Z–A</option>
+      </select>
+
+    </div>
   </div>
+
+</div>
 
 <!-- ================================
      CARDS
