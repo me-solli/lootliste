@@ -417,6 +417,26 @@ body{
   // später: wird vom Cards-Render gesetzt
 })();
 </script>
+
+  <script>
+/* ===== FILTER LOGIC (ISOLIERT / NO-OP) ===== */
+(function () {
+  const search = document.getElementById("filterSearch");
+  const sort   = document.getElementById("filterSort");
+
+  if (!search || !sort) return;
+
+  search.addEventListener("input", () => {
+    console.log("[FILTER] search =", search.value);
+    // später: trigger render
+  });
+
+  sort.addEventListener("change", () => {
+    console.log("[FILTER] sort =", sort.value);
+    // später: trigger render
+  });
+})();
+</script>
   
 </body>
 </html>
