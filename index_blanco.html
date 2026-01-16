@@ -367,6 +367,23 @@ body{
   });
 })();
 </script>
+
+<script>
+/* ===== META STATS (ISOLIERT) ===== */
+(function () {
+  const countEl = document.getElementById("metaItemCount");
+  const dateEl  = document.getElementById("metaDate");
+
+  if (dateEl) {
+    const now = new Date();
+    dateEl.textContent = now.toLocaleDateString("de-DE");
+  }
+
+  // 🔕 NO-OP:
+  // countEl bleibt bewusst 0
+  // später: wird vom Cards-Render gesetzt
+})();
+</script>
   
 </body>
 </html>
