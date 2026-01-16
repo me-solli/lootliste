@@ -6,12 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
+    :root{
+      --bg-main:#120e0a;
+      --bg-panel:#1a140d;
+      --bg-item:#17110b;
+
+      --gold:#d2b46c;
+      --gold-soft:#bfa25a;
+      --gold-dark:#7c6736;
+
+      --border-main:rgba(210,180,108,.35);
+      --border-soft:rgba(210,180,108,.2);
+
+      --text-main:#e6dcc8;
+      --text-soft:#b9ad95;
+
+      --error:#ff8a7a;
+      --ok:#9bd49b;
+    }
+
     body{
       margin:0;
       padding:40px 20px;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:#0e0e0e;
-      color:#e6e6e6;
+      background:
+        radial-gradient(circle at top, #241b12, var(--bg-main) 70%);
+      color:var(--text-main);
     }
 
     /* ===== HEADER ===== */
@@ -26,15 +46,14 @@
       height:46px;
     }
 
-    /* ===== ACCOUNT BOX ===== */
     .auth-box{
       display:flex;
       gap:10px;
       align-items:center;
       padding:10px 14px;
-      border:1px solid rgba(255,255,255,.15);
+      border:1px solid var(--border-main);
       border-radius:14px;
-      background:rgba(0,0,0,.55);
+      background:rgba(0,0,0,.45);
       font-size:13px;
     }
 
@@ -42,17 +61,17 @@
       width:28px;
       height:28px;
       border-radius:50%;
-      opacity:.85;
+      opacity:.9;
     }
 
     .account-name{
-      opacity:.9;
       white-space:nowrap;
+      opacity:.9;
     }
 
     .account-link{
       font-size:12px;
-      color:#d2b46c;
+      color:var(--gold);
       text-decoration:none;
       opacity:.85;
     }
@@ -66,64 +85,94 @@
     h1{
       font-size:28px;
       margin-bottom:10px;
+      color:var(--gold);
+      letter-spacing:.3px;
     }
 
     .hint{
-      opacity:.65;
       max-width:640px;
+      opacity:.75;
       line-height:1.5;
-      margin-bottom:30px;
+      margin-bottom:32px;
+      color:var(--text-soft);
     }
 
     /* ===== FORM ===== */
     .submit-box{
-      max-width:720px;
+      max-width:760px;
     }
 
     .item{
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:16px;
-      padding:20px;
-      margin-bottom:16px;
-      background:rgba(0,0,0,.35);
+      border:1px solid var(--border-main);
+      border-radius:18px;
+      padding:22px;
+      margin-bottom:18px;
+      background:
+        linear-gradient(180deg, #20180f, var(--bg-item));
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,.6) inset,
+        0 10px 30px rgba(0,0,0,.6);
     }
 
     .item-title{
       font-size:14px;
       font-weight:600;
       margin-bottom:14px;
-      opacity:.9;
+      color:var(--gold);
+      letter-spacing:.4px;
     }
 
     label{
       display:block;
       font-size:12px;
-      opacity:.7;
       margin-bottom:6px;
+      color:var(--text-soft);
     }
 
     input[type="file"],
     input[type="text"]{
       width:100%;
       box-sizing:border-box;
-      padding:8px;
+      padding:9px;
       margin-bottom:14px;
-      background:#0b0b0b;
-      color:#e6e6e6;
-      border:1px solid #333;
-      border-radius:8px;
+      background:#0b0906;
+      color:var(--text-main);
+      border:1px solid var(--border-soft);
+      border-radius:10px;
       font-size:13px;
     }
 
-    button{
+    /* ===== PREVIEW ===== */
+    .preview{
       margin-top:10px;
-      padding:12px 22px;
-      background:#6f7f4a;
-      color:#0a0a0a;
-      border:none;
+      display:none;
+    }
+
+    .preview img{
+      max-width:100%;
       border-radius:12px;
-      font-weight:600;
+      border:1px solid var(--border-soft);
+      box-shadow:0 6px 18px rgba(0,0,0,.6);
+    }
+
+    button{
+      margin-top:14px;
+      padding:12px 26px;
+      background:
+        linear-gradient(180deg, var(--gold), var(--gold-soft));
+      color:#1a140d;
+      border:none;
+      border-radius:14px;
+      font-weight:700;
+      letter-spacing:.4px;
       cursor:pointer;
+      box-shadow:
+        0 2px 0 var(--gold-dark),
+        0 8px 20px rgba(0,0,0,.6);
+    }
+
+    button:hover{
+      filter:brightness(1.05);
     }
 
     button:disabled{
@@ -132,82 +181,105 @@
     }
 
     .msg{
-      margin-top:16px;
+      margin-top:18px;
       font-size:14px;
     }
 
-    .error{ color:#ff7b7b; }
-    .ok{ color:#9bd49b; }
+    .error{ color:var(--error); }
+    .ok{ color:var(--ok); }
   </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <a href="index.html">
-      <img src="img/logo_d2r.png" alt="D2R Lootliste Logo" class="logo">
-    </a>
+<header class="site-header">
+  <a href="index.html">
+    <img src="img/logo_d2r.png" alt="D2R Lootliste Logo" class="logo">
+  </a>
 
-    <div class="auth-box">
-      <img src="img/avatars/default.png" alt="Avatar" class="account-avatar">
-      <span class="account-name">Username</span>
-      <a href="meine-items.html" class="account-link">Meine Items</a>
-    </div>
-  </header>
-
-  <!-- CONTENT -->
-  <h1>Items einreichen</h1>
-
-  <p class="hint">
-    Reiche hier neue Items über Screenshots ein.  
-    Die Screenshots dienen nur zur Prüfung.  
-    Nach Freigabe erscheinen die Items in der Lootliste.
-  </p>
-
-  <div class="submit-box">
-    <form id="submitForm">
-
-      <div class="item">
-        <div class="item-title">Item 1 (Pflicht)</div>
-
-        <label>Screenshot</label>
-        <input type="file" name="screenshot_1" accept="image/*" required>
-
-        <label>Interne Notiz (optional)</label>
-        <input type="text" name="note_1" maxlength="50">
-      </div>
-
-      <div class="item">
-        <div class="item-title">Item 2 (optional)</div>
-
-        <label>Screenshot</label>
-        <input type="file" name="screenshot_2" accept="image/*">
-
-        <label>Interne Notiz (optional)</label>
-        <input type="text" name="note_2" maxlength="50">
-      </div>
-
-      <div class="item">
-        <div class="item-title">Item 3 (optional)</div>
-
-        <label>Screenshot</label>
-        <input type="file" name="screenshot_3" accept="image/*">
-
-        <label>Interne Notiz (optional)</label>
-        <input type="text" name="note_3" maxlength="50">
-      </div>
-
-      <input type="hidden" name="item_count" id="itemCount" value="1">
-
-      <button type="submit" id="submitBtn">Items einreichen</button>
-      <div id="msg" class="msg"></div>
-    </form>
+  <div class="auth-box">
+    <img src="img/avatars/default.png" alt="Avatar" class="account-avatar">
+    <span class="account-name">Username</span>
+    <a href="meine-items.html" class="account-link">Meine Items</a>
   </div>
+</header>
+
+<h1>Items einreichen</h1>
+<p class="hint">
+  Wähle einen Screenshot des Items aus.  
+  Nach der Bestätigung erscheint das Item in der Lootliste.
+</p>
+
+<div class="submit-box">
+  <form id="submitForm">
+
+    <!-- ITEM 1 -->
+    <div class="item">
+      <div class="item-title">Item 1 (Pflicht)</div>
+
+      <label>Screenshot</label>
+      <input type="file" name="screenshot_1" accept="image/*" required data-preview="preview1">
+
+      <div class="preview" id="preview1"></div>
+
+      <label>Interne Notiz (optional)</label>
+      <input type="text" name="note_1" maxlength="50">
+    </div>
+
+    <!-- ITEM 2 -->
+    <div class="item">
+      <div class="item-title">Item 2 (optional)</div>
+
+      <label>Screenshot</label>
+      <input type="file" name="screenshot_2" accept="image/*" data-preview="preview2">
+
+      <div class="preview" id="preview2"></div>
+
+      <label>Interne Notiz (optional)</label>
+      <input type="text" name="note_2" maxlength="50">
+    </div>
+
+    <!-- ITEM 3 -->
+    <div class="item">
+      <div class="item-title">Item 3 (optional)</div>
+
+      <label>Screenshot</label>
+      <input type="file" name="screenshot_3" accept="image/*" data-preview="preview3">
+
+      <div class="preview" id="preview3"></div>
+
+      <label>Interne Notiz (optional)</label>
+      <input type="text" name="note_3" maxlength="50">
+    </div>
+
+    <input type="hidden" name="item_count" id="itemCount" value="1">
+
+    <button type="submit" id="submitBtn">Items einreichen</button>
+    <div id="msg" class="msg"></div>
+  </form>
+</div>
 
 <script>
 const API = "https://lootliste-production.up.railway.app";
 
+/* ===== PREVIEW LOGIC ===== */
+document.querySelectorAll('input[type="file"][data-preview]').forEach(input => {
+  input.addEventListener("change", () => {
+    const target = document.getElementById(input.dataset.preview);
+    target.innerHTML = "";
+    if (!input.files || !input.files[0]) {
+      target.style.display = "none";
+      return;
+    }
+
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(input.files[0]);
+    target.appendChild(img);
+    target.style.display = "block";
+  });
+});
+
+/* ===== SUBMIT ===== */
 const form = document.getElementById("submitForm");
 const msg = document.getElementById("msg");
 const btn = document.getElementById("submitBtn");
@@ -219,12 +291,11 @@ form.addEventListener("submit", async (e) => {
   msg.className = "msg";
 
   const fd = new FormData(form);
-
   let count = 0;
+
   for (let i = 1; i <= 3; i++) {
-    if (fd.get(`screenshot_${i}`) && fd.get(`screenshot_${i}`).name) {
-      count++;
-    }
+    const f = fd.get(`screenshot_${i}`);
+    if (f && f.name) count++;
   }
 
   if (count === 0) {
@@ -239,9 +310,7 @@ form.addEventListener("submit", async (e) => {
   try {
     const res = await fetch(API + "/api/items", {
       method: "POST",
-      headers: {
-        "x-login-id": "dev-admin"
-      },
+      headers: { "x-login-id": "dev-admin" },
       body: fd
     });
 
@@ -251,6 +320,7 @@ form.addEventListener("submit", async (e) => {
     msg.textContent = "✔ Item(s) erfolgreich eingereicht";
     msg.classList.add("ok");
     form.reset();
+    document.querySelectorAll(".preview").forEach(p => p.style.display="none");
     itemCountInput.value = "1";
 
   } catch (err) {
