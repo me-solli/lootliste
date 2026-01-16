@@ -1123,12 +1123,17 @@ body{
   const container = document.querySelector(".cards");
   const skeletons = document.getElementById("skeletons");
 
-  // Meta / Hero Elemente
+  // Meta / Hero
   const metaCount = document.getElementById("metaItemCount");
   const metaDate  = document.getElementById("metaDate");
   const heroCount = document.getElementById("heroItemCount");
   const heroAvg   = document.getElementById("heroAvgRating");
   const heroDonor = document.getElementById("heroDonorCount");
+
+  // Results / Empty
+  const resultsInfo  = document.getElementById("resultsInfo");
+  const resultsCount = document.getElementById("resultsCount");
+  const emptyState   = document.getElementById("emptyState");
 
   const state = {
     items,
@@ -1141,11 +1146,11 @@ body{
   function updateMeta() {
     const list = state.filtered;
 
-    // Item Counts
+    // Counts
     metaCount && (metaCount.textContent = list.length);
     heroCount && (heroCount.textContent = list.length);
 
-    // Durchschnitt Rating
+    // Avg rating
     if (heroAvg) {
       const ratings = list.map(i => i.rating).filter(Boolean);
       heroAvg.textContent = ratings.length
@@ -1153,45 +1158,59 @@ body{
         : "–";
     }
 
-    // Einzigartige Spender
+    // Unique donors
     if (heroDonor) {
       const donors = new Set(list.map(i => i.donor).filter(Boolean));
       heroDonor.textContent = donors.size;
     }
 
-    // Datum
-    if (metaDate) {
-      metaDate.textContent = new Date().toLocaleDateString("de-DE");
+    // Date
+    metaDate && (metaDate.textContent =
+      new Date().toLocaleDateString("de-DE")
+    );
+  }
+
+  function updateResultsUI() {
+    const count = state.filtered.length;
+
+    // Results info
+    if (resultsInfo && resultsCount) {
+      resultsCount.textContent = count;
+      resultsInfo.style.display = count === 0 ? "none" : "";
+    }
+
+    // Empty state
+    if (emptyState) {
+      emptyState.hidden = count !== 0;
     }
   }
 
   function applyFilters() {
     let list = [...state.items];
 
-    // Typ
+    // Type
     if (state.type) {
       list = list.filter(i => i.type === state.type);
     }
 
-    // Suche
+    // Search
     if (state.search) {
       const q = state.search.toLowerCase();
-      list = list.filter(i =>
-        i.name.toLowerCase().includes(q)
-      );
+      list = list.filter(i => i.name.toLowerCase().includes(q));
     }
 
     // Sort
     if (state.sort === "rating-desc") {
-      list.sort((a, b) => b.rating - a.rating);
+      list.sort((a,b) => b.rating - a.rating);
     }
     if (state.sort === "rating-asc") {
-      list.sort((a, b) => a.rating - b.rating);
+      list.sort((a,b) => a.rating - b.rating);
     }
 
     state.filtered = list;
     renderCards(state.filtered, container);
     updateMeta();
+    updateResultsUI();
   }
 
   // Initial render
@@ -1200,7 +1219,7 @@ body{
     applyFilters();
   }, 400);
 
-  // Suche
+  // Search
   const searchInput = document.getElementById("filterSearch");
   searchInput?.addEventListener("input", () => {
     state.search = searchInput.value;
@@ -1214,7 +1233,7 @@ body{
     applyFilters();
   });
 
-  // Icon-Bar
+  // Icon bar
   const iconBar = document.querySelector(".icon-bar");
   iconBar?.addEventListener("click", e => {
     const btn = e.target.closest(".icon-btn");
