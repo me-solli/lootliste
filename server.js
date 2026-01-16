@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET,POST,OPTIONS"
+    "GET,POST,PATCH,OPTIONS"
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -33,6 +33,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use(express.json());
 
 /* ================================
    UPLOAD DIR
@@ -57,7 +59,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
+  limits: { fileSize: 10 * 1024 * 1024 }
 });
 
 /* ================================
@@ -71,58 +73,79 @@ db.serialize(() => {
       id TEXT PRIMARY KEY,
       screenshot TEXT,
       note TEXT,
+      status TEXT DEFAULT 'submitted',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
 });
 
 /* ================================
-   SUBMIT (passt zu submit.html)
+   SUBMIT
 ================================ */
-app.post(
-  "/api/items",
-  upload.any(),
-  (req, res) => {
-    const count = Number(req.body.item_count || 0);
-    if (!count || count < 1) {
-      return res.status(400).json({ error: "NO_ITEMS" });
-    }
-
-    const files = req.files || [];
-    const inserts = [];
-
-    for (let i = 1; i <= count; i++) {
-      const file = files.find(f => f.fieldname === `screenshot_${i}`);
-      if (!file) continue;
-
-      const note = req.body[`note_${i}`] || "";
-
-      inserts.push({
-        id: randomUUID(),
-        screenshot: `/uploads/${file.filename}`,
-        note
-      });
-    }
-
-    if (!inserts.length) {
-      return res.status(400).json({ error: "NO_SCREENSHOTS" });
-    }
-
-    const stmt = db.prepare(
-      "INSERT INTO items (id, screenshot, note) VALUES (?, ?, ?)"
-    );
-
-    inserts.forEach(it => {
-      stmt.run(it.id, it.screenshot, it.note);
-    });
-
-    stmt.finalize();
-    res.status(201).json({ ok: true, count: inserts.length });
+app.post("/api/items", upload.any(), (req, res) => {
+  const count = Number(req.body.item_count || 0);
+  if (!count || count < 1) {
+    return res.status(400).json({ error: "NO_ITEMS" });
   }
-);
+
+  const files = req.files || [];
+  const inserts = [];
+
+  for (let i = 1; i <= count; i++) {
+    const file = files.find(f => f.fieldname === `screenshot_${i}`);
+    if (!file) continue;
+
+    const note = req.body[`note_${i}`] || "";
+
+    inserts.push({
+      id: randomUUID(),
+      screenshot: `/uploads/${file.filename}`,
+      note
+    });
+  }
+
+  if (!inserts.length) {
+    return res.status(400).json({ error: "NO_SCREENSHOTS" });
+  }
+
+  const stmt = db.prepare(
+    "INSERT INTO items (id, screenshot, note, status) VALUES (?, ?, ?, 'submitted')"
+  );
+
+  inserts.forEach(it => {
+    stmt.run(it.id, it.screenshot, it.note);
+  });
+
+  stmt.finalize();
+  res.status(201).json({ ok: true, count: inserts.length });
+});
 
 /* ================================
-   PUBLIC ITEMS (für index.html)
+   ADMIN: STATUS UPDATE
+================================ */
+app.patch("/api/items/:id/status", (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const allowed = ["submitted", "approved", "rejected", "hidden"];
+  if (!allowed.includes(status)) {
+    return res.status(400).json({ error: "INVALID_STATUS" });
+  }
+
+  db.run(
+    "UPDATE items SET status = ? WHERE id = ?",
+    [status, id],
+    function (err) {
+      if (err) {
+        return res.status(500).json({ error: "DB_ERROR" });
+      }
+      res.json({ ok: true });
+    }
+  );
+});
+
+/* ================================
+   PUBLIC ITEMS (noch ungefiltert)
 ================================ */
 app.get("/api/items/public", (req, res) => {
   db.all(
