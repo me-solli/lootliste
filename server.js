@@ -65,7 +65,9 @@ const upload = multer({
 /* ================================
    DB
 ================================ */
-const db = new sqlite3.Database("/data/lootliste.db");
+const DB_PATH = process.env.DB_PATH || "/data/lootliste.db";
+const db = new sqlite3.Database(DB_PATH);
+console.log("Using DB:", DB_PATH);
 
 db.serialize(() => {
   db.run(`
