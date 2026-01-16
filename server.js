@@ -8,7 +8,7 @@ const { randomUUID } = require("crypto");
 const app = express();
 
 /* ================================
-   CORS – stabil (GitHub Pages)
+   CORS (GitHub Pages)
 ================================ */
 const ALLOWED_ORIGINS = ["https://me-solli.github.io"];
 
@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, x-login-id, x-admin-token"
+    "Content-Type, x-admin-token"
   );
 
   if (req.method === "OPTIONS") {
@@ -36,13 +36,12 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 /* ================================
-   UPLOAD DIR
+   UPLOADS
 ================================ */
 const UPLOAD_DIR = "/data/uploads";
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
-
 app.use("/uploads", express.static(UPLOAD_DIR));
 
 /* ================================
@@ -51,8 +50,7 @@ app.use("/uploads", express.static(UPLOAD_DIR));
 const storage = multer.diskStorage({
   destination: UPLOAD_DIR,
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, randomUUID() + ext);
+    cb(null, randomUUID() + path.extname(file.originalname));
   }
 });
 
@@ -75,39 +73,38 @@ db.serialize(() => {
       screenshot TEXT,
       note TEXT,
       status TEXT DEFAULT 'submitted',
+      display_name TEXT,
+      item_type TEXT,
+      weapon_type TEXT,
+      rarity TEXT,
+      roll TEXT,
+      rating INTEGER,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
-
-  // 🔹 A.1a – Basisdaten (optional, rückwärtskompatibel)
-  db.run(`ALTER TABLE items ADD COLUMN display_name TEXT`, () => {});
-  db.run(`ALTER TABLE items ADD COLUMN item_type TEXT`, () => {});
-  db.run(`ALTER TABLE items ADD COLUMN weapon_type TEXT`, () => {});
-  db.run(`ALTER TABLE items ADD COLUMN rarity TEXT`, () => {});
 });
 
 /* ================================
-   SUBMIT
+   SUBMIT (Frontend)
 ================================ */
 app.post("/api/items", upload.any(), (req, res) => {
   const count = Number(req.body.item_count || 0);
-  if (!count || count < 1) {
+  if (!count) {
     return res.status(400).json({ error: "NO_ITEMS" });
   }
 
-  const files = req.files || [];
   const inserts = [];
 
   for (let i = 1; i <= count; i++) {
-    const file = files.find(f => f.fieldname === `screenshot_${i}`);
+    const file = req.files.find(
+      f => f.fieldname === `screenshot_${i}`
+    );
     if (!file) continue;
-
-    const note = req.body[`note_${i}`] || "";
 
     inserts.push({
       id: randomUUID(),
       screenshot: `/uploads/${file.filename}`,
-      note
+      note: req.body[`note_${i}`] || ""
     });
   }
 
@@ -115,24 +112,24 @@ app.post("/api/items", upload.any(), (req, res) => {
     return res.status(400).json({ error: "NO_SCREENSHOTS" });
   }
 
-  const stmt = db.prepare(
-    "INSERT INTO items (id, screenshot, note, status) VALUES (?, ?, ?, 'submitted')"
-  );
+  const stmt = db.prepare(`
+    INSERT INTO items (id, screenshot, note, status)
+    VALUES (?, ?, ?, 'submitted')
+  `);
 
   inserts.forEach(it => {
     stmt.run(it.id, it.screenshot, it.note);
   });
 
   stmt.finalize();
-  res.status(201).json({ ok: true, count: inserts.length });
+  res.json({ ok: true, count: inserts.length });
 });
 
 /* ================================
-   ADMIN: LISTE
+   ADMIN: LIST
 ================================ */
 app.get("/api/items/admin", (req, res) => {
-  const adminToken = req.headers["x-admin-token"];
-  if (adminToken !== "lootliste-admin-2025") {
+  if (req.headers["x-admin-token"] !== "lootliste-admin-2025") {
     return res.status(403).json({ error: "FORBIDDEN" });
   }
 
@@ -141,6 +138,7 @@ app.get("/api/items/admin", (req, res) => {
     [],
     (err, rows) => {
       if (err) {
+        console.error(err);
         return res.status(500).json({ error: "DB_ERROR" });
       }
       res.json(rows);
@@ -149,11 +147,10 @@ app.get("/api/items/admin", (req, res) => {
 });
 
 /* ================================
-   ADMIN: UPDATE (Status + Basisdaten)
+   ADMIN: UPDATE
 ================================ */
 app.patch("/api/items/:id", (req, res) => {
-  const adminToken = req.headers["x-admin-token"];
-  if (adminToken !== "lootliste-admin-2025") {
+  if (req.headers["x-admin-token"] !== "lootliste-admin-2025") {
     return res.status(403).json({ error: "FORBIDDEN" });
   }
 
@@ -163,14 +160,16 @@ app.patch("/api/items/:id", (req, res) => {
     display_name,
     item_type,
     weapon_type,
-    rarity
+    rarity,
+    roll,
+    rating
   } = req.body;
 
   const fields = [];
   const values = [];
 
   if (status) {
-    const allowed = ["submitted", "approved", "rejected", "hidden"];
+    const allowed = ["submitted", "approved", "hidden", "rejected"];
     if (!allowed.includes(status)) {
       return res.status(400).json({ error: "INVALID_STATUS" });
     }
@@ -198,6 +197,16 @@ app.patch("/api/items/:id", (req, res) => {
     values.push(rarity);
   }
 
+  if (roll !== undefined) {
+    fields.push("roll = ?");
+    values.push(roll);
+  }
+
+  if (rating !== undefined) {
+    fields.push("rating = ?");
+    values.push(Number(rating) || 0);
+  }
+
   if (!fields.length) {
     return res.json({ ok: true });
   }
@@ -207,7 +216,7 @@ app.patch("/api/items/:id", (req, res) => {
   db.run(
     `UPDATE items SET ${fields.join(", ")} WHERE id = ?`,
     values,
-    function (err) {
+    err => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: "DB_ERROR" });
@@ -218,7 +227,7 @@ app.patch("/api/items/:id", (req, res) => {
 });
 
 /* ================================
-   PUBLIC ITEMS (nur approved)
+   PUBLIC (approved only)
 ================================ */
 app.get("/api/items/public", (req, res) => {
   db.all(
@@ -226,6 +235,7 @@ app.get("/api/items/public", (req, res) => {
     [],
     (err, rows) => {
       if (err) {
+        console.error(err);
         return res.status(500).json({ error: "DB_ERROR" });
       }
       res.json(rows);
