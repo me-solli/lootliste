@@ -8,20 +8,35 @@ console.log("SERVER.JS wird geladen");
 const app = express();
 
 /* ================================
-   CORS (FIXED – erlaubt x-login-id)
+   CORS (STABIL – FIX FÜR RAILWAY)
 ================================ */
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "x-login-id"
-  ]
-}));
+const ALLOWED_ORIGINS = [
+  "https://me-solli.github.io"
+];
 
-// 🔑 wichtig für Preflight
-app.options("*", cors());
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,DELETE,OPTIONS"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, x-login-id"
+  );
+
+  // Preflight sofort beenden
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
 
 app.use(express.json());
 
@@ -39,7 +54,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 });
 
 /* ================================
-   DB INIT (läuft einmal sicher)
+   DB INIT
 ================================ */
 db.serialize(() => {
   db.run(`
@@ -52,33 +67,7 @@ db.serialize(() => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
-
-  // 🔹 optionales Demo-Item (nur wenn Tabelle leer ist)
-  db.get("SELECT COUNT(*) AS count FROM items", (err, row) => {
-    if (err) return;
-
-    if (row.count === 0) {
-      db.run(
-        `INSERT INTO items (id, name, type, rating, status)
-         VALUES (?, ?, ?, ?, ?)`,
-        [
-          randomUUID(),
-          "Shako",
-          "helm",
-          5,
-          "verfügbar"
-        ]
-      );
-      console.log("🧪 Demo-Item eingefügt");
-    }
-  });
 });
-
-/* ================================
-   PORT
-================================ */
-const PORT = process.env.PORT || 8080;
-console.log("PORT =", PORT);
 
 /* ================================
    ROOT
@@ -88,23 +77,24 @@ app.get("/", (req, res) => {
 });
 
 /* ================================
-   PUBLIC ITEMS (DB)
+   PUBLIC ITEMS
 ================================ */
 app.get("/api/items/public", (req, res) => {
-  const sql = `SELECT * FROM items ORDER BY created_at DESC`;
-
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      console.error("❌ DB Query Fehler:", err.message);
-      return res.status(500).json({ error: "DB_ERROR" });
+  db.all(
+    "SELECT * FROM items ORDER BY created_at DESC",
+    [],
+    (err, rows) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "DB_ERROR" });
+      }
+      res.json(rows);
     }
-
-    res.json(rows);
-  });
+  );
 });
 
 /* ================================
-   CREATE ITEM (PUBLIC, MINIMAL)
+   CREATE ITEM (DEV)
 ================================ */
 app.post("/api/items", (req, res) => {
   const { name, type, rating = 0, status = "verfügbar" } = req.body || {};
@@ -115,24 +105,27 @@ app.post("/api/items", (req, res) => {
 
   const id = randomUUID();
 
-  const sql = `
+  db.run(
+    `
     INSERT INTO items (id, name, type, rating, status)
     VALUES (?, ?, ?, ?, ?)
-  `;
+    `,
+    [id, name, type, rating, status],
+    err => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "DB_ERROR" });
+      }
 
-  db.run(sql, [id, name, type, rating, status], function (err) {
-    if (err) {
-      console.error("❌ INSERT Fehler:", err.message);
-      return res.status(500).json({ error: "DB_ERROR" });
+      res.status(201).json({ id });
     }
-
-    res.status(201).json({ id, name, type, rating, status });
-  });
+  );
 });
 
 /* ================================
    START
 ================================ */
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("LISTENING ON", PORT);
 });
