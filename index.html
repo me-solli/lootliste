@@ -1530,13 +1530,14 @@ confirmReq.onclick = async () => {
   confirmReq.innerHTML = "⏳ Wird gesendet …";
 
   try {
-    await fetch(
-      `https://content-connection-production-ea07.up.railway.app/api/items/${pendingItemId}/give`,
-      {
-        method: "POST",
-        credentials: "include"
-      }
-    );
+await fetch(
+  `https://lootliste-production.up.railway.app/api/items/${pendingItemId}/give`,
+  {
+    method: "POST",
+    credentials: "include"
+  }
+);
+
   } catch (e) {
     console.warn("Item konnte nicht vergeben werden", e);
   }
