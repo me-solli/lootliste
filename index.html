@@ -291,6 +291,32 @@ body{
   border-radius:6px;
 }
 
+  /* ================================
+   ICON BAR – IMAGE SHINE
+================================ */
+
+/* Grund-Shine (sehr subtil) */
+.icon-btn img{
+  filter:
+    drop-shadow(0 0 6px rgba(255,200,120,.18))
+    drop-shadow(0 0 14px rgba(0,0,0,.6));
+  transition: filter .2s ease;
+}
+
+/* Hover – mehr Leben */
+.icon-btn:hover img{
+  filter:
+    drop-shadow(0 0 10px rgba(255,210,130,.35))
+    drop-shadow(0 0 22px rgba(255,170,80,.25));
+}
+
+/* Active – „früherer Diablo-Glow“, aber gezügelt */
+.icon-btn.active img{
+  filter:
+    drop-shadow(0 0 14px rgba(255,215,120,.75))
+    drop-shadow(0 0 28px rgba(255,185,90,.55));
+}
+
 /* ================================
    CONTENT / META / FILTER
 ================================ */
