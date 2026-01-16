@@ -8,13 +8,20 @@ console.log("SERVER.JS wird geladen");
 const app = express();
 
 /* ================================
-   CORS
+   CORS (FIXED – erlaubt x-login-id)
 ================================ */
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "x-login-id"
+  ]
 }));
+
+// 🔑 wichtig für Preflight
+app.options("*", cors());
 
 app.use(express.json());
 
