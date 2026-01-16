@@ -760,7 +760,7 @@ body{
   </div>
 
 <!-- ================================
-       CARDS
+     CARDS
 ================================ -->
 <section class="cards">
 
@@ -771,62 +771,7 @@ body{
     <div class="skeleton-card"></div>
   </div>
 
-  <!-- CARD 1 -->
-  <article class="card" data-type="waffe">
-    <div class="card-image">
-      <img src="img/icons/waffe.png" alt="Waffe">
-    </div>
-
-    <div class="card-body">
-      <div class="item-name">Beispiel Schwert</div>
-      <div class="item-sub">Waffe · Schwert</div>
-      <div class="item-roll">+200% ed · +20 str</div>
-
-      <div class="stars">
-        ★★★★☆ <span class="stars-num">4/5</span>
-      </div>
-
-      <div class="player">Spender: Testspieler</div>
-    </div>
-  </article>
-
-  <!-- CARD 2 -->
-  <article class="card" data-type="helm">
-    <div class="card-image">
-      <img src="img/icons/helm.png" alt="Helm">
-    </div>
-
-    <div class="card-body">
-      <div class="item-name">Beispiel Helm</div>
-      <div class="item-sub">Helm · Unique</div>
-      <div class="item-roll">+30 str · +15 allres</div>
-
-      <div class="stars">
-        ★★★☆☆ <span class="stars-num">3/5</span>
-      </div>
-
-      <div class="player">Spender: AnotherGuy</div>
-    </div>
-  </article>
-
-  <!-- CARD 3 -->
-  <article class="card" data-type="charm">
-    <div class="card-image">
-      <img src="img/icons/charm.png" alt="Charm">
-    </div>
-
-    <div class="card-body">
-      <div class="item-name">Sunder Charm</div>
-      <div class="item-sub">Charm · Unique</div>
-      <div class="item-roll">–70% Blitzres</div>
-
-      <div class="stars">
-        ★★★★★ <span class="stars-num">5/5</span>
-      </div>
-
-      <div class="player">Spender: DiabloFan</div>
-    </div>
-  </article>
+</section>
 
   <!-- EMPTY STATE -->
   <div id="emptyState" class="empty-state" hidden>
@@ -1169,6 +1114,19 @@ body{
   document.addEventListener("click", reset);
   document.addEventListener("input", reset);
 })();
+</script>
+
+  <script type="module">
+  import { items } from "./items.mock.js";
+  import { renderCards } from "./render.cards.js";
+
+  const container = document.querySelector(".cards");
+  const skeletons = document.getElementById("skeletons");
+
+  setTimeout(() => {
+    skeletons?.remove();
+    renderCards(items, container);
+  }, 400);
 </script>
   
 </body>
