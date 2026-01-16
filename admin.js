@@ -1,102 +1,91 @@
-/* ================================
-   CONFIG
-================================ */
 const API_BASE = "https://lootliste-production.up.railway.app";
 const ADMIN_TOKEN = "lootliste-admin-2025";
 
-/* ================================
-   CONSTANTS
-================================ */
 const ITEM_TYPES = [
-  "sonstiges",
-  "waffe",
-  "ruestung",
-  "schild",
-  "helm",
-  "ring",
-  "amulett",
-  "charm",
-  "rune"
+  "sonstiges","waffe","ruestung","schild","helm","ring","amulett","charm","rune"
 ];
+
+const RARITIES = ["","normal","magic","rare","set","unique"];
+
+let currentStatus = "submitted";
 
 /* ================================
    HELPERS
 ================================ */
-function resolveImageSrc(screenshot) {
-  if (!screenshot) return "";
-  if (screenshot.startsWith("http")) return screenshot;
-  return API_BASE + screenshot;
+function resolveImageSrc(s) {
+  if (!s) return "";
+  if (s.startsWith("http")) return s;
+  return API_BASE + s;
 }
 
-/* ================================
-   API
-================================ */
-async function fetchAdminItems() {
-  const res = await fetch(API_BASE + "/api/items/admin", {
-    headers: { "x-admin-token": ADMIN_TOKEN }
+async function api(url, opts = {}) {
+  const res = await fetch(API_BASE + url, {
+    ...opts,
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-token": ADMIN_TOKEN,
+      ...(opts.headers || {})
+    }
   });
-  if (!res.ok) throw new Error("HTTP " + res.status);
+  if (!res.ok) throw new Error(res.status);
   return res.json();
 }
 
-async function updateItem(id, data) {
-  const res = await fetch(`${API_BASE}/api/items/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-token": ADMIN_TOKEN
-    },
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) throw new Error("HTTP " + res.status);
-}
-
-async function updateItemStatus(id, status) {
-  return updateItem(id, { status });
-}
-
 /* ================================
-   RENDER
+   LOAD
 ================================ */
-function renderItems(list, items) {
-  if (!items.length) {
-    list.innerHTML = '<div class="empty">Keine Items vorhanden.</div>';
+async function loadItems() {
+  const list = document.getElementById("list");
+  list.innerHTML = "Lade Items…";
+
+  const items = await api("/api/items/admin");
+  const filtered = items.filter(i => i.status === currentStatus);
+
+  if (!filtered.length) {
+    list.innerHTML = "<div class='empty'>Keine Items vorhanden.</div>";
     return;
   }
 
-  list.innerHTML = items.map(item => `
+  list.innerHTML = filtered.map(item => `
     <div class="item">
       <div class="thumb">
-        <img src="${resolveImageSrc(item.screenshot)}" alt="">
+        <img src="${resolveImageSrc(item.screenshot)}">
       </div>
 
       <div class="meta">
-        <div style="font-weight:600;margin-bottom:6px;">
-          ${item.note || "Item ohne Notiz"}
-        </div>
+        <input placeholder="Anzeigename"
+          data-field="display_name"
+          data-id="${item.id}"
+          value="${item.display_name || ""}">
 
-        <div style="font-size:12px;opacity:.7;margin-bottom:6px;">
-          Status: <strong>${item.status}</strong>
-        </div>
+        <select data-field="item_type" data-id="${item.id}">
+          ${ITEM_TYPES.map(t =>
+            `<option value="${t}" ${item.item_type===t?"selected":""}>${t}</option>`
+          ).join("")}
+        </select>
 
-        <div style="margin-bottom:6px;">
-          <select data-item-type data-id="${item.id}">
-            ${ITEM_TYPES.map(t => `
-              <option value="${t}" ${item.item_type === t ? "selected" : ""}>
-                ${t}
-              </option>
-            `).join("")}
-          </select>
+        <select data-field="rarity" data-id="${item.id}">
+          ${RARITIES.map(r =>
+            `<option value="${r}" ${item.rarity===r?"selected":""}>${r||"– Qualität –"}</option>`
+          ).join("")}
+        </select>
 
-          <button data-save-type data-id="${item.id}">
-            Speichern
-          </button>
-        </div>
+        <input placeholder="Roll / Notiz"
+          data-field="roll"
+          data-id="${item.id}"
+          value="${item.roll || ""}">
 
-        <div class="actions" style="margin-top:8px; display:flex; gap:6px;">
-          <button data-id="${item.id}" data-status="approved">Freigeben</button>
-          <button data-id="${item.id}" data-status="hidden">Verstecken</button>
-          <button data-id="${item.id}" data-status="rejected">Ablehnen</button>
+        <select data-field="rating" data-id="${item.id}">
+          ${[0,1,2,3,4,5].map(r =>
+            `<option value="${r}" ${Number(item.rating)===r?"selected":""}>${r}/5</option>`
+          ).join("")}
+        </select>
+
+        <div class="actions">
+          <button data-status="approved" data-id="${item.id}">Freigeben</button>
+          <button data-status="hidden" data-id="${item.id}">Verstecken</button>
+          <button data-status="rejected" data-id="${item.id}">Ablehnen</button>
+          <button data-save data-id="${item.id}">Speichern</button>
         </div>
       </div>
     </div>
@@ -104,48 +93,39 @@ function renderItems(list, items) {
 }
 
 /* ================================
-   LOAD
-================================ */
-async function loadItems(list) {
-  list.innerHTML = "Lade Items…";
-  try {
-    const items = await fetchAdminItems();
-    renderItems(list, items);
-  } catch (err) {
-    console.error(err);
-    list.innerHTML =
-      '<div class="error">Fehler beim Laden der Admin-Items</div>';
-  }
-}
-
-/* ================================
    INIT
 ================================ */
 document.addEventListener("DOMContentLoaded", () => {
-  const list = document.getElementById("list");
-  loadItems(list);
+  document.querySelectorAll("[data-tab]").forEach(btn => {
+    btn.onclick = () => {
+      currentStatus = btn.dataset.tab;
+      loadItems();
+    };
+  });
 
-  list.addEventListener("click", async (e) => {
-    // Status-Buttons
-    const statusBtn = e.target.closest("button[data-id][data-status]");
-    if (statusBtn) {
-      const { id, status } = statusBtn.dataset;
-      await updateItemStatus(id, status);
-      loadItems(list);
-      return;
+  document.getElementById("list").addEventListener("click", async e => {
+    const id = e.target.dataset.id;
+
+    if (e.target.dataset.status) {
+      await api(`/api/items/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status: e.target.dataset.status })
+      });
+      loadItems();
     }
 
-    // Item-Type speichern
-    const saveBtn = e.target.closest("button[data-save-type]");
-    if (saveBtn) {
-      const id = saveBtn.dataset.id;
-      const select = list.querySelector(
-        `select[data-item-type][data-id="${id}"]`
-      );
-      if (!select) return;
-
-      await updateItem(id, { item_type: select.value });
-      loadItems(list);
+    if (e.target.dataset.save) {
+      const fields = {};
+      document.querySelectorAll(`[data-id="${id}"][data-field]`).forEach(el => {
+        fields[el.dataset.field] = el.value;
+      });
+      await api(`/api/items/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(fields)
+      });
+      loadItems();
     }
   });
+
+  loadItems();
 });
