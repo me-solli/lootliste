@@ -302,8 +302,22 @@ body{
   </div>
 
   <div class="filter-panel">
-    <!-- FAKE: FILTER_LOGIC -->
-    <div class="fake-block"><strong>[FAKE]</strong> Filter & Sort</div>
+<div class="filter-row">
+  <input
+    type="text"
+    id="filterSearch"
+    placeholder="Item suchen …"
+    autocomplete="off"
+  >
+
+  <select id="filterSort">
+    <option value="rating-desc">Rating ↓</option>
+    <option value="rating-asc">Rating ↑</option>
+    <option value="name-asc">Name A–Z</option>
+    <option value="name-desc">Name Z–A</option>
+  </select>
+</div>
+
   </div>
 
   <!-- ================================
