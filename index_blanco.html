@@ -651,6 +651,66 @@ body{
   apply();
 })();
 </script>
+
+  <script>
+/* ===== META + HERO STATS FROM CARDS (FRONTEND ONLY) ===== */
+(function () {
+  const cards = () => Array.from(document.querySelectorAll(".card"))
+    .filter(c => c.style.display !== "none");
+
+  const metaCount = document.getElementById("metaItemCount");
+  const heroCount = document.getElementById("heroItemCount");
+  const heroAvg   = document.getElementById("heroAvgRating");
+  const heroDonor = document.getElementById("heroDonorCount");
+
+  function getRating(card){
+    const txt = card.querySelector(".stars")?.textContent || "";
+    const m = txt.match(/(\d)\s*\/\s*5/);
+    return m ? Number(m[1]) : 0;
+  }
+
+  function getDonor(card){
+    const txt = card.querySelector(".player")?.textContent || "";
+    const m = txt.match(/Spender:\s*(.+)$/i);
+    return m ? m[1].trim() : null;
+  }
+
+  function update(){
+    const visible = cards();
+
+    // Item counts
+    metaCount && (metaCount.textContent = visible.length);
+    heroCount && (heroCount.textContent = visible.length);
+
+    // Avg rating
+    if (heroAvg) {
+      const ratings = visible.map(getRating).filter(n => n > 0);
+      const avg = ratings.length
+        ? (ratings.reduce((a,b)=>a+b,0) / ratings.length).toFixed(1)
+        : "–";
+      heroAvg.textContent = avg;
+    }
+
+    // Unique donors
+    if (heroDonor) {
+      const donors = new Set(visible.map(getDonor).filter(Boolean));
+      heroDonor.textContent = donors.size;
+    }
+  }
+
+  // Recalculate on any filter/sort interaction
+  document.addEventListener("click", e => {
+    if (e.target.closest(".icon-btn")) update();
+  });
+  document.getElementById("filterSearch")
+    ?.addEventListener("input", update);
+  document.getElementById("filterSort")
+    ?.addEventListener("change", update);
+
+  // Initial
+  update();
+})();
+</script>
   
 </body>
 </html>
