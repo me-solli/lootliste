@@ -512,18 +512,22 @@ body{
 
   </div>
 
-  <!-- ================================
+<!-- ================================
        CARDS
-  ================================ -->
-  <section class="cards">
+================================ -->
+<section class="cards">
 
-    <div id="skeletons" class="skeletons">
-  <div class="skeleton-card"></div>
-  <div class="skeleton-card"></div>
-  <div class="skeleton-card"></div>
-</div>
+  <!-- SKELETON LOADING -->
+  <div id="skeletons" class="skeletons">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
 
+  <!-- CARD 1 -->
   <article class="card" data-type="waffe">
+    <div class="card-badge badge-top">Top</div>
+
     <div class="card-image">
       <img src="img/icons/waffe.png" alt="Waffe">
     </div>
@@ -541,7 +545,10 @@ body{
     </div>
   </article>
 
+  <!-- CARD 2 -->
   <article class="card" data-type="helm">
+    <div class="card-badge badge-new">Neu</div>
+
     <div class="card-image">
       <img src="img/icons/helm.png" alt="Helm">
     </div>
@@ -559,7 +566,10 @@ body{
     </div>
   </article>
 
+  <!-- CARD 3 -->
   <article class="card" data-type="charm">
+    <div class="card-badge badge-roll">High Roll</div>
+
     <div class="card-image">
       <img src="img/icons/charm.png" alt="Charm">
     </div>
@@ -577,6 +587,7 @@ body{
     </div>
   </article>
 
+  <!-- EMPTY STATE -->
   <div id="emptyState" class="empty-state" hidden>
     Keine Items gefunden.
   </div>
