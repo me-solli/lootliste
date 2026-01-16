@@ -101,24 +101,96 @@ body{
 /* ================================
    PROJECT TIMELINE (OPTIK)
 ================================ */
+.project-timeline{
+  padding:10px 28px 12px;
+  background:linear-gradient(
+    180deg,
+    rgba(0,0,0,.28),
+    rgba(0,0,0,0)
+  );
+}
+
+/* Label */
 .timeline-label{
-  padding:4px 28px 0;
+  padding:4px 0 6px;
   font-size:12px;
   color:#bfa86a;
   opacity:.75;
 }
 
-.project-timeline{
-  padding:6px 28px 4px;
-  background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,0));
+/* Track */
+.timeline-track{
+  height:1px;
+  background:#2a2a2a;
+  position:relative;
+  margin-bottom:10px;
 }
-.timeline-track{height:1px;background:#2a2a2a;position:relative}
-.timeline-progress{position:absolute;left:0;top:0;height:1px;width:75%;background:linear-gradient(90deg,#bfa86a,#6f7f4a)}
-.timeline-steps{display:flex;justify-content:space-between}
-.timeline-step{width:14px;height:14px;border-radius:50%;background:#2a2a2a}
+
+.timeline-progress{
+  position:absolute;
+  left:0;
+  top:0;
+  height:1px;
+  width:75%;
+  background:linear-gradient(90deg,#bfa86a,#6f7f4a);
+}
+
+/* Steps */
+.timeline-steps{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.timeline-step{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#2a2a2a;
+}
+
 .timeline-step.done{background:#bfa86a}
 .timeline-step.current{background:#6f7f4a}
 .timeline-step.future{background:#333;opacity:.5}
+
+/* ================================
+   RULES / FLOW BOX (IN TIMELINE)
+================================ */
+.rules-box{
+  margin-top:6px;
+  padding:14px 18px;
+  border:1px solid rgba(191,168,106,.35);
+  border-radius:14px;
+  font-size:13px;
+  background:rgba(0,0,0,.25);
+  box-shadow:
+    inset 0 0 12px rgba(191,168,106,.08);
+  opacity:.9;
+}
+
+.rules-box strong{
+  display:block;
+  margin-bottom:6px;
+  color:#bfa86a;
+  font-weight:600;
+}
+
+.rules-box p{
+  margin:6px 0;
+  line-height:1.45;
+}
+
+.rules-link{
+  display:inline-block;
+  margin-top:6px;
+  color:var(--gold);
+  text-decoration:none;
+  font-weight:500;
+}
+
+.rules-link:hover{
+  text-decoration:underline;
+}
 
 /* ================================
    ICON BAR (OPTIK)
