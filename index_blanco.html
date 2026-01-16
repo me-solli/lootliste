@@ -711,6 +711,45 @@ body{
   update();
 })();
 </script>
+
+  <script>
+/* ===== SCREENSHOT OVERLAY (CLICK TO OPEN) ===== */
+(function () {
+  const overlay   = document.getElementById("screenshotOverlay");
+  const imgTarget = document.getElementById("overlayImage");
+  if (!overlay || !imgTarget) return;
+
+  // Öffnen: Klick auf Card-Image
+  document.addEventListener("click", (e) => {
+    const img = e.target.closest(".card-image img");
+    if (!img) return;
+
+    // Quelle bestimmen:
+    // 1) data-full (falls später vorhanden)
+    // 2) src des Icons (Fallback)
+    const fullSrc = img.dataset.full || img.src;
+    imgTarget.src = fullSrc;
+
+    overlay.hidden = false;
+  });
+
+  // Schließen: Klick auf Backdrop oder ESC
+  overlay.addEventListener("click", (e) => {
+    if (e.target.classList.contains("overlay-backdrop")) {
+      close();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+
+  function close(){
+    overlay.hidden = true;
+    imgTarget.src = "";
+  }
+})();
+</script>
   
 </body>
 </html>
