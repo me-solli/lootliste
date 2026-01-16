@@ -1,9 +1,21 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
+const cors = require("cors");
 
 console.log("SERVER.JS wird geladen");
 
 const app = express();
+
+/* ================================
+   CORS
+================================ */
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.use(express.json());
 
 /* ================================
    DB
@@ -25,15 +37,22 @@ const PORT = process.env.PORT || 8080;
 console.log("PORT =", PORT);
 
 /* ================================
-   ROOT TEST
+   ROOT
 ================================ */
 app.get("/", (req, res) => {
   res.status(200).send("OK");
 });
 
 /* ================================
+   PUBLIC ITEMS (TEST)
+================================ */
+app.get("/api/items/public", (req, res) => {
+  res.json([]);
+});
+
+/* ================================
    START
 ================================ */
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("LISTENING");
+  console.log("LISTENING ON", PORT);
 });
