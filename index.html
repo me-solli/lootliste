@@ -1116,17 +1116,85 @@ body{
 })();
 </script>
 
-  <script type="module">
+<script type="module">
   import { items } from "./items.mock.js";
   import { renderCards } from "./render.cards.js";
 
   const container = document.querySelector(".cards");
   const skeletons = document.getElementById("skeletons");
 
+  const state = {
+    items,
+    filtered: items,
+    type: "",
+    search: "",
+    sort: "rating-desc"
+  };
+
+  function applyFilters() {
+    let list = [...state.items];
+
+    // Typ
+    if (state.type) {
+      list = list.filter(i => i.type === state.type);
+    }
+
+    // Suche
+    if (state.search) {
+      const q = state.search.toLowerCase();
+      list = list.filter(i =>
+        i.name.toLowerCase().includes(q)
+      );
+    }
+
+    // Sort
+    if (state.sort === "rating-desc") {
+      list.sort((a, b) => b.rating - a.rating);
+    }
+    if (state.sort === "rating-asc") {
+      list.sort((a, b) => a.rating - b.rating);
+    }
+
+    state.filtered = list;
+    renderCards(state.filtered, container);
+  }
+
+  // Initial render
   setTimeout(() => {
     skeletons?.remove();
-    renderCards(items, container);
+    applyFilters();
   }, 400);
+
+  // Suche
+  const searchInput = document.getElementById("filterSearch");
+  searchInput?.addEventListener("input", () => {
+    state.search = searchInput.value;
+    applyFilters();
+  });
+
+  // Sort
+  const sortSelect = document.getElementById("filterSort");
+  sortSelect?.addEventListener("change", () => {
+    state.sort = sortSelect.value;
+    applyFilters();
+  });
+
+  // Icon-Bar
+  const iconBar = document.querySelector(".icon-bar");
+  iconBar?.addEventListener("click", e => {
+    const btn = e.target.closest(".icon-btn");
+    if (!btn) return;
+
+    const type = btn.dataset.type || "";
+
+    iconBar.querySelectorAll(".icon-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    state.type = state.type === type ? "" : type;
+    if (state.type) btn.classList.add("active");
+
+    applyFilters();
+  });
 </script>
   
 </body>
