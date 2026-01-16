@@ -44,10 +44,23 @@ app.get("/", (req, res) => {
 });
 
 /* ================================
-   PUBLIC ITEMS (TEST)
+   PUBLIC ITEMS (DB)
 ================================ */
 app.get("/api/items/public", (req, res) => {
-  res.json([]);
+  const sql = `
+    SELECT *
+    FROM items
+    ORDER BY created_at DESC
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error("❌ DB Query Fehler:", err.message);
+      return res.status(500).json({ error: "DB_ERROR" });
+    }
+
+    res.json(rows);
+  });
 });
 
 /* ================================
