@@ -9,135 +9,140 @@
 /* ================================
    GLOBALS / RESET
 ================================ */
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+}
 
-/* HIER: globale Variablen, Farben, Reset */
+*{box-sizing:border-box}
 
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:#0b0b0b;
+  color:#eaeaea;
+}
 
 /* ================================
    LAYOUT / WRAPPER
 ================================ */
-
-/* HIER: body, .wrapper */
-
+.wrapper{
+  max-width:1500px;
+  margin:0 auto;
+}
 
 /* ================================
    HERO
 ================================ */
-
-/* HIER: Hero, Banner, Logo, Titel */
-
+.hero{
+  background:#111;
+}
+.hero-inner{
+  padding:40px 32px;
+}
+.hero-logo img{
+  max-width:420px;
+  width:100%;
+}
 
 /* ================================
    MODE / STATUS BANNER
 ================================ */
-
-/* HIER: Non-Ladder / Ladder Hinweis */
-
+.mode-banner{
+  margin-top:12px;
+  font-size:13px;
+}
+.mode-banner strong{color:#4cff4c}
 
 /* ================================
    HERO STATS
 ================================ */
-
-/* HIER: Drop-Anzahl, Ø Rating, Spender */
-
-
-/* ================================
-   AUTH BOX (PLACEHOLDER)
-================================ */
-
-/* HIER: Login / Profil Anzeige */
-
+.hero-stats{
+  display:flex;
+  gap:16px;
+  margin-top:14px;
+}
 
 /* ================================
-   PROJECT TIMELINE (VISUELL)
+   AUTH BOX
 ================================ */
-
-/* HIER: reine Anzeige – keine Logik */
-
+.auth-box{
+  position:absolute;
+  top:20px;
+  right:24px;
+}
 
 /* ================================
-   ICON BAR (FILTER)
+   PROJECT TIMELINE
 ================================ */
+.project-timeline{
+  padding:16px 24px;
+  border-bottom:1px solid var(--border);
+}
 
-/* HIER: Item-Typ Icons */
-
+/* ================================
+   ICON BAR
+================================ */
+.icon-bar{
+  display:flex;
+  gap:14px;
+  padding:18px 24px;
+  border-bottom:1px solid var(--border);
+}
 
 /* ================================
    META BAR
 ================================ */
-
-/* HIER: Treffer, Datum */
-
+.meta-bar{
+  padding:12px 24px;
+  font-size:13px;
+  opacity:.85;
+}
 
 /* ================================
    FILTER PANEL
 ================================ */
-
-/* HIER: Suche, Sortierung */
-
+.filter-panel{
+  padding:16px 24px;
+  border:1px solid var(--border);
+  margin-bottom:18px;
+}
 
 /* ================================
    DROP FEED / CARDS GRID
 ================================ */
-
-/* HIER: Grid, Performance */
-
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
 
 /* ================================
    CARD BASIS
 ================================ */
-
-/* HIER: Card, Hover, Rahmen */
-
-
-/* ================================
-   CARD STATUS (NUR VISUELL)
-================================ */
-
-/* HIER: approved / hidden Mapping */
-
-
-/* ================================
-   CARD IMAGE + SCREENSHOT
-================================ */
-
-/* HIER: Icon, Screenshot Overlay Trigger */
-
-
-/* ================================
-   CARD BODY
-================================ */
-
-/* HIER: Name, Typ, Roll */
-
+.card{
+  background:#121212;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
 
 /* ================================
    RATING (STERNE)
 ================================ */
-
-/* HIER: ⭐⭐⭐⭐☆ 4/5 */
-
-
-/* ================================
-   CTA / BUTTONS (OPTIONAL)
-================================ */
-
-/* HIER: aktuell deaktiviert / Platzhalter */
-
-
-/* ================================
-   MODALS (OPTIONAL)
-================================ */
-
-/* HIER: Request / Info Modals */
-
+.stars{color:var(--gold)}
 
 /* ================================
    FOOTER
 ================================ */
-
-/* HIER: Links, Copyright */
-
+.footer{
+  padding:24px;
+  text-align:center;
+  font-size:12px;
+  border-top:1px solid var(--border);
+}
 </style>
 </head>
 
@@ -152,33 +157,34 @@
        HERO
   ================================ -->
   <header class="hero">
-    <!-- HERO CONTENT -->
+    <div class="hero-inner">
+      <div id="authBox" class="auth-box">Login</div>
+      <h1 class="hero-logo"><img src="img/logo_d2r.png" alt="D2R Lootliste"></h1>
+      <p>Community Lootliste · Diablo II Resurrected</p>
+      <div class="mode-banner">
+        Aktueller Modus: <strong>NON-LADDER</strong>
+      </div>
+      <div class="hero-stats">
+        <div>📦 … Drops</div>
+        <div>⭐ Ø …</div>
+        <div>🧍 … Spender</div>
+      </div>
+    </div>
   </header>
-
-
-  <!-- ================================
-       AUTH BOX (PLACEHOLDER)
-  ================================ -->
-  <div class="auth-box">
-    <!-- LOGIN / PROFIL -->
-  </div>
-
 
   <!-- ================================
        PROJECT TIMELINE
   ================================ -->
   <section class="project-timeline">
-    <!-- VISUELLER STATUS -->
+    <!-- Timeline-Elemente hier einfügen -->
   </section>
-
 
   <!-- ================================
        ICON BAR
   ================================ -->
   <nav class="icon-bar">
-    <!-- ICON FILTER -->
+    <!-- Icon-Buttons hier -->
   </nav>
-
 
   <!-- ================================
        CONTENT
@@ -188,81 +194,32 @@
     <!-- ================================
          META BAR
     ================================ -->
-    <div class="meta-bar"></div>
-
+    <div class="meta-bar">📦 0 Items · Stand heute</div>
 
     <!-- ================================
          FILTER PANEL
     ================================ -->
-    <div class="filter-panel"></div>
-
+    <div class="filter-panel">
+      <!-- Suche / Sortierung -->
+    </div>
 
     <!-- ================================
          DROP FEED / CARDS
     ================================ -->
-    <section class="cards"></section>
+    <section class="cards">
+      <!-- Cards hier rendern -->
+    </section>
 
   </main>
-
 
   <!-- ================================
        FOOTER
   ================================ -->
-  <footer class="footer"></footer>
+  <footer class="footer">
+    © 2026 D2R Lootliste
+  </footer>
 
 </div>
-
-
-<!-- ================================
-     SCREENSHOT OVERLAY
-================================ -->
-<div id="screenshotOverlay">
-  <!-- IMAGE PREVIEW -->
-</div>
-
-
-<script type="module">
-/* ================================
-   KONFIG / KONSTANTEN
-================================ */
-
-/* HIER: ICONS, LABELS */
-
-
-/* ================================
-   STATE
-================================ */
-
-/* HIER: items[], activeFilter */
-
-
-/* ================================
-   LOAD ITEMS (DROP FEED)
-================================ */
-
-/* HIER: fetch /api/items/public */
-
-
-/* ================================
-   RENDER
-================================ */
-
-/* HIER: Filter + Card Render */
-
-
-/* ================================
-   EVENTS
-================================ */
-
-/* HIER: Search, Sort, Icon Klick */
-
-
-/* ================================
-   INIT
-================================ */
-
-/* HIER: loadItems().then(render) */
-</script>
 
 </body>
 </html>
