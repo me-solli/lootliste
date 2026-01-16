@@ -97,6 +97,33 @@ app.get("/api/items/public", (req, res) => {
 });
 
 /* ================================
+   CREATE ITEM (PUBLIC, MINIMAL)
+================================ */
+app.post("/api/items", (req, res) => {
+  const { name, type, rating = 0, status = "verfügbar" } = req.body || {};
+
+  if (!name || !type) {
+    return res.status(400).json({ error: "NAME_AND_TYPE_REQUIRED" });
+  }
+
+  const id = randomUUID();
+
+  const sql = `
+    INSERT INTO items (id, name, type, rating, status)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.run(sql, [id, name, type, rating, status], function (err) {
+    if (err) {
+      console.error("❌ INSERT Fehler:", err.message);
+      return res.status(500).json({ error: "DB_ERROR" });
+    }
+
+    res.status(201).json({ id, name, type, rating, status });
+  });
+});
+
+/* ================================
    START
 ================================ */
 app.listen(PORT, "0.0.0.0", () => {
