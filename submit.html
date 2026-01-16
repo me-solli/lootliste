@@ -1,146 +1,191 @@
-const express = require("express");
-const cors = require("cors");
-const sqlite3 = require("sqlite3").verbose();
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const { randomUUID } = require("crypto");
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lootliste – Item einreichen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-const app = express();
-
-/* ================================
-   CORS – stabil (GitHub Pages)
-================================ */
-const ALLOWED_ORIGINS = ["https://me-solli.github.io"];
-
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,POST,OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, x-login-id"
-  );
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
-/* ================================
-   UPLOAD DIR
-================================ */
-const UPLOAD_DIR = "/data/uploads";
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-app.use("/uploads", express.static(UPLOAD_DIR));
-
-/* ================================
-   MULTER
-================================ */
-const storage = multer.diskStorage({
-  destination: UPLOAD_DIR,
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, randomUUID() + ext);
-  }
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
-});
-
-/* ================================
-   DB
-================================ */
-const db = new sqlite3.Database("/data/lootliste.db");
-
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS items (
-      id TEXT PRIMARY KEY,
-      screenshot TEXT,
-      note TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-});
-
-/* ================================
-   SUBMIT (passt zu submit.html)
-================================ */
-app.post(
-  "/api/items",
-  upload.any(),
-  (req, res) => {
-    const count = Number(req.body.item_count || 0);
-    if (!count || count < 1) {
-      return res.status(400).json({ error: "NO_ITEMS" });
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #0f0f0f;
+      color: #e6e6e6;
+      margin: 0;
+      padding: 24px;
     }
 
-    const files = req.files || [];
-    const inserts = [];
-
-    for (let i = 1; i <= count; i++) {
-      const file = files.find(f => f.fieldname === `screenshot_${i}`);
-      if (!file) continue;
-
-      const note = req.body[`note_${i}`] || "";
-
-      inserts.push({
-        id: randomUUID(),
-        screenshot: `/uploads/${file.filename}`,
-        note
-      });
+    h1 {
+      margin-top: 0;
+      font-size: 22px;
     }
 
-    if (!inserts.length) {
-      return res.status(400).json({ error: "NO_SCREENSHOTS" });
+    .box {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #181818;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 20px;
     }
 
-    const stmt = db.prepare(
-      "INSERT INTO items (id, screenshot, note) VALUES (?, ?, ?)"
-    );
+    .item {
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+      background: #121212;
+    }
 
-    inserts.forEach(it => {
-      stmt.run(it.id, it.screenshot, it.note);
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      opacity: 0.85;
+    }
+
+    input[type="file"],
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px;
+      background: #0d0d0d;
+      color: #e6e6e6;
+      border: 1px solid #333;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 16px;
+      padding: 10px 18px;
+      background: #6f7f4a;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .msg {
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+
+    .ok {
+      color: #8fd18f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h1>Item(s) einreichen</h1>
+
+    <form id="submitForm">
+      <!-- ITEM 1 -->
+      <div class="item">
+        <label>Screenshot Item 1 (Pflicht)</label>
+        <input type="file" name="screenshot_1" accept="image/*" required>
+
+        <label>Interne Notiz (optional)</label>
+        <input type="text" name="note_1" maxlength="50">
+      </div>
+
+      <!-- ITEM 2 -->
+      <div class="item">
+        <label>Screenshot Item 2 (optional)</label>
+        <input type="file" name="screenshot_2" accept="image/*">
+
+        <label>Interne Notiz (optional)</label>
+        <input type="text" name="note_2" maxlength="50">
+      </div>
+
+      <!-- ITEM 3 -->
+      <div class="item">
+        <label>Screenshot Item 3 (optional)</label>
+        <input type="file" name="screenshot_3" accept="image/*">
+
+        <label>Interne Notiz (optional)</label>
+        <input type="text" name="note_3" maxlength="50">
+      </div>
+
+      <input type="hidden" name="item_count" id="itemCount" value="1">
+
+      <button type="submit" id="submitBtn">Einreichen</button>
+
+      <div id="msg" class="msg"></div>
+    </form>
+  </div>
+
+<script>
+const API = "https://lootliste-production.up.railway.app";
+
+const form = document.getElementById("submitForm");
+const msg = document.getElementById("msg");
+const btn = document.getElementById("submitBtn");
+const itemCountInput = document.getElementById("itemCount");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  msg.textContent = "";
+  msg.className = "msg";
+
+  const fd = new FormData(form);
+
+  // Anzahl Items anhand vorhandener Screenshots bestimmen
+  let count = 0;
+  for (let i = 1; i <= 3; i++) {
+    if (fd.get(`screenshot_${i}`) && fd.get(`screenshot_${i}`).name) {
+      count++;
+    }
+  }
+
+  if (count === 0) {
+    msg.textContent = "Mindestens ein Screenshot ist erforderlich.";
+    msg.classList.add("error");
+    return;
+  }
+
+  itemCountInput.value = count;
+
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(API + "/api/items", {
+      method: "POST",
+      headers: {
+        "x-login-id": "dev-admin"
+      },
+      body: fd
     });
 
-    stmt.finalize();
-    res.status(201).json({ ok: true, count: inserts.length });
-  }
-);
+    const data = await res.json().catch(() => ({}));
 
-/* ================================
-   PUBLIC ITEMS (für index.html)
-================================ */
-app.get("/api/items/public", (req, res) => {
-  db.all(
-    "SELECT * FROM items ORDER BY created_at DESC",
-    [],
-    (err, rows) => {
-      if (err) {
-        return res.status(500).json({ error: "DB_ERROR" });
-      }
-      res.json(rows);
+    if (!res.ok) {
+      throw new Error(data.error || "Upload fehlgeschlagen");
     }
-  );
-});
 
-/* ================================
-   START
-================================ */
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Lootliste Backend läuft auf Port", PORT);
+    msg.textContent = "✔ Item(s) erfolgreich eingereicht";
+    msg.classList.add("ok");
+    form.reset();
+    itemCountInput.value = "1";
+
+  } catch (err) {
+    msg.textContent = "✖ Fehler beim Upload: " + err.message;
+    msg.classList.add("error");
+  } finally {
+    btn.disabled = false;
+  }
 });
+</script>
+
+</body>
+</html>
