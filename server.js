@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
 const multer = require("multer");
 const path = require("path");
@@ -123,7 +122,28 @@ app.post("/api/items", upload.any(), (req, res) => {
 });
 
 /* ================================
-   ADMIN: STATUS UPDATE (geschützt)
+   ADMIN: LISTE (NEU)
+================================ */
+app.get("/api/items/admin", (req, res) => {
+  const adminToken = req.headers["x-admin-token"];
+  if (adminToken !== "lootliste-admin-2025") {
+    return res.status(403).json({ error: "FORBIDDEN" });
+  }
+
+  db.all(
+    "SELECT * FROM items ORDER BY created_at DESC",
+    [],
+    (err, rows) => {
+      if (err) {
+        return res.status(500).json({ error: "DB_ERROR" });
+      }
+      res.json(rows);
+    }
+  );
+});
+
+/* ================================
+   ADMIN: STATUS UPDATE
 ================================ */
 app.patch("/api/items/:id/status", (req, res) => {
   const adminToken = req.headers["x-admin-token"];
@@ -152,7 +172,7 @@ app.patch("/api/items/:id/status", (req, res) => {
 });
 
 /* ================================
-   PUBLIC ITEMS (nur freigegeben)
+   PUBLIC ITEMS (nur approved)
 ================================ */
 app.get("/api/items/public", (req, res) => {
   db.all(
