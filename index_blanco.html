@@ -257,6 +257,24 @@ body{
   opacity:.75;
   font-size:12px;
 }
+
+  /* ================================
+   UX – ICON BAR FEEDBACK
+================================ */
+.icon-btn{
+  cursor:pointer;
+  transition:transform .15s ease, background .15s ease, border-color .15s ease;
+}
+
+.icon-btn:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.04);
+}
+
+.icon-btn.active{
+  border-color:var(--gold);
+  background:rgba(245,196,81,.08);
+}
   
 </style>
 </head>
