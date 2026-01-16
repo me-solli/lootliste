@@ -897,6 +897,22 @@ body{
   }, 500);
 })();
 </script>
+
+  <script>
+/* ===== CARD FADE RESET ===== */
+(function(){
+  function reset(){
+    document.querySelectorAll(".card").forEach(c => {
+      c.style.animation = "none";
+      c.offsetHeight; // reflow
+      c.style.animation = "";
+    });
+  }
+
+  document.addEventListener("click", reset);
+  document.addEventListener("input", reset);
+})();
+</script>
   
 </body>
 </html>
