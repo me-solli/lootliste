@@ -329,5 +329,37 @@ body{
 <div class="fake-block"><strong>[FAKE]</strong> Screenshot Overlay Logic</div>
 
 </div>
+
+  <script>
+/* ===== ICON BAR (ISOLIERT) ===== */
+(function () {
+  const bar = document.querySelector(".icon-bar");
+  if (!bar) return;
+
+  let activeType = "";
+
+  bar.addEventListener("click", (e) => {
+    const btn = e.target.closest(".icon-btn");
+    if (!btn) return;
+
+    const type = btn.dataset.type || "";
+
+    bar.querySelectorAll(".icon-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    if (activeType === type) {
+      activeType = "";
+    } else {
+      activeType = type;
+      btn.classList.add("active");
+    }
+
+    // 🔕 NO-OP: hier passiert bewusst noch nichts
+    // später: trigger filter/render
+    console.log("[ICON BAR] activeType =", activeType);
+  });
+})();
+</script>
+  
 </body>
 </html>
