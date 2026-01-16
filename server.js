@@ -78,6 +78,12 @@ db.serialize(() => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // 🔹 A.1a – Basisdaten (optional, rückwärtskompatibel)
+  db.run(`ALTER TABLE items ADD COLUMN display_name TEXT`, () => {});
+  db.run(`ALTER TABLE items ADD COLUMN item_type TEXT`, () => {});
+  db.run(`ALTER TABLE items ADD COLUMN weapon_type TEXT`, () => {});
+  db.run(`ALTER TABLE items ADD COLUMN rarity TEXT`, () => {});
 });
 
 /* ================================
@@ -122,7 +128,7 @@ app.post("/api/items", upload.any(), (req, res) => {
 });
 
 /* ================================
-   ADMIN: LISTE (NEU)
+   ADMIN: LISTE
 ================================ */
 app.get("/api/items/admin", (req, res) => {
   const adminToken = req.headers["x-admin-token"];
@@ -143,27 +149,67 @@ app.get("/api/items/admin", (req, res) => {
 });
 
 /* ================================
-   ADMIN: STATUS UPDATE
+   ADMIN: UPDATE (Status + Basisdaten)
 ================================ */
-app.patch("/api/items/:id/status", (req, res) => {
+app.patch("/api/items/:id", (req, res) => {
   const adminToken = req.headers["x-admin-token"];
   if (adminToken !== "lootliste-admin-2025") {
     return res.status(403).json({ error: "FORBIDDEN" });
   }
 
   const { id } = req.params;
-  const { status } = req.body;
+  const {
+    status,
+    display_name,
+    item_type,
+    weapon_type,
+    rarity
+  } = req.body;
 
-  const allowed = ["submitted", "approved", "rejected", "hidden"];
-  if (!allowed.includes(status)) {
-    return res.status(400).json({ error: "INVALID_STATUS" });
+  const fields = [];
+  const values = [];
+
+  if (status) {
+    const allowed = ["submitted", "approved", "rejected", "hidden"];
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ error: "INVALID_STATUS" });
+    }
+    fields.push("status = ?");
+    values.push(status);
   }
 
+  if (display_name !== undefined) {
+    fields.push("display_name = ?");
+    values.push(display_name);
+  }
+
+  if (item_type !== undefined) {
+    fields.push("item_type = ?");
+    values.push(item_type);
+  }
+
+  if (weapon_type !== undefined) {
+    fields.push("weapon_type = ?");
+    values.push(weapon_type);
+  }
+
+  if (rarity !== undefined) {
+    fields.push("rarity = ?");
+    values.push(rarity);
+  }
+
+  if (!fields.length) {
+    return res.json({ ok: true });
+  }
+
+  values.push(id);
+
   db.run(
-    "UPDATE items SET status = ? WHERE id = ?",
-    [status, id],
+    `UPDATE items SET ${fields.join(", ")} WHERE id = ?`,
+    values,
     function (err) {
       if (err) {
+        console.error(err);
         return res.status(500).json({ error: "DB_ERROR" });
       }
       res.json({ ok: true });
