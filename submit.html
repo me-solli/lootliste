@@ -1,116 +1,197 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Lootliste – Item einreichen</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>Items einreichen · D2R Lootliste</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #0f0f0f;
-      color: #e6e6e6;
-      margin: 0;
-      padding: 24px;
+    body{
+      margin:0;
+      padding:40px 20px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:#0e0e0e;
+      color:#e6e6e6;
     }
 
-    h1 {
-      margin-top: 0;
-      font-size: 22px;
+    /* ===== HEADER ===== */
+    .site-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:40px;
     }
 
-    .box {
-      max-width: 720px;
-      margin: 0 auto;
-      background: #181818;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      padding: 20px;
+    .logo{
+      height:46px;
     }
 
-    .item {
-      border: 1px solid #2a2a2a;
-      border-radius: 6px;
-      padding: 12px;
-      margin-bottom: 12px;
-      background: #121212;
+    /* ===== ACCOUNT BOX ===== */
+    .auth-box{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:14px;
+      background:rgba(0,0,0,.55);
+      font-size:13px;
     }
 
-    label {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 6px;
-      opacity: 0.85;
+    .account-avatar{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      opacity:.85;
+    }
+
+    .account-name{
+      opacity:.9;
+      white-space:nowrap;
+    }
+
+    .account-link{
+      font-size:12px;
+      color:#d2b46c;
+      text-decoration:none;
+      opacity:.85;
+    }
+
+    .account-link:hover{
+      opacity:1;
+      text-decoration:underline;
+    }
+
+    /* ===== CONTENT ===== */
+    h1{
+      font-size:28px;
+      margin-bottom:10px;
+    }
+
+    .hint{
+      opacity:.65;
+      max-width:640px;
+      line-height:1.5;
+      margin-bottom:30px;
+    }
+
+    /* ===== FORM ===== */
+    .submit-box{
+      max-width:720px;
+    }
+
+    .item{
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+      background:rgba(0,0,0,.35);
+    }
+
+    .item-title{
+      font-size:14px;
+      font-weight:600;
+      margin-bottom:14px;
+      opacity:.9;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      opacity:.7;
+      margin-bottom:6px;
     }
 
     input[type="file"],
-    input[type="text"] {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 6px;
-      background: #0d0d0d;
-      color: #e6e6e6;
-      border: 1px solid #333;
-      border-radius: 4px;
+    input[type="text"]{
+      width:100%;
+      box-sizing:border-box;
+      padding:8px;
+      margin-bottom:14px;
+      background:#0b0b0b;
+      color:#e6e6e6;
+      border:1px solid #333;
+      border-radius:8px;
+      font-size:13px;
     }
 
-    button {
-      margin-top: 16px;
-      padding: 10px 18px;
-      background: #6f7f4a;
-      color: #0a0a0a;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
+    button{
+      margin-top:10px;
+      padding:12px 22px;
+      background:#6f7f4a;
+      color:#0a0a0a;
+      border:none;
+      border-radius:12px;
+      font-weight:600;
+      cursor:pointer;
     }
 
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    button:disabled{
+      opacity:.6;
+      cursor:not-allowed;
     }
 
-    .msg {
-      margin-top: 12px;
-      font-size: 14px;
+    .msg{
+      margin-top:16px;
+      font-size:14px;
     }
 
-    .error {
-      color: #ff6b6b;
-    }
-
-    .ok {
-      color: #8fd18f;
-    }
+    .error{ color:#ff7b7b; }
+    .ok{ color:#9bd49b; }
   </style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h1>Item(s) einreichen</h1>
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="index.html">
+      <img src="img/logo_d2r.png" alt="D2R Lootliste Logo" class="logo">
+    </a>
 
+    <div class="auth-box">
+      <img src="img/avatars/default.png" alt="Avatar" class="account-avatar">
+      <span class="account-name">Username</span>
+      <a href="meine-items.html" class="account-link">Meine Items</a>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <h1>Items einreichen</h1>
+
+  <p class="hint">
+    Reiche hier neue Items über Screenshots ein.  
+    Die Screenshots dienen nur zur Prüfung.  
+    Nach Freigabe erscheinen die Items in der Lootliste.
+  </p>
+
+  <div class="submit-box">
     <form id="submitForm">
-      <!-- ITEM 1 -->
+
       <div class="item">
-        <label>Screenshot Item 1 (Pflicht)</label>
+        <div class="item-title">Item 1 (Pflicht)</div>
+
+        <label>Screenshot</label>
         <input type="file" name="screenshot_1" accept="image/*" required>
 
         <label>Interne Notiz (optional)</label>
         <input type="text" name="note_1" maxlength="50">
       </div>
 
-      <!-- ITEM 2 -->
       <div class="item">
-        <label>Screenshot Item 2 (optional)</label>
+        <div class="item-title">Item 2 (optional)</div>
+
+        <label>Screenshot</label>
         <input type="file" name="screenshot_2" accept="image/*">
 
         <label>Interne Notiz (optional)</label>
         <input type="text" name="note_2" maxlength="50">
       </div>
 
-      <!-- ITEM 3 -->
       <div class="item">
-        <label>Screenshot Item 3 (optional)</label>
+        <div class="item-title">Item 3 (optional)</div>
+
+        <label>Screenshot</label>
         <input type="file" name="screenshot_3" accept="image/*">
 
         <label>Interne Notiz (optional)</label>
@@ -119,8 +200,7 @@
 
       <input type="hidden" name="item_count" id="itemCount" value="1">
 
-      <button type="submit" id="submitBtn">Einreichen</button>
-
+      <button type="submit" id="submitBtn">Items einreichen</button>
       <div id="msg" class="msg"></div>
     </form>
   </div>
@@ -140,7 +220,6 @@ form.addEventListener("submit", async (e) => {
 
   const fd = new FormData(form);
 
-  // Anzahl Items anhand vorhandener Screenshots bestimmen
   let count = 0;
   for (let i = 1; i <= 3; i++) {
     if (fd.get(`screenshot_${i}`) && fd.get(`screenshot_${i}`).name) {
@@ -155,7 +234,6 @@ form.addEventListener("submit", async (e) => {
   }
 
   itemCountInput.value = count;
-
   btn.disabled = true;
 
   try {
@@ -168,10 +246,7 @@ form.addEventListener("submit", async (e) => {
     });
 
     const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      throw new Error(data.error || "Upload fehlgeschlagen");
-    }
+    if (!res.ok) throw new Error(data.error || "Upload fehlgeschlagen");
 
     msg.textContent = "✔ Item(s) erfolgreich eingereicht";
     msg.classList.add("ok");
