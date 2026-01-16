@@ -1,11 +1,4 @@
 <!DOCTYPE html>
-<!--
-  ================================
-  LOOTLISTE V3 – ADMIN
-  STATUS: STABLE
-  FLOW: SUBMIT → REVIEW → STATUS
-  ================================
--->
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -32,18 +25,34 @@
       margin-bottom: 16px;
     }
 
+    /* =========================
+       TABS
+    ========================= */
+    #tabs {
+      margin-bottom: 20px;
+    }
+
     #tabs button {
       margin-right: 6px;
-      padding: 6px 10px;
+      padding: 6px 12px;
       cursor: pointer;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #ccc;
+      border-radius: 6px;
       opacity: 0.6;
     }
 
     #tabs button.active {
       opacity: 1;
-      font-weight: bold;
+      color: #fff;
+      font-weight: 600;
+      border-color: #f5c451;
     }
 
+    /* =========================
+       ITEM LIST
+    ========================= */
     .item {
       display: flex;
       gap: 16px;
@@ -57,8 +66,25 @@
       border: 1px solid #333;
     }
 
+    .meta {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .meta input,
+    .meta select {
+      background: #0e0e0e;
+      border: 1px solid #333;
+      color: #eee;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
     /* =========================
-       STATUS BADGE (STEP A3)
+       STATUS BADGES
     ========================= */
     .status-badge {
       display: inline-block;
@@ -66,25 +92,36 @@
       border-radius: 6px;
       font-size: 12px;
       font-weight: bold;
-      margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      margin-bottom: 4px;
+      width: fit-content;
     }
 
-    .status-submitted { background: #555; color: #eee; }
-    .status-approved  { background: #2e7d32; color: #fff; }
-    .status-hidden    { background: #6a1b9a; color: #fff; }
-    .status-rejected  { background: #b71c1c; color: #fff; }
+    .status-submitted { background: #555; }
+    .status-approved  { background: #2e7d32; }
+    .status-hidden    { background: #6a1b9a; }
+    .status-rejected  { background: #b71c1c; }
+
+    /* =========================
+       ACTIONS
+    ========================= */
+    .actions {
+      margin-top: 8px;
+    }
 
     .actions button {
-      margin-top: 6px;
       margin-right: 6px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: #eee;
+      cursor: pointer;
     }
 
-    .error {
-      color: #ff5c5c;
-      padding: 20px;
-      text-align: center;
+    .actions button:hover {
+      border-color: #f5c451;
     }
 
     .empty {
@@ -92,44 +129,36 @@
       padding: 20px;
       text-align: center;
     }
-    
-/* ===== FUTURE CONTEXT AREAS ===== */
 
-.admin-context {
-  padding: 10px 14px;
-  margin-bottom: 14px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.03);
-  border: 1px dashed rgba(255,255,255,0.08);
-  font-size: 13px;
-  color: #bbb;
-}   
-    
+    .error {
+      color: #ff5c5c;
+      padding: 20px;
+      text-align: center;
+    }
   </style>
 </head>
 
 <body>
   <div class="panel">
-    
-<!-- ===== ADMIN CONTEXT (future) ===== -->
-<div class="admin-context" data-role="admin-context" hidden>
-  <!-- später: Admin-Hinweise / Statusmeldungen / History -->
-</div>
-    
     <h1>Admin – Lootliste</h1>
 
+    <!-- =========================
+         STATUS TABS
+    ========================= -->
     <div id="tabs">
-      <button data-status="submitted" class="active">Eingereicht</button>
-      <button data-status="approved">Freigegeben</button>
-      <button data-status="hidden">Versteckt</button>
-      <button data-status="rejected">Abgelehnt</button>
+      <button data-tab="submitted" class="active">Eingereicht</button>
+      <button data-tab="approved">Freigegeben</button>
+      <button data-tab="hidden">Versteckt</button>
+      <button data-tab="rejected">Abgelehnt</button>
     </div>
 
-    <div id="list" data-role="admin-item-list">
-</div>
+    <!-- =========================
+         ITEM LIST
+    ========================= -->
+    <div id="list"></div>
   </div>
 
-  <!-- WICHTIG: NUR dieses Script, KEIN Inline-JS -->
+  <!-- NUR diese Datei, KEIN Inline-JS -->
   <script src="admin.js"></script>
 </body>
 </html>
