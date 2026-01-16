@@ -275,6 +275,23 @@ body{
   border-color:var(--gold);
   background:rgba(245,196,81,.08);
 }
+
+  /* ================================
+   UX – CARDS HOVER & CLICK
+================================ */
+.card{
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+.card-image{
+  cursor:zoom-in;
+}
   
 </style>
 </head>
