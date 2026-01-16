@@ -1123,6 +1123,13 @@ body{
   const container = document.querySelector(".cards");
   const skeletons = document.getElementById("skeletons");
 
+  // Meta / Hero Elemente
+  const metaCount = document.getElementById("metaItemCount");
+  const metaDate  = document.getElementById("metaDate");
+  const heroCount = document.getElementById("heroItemCount");
+  const heroAvg   = document.getElementById("heroAvgRating");
+  const heroDonor = document.getElementById("heroDonorCount");
+
   const state = {
     items,
     filtered: items,
@@ -1130,6 +1137,33 @@ body{
     search: "",
     sort: "rating-desc"
   };
+
+  function updateMeta() {
+    const list = state.filtered;
+
+    // Item Counts
+    metaCount && (metaCount.textContent = list.length);
+    heroCount && (heroCount.textContent = list.length);
+
+    // Durchschnitt Rating
+    if (heroAvg) {
+      const ratings = list.map(i => i.rating).filter(Boolean);
+      heroAvg.textContent = ratings.length
+        ? (ratings.reduce((a,b)=>a+b,0) / ratings.length).toFixed(1)
+        : "–";
+    }
+
+    // Einzigartige Spender
+    if (heroDonor) {
+      const donors = new Set(list.map(i => i.donor).filter(Boolean));
+      heroDonor.textContent = donors.size;
+    }
+
+    // Datum
+    if (metaDate) {
+      metaDate.textContent = new Date().toLocaleDateString("de-DE");
+    }
+  }
 
   function applyFilters() {
     let list = [...state.items];
@@ -1157,6 +1191,7 @@ body{
 
     state.filtered = list;
     renderCards(state.filtered, container);
+    updateMeta();
   }
 
   // Initial render
