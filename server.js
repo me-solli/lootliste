@@ -1,18 +1,17 @@
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
+const sqlite3 = require("sqlite3").verbose();
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 const { randomUUID } = require("crypto");
-
-console.log("SERVER.JS wird geladen");
 
 const app = express();
 
 /* ================================
-   CORS (STABIL – FIX FÜR RAILWAY)
+   CORS – stabil (GitHub Pages)
 ================================ */
-const ALLOWED_ORIGINS = [
-  "https://me-solli.github.io"
-];
+const ALLOWED_ORIGINS = ["https://me-solli.github.io"];
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
@@ -22,62 +21,108 @@ app.use((req, res, next) => {
 
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET,POST,PUT,DELETE,OPTIONS"
+    "GET,POST,OPTIONS"
   );
-
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, x-login-id"
+    "Content-Type, x-login-id"
   );
 
-  // Preflight sofort beenden
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
-
   next();
 });
 
-app.use(express.json());
+/* ================================
+   UPLOAD DIR
+================================ */
+const UPLOAD_DIR = "/data/uploads";
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
+
+app.use("/uploads", express.static(UPLOAD_DIR));
+
+/* ================================
+   MULTER
+================================ */
+const storage = multer.diskStorage({
+  destination: UPLOAD_DIR,
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, randomUUID() + ext);
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
+});
 
 /* ================================
    DB
 ================================ */
-const DB_PATH = "/data/lootliste.db";
+const db = new sqlite3.Database("/data/lootliste.db");
 
-const db = new sqlite3.Database(DB_PATH, (err) => {
-  if (err) {
-    console.error("❌ DB Fehler:", err.message);
-    process.exit(1);
-  }
-  console.log("✅ SQLite DB verbunden:", DB_PATH);
-});
-
-/* ================================
-   DB INIT
-================================ */
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS items (
       id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      type TEXT NOT NULL,
-      rating INTEGER DEFAULT 0,
-      status TEXT DEFAULT 'verfügbar',
+      screenshot TEXT,
+      note TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
 });
 
 /* ================================
-   ROOT
+   SUBMIT (passt zu submit.html)
 ================================ */
-app.get("/", (req, res) => {
-  res.status(200).send("OK");
-});
+app.post(
+  "/api/items",
+  upload.any(),
+  (req, res) => {
+    const count = Number(req.body.item_count || 0);
+    if (!count || count < 1) {
+      return res.status(400).json({ error: "NO_ITEMS" });
+    }
+
+    const files = req.files || [];
+    const inserts = [];
+
+    for (let i = 1; i <= count; i++) {
+      const file = files.find(f => f.fieldname === `screenshot_${i}`);
+      if (!file) continue;
+
+      const note = req.body[`note_${i}`] || "";
+
+      inserts.push({
+        id: randomUUID(),
+        screenshot: `/uploads/${file.filename}`,
+        note
+      });
+    }
+
+    if (!inserts.length) {
+      return res.status(400).json({ error: "NO_SCREENSHOTS" });
+    }
+
+    const stmt = db.prepare(
+      "INSERT INTO items (id, screenshot, note) VALUES (?, ?, ?)"
+    );
+
+    inserts.forEach(it => {
+      stmt.run(it.id, it.screenshot, it.note);
+    });
+
+    stmt.finalize();
+    res.status(201).json({ ok: true, count: inserts.length });
+  }
+);
 
 /* ================================
-   PUBLIC ITEMS
+   PUBLIC ITEMS (für index.html)
 ================================ */
 app.get("/api/items/public", (req, res) => {
   db.all(
@@ -85,39 +130,9 @@ app.get("/api/items/public", (req, res) => {
     [],
     (err, rows) => {
       if (err) {
-        console.error(err);
         return res.status(500).json({ error: "DB_ERROR" });
       }
       res.json(rows);
-    }
-  );
-});
-
-/* ================================
-   CREATE ITEM (DEV)
-================================ */
-app.post("/api/items", (req, res) => {
-  const { name, type, rating = 0, status = "verfügbar" } = req.body || {};
-
-  if (!name || !type) {
-    return res.status(400).json({ error: "NAME_AND_TYPE_REQUIRED" });
-  }
-
-  const id = randomUUID();
-
-  db.run(
-    `
-    INSERT INTO items (id, name, type, rating, status)
-    VALUES (?, ?, ?, ?, ?)
-    `,
-    [id, name, type, rating, status],
-    err => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "DB_ERROR" });
-      }
-
-      res.status(201).json({ id });
     }
   );
 });
@@ -127,5 +142,5 @@ app.post("/api/items", (req, res) => {
 ================================ */
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("LISTENING ON", PORT);
+  console.log("Lootliste Backend läuft auf Port", PORT);
 });
