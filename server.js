@@ -1,3 +1,6 @@
+// server.js – Drop-Feed Backend (NEU & BEREINIGT)
+// Fokus: ruhiger Item-Drop-Feed ohne alte Workflow-/Würfel-Logik
+
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const multer = require("multer");
@@ -18,18 +21,10 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,POST,PATCH,OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, x-admin-token"
-  );
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-admin-token");
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
+  if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
 
@@ -70,7 +65,7 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS items (
       id TEXT PRIMARY KEY,
-      screenshot TEXT,
+      screenshot TEXT NOT NULL,
       note TEXT,
       status TEXT DEFAULT 'submitted',
       display_name TEXT,
@@ -85,26 +80,23 @@ db.serialize(() => {
 });
 
 /* ================================
-   SUBMIT (Frontend)
+   SUBMIT (Frontend Drop)
 ================================ */
 app.post("/api/items", upload.any(), (req, res) => {
   const count = Number(req.body.item_count || 0);
-  if (!count) {
-    return res.status(400).json({ error: "NO_ITEMS" });
-  }
+  if (!count) return res.status(400).json({ error: "NO_ITEMS" });
 
   const inserts = [];
 
   for (let i = 1; i <= count; i++) {
-    const file = req.files.find(
-      f => f.fieldname === `screenshot_${i}`
-    );
+    const file = req.files.find(f => f.fieldname === `screenshot_${i}`);
     if (!file) continue;
 
     inserts.push({
       id: randomUUID(),
       screenshot: `/uploads/${file.filename}`,
-      note: req.body[`note_${i}`] || ""
+      note: req.body[`note_${i}`] || "",
+      status: "submitted"
     });
   }
 
@@ -114,11 +106,11 @@ app.post("/api/items", upload.any(), (req, res) => {
 
   const stmt = db.prepare(`
     INSERT INTO items (id, screenshot, note, status)
-    VALUES (?, ?, ?, 'submitted')
+    VALUES (?, ?, ?, ?)
   `);
 
   inserts.forEach(it => {
-    stmt.run(it.id, it.screenshot, it.note);
+    stmt.run(it.id, it.screenshot, it.note, it.status);
   });
 
   stmt.finalize();
@@ -126,7 +118,7 @@ app.post("/api/items", upload.any(), (req, res) => {
 });
 
 /* ================================
-   ADMIN: LIST
+   ADMIN: LIST (Feed)
 ================================ */
 app.get("/api/items/admin", (req, res) => {
   if (req.headers["x-admin-token"] !== "lootliste-admin-2025") {
@@ -147,7 +139,7 @@ app.get("/api/items/admin", (req, res) => {
 });
 
 /* ================================
-   ADMIN: UPDATE
+   ADMIN: UPDATE (Freigabe / Pflege)
 ================================ */
 app.patch("/api/items/:id", (req, res) => {
   if (req.headers["x-admin-token"] !== "lootliste-admin-2025") {
@@ -155,61 +147,18 @@ app.patch("/api/items/:id", (req, res) => {
   }
 
   const { id } = req.params;
-  const {
-    status,
-    display_name,
-    item_type,
-    weapon_type,
-    rarity,
-    roll,
-    rating
-  } = req.body;
+  const allowedStatus = ["submitted", "approved", "hidden", "rejected"];
 
   const fields = [];
   const values = [];
 
-  if (status) {
-    const allowed = ["submitted", "approved", "hidden", "rejected"];
-    if (!allowed.includes(status)) {
-      return res.status(400).json({ error: "INVALID_STATUS" });
-    }
-    fields.push("status = ?");
-    values.push(status);
+  for (const [key, value] of Object.entries(req.body)) {
+    if (key === "status" && !allowedStatus.includes(value)) continue;
+    fields.push(`${key} = ?`);
+    values.push(value);
   }
 
-  if (display_name !== undefined) {
-    fields.push("display_name = ?");
-    values.push(display_name);
-  }
-
-  if (item_type !== undefined) {
-    fields.push("item_type = ?");
-    values.push(item_type);
-  }
-
-  if (weapon_type !== undefined) {
-    fields.push("weapon_type = ?");
-    values.push(weapon_type);
-  }
-
-  if (rarity !== undefined) {
-    fields.push("rarity = ?");
-    values.push(rarity);
-  }
-
-  if (roll !== undefined) {
-    fields.push("roll = ?");
-    values.push(roll);
-  }
-
-  if (rating !== undefined) {
-    fields.push("rating = ?");
-    values.push(Number(rating) || 0);
-  }
-
-  if (!fields.length) {
-    return res.json({ ok: true });
-  }
+  if (!fields.length) return res.json({ ok: true });
 
   values.push(id);
 
@@ -227,7 +176,7 @@ app.patch("/api/items/:id", (req, res) => {
 });
 
 /* ================================
-   PUBLIC (approved only)
+   PUBLIC FEED (approved)
 ================================ */
 app.get("/api/items/public", (req, res) => {
   db.all(
@@ -248,5 +197,5 @@ app.get("/api/items/public", (req, res) => {
 ================================ */
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("Lootliste Backend läuft auf Port", PORT);
+  console.log("Lootliste Drop-Feed Backend läuft auf Port", PORT);
 });
