@@ -1336,17 +1336,13 @@ function render() {
   document.getElementById("metaStats").textContent =
     `📦 ${filtered.length} Treffer · 🕒 ${new Date().toLocaleDateString("de-DE")}`;
 
-  /* ===== FAST CARD RENDER ===== */
-  let html = "";
+/* ===== FAST CARD RENDER ===== */
+let html = "";
 
-  for (const item of filtered) {
-    const s =
-      item.status === "Reserviert" ? "reserviert" :
-      item.status === "Vergeben"   ? "vergeben"   :
-                                     "verfuegbar";
+for (const item of filtered) {
 
-    html += `
-<div class="card ${s}" data-item="${item.name}" data-id="${item.id}">
+  html += `
+<div class="card" data-item="${item.name}" data-id="${item.id}">
  
   <div class="card-image"
     ${item.screenshot ? `data-screenshot="${item.screenshot}"` : ""}>
