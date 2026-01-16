@@ -1030,44 +1030,6 @@ body{
 })();
 </script>
 
-  <script>
-/* ===== RESULTS INFO UPDATE ===== */
-(function(){
-  const info = document.getElementById("resultsInfo");
-  const countEl = document.getElementById("resultsCount");
-  if (!info || !countEl) return;
-
-  function update(){
-    const visible = document.querySelectorAll(
-      ".card:not([style*='display: none'])"
-    ).length;
-
-    countEl.textContent = visible;
-    info.style.display = visible === 0 ? "none" : "";
-  }
-
-  // initial
-  update();
-
-  // react on filters
-  document.addEventListener("input", update);
-  document.addEventListener("click", update);
-})();
-</script>
-
-  <script>
-/* ===== SKELETON REMOVE ===== */
-(function(){
-  const skel = document.getElementById("skeletons");
-  if (!skel) return;
-
-  // kurze Verzögerung für Lade-Gefühl
-  setTimeout(() => {
-    skel.remove();
-  }, 500);
-})();
-</script>
-
 <script type="module">
   import { items } from "./items.mock.js";
   import { renderCards } from "./render.cards.js";
