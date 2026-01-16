@@ -317,6 +317,56 @@ body{
     drop-shadow(0 0 28px rgba(255,185,90,.55));
 }
 
+  /* ================================
+   ICON BAR – SLOW AMBIENT SHINE
+================================ */
+
+/* Grundzustand: sanfter, lebender Glow */
+.icon-btn img{
+  animation: iconGlow 6s ease-in-out infinite;
+}
+
+/* Active darf etwas stärker „atmen“ */
+.icon-btn.active img{
+  animation: iconGlowActive 4.5s ease-in-out infinite;
+}
+
+@keyframes iconGlow{
+  0%{
+    filter:
+      drop-shadow(0 0 10px rgba(255,200,120,.25))
+      drop-shadow(0 0 22px rgba(0,0,0,.6));
+  }
+  50%{
+    filter:
+      drop-shadow(0 0 14px rgba(255,210,130,.35))
+      drop-shadow(0 0 28px rgba(0,0,0,.7));
+  }
+  100%{
+    filter:
+      drop-shadow(0 0 10px rgba(255,200,120,.25))
+      drop-shadow(0 0 22px rgba(0,0,0,.6));
+  }
+}
+
+@keyframes iconGlowActive{
+  0%{
+    filter:
+      drop-shadow(0 0 16px rgba(255,215,120,.75))
+      drop-shadow(0 0 34px rgba(255,185,90,.6));
+  }
+  50%{
+    filter:
+      drop-shadow(0 0 22px rgba(255,225,140,.9))
+      drop-shadow(0 0 44px rgba(255,195,110,.7));
+  }
+  100%{
+    filter:
+      drop-shadow(0 0 16px rgba(255,215,120,.75))
+      drop-shadow(0 0 34px rgba(255,185,90,.6));
+  }
+}
+
 /* ================================
    CONTENT / META / FILTER
 ================================ */
