@@ -1,6 +1,7 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
+const { randomUUID } = require("crypto");
 
 console.log("SERVER.JS wird geladen");
 
@@ -31,6 +32,42 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 });
 
 /* ================================
+   DB INIT (läuft einmal sicher)
+================================ */
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS items (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      type TEXT NOT NULL,
+      rating INTEGER DEFAULT 0,
+      status TEXT DEFAULT 'verfügbar',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // 🔹 optionales Demo-Item (nur wenn Tabelle leer ist)
+  db.get("SELECT COUNT(*) AS count FROM items", (err, row) => {
+    if (err) return;
+
+    if (row.count === 0) {
+      db.run(
+        `INSERT INTO items (id, name, type, rating, status)
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          randomUUID(),
+          "Shako",
+          "helm",
+          5,
+          "verfügbar"
+        ]
+      );
+      console.log("🧪 Demo-Item eingefügt");
+    }
+  });
+});
+
+/* ================================
    PORT
 ================================ */
 const PORT = process.env.PORT || 8080;
@@ -47,11 +84,7 @@ app.get("/", (req, res) => {
    PUBLIC ITEMS (DB)
 ================================ */
 app.get("/api/items/public", (req, res) => {
-  const sql = `
-    SELECT *
-    FROM items
-    ORDER BY created_at DESC
-  `;
+  const sql = `SELECT * FROM items ORDER BY created_at DESC`;
 
   db.all(sql, [], (err, rows) => {
     if (err) {
