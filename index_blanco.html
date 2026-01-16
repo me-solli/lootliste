@@ -868,6 +868,19 @@ body{
   document.addEventListener("click", update);
 })();
 </script>
+
+  <script>
+/* ===== SKELETON REMOVE ===== */
+(function(){
+  const skel = document.getElementById("skeletons");
+  if (!skel) return;
+
+  // kurze Verzögerung für Lade-Gefühl
+  setTimeout(() => {
+    skel.remove();
+  }, 500);
+})();
+</script>
   
 </body>
 </html>
