@@ -2,6 +2,7 @@
    CONFIG
 ================================ */
 const API_BASE = "https://lootliste-production.up.railway.app";
+const ADMIN_TOKEN = "lootliste-admin-2025";
 
 /* ================================
    HELPERS
@@ -13,15 +14,21 @@ function resolveImageSrc(screenshot) {
 }
 
 /* ================================
-   LOAD + RENDER
+   LOAD + RENDER (ADMIN)
 ================================ */
 async function loadItems(list) {
   list.innerHTML = "Lade Items…";
 
   try {
-    const res = await fetch(API_BASE + "/api/items/public");
+    const res = await fetch(API_BASE + "/api/items/admin", {
+      headers: {
+        "x-admin-token": ADMIN_TOKEN
+      }
+    });
 
-    if (!res.ok) throw new Error("HTTP " + res.status);
+    if (!res.ok) {
+      throw new Error("HTTP " + res.status);
+    }
 
     const items = await res.json();
 
@@ -42,6 +49,10 @@ async function loadItems(list) {
           </div>
 
           <div style="font-size:12px;opacity:.7;">
+            Status: <strong>${item.status}</strong>
+          </div>
+
+          <div style="font-size:12px;opacity:.7;">
             ID: ${item.id}
           </div>
 
@@ -54,7 +65,8 @@ async function loadItems(list) {
 
   } catch (err) {
     console.error(err);
-    list.innerHTML = '<div class="error">Fehler beim Laden der Items</div>';
+    list.innerHTML =
+      '<div class="error">Fehler beim Laden der Admin-Items</div>';
   }
 }
 
