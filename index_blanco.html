@@ -227,7 +227,55 @@ body{
        ICON BAR
   ================================ -->
   <nav class="icon-bar">
-    <!-- Icon-Buttons hier -->
+
+    <!-- ICON BUTTON: WAFFE -->
+    <div class="icon-btn active" data-type="waffe">
+      <img src="img/icons/waffe.png" alt="Waffe">
+      <span>Waffen</span>
+    </div>
+
+    <!-- ICON BUTTON: HELM -->
+    <div class="icon-btn" data-type="helm">
+      <img src="img/icons/helm.png" alt="Helm">
+      <span>Helme</span>
+    </div>
+
+    <!-- ICON BUTTON: RÜSTUNG -->
+    <div class="icon-btn" data-type="ruestung">
+      <img src="img/icons/ruestung.png" alt="Rüstung">
+      <span>Rüstungen</span>
+    </div>
+
+    <!-- ICON BUTTON: SCHILD -->
+    <div class="icon-btn" data-type="schild">
+      <img src="img/icons/schild.png" alt="Schild">
+      <span>Schilde</span>
+    </div>
+
+    <!-- ICON BUTTON: SCHMUCK -->
+    <div class="icon-btn" data-type="schmuck">
+      <img src="img/icons/amulett.png" alt="Schmuck">
+      <span>Schmuck</span>
+    </div>
+
+    <!-- ICON BUTTON: CHARMS -->
+    <div class="icon-btn" data-type="charm">
+      <img src="img/icons/charm.png" alt="Charm">
+      <span>Charms</span>
+    </div>
+
+    <!-- ICON BUTTON: RUNEN -->
+    <div class="icon-btn" data-type="rune">
+      <img src="img/icons/rune.png" alt="Rune">
+      <span>Runen</span>
+    </div>
+
+    <!-- ICON BUTTON: SONSTIGES -->
+    <div class="icon-btn" data-type="sonstiges">
+      <img src="img/icons/sonstiges.png" alt="Sonstiges">
+      <span>Sonstiges</span>
+    </div>
+
   </nav>
 
   <!-- ================================
@@ -238,20 +286,68 @@ body{
     <!-- ================================
          META BAR
     ================================ -->
-    <div class="meta-bar">📦 0 Items · Stand heute</div>
+    <div class="meta-bar">
+      <span class="meta-left">📦 <strong>0</strong> Items</span>
+      <span class="meta-right">🕒 Stand: <span id="metaDate">heute</span></span>
+    </div>
 
     <!-- ================================
          FILTER PANEL
     ================================ -->
     <div class="filter-panel">
-      <!-- Suche / Sortierung -->
+
+      <div class="filter-group">
+        <input type="text" id="search" placeholder="Item suchen …">
+      </div>
+
+      <div class="filter-group">
+        <label for="sortRating">Sortierung</label>
+        <select id="sortRating">
+          <option value="desc">Rating ↓</option>
+          <option value="asc">Rating ↑</option>
+        </select>
+      </div>
+
     </div>
 
     <!-- ================================
          DROP FEED / CARDS
     ================================ -->
     <section class="cards">
-      <!-- Cards hier rendern -->
+
+      <!-- CARD (DUMMY / STRUKTUR) -->
+      <article class="card">
+
+        <!-- CARD IMAGE / ICON -->
+        <div class="card-image">
+          <img src="img/icons/waffe.png" alt="Item Icon">
+        </div>
+
+        <!-- CARD BODY -->
+        <div class="card-body">
+
+          <!-- ITEM NAME -->
+          <div class="item-name">Beispiel Itemname</div>
+
+          <!-- ITEM SUB / TYPE -->
+          <div class="item-sub">Waffe · Schwert</div>
+
+          <!-- ITEM ROLL -->
+          <div class="item-roll">+200% ed · +20 str</div>
+
+          <!-- RATING -->
+          <div class="stars">
+            <span class="stars-filled">★★★★☆</span>
+            <span class="stars-num">4/5</span>
+          </div>
+
+          <!-- PLAYER / SOURCE -->
+          <div class="player">Spender: BeispielName</div>
+
+        </div>
+
+      </article>
+
     </section>
 
   </main>
