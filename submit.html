@@ -1,368 +1,146 @@
-<!--
-  HEADER & LAYOUT: FINAL
-  Index ist Referenz und bleibt unangetastet.
-  Änderungen hier nur, wenn bewusst erweitert wird.
--->
+const express = require("express");
+const cors = require("cors");
+const sqlite3 = require("sqlite3").verbose();
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const { randomUUID } = require("crypto");
 
-<!DOCTYPE html>
-<!--
-  ================================
-  LOOTLISTE V3 – SUBMIT
-  STATUS: STABLE (PRE-ACCOUNTS)
-  NOTE: NO USER CONTEXT ACTIVE YET
-  ================================
--->
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>Items einreichen · D2R Lootliste</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+const app = express();
 
-<style>
-:root{
-  --panel:#141414;
-  --border:#2a2a2a;
-  --gold:#f5c451;
-  --text:#eaeaea;
-  --muted:#999;
-  --green:#4cff4c;
-  --red:#ff5c5c;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#1c1c1c 0%,#0b0b0b 65%);
-  color:var(--text);
-}
+/* ================================
+   CORS – stabil (GitHub Pages)
+================================ */
+const ALLOWED_ORIGINS = ["https://me-solli.github.io"];
 
-/* ===== HEADER (FINAL) ===== */
-.site-header{
-  max-width:640px;
-  margin:30px auto 20px;
-  padding:0 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,POST,OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, x-login-id"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+/* ================================
+   UPLOAD DIR
+================================ */
+const UPLOAD_DIR = "/data/uploads";
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-.logo{
-  height:44px;
-}
+app.use("/uploads", express.static(UPLOAD_DIR));
 
-/* Account-Box (identisch zu meine-items.html) */
-.auth-box{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:10px 14px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:rgba(0,0,0,.55);
-  font-size:13px;
-}
+/* ================================
+   MULTER
+================================ */
+const storage = multer.diskStorage({
+  destination: UPLOAD_DIR,
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, randomUUID() + ext);
+  }
+});
 
-.account-avatar{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  opacity:.85;
-}
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
+});
 
-.account-name{
-  opacity:.9;
-  white-space:nowrap;
-}
+/* ================================
+   DB
+================================ */
+const db = new sqlite3.Database("/data/lootliste.db");
 
-.account-link{
-  font-size:12px;
-  color:var(--gold);
-  text-decoration:none;
-  opacity:.85;
-}
-.account-link:hover{
-  opacity:1;
-  text-decoration:underline;
-}
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS items (
+      id TEXT PRIMARY KEY,
+      screenshot TEXT,
+      note TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+});
 
-/* ===== CONTENT ===== */
-.wrapper{
-  max-width:640px;
-  margin:0 auto 40px;
-  padding:0 20px;
-}
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:24px;
-}
-h1{margin:0 0 10px;color:var(--gold)}
-p{margin:0 0 22px;color:var(--muted);font-size:14px}
-
-/* ===== ITEM CARD ===== */
-.item-block{
-  background:linear-gradient(180deg,#161616,#121212);
-  border:1px solid #2f2f2f;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:20px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 8px 18px rgba(0,0,0,.45);
-}
-
-/* ===== TOOLTIP ===== */
-.tooltip{
-  margin-left:6px;
-  cursor:help;
-  color:#777;
-  font-size:13px;
-  position:relative;
-}
-.tooltip span{
-  visibility:hidden;
-  background:#222;
-  color:#ddd;
-  padding:6px 8px;
-  border-radius:6px;
-  position:absolute;
-  top:20px;
-  left:0;
-  white-space:nowrap;
-  z-index:10;
-}
-.tooltip:hover span{visibility:visible}
-
-/* ===== SCREENSHOT ===== */
-.screenshot-box{
-  background:#0e0e0e;
-  border:1px solid #333;
-  border-radius:12px;
-  padding:14px;
-}
-input[type="file"],input[type="text"]{
-  width:100%;
-  padding:10px;
-  background:#0f0f0f;
-  border:1px solid var(--border);
-  border-radius:8px;
-  color:var(--text);
-}
-.preview{display:none;margin-top:12px}
-.preview img{
-  width:100%;
-  max-height:180px;
-  object-fit:contain;
-  border-radius:8px;
-  background:#090909;
-  border:1px solid #222;
-}
-
-/* ===== NOTE ===== */
-.note-box{
-  margin-top:14px;
-  padding:12px;
-  background:#101010;
-  border:1px dashed #2a2a2a;
-  border-radius:10px;
-}
-.note-box label{font-size:13px;color:#888}
-
-/* ===== BUTTONS ===== */
-.add-btn{
-  margin-top:10px;
-  padding:10px;
-  background:#1b1b1b;
-  border:1px dashed #333;
-  color:#bbb;
-  border-radius:10px;
-  cursor:pointer;
-  text-align:center;
-}
-.add-btn:hover{color:#eee;border-color:#555}
-
-button[type="submit"]{
-  margin-top:24px;
-  width:100%;
-  padding:14px;
-  background:linear-gradient(180deg,#f5c451,#caa03a);
-  border:none;
-  border-radius:12px;
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* ===== PROGRESS ===== */
-.progress{
-  display:none;
-  margin-top:14px;
-  background:#0f0f0f;
-  border:1px solid #333;
-  border-radius:8px;
-  overflow:hidden;
-}
-.progress div{
-  height:8px;
-  width:0%;
-  background:linear-gradient(90deg,#f5c451,#caa03a);
-}
-
-/* ===== MSG ===== */
-.notice{
-  padding:12px;
-  border-radius:8px;
-  margin-top:18px;
-  font-size:14px;
-}
-.notice.success{background:#0f1a0f;border:1px solid #1a3a1a;color:var(--green)}
-.notice.error{background:#1a0f0f;border:1px solid #3a1a1a;color:var(--red)}
-</style>
-</head>
-
-<body>
-
-<!-- HEADER -->
-<header class="site-header">
-  <a href="index.html">
-    <img src="img/logo_d2r.png" alt="D2R Lootliste Logo" class="logo">
-  </a>
-
-  <div class="auth-box">
-    <img src="img/avatars/default.png" alt="Avatar" class="account-avatar">
-    <span class="account-name">Username</span>
-    <a href="meine-items.html" class="account-link">Meine Items</a>
-  </div>
-</header>
-
-<!-- CONTENT -->
-<div class="wrapper">
-<div class="panel">
-
-<h1>Items einreichen</h1>
-<p>Bis zu <strong>3 Items</strong> gleichzeitig · je Item <strong>1 Screenshot</strong></p>
-
-<form id="submitForm">
-  <input type="hidden" name="item_count" id="itemCount">
-  <div id="items"></div>
-  <div class="add-btn" id="addItemBtn">+ weiteres Item hinzufügen</div>
-  <button type="submit">Items einreichen</button>
-  <div class="progress"><div></div></div>
-</form>
-
-<div id="msgSuccess" class="notice success" style="display:none">✔ Upload abgeschlossen</div>
-<div id="msgError" class="notice error" style="display:none">✖ Fehler beim Upload</div>
-
-</div>
-</div>
-
-<script>
-const API = "https://lootliste-production.up.railway.app";
-const MAX = 3;
-let count = 0;
-
-const items     = document.getElementById("items");
-const addBtn    = document.getElementById("addItemBtn");
-const progress  = document.querySelector(".progress");
-const bar       = progress.firstElementChild;
-const msgSuccess = document.getElementById("msgSuccess");
-const msgError   = document.getElementById("msgError");
-const itemCountInput = document.getElementById("itemCount");
-
-function addItem() {
-  if (count >= MAX) return;
-  count++;
-
-  const div = document.createElement("div");
-  div.className = "item-block";
-  div.innerHTML = `
-    <div class="screenshot-box">
-      <label>Item ${count} – Screenshot *
-        <span class="tooltip">?
-          <span>Voll sichtbar, nicht zugeschnitten</span>
-        </span>
-      </label>
-      <input type="file" name="screenshot_${count}" accept="image/*" required>
-      <div class="preview"><img></div>
-    </div>
-
-    <div class="note-box">
-      <label>Eigene Notiz
-        <span class="tooltip">?
-          <span>Nur für dich sichtbar</span>
-        </span>
-      </label>
-      <input type="text" name="note_${count}" maxlength="40"
-        placeholder="z. B. Mule xyz / MF Sorc / Char: xyz">
-    </div>
-  `;
-
-  items.appendChild(div);
-
-  const input   = div.querySelector("input[type=file]");
-  const preview = div.querySelector(".preview");
-  const img     = preview.querySelector("img");
-
-  input.addEventListener("change", () => {
-    const f = input.files[0];
-    if (!f || f.size > 10 * 1024 * 1024) {
-      input.value = "";
-      return alert("Bild max. 10 MB");
+/* ================================
+   SUBMIT (passt zu submit.html)
+================================ */
+app.post(
+  "/api/items",
+  upload.any(),
+  (req, res) => {
+    const count = Number(req.body.item_count || 0);
+    if (!count || count < 1) {
+      return res.status(400).json({ error: "NO_ITEMS" });
     }
-    const r = new FileReader();
-    r.onload = e => {
-      img.src = e.target.result;
-      preview.style.display = "block";
-    };
-    r.readAsDataURL(f);
-  });
 
-  if (count === MAX) addBtn.style.display = "none";
-}
+    const files = req.files || [];
+    const inserts = [];
 
-addBtn.onclick = addItem;
-addItem();
+    for (let i = 1; i <= count; i++) {
+      const file = files.find(f => f.fieldname === `screenshot_${i}`);
+      if (!file) continue;
 
-document.getElementById("submitForm").onsubmit = async e => {
-  e.preventDefault();
-  if (count === 0) return;
+      const note = req.body[`note_${i}`] || "";
 
-  itemCountInput.value = count;
-  progress.style.display = "block";
-  bar.style.width = "10%";
-
-  const xhr = new XMLHttpRequest();
-
-  xhr.upload.onprogress = e => {
-    if (e.lengthComputable) {
-      bar.style.width = (e.loaded / e.total * 100) + "%";
+      inserts.push({
+        id: randomUUID(),
+        screenshot: `/uploads/${file.filename}`,
+        note
+      });
     }
-  };
 
-  xhr.onload = () => {
-    progress.style.display = "none";
-    bar.style.width = "0%";
-
-    if (xhr.status >= 200 && xhr.status < 300) {
-      msgSuccess.style.display = "block";
-      msgError.style.display = "none";
-      setTimeout(() => location.reload(), 1800);
-    } else {
-      msgSuccess.style.display = "none";
-      msgError.style.display = "block";
+    if (!inserts.length) {
+      return res.status(400).json({ error: "NO_SCREENSHOTS" });
     }
-  };
 
-  xhr.onerror = () => {
-    progress.style.display = "none";
-    bar.style.width = "0%";
-    msgSuccess.style.display = "none";
-    msgError.style.display = "block";
-  };
+    const stmt = db.prepare(
+      "INSERT INTO items (id, screenshot, note) VALUES (?, ?, ?)"
+    );
 
-  xhr.open("POST", API + "/api/items");
-  xhr.setRequestHeader("x-login-id", "dev-admin");
-  xhr.send(new FormData(e.target));
-};
-</script>
+    inserts.forEach(it => {
+      stmt.run(it.id, it.screenshot, it.note);
+    });
 
-</body>
-</html>
+    stmt.finalize();
+    res.status(201).json({ ok: true, count: inserts.length });
+  }
+);
+
+/* ================================
+   PUBLIC ITEMS (für index.html)
+================================ */
+app.get("/api/items/public", (req, res) => {
+  db.all(
+    "SELECT * FROM items ORDER BY created_at DESC",
+    [],
+    (err, rows) => {
+      if (err) {
+        return res.status(500).json({ error: "DB_ERROR" });
+      }
+      res.json(rows);
+    }
+  );
+});
+
+/* ================================
+   START
+================================ */
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("Lootliste Backend läuft auf Port", PORT);
+});
