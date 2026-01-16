@@ -2,303 +2,266 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Free Lootliste – Drop Board | D2R Non-Ladder</title>
+<title>Free Lootliste – Community Items | D2R</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --gold:#f5c451;
-  --bg:#0b0b0b;
-  --panel:#121212;
-  --border:#2a2a2a;
-  --green:#4cff4c;
-  --red:#ff5c5c;
-}
+/* ================================
+   GLOBALS / RESET
+================================ */
 
-*{box-sizing:border-box}
+/* HIER: globale Variablen, Farben, Reset */
 
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
-  color:#eaeaea;
-}
 
-.wrapper{max-width:1500px;margin:0 auto}
+/* ================================
+   LAYOUT / WRAPPER
+================================ */
 
-/* ===== HERO ===== */
-.hero{
-  background:url("img/banner_diablo.png") center top / cover no-repeat;
-  border-radius:0 0 26px 26px;
-  overflow:hidden;
-}
+/* HIER: body, .wrapper */
 
-.hero-inner{
-  padding:42px 36px;
-  background:linear-gradient(
-    to bottom,
-    rgba(0,0,0,.35),
-    rgba(0,0,0,.75)
-  );
-}
 
-.hero-logo img{
-  max-width:420px;
-  width:100%;
-  filter:brightness(.85);
-}
+/* ================================
+   HERO
+================================ */
 
-.hero p{
-  margin:10px 0 0;
-  opacity:.9;
-}
+/* HIER: Hero, Banner, Logo, Titel */
 
-.mode-banner{
-  margin-top:10px;
-  font-size:13px;
-  color:#dcdcdc;
-}
 
-.mode-banner strong{color:var(--green)}
+/* ================================
+   MODE / STATUS BANNER
+================================ */
 
-/* ===== ICON BAR ===== */
-.icon-bar{
-  display:flex;
-  gap:14px;
-  padding:18px 24px;
-  overflow-x:auto;
-  background:linear-gradient(180deg,#141414,#0d0d0d);
-  border-bottom:1px solid #222;
-}
+/* HIER: Non-Ladder / Ladder Hinweis */
 
-.icon-btn{
-  min-width:92px;
-  text-align:center;
-  cursor:pointer;
-  padding:10px 6px;
-  border-radius:14px;
-  border:1px solid transparent;
-}
 
-.icon-btn img{
-  width:40px;
-  height:40px;
-}
+/* ================================
+   HERO STATS
+================================ */
 
-.icon-btn span{
-  display:block;
-  margin-top:6px;
-  font-size:12px;
-  opacity:.85;
-}
+/* HIER: Drop-Anzahl, Ø Rating, Spender */
 
-.icon-btn.active{
-  border-color:var(--gold);
-  background:rgba(245,196,81,.08);
-}
 
-/* ===== CONTENT ===== */
-.container{padding:26px}
+/* ================================
+   AUTH BOX (PLACEHOLDER)
+================================ */
 
-.filter-panel{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:18px;
-}
+/* HIER: Login / Profil Anzeige */
 
-.filter-panel input,
-.filter-panel select{
-  padding:10px 12px;
-  background:#111;
-  border:1px solid #333;
-  color:#fff;
-  border-radius:10px;
-}
 
-/* ===== CARDS ===== */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:22px;
-}
+/* ================================
+   PROJECT TIMELINE (VISUELL)
+================================ */
 
-@media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.cards{grid-template-columns:1fr}}
+/* HIER: reine Anzeige – keine Logik */
 
-.card{
-  display:flex;
-  background:linear-gradient(180deg,#191919,#0f0f0f);
-  border:1px solid var(--border);
-  border-left:3px solid #2a2a2a;
-  border-radius:18px;
-  overflow:hidden;
-}
 
-.card.verfuegbar{border-left-color:#6f7f4a}
-.card.vergeben{border-left-color:#5a2e2e;opacity:.8}
+/* ================================
+   ICON BAR (FILTER)
+================================ */
 
-.status-badge{
-  position:absolute;
-  top:12px;
-  right:12px;
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:999px;
-  background:#000a;
-  border:1px solid #333;
-}
+/* HIER: Item-Typ Icons */
 
-.card-image{
-  width:110px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
 
-.card-image img{
-  width:64px;
-  height:64px;
-}
+/* ================================
+   META BAR
+================================ */
 
-.card-body{
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  flex:1;
-}
+/* HIER: Treffer, Datum */
 
-.item-name{
-  font-size:16px;
-  font-weight:600;
-}
 
-.item-sub{
-  font-size:11px;
-  opacity:.7;
-}
+/* ================================
+   FILTER PANEL
+================================ */
 
-.stars{
-  color:var(--gold);
-  font-size:15px;
-}
+/* HIER: Suche, Sortierung */
 
-.player{
-  font-size:12px;
-  opacity:.8;
-}
+
+/* ================================
+   DROP FEED / CARDS GRID
+================================ */
+
+/* HIER: Grid, Performance */
+
+
+/* ================================
+   CARD BASIS
+================================ */
+
+/* HIER: Card, Hover, Rahmen */
+
+
+/* ================================
+   CARD STATUS (NUR VISUELL)
+================================ */
+
+/* HIER: approved / hidden Mapping */
+
+
+/* ================================
+   CARD IMAGE + SCREENSHOT
+================================ */
+
+/* HIER: Icon, Screenshot Overlay Trigger */
+
+
+/* ================================
+   CARD BODY
+================================ */
+
+/* HIER: Name, Typ, Roll */
+
+
+/* ================================
+   RATING (STERNE)
+================================ */
+
+/* HIER: ⭐⭐⭐⭐☆ 4/5 */
+
+
+/* ================================
+   CTA / BUTTONS (OPTIONAL)
+================================ */
+
+/* HIER: aktuell deaktiviert / Platzhalter */
+
+
+/* ================================
+   MODALS (OPTIONAL)
+================================ */
+
+/* HIER: Request / Info Modals */
+
+
+/* ================================
+   FOOTER
+================================ */
+
+/* HIER: Links, Copyright */
+
 </style>
 </head>
 
 <body>
+
+<!-- ================================
+     WRAPPER
+================================ -->
 <div class="wrapper">
 
-<header class="hero">
-  <div class="hero-inner">
-    <h1 class="hero-logo">
-      <img src="img/logo_d2r.png" alt="D2R Lootliste">
-    </h1>
-    <p>Community Drop-Board · Diablo II Resurrected</p>
-    <div class="mode-banner">
-      Modus: <strong>NON-LADDER</strong>
-    </div>
-  </div>
-</header>
+  <!-- ================================
+       HERO
+  ================================ -->
+  <header class="hero">
+    <!-- HERO CONTENT -->
+  </header>
 
-<div class="icon-bar" id="iconBar"></div>
 
-<div class="container">
-
-  <div class="filter-panel">
-    <input id="search" placeholder="Item suchen…">
-    <select id="statusFilter">
-      <option value="">Alle</option>
-      <option>Verfügbar</option>
-      <option>Vergeben</option>
-    </select>
+  <!-- ================================
+       AUTH BOX (PLACEHOLDER)
+  ================================ -->
+  <div class="auth-box">
+    <!-- LOGIN / PROFIL -->
   </div>
 
-  <div class="cards" id="cards"></div>
+
+  <!-- ================================
+       PROJECT TIMELINE
+  ================================ -->
+  <section class="project-timeline">
+    <!-- VISUELLER STATUS -->
+  </section>
+
+
+  <!-- ================================
+       ICON BAR
+  ================================ -->
+  <nav class="icon-bar">
+    <!-- ICON FILTER -->
+  </nav>
+
+
+  <!-- ================================
+       CONTENT
+  ================================ -->
+  <main class="container">
+
+    <!-- ================================
+         META BAR
+    ================================ -->
+    <div class="meta-bar"></div>
+
+
+    <!-- ================================
+         FILTER PANEL
+    ================================ -->
+    <div class="filter-panel"></div>
+
+
+    <!-- ================================
+         DROP FEED / CARDS
+    ================================ -->
+    <section class="cards"></section>
+
+  </main>
+
+
+  <!-- ================================
+       FOOTER
+  ================================ -->
+  <footer class="footer"></footer>
+
 </div>
 
+
+<!-- ================================
+     SCREENSHOT OVERLAY
+================================ -->
+<div id="screenshotOverlay">
+  <!-- IMAGE PREVIEW -->
+</div>
+
+
 <script type="module">
-const ICONS={
-  waffe:"waffe",helm:"helm",ruestung:"ruestung",schild:"schild",
-  guertel:"guertel",handschuhe:"handschuhe",
-  amulett:"amulett",ring:"ring",charm:"charm",
-  rune:"rune",sonstiges:"sonstiges"
-};
+/* ================================
+   KONFIG / KONSTANTEN
+================================ */
 
-const TYPE_LABELS={
-  waffe:"Waffe",helm:"Helm",ruestung:"Rüstung",schild:"Schild",
-  guertel:"Gürtel",handschuhe:"Handschuhe",
-  amulett:"Amulett",ring:"Ring",charm:"Charm",
-  rune:"Rune",sonstiges:"Sonstiges"
-};
+/* HIER: ICONS, LABELS */
 
-const iconBar=document.getElementById("iconBar");
-const cards=document.getElementById("cards");
-const search=document.getElementById("search");
-const statusFilter=document.getElementById("statusFilter");
 
-let items=[],activeType="";
+/* ================================
+   STATE
+================================ */
 
-Object.keys(ICONS).forEach(type=>{
-  const b=document.createElement("div");
-  b.className="icon-btn";
-  b.innerHTML=`<img src="img/icons/${ICONS[type]}.png"><span>${TYPE_LABELS[type]}</span>`;
-  b.onclick=()=>{
-    document.querySelectorAll(".icon-btn").forEach(x=>x.classList.remove("active"));
-    activeType=activeType===type?"":type;
-    if(activeType) b.classList.add("active");
-    render();
-  };
-  iconBar.appendChild(b);
-});
+/* HIER: items[], activeFilter */
 
-async function loadItems(){
-  const res=await fetch("https://content-connection-production-ea07.up.railway.app/api/items/public");
-  const data=await res.json();
-  items=Array.isArray(data)?data.map(i=>({
-    name:i.name,
-    type:i.type||"sonstiges",
-    rating:Number(i.rating)||0,
-    roll:i.roll||"",
-    contact:i.contact||"",
-    status:i.status==="given"?"Vergeben":"Verfügbar"
-  })):[];
-}
 
-function render(){
-  cards.innerHTML="";
-  items.filter(i=>{
-    const q=search.value.toLowerCase();
-    return (!q||i.name.toLowerCase().includes(q))
-      &&(!activeType||i.type===activeType)
-      &&(!statusFilter.value||i.status===statusFilter.value);
-  }).forEach(i=>{
-    const s=i.status==="Vergeben"?"vergeben":"verfuegbar";
-    cards.innerHTML+=`
-      <div class="card ${s}">
-        <span class="status-badge">${i.status}</span>
-        <div class="card-image">
-          <img src="img/icons/${ICONS[i.type]||"default"}.png">
-        </div>
-        <div class="card-body">
-          <div class="item-name">${i.name}</div>
-          <div class="item-sub">${TYPE_LABELS[i.type]}</div>
-          ${i.roll?`<div>${i.roll}</div>`:""}
-          <div class="stars">${"★".repeat(i.rating)}${"☆".repeat(5-i.rating)} ${i.rating}/5</div>
-          <div class="player">Spieler: ${i.contact||"-"}</div>
-        </div>
-      </div>`;
-  });
-}
+/* ================================
+   LOAD ITEMS (DROP FEED)
+================================ */
 
-search.oninput=render;
-statusFilter.onchange=render;
-loadItems().then(render);
+/* HIER: fetch /api/items/public */
+
+
+/* ================================
+   RENDER
+================================ */
+
+/* HIER: Filter + Card Render */
+
+
+/* ================================
+   EVENTS
+================================ */
+
+/* HIER: Search, Sort, Icon Klick */
+
+
+/* ================================
+   INIT
+================================ */
+
+/* HIER: loadItems().then(render) */
 </script>
 
 </body>
