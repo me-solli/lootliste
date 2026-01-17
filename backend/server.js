@@ -47,13 +47,35 @@ function saveItems(items) {
 }
 
 /* ===============================
+   Migration alter Items (EINMALIG)
+   =============================== */
+let items = loadItems();
+
+items = items.map(it => ({
+  id: it.id ?? Date.now(),
+  name: it.name ?? it.Name ?? "Unbenannt",
+  status: it.status ?? it.Status ?? "verfügbar",
+  createdAt: it.createdAt ?? it.erstelltAt ?? new Date().toISOString(),
+
+  quality: it.quality ?? null,
+  category: it.category ?? null,
+  screenshot: it.screenshot ?? null,
+
+  donor: it.donor ?? "Community",
+  claimedBy: it.claimedBy ?? it.behauptetVon ?? null,
+  contact: it.contact ?? it.Kontakt ?? null,
+  claimedAt: it.claimedAt ?? it.behauptetAt ?? null
+}));
+
+saveItems(items);
+
+/* ===============================
    MINI-ACCOUNT
    =============================== */
 function createPlayerId() {
   return "plr_" + crypto.randomBytes(4).toString("hex");
 }
 
-/* Spieler-ID holen oder erzeugen */
 app.post("/player", (req, res) => {
   const playerId = createPlayerId();
   res.json({ playerId });
@@ -63,21 +85,36 @@ app.post("/player", (req, res) => {
    GET /items
    =============================== */
 app.get("/items", (req, res) => {
-  const items = loadItems();
-  res.json(items.filter(i => i.status === "verfügbar"));
+  res.json(items);
 });
 
 /* ===============================
    POST /items
    =============================== */
 app.post("/items", (req, res) => {
-  const items = loadItems();
+  const {
+    name,
+    quality,
+    category,
+    screenshot,
+    playerId
+  } = req.body;
+
+  if (!name || !screenshot || !playerId) {
+    return res.status(400).json({ error: "Pflichtfelder fehlen" });
+  }
 
   const newItem = {
     id: Date.now(),
-    name: req.body.name || "Unbenannt",
+    name,
     status: "verfügbar",
     createdAt: new Date().toISOString(),
+
+    quality: quality || null,
+    category: category || null,
+    screenshot: screenshot || null,
+
+    donor: "Community",
     claimedBy: null,
     contact: null,
     claimedAt: null
@@ -85,11 +122,12 @@ app.post("/items", (req, res) => {
 
   items.push(newItem);
   saveItems(items);
+
   res.status(201).json(newItem);
 });
 
 /* ===============================
-   CLAIM (Drop-Logik)
+   CLAIM
    =============================== */
 app.post("/items/:id/claim", (req, res) => {
   const { playerId, contact } = req.body;
@@ -97,9 +135,7 @@ app.post("/items/:id/claim", (req, res) => {
     return res.status(400).json({ error: "playerId required" });
   }
 
-  const items = loadItems();
   const item = items.find(i => i.id === Number(req.params.id));
-
   if (!item) return res.status(404).json({ error: "Item not found" });
   if (item.status !== "verfügbar") {
     return res.status(409).json({ error: "Item already claimed" });
