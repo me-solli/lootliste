@@ -1182,13 +1182,22 @@ initPlayer();
   const resultsCount = document.getElementById("resultsCount");
   const emptyState   = document.getElementById("emptyState");
 
-  const state = {
-    items,
-    filtered: items,
-    type: "",
-    search: "",
-    sort: "rating-desc"
-  };
+const API = "https://lootliste-production.up.railway.app";
+
+const state = {
+  items: [],
+  filtered: [],
+  type: "",
+  search: "",
+  sort: "rating-desc"
+};
+
+async function loadItems() {
+  const res = await fetch(API + "/items");
+  const data = await res.json();
+  state.items = data;
+  state.filtered = data;
+}
 
   function updateMeta() {
     const list = state.filtered;
