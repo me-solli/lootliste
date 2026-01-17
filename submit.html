@@ -12,32 +12,38 @@
       background: radial-gradient(ellipse at top, #2a0f0f, #0b0505 60%);
       color: #eee;
     }
+
     header {
       padding: 40px 20px;
       background: linear-gradient(to right, #3a0d0d, #1a0505);
       border-bottom: 1px solid #3a1a1a;
     }
+
     h1 {
       margin: 0;
       color: #f2c94c;
     }
+
     main {
       max-width: 720px;
       margin: 40px auto;
       padding: 0 20px;
     }
+
     .box {
       background: rgba(20, 8, 8, 0.9);
       border: 1px solid #3a1a1a;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 24px;
     }
+
     label {
       display: block;
       margin-top: 16px;
       margin-bottom: 6px;
       font-weight: 600;
     }
+
     input, select {
       width: 100%;
       padding: 10px;
@@ -47,6 +53,7 @@
       color: #eee;
       font-size: 1rem;
     }
+
     button {
       margin-top: 24px;
       padding: 14px;
@@ -59,24 +66,59 @@
       background: linear-gradient(to right, #b83232, #7a1c1c);
       color: #fff;
     }
+
     button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
+
     .status {
       margin-top: 16px;
       font-size: 0.95rem;
     }
+
     .player {
       margin-top: 12px;
       font-size: 0.9rem;
-      opacity: 0.8;
+      opacity: 0.85;
     }
+
     a {
       color: #f2c94c;
       text-decoration: none;
       display: inline-block;
       margin-top: 24px;
+    }
+
+    /* Screenshot Preview */
+    .preview {
+      margin-top: 12px;
+      display: none;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #3a1a1a;
+      cursor: zoom-in;
+    }
+
+    /* Zoom Overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .overlay img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 10px;
+      cursor: zoom-out;
     }
   </style>
 </head>
@@ -93,8 +135,12 @@
       <label>Screenshot (Pflicht)</label>
       <input type="file" id="image" accept="image/*" required>
 
+      <div class="preview" id="preview">
+        <img id="previewImg" alt="Vorschau">
+      </div>
+
       <label>Item-Name</label>
-      <input id="name" required placeholder="z. B. Shako">
+      <input id="name" required placeholder="z. B. Harlequin Crest (Shako)">
 
       <label>Qualität</label>
       <select id="quality" required>
@@ -128,6 +174,11 @@
   <a href="index.html">← zurück zur Lootliste</a>
 </main>
 
+<!-- Zoom Overlay -->
+<div class="overlay" id="overlay">
+  <img id="overlayImg">
+</div>
+
 <script>
 /* ===============================
    CONFIG
@@ -137,7 +188,7 @@ const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
 
 /* ===============================
-   playerId (lokal, stabil)
+   Player-ID (lokal & stabil)
    =============================== */
 let playerId = localStorage.getItem("playerId");
 if (!playerId) {
@@ -146,6 +197,28 @@ if (!playerId) {
 }
 document.getElementById("playerInfo").textContent =
   "Deine ID: " + playerId;
+
+/* ===============================
+   Screenshot Preview + Zoom
+   =============================== */
+const fileInput = document.getElementById("image");
+const preview = document.getElementById("preview");
+const previewImg = document.getElementById("previewImg");
+const overlay = document.getElementById("overlay");
+const overlayImg = document.getElementById("overlayImg");
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+  previewImg.src = url;
+  overlayImg.src = url;
+  preview.style.display = "block";
+});
+
+previewImg.onclick = () => overlay.style.display = "flex";
+overlay.onclick = () => overlay.style.display = "none";
 
 /* ===============================
    Cloudinary Upload
@@ -157,17 +230,11 @@ async function uploadImage(file) {
 
   const res = await fetch(
     `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-    {
-      method: "POST",
-      body: formData
-    }
+    { method: "POST", body: formData }
   );
 
   const data = await res.json();
-  if (!data.secure_url) {
-    console.error(data);
-    throw new Error("Upload fehlgeschlagen");
-  }
+  if (!data.secure_url) throw new Error("Upload fehlgeschlagen");
   return data.secure_url;
 }
 
@@ -177,15 +244,14 @@ async function uploadImage(file) {
 document.getElementById("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const status = document.getElementById("status");
-  status.textContent = "Lade Screenshot hoch…";
+  status.textContent = "📤 Lade Screenshot hoch…";
 
   try {
-    const file = document.getElementById("image").files[0];
+    const file = fileInput.files[0];
     if (!file) throw new Error("Kein Bild gewählt");
 
-    const imageUrl = await uploadImage(file);
-
-    status.textContent = "Speichere Item…";
+    const screenshot = await uploadImage(file);
+    status.textContent = "💾 Speichere Item…";
 
     await fetch(BACKEND_URL, {
       method: "POST",
@@ -194,7 +260,7 @@ document.getElementById("form").addEventListener("submit", async (e) => {
         name: document.getElementById("name").value.trim(),
         quality: document.getElementById("quality").value,
         category: document.getElementById("category").value,
-        screenshot: imageUrl,
+        screenshot,
         playerId,
         status: "verfügbar"
       })
@@ -202,10 +268,11 @@ document.getElementById("form").addEventListener("submit", async (e) => {
 
     status.textContent = "✅ Item erfolgreich eingereicht";
     e.target.reset();
+    preview.style.display = "none";
 
   } catch (err) {
     console.error(err);
-    status.textContent = "❌ Fehler beim Upload";
+    status.textContent = "❌ Fehler beim Einreichen";
   }
 });
 </script>
