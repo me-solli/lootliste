@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Item einreichen – D2R Lootliste</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(ellipse at top, #2a0f0f, #0b0505 60%);
+      color: #eee;
+    }
+
+    header {
+      padding: 40px 20px;
+      background: linear-gradient(to right, #3a0d0d, #1a0505);
+      border-bottom: 1px solid #3a1a1a;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #f2c94c;
+    }
+
+    .subtitle {
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .box {
+      background: rgba(20, 8, 8, 0.9);
+      border: 1px solid #3a1a1a;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #120606;
+      color: #eee;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    .player-id {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    button {
+      margin-top: 28px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(to right, #b83232, #7a1c1c);
+      color: #fff;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 18px;
+      font-size: 0.95rem;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-top: 30px;
+      opacity: 0.8;
+      color: #f2c94c;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Item einreichen</h1>
+    <div class="subtitle">Screenshot ist Pflicht – ohne Bild kein Item</div>
+  </header>
+
+  <main>
+    <div class="box">
+      <form id="submitForm">
+        <label>Item-Name *</label>
+        <input id="itemName" required placeholder="z. B. Shako / Arachnid / Griffon's" />
+
+        <label>Screenshot-URL *</label>
+        <input id="screenshotUrl" required placeholder="https://imgur.com/..." />
+        <div class="hint">
+          Lade einen In-Game-Screenshot hoch (z. B. Imgur) – das Bild ist Teil des Items.
+        </div>
+
+        <label>Notiz (optional)</label>
+        <textarea id="note" placeholder="z. B. guter Roll, Selfdrop, besondere Info"></textarea>
+
+        <label>Kontakt (optional)</label>
+        <input id="contact" placeholder="z. B. Discord, Battletag, ingame-Name" />
+
+        <div class="player-id" id="playerInfo"></div>
+
+        <button type="submit">Item einreichen</button>
+        <div class="status" id="status"></div>
+      </form>
+    </div>
+
+    <a class="back" href="index.html">← zurück zur Lootliste</a>
+  </main>
+
+  <script>
+    const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
+
+    // Player-ID aus localStorage (existiert bereits bei dir)
+    let playerId = localStorage.getItem("playerId");
+    if (!playerId) {
+      playerId = "plr_" + Math.random().toString(16).slice(2, 10);
+      localStorage.setItem("playerId", playerId);
+    }
+
+    document.getElementById("playerInfo").textContent =
+      "Deine ID: " + playerId;
+
+    const form = document.getElementById("submitForm");
+    const statusBox = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusBox.textContent = "Sende Item…";
+
+      const payload = {
+        name: document.getElementById("itemName").value.trim(),
+        screenshot: document.getElementById("screenshotUrl").value.trim(),
+        note: document.getElementById("note").value.trim(),
+        contact: document.getElementById("contact").value.trim(),
+        playerId,
+        status: "verfügbar"
+      };
+
+      try {
+        const res = await fetch(BACKEND_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("Fehler beim Speichern");
+
+        statusBox.textContent = "✅ Item erfolgreich eingereicht!";
+        form.reset();
+      } catch (err) {
+        statusBox.textContent = "❌ Fehler beim Einreichen";
+      }
+    });
+  </script>
+</body>
+</html>
