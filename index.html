@@ -1270,10 +1270,11 @@ async function loadItems() {
   }
 
   // Initial render
-  setTimeout(() => {
-    skeletons?.remove();
-    applyFilters();
-  }, 400);
+setTimeout(async () => {
+  skeletons?.remove();
+  await loadItems();
+  applyFilters();
+}, 400);
 
   // Search
   const searchInput = document.getElementById("filterSearch");
