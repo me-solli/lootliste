@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const DATA_PATH = path.resolve("data/items.json");
 
@@ -18,5 +18,5 @@ app.get("/items", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Backend läuft auf http://localhost:" + PORT);
+  console.log("Backend läuft auf Port", PORT);
 });
