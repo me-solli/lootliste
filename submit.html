@@ -65,6 +65,7 @@
     }
     .status {
       margin-top: 16px;
+      font-size: 0.95rem;
     }
     .player {
       margin-top: 12px;
@@ -89,13 +90,13 @@
   <div class="box">
     <form id="form">
 
-      <label>Screenshot *</label>
+      <label>Screenshot (Pflicht)</label>
       <input type="file" id="image" accept="image/*" required>
 
-      <label>Item-Name *</label>
+      <label>Item-Name</label>
       <input id="name" required placeholder="z. B. Shako">
 
-      <label>Qualität *</label>
+      <label>Qualität</label>
       <select id="quality" required>
         <option value="">Bitte wählen</option>
         <option>Unique</option>
@@ -104,7 +105,7 @@
         <option>Magic</option>
       </select>
 
-      <label>Kategorie *</label>
+      <label>Kategorie</label>
       <select id="category" required>
         <option value="">Bitte wählen</option>
         <option>Waffen</option>
@@ -128,51 +129,69 @@
 </main>
 
 <script>
-const BACKEND = "https://lootliste-production.up.railway.app/items";
-const IMGUR_CLIENT_ID = "HIER_DEINE_CLIENT_ID_EINTRAGEN";
+/* ===============================
+   CONFIG
+   =============================== */
+const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
+const CLOUD_NAME = "dcczi93p6";
+const UPLOAD_PRESET = "lootliste_unsigned";
 
-// playerId
+/* ===============================
+   playerId (lokal, stabil)
+   =============================== */
 let playerId = localStorage.getItem("playerId");
 if (!playerId) {
   playerId = "plr_" + Math.random().toString(16).slice(2, 10);
   localStorage.setItem("playerId", playerId);
 }
-document.getElementById("playerInfo").textContent = "Deine ID: " + playerId;
+document.getElementById("playerInfo").textContent =
+  "Deine ID: " + playerId;
 
-// Upload zu Imgur
+/* ===============================
+   Cloudinary Upload
+   =============================== */
 async function uploadImage(file) {
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
 
-  const res = await fetch("https://api.imgur.com/3/image", {
-    method: "POST",
-    headers: {
-      Authorization: "Client-ID " + IMGUR_CLIENT_ID
-    },
-    body: formData
-  });
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    {
+      method: "POST",
+      body: formData
+    }
+  );
 
   const data = await res.json();
-  if (!data.success) throw new Error("Upload fehlgeschlagen");
-  return data.data.link;
+  if (!data.secure_url) {
+    console.error(data);
+    throw new Error("Upload fehlgeschlagen");
+  }
+  return data.secure_url;
 }
 
-document.getElementById("form").addEventListener("submit", async e => {
+/* ===============================
+   Submit
+   =============================== */
+document.getElementById("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const status = document.getElementById("status");
-  status.textContent = "Lade Bild hoch…";
+  status.textContent = "Lade Screenshot hoch…";
 
   try {
     const file = document.getElementById("image").files[0];
+    if (!file) throw new Error("Kein Bild gewählt");
+
     const imageUrl = await uploadImage(file);
 
     status.textContent = "Speichere Item…";
 
-    await fetch(BACKEND, {
+    await fetch(BACKEND_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: document.getElementById("name").value,
+        name: document.getElementById("name").value.trim(),
         quality: document.getElementById("quality").value,
         category: document.getElementById("category").value,
         screenshot: imageUrl,
@@ -185,6 +204,7 @@ document.getElementById("form").addEventListener("submit", async e => {
     e.target.reset();
 
   } catch (err) {
+    console.error(err);
     status.textContent = "❌ Fehler beim Upload";
   }
 });
