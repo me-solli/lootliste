@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 /* ===============================
-   CORS (wichtig für Browser-POST)
+   CORS (Browser + Preflight)
    =============================== */
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,6 +28,13 @@ app.use((req, res, next) => {
    =============================== */
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+
+/* ===============================
+   Healthcheck (WICHTIG für Railway)
+   =============================== */
+app.get("/", (req, res) => {
+  res.status(200).send("OK");
+});
 
 /* ===============================
    Datenpfad
