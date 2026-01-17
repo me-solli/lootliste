@@ -30,12 +30,19 @@ app.get("/", (req, res) => {
 });
 
 /* ===============================
-   Daten
+   Daten (Railway Volume)
    =============================== */
-const DATA_PATH = path.resolve("data/items.json");
+const DATA_DIR = "/data";
+const DATA_PATH = path.join(DATA_DIR, "items.json");
+
+// Volume-Verzeichnis sicherstellen
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
 
 function loadItems() {
   try {
+    if (!fs.existsSync(DATA_PATH)) return [];
     return JSON.parse(fs.readFileSync(DATA_PATH, "utf-8"));
   } catch {
     return [];
@@ -92,13 +99,7 @@ app.get("/items", (req, res) => {
    POST /items
    =============================== */
 app.post("/items", (req, res) => {
-  const {
-    name,
-    quality,
-    category,
-    screenshot,
-    playerId
-  } = req.body;
+  const { name, quality, category, screenshot, playerId } = req.body;
 
   if (!name || !screenshot || !playerId) {
     return res.status(400).json({ error: "Pflichtfelder fehlen" });
