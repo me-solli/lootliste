@@ -1144,6 +1144,25 @@ background:#000;
 })();
 </script>
 
+  <script>
+const API = "https://lootliste-production.up.railway.app";
+let playerId = localStorage.getItem("playerId");
+
+async function initPlayer() {
+  if (!playerId) {
+    const res = await fetch(API + "/player", { method: "POST" });
+    const data = await res.json();
+    playerId = data.playerId;
+    localStorage.setItem("playerId", playerId);
+  }
+
+  const label = document.getElementById("playerIdLabel");
+  if (label) label.textContent = "ID: " + playerId;
+}
+
+initPlayer();
+</script>
+
 <script type="module">
   import { items } from "./items.mock.js";
   import { renderCards } from "./render.cards.js";
