@@ -35,7 +35,6 @@ app.get("/", (req, res) => {
 const DATA_DIR = "/data";
 const DATA_PATH = path.join(DATA_DIR, "items.json");
 
-// Volume-Verzeichnis sicherstellen
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
@@ -69,6 +68,8 @@ items = items.map(it => ({
   screenshot: it.screenshot ?? null,
 
   donor: it.donor ?? "Community",
+
+  // Beziehung
   claimedBy: it.claimedBy ?? it.behauptetVon ?? null,
   contact: it.contact ?? it.Kontakt ?? null,
   claimedAt: it.claimedAt ?? it.behauptetAt ?? null
@@ -115,7 +116,7 @@ app.post("/items", (req, res) => {
     category: category || null,
     screenshot: screenshot || null,
 
-    donor: "Community",
+    donor: playerId,
     claimedBy: null,
     contact: null,
     claimedAt: null
@@ -128,27 +129,31 @@ app.post("/items", (req, res) => {
 });
 
 /* ===============================
-   CLAIM
+   CLAIM (RESERVIEREN – C1)
    =============================== */
 app.post("/items/:id/claim", (req, res) => {
   const { playerId, contact } = req.body;
+
   if (!playerId) {
     return res.status(400).json({ error: "playerId required" });
   }
 
   const item = items.find(i => i.id === Number(req.params.id));
-  if (!item) return res.status(404).json({ error: "Item not found" });
-  if (item.status !== "verfügbar") {
-    return res.status(409).json({ error: "Item already claimed" });
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
   }
 
-  item.status = "vergeben";
+  if (item.status !== "verfügbar") {
+    return res.status(409).json({ error: "Item not available" });
+  }
+
+  item.status = "reserviert";
   item.claimedBy = playerId;
   item.contact = contact || null;
   item.claimedAt = new Date().toISOString();
 
   saveItems(items);
-  res.json({ success: true });
+  res.json({ success: true, status: "reserviert" });
 });
 
 /* ===============================
