@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Meine erhaltenen Items – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:#0b0b0b;
+  color:#eaeaea;
+}
+
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
+  padding:30px 20px;
+}
+
+h1{
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.sub{
+  font-size:13px;
+  opacity:.7;
+  margin-bottom:22px;
+}
+
+.items{
+  display:grid;
+  gap:14px;
+}
+
+.item{
+  padding:16px 18px;
+  border:1px solid #2a2a2a;
+  border-radius:14px;
+  background:#121212;
+}
+
+.item-name{
+  font-size:16px;
+  font-weight:600;
+}
+
+.item-meta{
+  margin-top:6px;
+  font-size:13px;
+  opacity:.85;
+}
+
+.status{
+  margin-top:8px;
+  font-size:13px;
+}
+
+.status.reserviert{
+  color:#f5c451;
+}
+
+.status.übergeben{
+  color:#8fd1ff;
+}
+
+.actions{
+  margin-top:12px;
+}
+
+.btn{
+  padding:8px 14px;
+  font-size:13px;
+  border-radius:999px;
+  border:1px solid rgba(143,209,255,.5);
+  background:transparent;
+  color:#8fd1ff;
+  cursor:pointer;
+}
+
+.btn:disabled{
+  opacity:.5;
+  cursor:default;
+}
+
+.empty{
+  padding:18px;
+  border:1px dashed #333;
+  border-radius:14px;
+  opacity:.7;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<h1>Meine erhaltenen Items</h1>
+<div class="sub">Items, die du reserviert hast</div>
+
+<div id="list" class="items"></div>
+
+</div>
+
+<script>
+const API = "https://lootliste-production.up.railway.app";
+const playerId = localStorage.getItem("playerId");
+const list = document.getElementById("list");
+
+if (!playerId) {
+  list.innerHTML = "<div class='empty'>Keine Spieler-ID gefunden.</div>";
+} else {
+  loadMyClaims();
+}
+
+async function loadMyClaims(){
+  list.innerHTML = "";
+  const res = await fetch(API + "/items");
+  const items = await res.json();
+
+  const mine = items.filter(i => i.claimedBy === playerId);
+
+  if (mine.length === 0) {
+    list.innerHTML = "<div class='empty'>Du hast noch keine Items reserviert.</div>";
+    return;
+  }
+
+  mine.forEach(item => {
+    const el = document.createElement("div");
+    el.className = "item";
+
+    const receiverConfirmed = item.handover?.receiverConfirmed;
+
+    el.innerHTML = `
+      <div class="item-name">${item.name}</div>
+
+      <div class="item-meta">
+        Reserviert am: ${new Date(item.claimedAt).toLocaleDateString("de-DE")}
+      </div>
+
+      <div class="status ${item.status}">
+        Status: ${item.status}
+      </div>
+
+      ${
+        item.status === "reserviert"
+          ? `
+            <div class="actions">
+              <button class="btn" ${receiverConfirmed ? "disabled" : ""}>
+                ${receiverConfirmed ? "Erhalt bestätigt" : "Item erhalten"}
+              </button>
+            </div>
+          `
+          : ""
+      }
+    `;
+
+    if (item.status === "reserviert" && !receiverConfirmed) {
+      const btn = el.querySelector(".btn");
+
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        btn.textContent = "…";
+
+        const res = await fetch(
+          `${API}/items/${item.id}/handover/receiver`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ playerId })
+          }
+        );
+
+        if (!res.ok) {
+          alert("Bestätigung fehlgeschlagen.");
+          btn.disabled = false;
+          btn.textContent = "Item erhalten";
+          return;
+        }
+
+        const data = await res.json();
+
+        if (data.status === "übergeben") {
+          el.querySelector(".status").textContent = "Status: übergeben";
+          el.querySelector(".status").className = "status übergeben";
+        }
+
+        btn.textContent = "Erhalt bestätigt";
+      });
+    }
+
+    list.appendChild(el);
+  });
+}
+</script>
+
+</body>
+</html>
