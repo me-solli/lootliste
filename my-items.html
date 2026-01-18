@@ -66,10 +66,33 @@ h1{
   color:#f5c451;
 }
 
+.status.übergeben{
+  color:#8fd1ff;
+}
+
 .contact{
   margin-top:6px;
   font-size:13px;
   opacity:.9;
+}
+
+.actions{
+  margin-top:12px;
+}
+
+.btn{
+  padding:8px 14px;
+  font-size:13px;
+  border-radius:999px;
+  border:1px solid rgba(245,196,81,.4);
+  background:transparent;
+  color:#f5c451;
+  cursor:pointer;
+}
+
+.btn:disabled{
+  opacity:.5;
+  cursor:default;
 }
 
 .empty{
@@ -104,6 +127,7 @@ if (!playerId) {
 }
 
 async function loadMyItems(){
+  list.innerHTML = "";
   const res = await fetch(API + "/items");
   const items = await res.json();
 
@@ -117,6 +141,8 @@ async function loadMyItems(){
   mine.forEach(item => {
     const el = document.createElement("div");
     el.className = "item";
+
+    const donorConfirmed = item.handover?.donorConfirmed;
 
     el.innerHTML = `
       <div class="item-name">${item.name}</div>
@@ -134,7 +160,43 @@ async function loadMyItems(){
           ? `<div class="contact">Kontakt: ${item.contact}</div>`
           : ""
       }
+
+      ${
+        item.status === "reserviert"
+          ? `
+            <div class="actions">
+              <button class="btn" ${donorConfirmed ? "disabled" : ""}>
+                ${donorConfirmed ? "Übergabe bestätigt" : "Übergabe erfolgt"}
+              </button>
+            </div>
+          `
+          : ""
+      }
     `;
+
+    if (item.status === "reserviert" && !donorConfirmed) {
+      const btn = el.querySelector(".btn");
+
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        btn.textContent = "…";
+
+        const res = await fetch(`${API}/items/${item.id}/handover/donor`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ playerId })
+        });
+
+        if (!res.ok) {
+          alert("Übergabe konnte nicht bestätigt werden.");
+          btn.disabled = false;
+          btn.textContent = "Übergabe erfolgt";
+          return;
+        }
+
+        btn.textContent = "Übergabe bestätigt";
+      });
+    }
 
     list.appendChild(el);
   });
