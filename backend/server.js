@@ -59,9 +59,9 @@ let items = loadItems();
 
 items = items.map(it => ({
   id: it.id ?? Date.now(),
-  name: it.name ?? it.Name ?? "Unbenannt",
-  status: it.status ?? it.Status ?? "verfügbar",
-  createdAt: it.createdAt ?? it.erstelltAt ?? new Date().toISOString(),
+  name: it.name ?? "Unbenannt",
+  status: it.status ?? "verfügbar",
+  createdAt: it.createdAt ?? new Date().toISOString(),
 
   quality: it.quality ?? null,
   category: it.category ?? null,
@@ -69,12 +69,12 @@ items = items.map(it => ({
 
   donor: it.donor ?? "Community",
 
-  // Beziehung (C1)
-  claimedBy: it.claimedBy ?? it.behauptetVon ?? null,
-  contact: it.contact ?? it.Kontakt ?? null,
-  claimedAt: it.claimedAt ?? it.behauptetAt ?? null,
+  // C1
+  claimedBy: it.claimedBy ?? null,
+  contact: it.contact ?? null,
+  claimedAt: it.claimedAt ?? null,
 
-  // Übergabe (C2)
+  // C2
   handover: it.handover ?? {
     donorConfirmed: false,
     receiverConfirmed: false,
@@ -93,8 +93,7 @@ function createPlayerId() {
 }
 
 app.post("/player", (req, res) => {
-  const playerId = createPlayerId();
-  res.json({ playerId });
+  res.json({ playerId: createPlayerId() });
 });
 
 /* ===============================
@@ -122,7 +121,7 @@ app.post("/items", (req, res) => {
 
     quality: quality || null,
     category: category || null,
-    screenshot: screenshot || null,
+    screenshot,
 
     donor: playerId,
 
@@ -140,25 +139,17 @@ app.post("/items", (req, res) => {
 
   items.push(newItem);
   saveItems(items);
-
   res.status(201).json(newItem);
 });
 
 /* ===============================
-   CLAIM (RESERVIEREN – C1)
+   CLAIM – RESERVIEREN (C1)
    =============================== */
 app.post("/items/:id/claim", (req, res) => {
   const { playerId, contact } = req.body;
-
-  if (!playerId) {
-    return res.status(400).json({ error: "playerId required" });
-  }
-
   const item = items.find(i => i.id === Number(req.params.id));
-  if (!item) {
-    return res.status(404).json({ error: "Item not found" });
-  }
 
+  if (!item) return res.status(404).json({ error: "Item not found" });
   if (item.status !== "verfügbar") {
     return res.status(409).json({ error: "Item not available" });
   }
@@ -169,7 +160,7 @@ app.post("/items/:id/claim", (req, res) => {
   item.claimedAt = new Date().toISOString();
 
   saveItems(items);
-  res.json({ success: true, status: "reserviert" });
+  res.json({ success: true });
 });
 
 /* ===============================
@@ -177,41 +168,51 @@ app.post("/items/:id/claim", (req, res) => {
    =============================== */
 app.post("/items/:id/handover/donor", (req, res) => {
   const { playerId } = req.body;
-
-  if (!playerId) {
-    return res.status(400).json({ error: "playerId required" });
-  }
-
   const item = items.find(i => i.id === Number(req.params.id));
-  if (!item) {
-    return res.status(404).json({ error: "Item not found" });
-  }
 
+  if (!item) return res.status(404).json({ error: "Item not found" });
   if (item.status !== "reserviert") {
-    return res.status(409).json({ error: "Item not in reserviert state" });
+    return res.status(409).json({ error: "Wrong state" });
   }
-
   if (item.donor !== playerId) {
-    return res.status(403).json({ error: "Not donor of this item" });
+    return res.status(403).json({ error: "Not donor" });
   }
-
-  item.handover = item.handover || {
-    donorConfirmed: false,
-    receiverConfirmed: false,
-    donorConfirmedAt: null,
-    receiverConfirmedAt: null
-  };
 
   item.handover.donorConfirmed = true;
   item.handover.donorConfirmedAt = new Date().toISOString();
 
-  // Status erst finalisieren, wenn beide bestätigt haben
   if (item.handover.receiverConfirmed) {
     item.status = "übergeben";
   }
 
   saveItems(items);
-  res.json({ success: true });
+  res.json({ success: true, status: item.status });
+});
+
+/* ===============================
+   HANDOVER – RECEIVER CONFIRM (C2)
+   =============================== */
+app.post("/items/:id/handover/receiver", (req, res) => {
+  const { playerId } = req.body;
+  const item = items.find(i => i.id === Number(req.params.id));
+
+  if (!item) return res.status(404).json({ error: "Item not found" });
+  if (item.status !== "reserviert") {
+    return res.status(409).json({ error: "Wrong state" });
+  }
+  if (item.claimedBy !== playerId) {
+    return res.status(403).json({ error: "Not receiver" });
+  }
+
+  item.handover.receiverConfirmed = true;
+  item.handover.receiverConfirmedAt = new Date().toISOString();
+
+  if (item.handover.donorConfirmed) {
+    item.status = "übergeben";
+  }
+
+  saveItems(items);
+  res.json({ success: true, status: item.status });
 });
 
 /* ===============================
