@@ -69,10 +69,18 @@ items = items.map(it => ({
 
   donor: it.donor ?? "Community",
 
-  // Beziehung
+  // Beziehung (C1)
   claimedBy: it.claimedBy ?? it.behauptetVon ?? null,
   contact: it.contact ?? it.Kontakt ?? null,
-  claimedAt: it.claimedAt ?? it.behauptetAt ?? null
+  claimedAt: it.claimedAt ?? it.behauptetAt ?? null,
+
+  // Übergabe (C2)
+  handover: it.handover ?? {
+    donorConfirmed: false,
+    receiverConfirmed: false,
+    donorConfirmedAt: null,
+    receiverConfirmedAt: null
+  }
 }));
 
 saveItems(items);
@@ -117,9 +125,17 @@ app.post("/items", (req, res) => {
     screenshot: screenshot || null,
 
     donor: playerId,
+
     claimedBy: null,
     contact: null,
-    claimedAt: null
+    claimedAt: null,
+
+    handover: {
+      donorConfirmed: false,
+      receiverConfirmed: false,
+      donorConfirmedAt: null,
+      receiverConfirmedAt: null
+    }
   };
 
   items.push(newItem);
@@ -154,6 +170,48 @@ app.post("/items/:id/claim", (req, res) => {
 
   saveItems(items);
   res.json({ success: true, status: "reserviert" });
+});
+
+/* ===============================
+   HANDOVER – DONOR CONFIRM (C2)
+   =============================== */
+app.post("/items/:id/handover/donor", (req, res) => {
+  const { playerId } = req.body;
+
+  if (!playerId) {
+    return res.status(400).json({ error: "playerId required" });
+  }
+
+  const item = items.find(i => i.id === Number(req.params.id));
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (item.status !== "reserviert") {
+    return res.status(409).json({ error: "Item not in reserviert state" });
+  }
+
+  if (item.donor !== playerId) {
+    return res.status(403).json({ error: "Not donor of this item" });
+  }
+
+  item.handover = item.handover || {
+    donorConfirmed: false,
+    receiverConfirmed: false,
+    donorConfirmedAt: null,
+    receiverConfirmedAt: null
+  };
+
+  item.handover.donorConfirmed = true;
+  item.handover.donorConfirmedAt = new Date().toISOString();
+
+  // Status erst finalisieren, wenn beide bestätigt haben
+  if (item.handover.receiverConfirmed) {
+    item.status = "übergeben";
+  }
+
+  saveItems(items);
+  res.json({ success: true });
 });
 
 /* ===============================
