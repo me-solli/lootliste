@@ -36,69 +36,65 @@ export function renderCards(items, container) {
           </div>
         ` : ""}
 
-        <div class="item-status status-${item.status}">
-          Status: ${item.status}
-        </div>
-
         <div class="player">
           Spender: ${item.donor || "Community"}
         </div>
 
-        ${item.status === "verfügbar" ? `
-          <div class="claim-row">
-            <button class="claim-btn">🖐️ Nehmen</button>
-          </div>
-        ` : `
-          <div class="claim-row disabled">
-            <span>Item nicht verfügbar</span>
-          </div>
-        `}
+        <div class="claim-row">
+          <button class="claim-btn">🖐️ Nehmen</button>
+        </div>
+
       </div>
     `;
 
     const btn = card.querySelector(".claim-btn");
-    if (btn) {
-      btn.addEventListener("click", async (e) => {
-        e.stopPropagation();
 
-        const playerId = localStorage.getItem("playerId");
-        if (!playerId) {
-          alert("Spieler-ID fehlt. Seite neu laden.");
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+
+      const playerId = localStorage.getItem("playerId");
+      if (!playerId) {
+        alert("Spieler-ID fehlt. Seite neu laden.");
+        return;
+      }
+
+      const contact = prompt("Kontakt für Übergabe (z. B. Discord):");
+      if (!contact) return;
+
+      btn.disabled = true;
+      btn.textContent = "…";
+
+      try {
+        const res = await fetch(`${API}/items/${item.id}/claim`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ playerId, contact })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.error || "Item konnte nicht genommen werden.");
+          btn.disabled = false;
+          btn.textContent = "🖐️ Nehmen";
           return;
         }
 
-        const contact = prompt("Kontakt für Übergabe (z. B. Discord):");
-        if (!contact) return;
-
-        btn.disabled = true;
-        btn.textContent = "…";
-
-        try {
-          const res = await fetch(`${API}/items/${item.id}/claim`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ playerId, contact })
-          });
-
-          if (!res.ok) {
-            const err = await res.json();
-            alert(err.error || "Item konnte nicht genommen werden.");
-            btn.disabled = false;
-            btn.textContent = "🖐️ Nehmen";
-            return;
-          }
-
-          card.style.opacity = "0";
-          card.style.transform = "scale(0.96)";
-          setTimeout(() => card.remove(), 200);
-
-        } catch {
-          alert("Netzwerkfehler.");
-          btn.disabled = false;
-          btn.textContent = "🖐️ Nehmen";
+        // ✅ UX-Feedback (Toast)
+        if (typeof showToast === "function") {
+          showToast("Item reserviert – Kontakt gespeichert");
         }
-      });
-    }
+
+        // ✅ Card sauber entfernen
+        card.style.opacity = "0";
+        card.style.transform = "scale(0.96)";
+        setTimeout(() => card.remove(), 200);
+
+      } catch {
+        alert("Netzwerkfehler.");
+        btn.disabled = false;
+        btn.textContent = "🖐️ Nehmen";
+      }
+    });
 
     container.appendChild(card);
   });
