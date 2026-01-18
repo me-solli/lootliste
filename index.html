@@ -1281,7 +1281,7 @@ async function loadItems() {
 
     // Type
     if (state.type) {
-      list = list.filter(i => i.type === state.type);
+  list = list.filter(i => i.category === state.type);
     }
 
     // Search
