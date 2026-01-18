@@ -1347,6 +1347,20 @@ setTimeout(async () => {
 
 </script>
 
+  <script>
+function showToast(text){
+  const t = document.getElementById("toast");
+  if (!t) return;
+
+  t.textContent = text;
+  t.hidden = false;
+
+  setTimeout(() => {
+    t.hidden = true;
+  }, 2200);
+}
+</script>
+
   <div id="toast" class="toast" hidden></div>
   
 </body>
