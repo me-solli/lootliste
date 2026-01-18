@@ -1284,33 +1284,37 @@ async function loadItems() {
     }
   }
 
-  function applyFilters() {
-    let list = [...state.items];
+function applyFilters() {
+  let list = [...state.items];
 
-    // Type
-    if (state.type) {
-list = list.filter(i => (i.category || "").toLowerCase() === state.type);
-    }
-
-    // Search
-    if (state.search) {
-      const q = state.search.toLowerCase();
-      list = list.filter(i => i.name.toLowerCase().includes(q));
-    }
-
-    // Sort
-    if (state.sort === "rating-desc") {
-      list.sort((a,b) => b.rating - a.rating);
-    }
-    if (state.sort === "rating-asc") {
-      list.sort((a,b) => a.rating - b.rating);
-    }
-
-    state.filtered = list;
-    renderCards(state.filtered, container);
-    updateMeta();
-    updateResultsUI();
+  // Type (robust: lowercase + Plural-Fallback)
+  if (state.type) {
+    list = list.filter(i => {
+      const c = (i.category || "").toLowerCase();
+      return c === state.type || c === state.type + "n";
+    });
   }
+
+  // Search
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    list = list.filter(i => (i.name || "").toLowerCase().includes(q));
+  }
+
+  // Sort
+  if (state.sort === "rating-desc") {
+    list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  }
+
+  if (state.sort === "rating-asc") {
+    list.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+  }
+
+  state.filtered = list;
+  renderCards(state.filtered, container);
+  updateMeta();
+  updateResultsUI();
+}
 
   // Initial render
 setTimeout(async () => {
