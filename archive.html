@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Archiv – Übergebene Items</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:#0b0b0b;
+  color:#eaeaea;
+}
+
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
+  padding:30px 20px;
+}
+
+h1{
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.sub{
+  font-size:13px;
+  opacity:.7;
+  margin-bottom:22px;
+}
+
+.items{
+  display:grid;
+  gap:14px;
+}
+
+.item{
+  padding:16px 18px;
+  border:1px solid #262626;
+  border-radius:14px;
+  background:#111;
+}
+
+.item-name{
+  font-size:16px;
+  font-weight:600;
+}
+
+.meta{
+  margin-top:6px;
+  font-size:13px;
+  opacity:.75;
+}
+
+.status{
+  margin-top:6px;
+  font-size:13px;
+  color:#8fd1ff;
+}
+
+.empty{
+  padding:18px;
+  border:1px dashed #333;
+  border-radius:14px;
+  opacity:.7;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<h1>Archiv</h1>
+<div class="sub">Abgeschlossene Übergaben</div>
+
+<div id="list" class="items"></div>
+
+</div>
+
+<script>
+const API = "https://lootliste-production.up.railway.app";
+const list = document.getElementById("list");
+
+loadArchive();
+
+async function loadArchive(){
+  const res = await fetch(API + "/items");
+  const items = await res.json();
+
+  const done = items
+    .filter(i => i.status === "übergeben")
+    .sort((a,b) => {
+      const da = a.handover?.receiverConfirmedAt || a.handover?.donorConfirmedAt || "";
+      const db = b.handover?.receiverConfirmedAt || b.handover?.donorConfirmedAt || "";
+      return db.localeCompare(da);
+    });
+
+  if (done.length === 0) {
+    list.innerHTML = "<div class='empty'>Noch keine abgeschlossenen Übergaben.</div>";
+    return;
+  }
+
+  done.forEach(item => {
+    const el = document.createElement("div");
+    el.className = "item";
+
+    const date =
+      item.handover?.receiverConfirmedAt ||
+      item.handover?.donorConfirmedAt ||
+      item.claimedAt;
+
+    el.innerHTML = `
+      <div class="item-name">${item.name}</div>
+      <div class="meta">
+        Kategorie: ${item.category || "–"} ·
+        Übergeben am: ${date ? new Date(date).toLocaleDateString("de-DE") : "–"}
+      </div>
+      <div class="status">Status: übergeben</div>
+    `;
+
+    list.appendChild(el);
+  });
+}
+</script>
+
+</body>
+</html>
