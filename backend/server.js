@@ -12,9 +12,23 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-User-Id");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  if (req.method === "OPTIONS") return res.sendStatus(200);
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, X-User-Id"
+  );
+  res.setHeader(
+    "Access-Control-Expose-Headers",
+    "X-User-Id"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,POST,OPTIONS"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
   next();
 });
 
