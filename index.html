@@ -1197,17 +1197,32 @@ async function loadItems() {
   state.filtered = available;
 }
 
-    // Unique donors
-    if (heroDonor) {
-      const donors = new Set(list.map(i => i.donor).filter(Boolean));
-      heroDonor.textContent = donors.size;
-    }
+function updateMeta() {
+  const list = state.filtered;
 
-    // Date
-    metaDate && (metaDate.textContent =
-      new Date().toLocaleDateString("de-DE")
-    );
+  // Counts
+  metaCount && (metaCount.textContent = list.length);
+  heroCount && (heroCount.textContent = list.length);
+
+  // Avg rating
+  if (heroAvg) {
+    const ratings = list.map(i => i.rating).filter(Boolean);
+    heroAvg.textContent = ratings.length
+      ? (ratings.reduce((a,b)=>a+b,0) / ratings.length).toFixed(1)
+      : "–";
   }
+
+  // Unique donors
+  if (heroDonor) {
+    const donors = new Set(list.map(i => i.donor).filter(Boolean));
+    heroDonor.textContent = donors.size;
+  }
+
+  // Date
+  metaDate && (metaDate.textContent =
+    new Date().toLocaleDateString("de-DE")
+  );
+}
 
   function updateResultsUI() {
     const count = state.filtered.length;
