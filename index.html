@@ -1169,11 +1169,17 @@ async function loadItems() {
     localStorage.setItem("lootliste_user_id", headerUid);
   }
 
-  const uid = localStorage.getItem("lootliste_user_id");
-  const label = document.getElementById("playerIdLabel");
-  if (label && uid) {
+const label = document.getElementById("playerIdLabel");
+const uid = localStorage.getItem("lootliste_user_id");
+
+if (label) {
+  if (uid) {
     label.textContent = "ID: " + uid;
+  } else {
+    label.textContent =
+      label.dataset.placeholder || "Spieler lädt…";
   }
+}
 
   const data = await res.json();
 
