@@ -1173,7 +1173,15 @@ const state = {
 };
 
 async function loadItems() {
-  const res = await fetch(API + "/items");
+  const res = await fetch(API + "/items", {
+    headers: {
+      "X-User-Id": localStorage.getItem("lootliste_user_id") || ""
+    }
+  });
+
+  const uid = res.headers.get("X-User-Id");
+  if (uid) localStorage.setItem("lootliste_user_id", uid);
+
   const data = await res.json();
 
   // 🔒 Öffentliche Liste: nur verfügbare Items
