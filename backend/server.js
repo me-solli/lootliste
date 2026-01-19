@@ -10,10 +10,9 @@ const PORT = process.env.PORT || 3000;
    BASIC / CORS
    =============================== */
 app.use(express.json());
-
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-User-Id");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
@@ -31,67 +30,54 @@ app.get("/", (req, res) => {
    =============================== */
 const DATA_DIR = "/data";
 const ITEMS_PATH = path.join(DATA_DIR, "items.json");
+const USERS_PATH = path.join(DATA_DIR, "users.json");
 
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-function loadItems() {
-  if (!fs.existsSync(ITEMS_PATH)) return [];
+function loadJSON(file, fallback) {
+  if (!fs.existsSync(file)) return fallback;
   try {
-    return JSON.parse(fs.readFileSync(ITEMS_PATH, "utf-8"));
+    return JSON.parse(fs.readFileSync(file, "utf-8"));
   } catch {
-    return [];
+    return fallback;
   }
 }
 
-function saveItems(items) {
-  fs.writeFileSync(ITEMS_PATH, JSON.stringify(items, null, 2), "utf-8");
+function saveJSON(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2), "utf-8");
 }
 
+let items = loadJSON(ITEMS_PATH, []);
+let users = loadJSON(USERS_PATH, []);
+
 /* ===============================
-   LOAD + MIGRATION (SAFE)
+   USER SYSTEM (MINIMAL, STABIL)
    =============================== */
-let items = loadItems();
+function createUser() {
+  const user = {
+    id: "usr_" + crypto.randomBytes(6).toString("hex"),
+    createdAt: new Date().toISOString()
+  };
+  users.push(user);
+  saveJSON(USERS_PATH, users);
+  return user;
+}
 
-items = items.map(it => ({
-  id: it.id ?? Date.now(),
-  name: it.name ?? "Unbenannt",
-  status: it.status ?? "verfügbar",
-  createdAt: it.createdAt ?? new Date().toISOString(),
+// Middleware: stellt immer req.user sicher
+app.use((req, res, next) => {
+  const headerId = req.headers["x-user-id"];
+  let user = users.find(u => u.id === headerId);
 
-  quality: it.quality ?? null,
-  category: it.category ?? null,
-  screenshot: it.screenshot ?? null,
-
-  // IDENTITÄT (ÜBERGANG)
-  donor: it.donor ?? "Community",
-
-  // CLAIM (C1)
-  claimedBy: it.claimedBy ?? null,
-  contact: it.contact ?? null,
-  claimedAt: it.claimedAt ?? null,
-
-  // HANDOVER (C2)
-  handover: it.handover ?? {
-    donorConfirmed: false,
-    receiverConfirmed: false,
-    donorConfirmedAt: null,
-    receiverConfirmedAt: null
+  if (!user) {
+    user = createUser();
   }
-}));
 
-saveItems(items);
-
-/* ===============================
-   TEMP IDENTITÄT (ÜBERGANG)
-   =============================== */
-function createTempPlayerId() {
-  return "plr_" + crypto.randomBytes(4).toString("hex");
-}
-
-app.post("/player", (req, res) => {
-  res.json({ playerId: createTempPlayerId() });
+  req.user = user;
+  // User-ID immer zurückgeben, damit das Frontend sie speichern kann
+  res.setHeader("X-User-Id", user.id);
+  next();
 });
 
 /* ===============================
@@ -105,9 +91,9 @@ app.get("/items", (req, res) => {
    POST ITEM
    =============================== */
 app.post("/items", (req, res) => {
-  const { name, quality, category, screenshot, playerId } = req.body;
+  const { name, quality, category, screenshot } = req.body;
 
-  if (!name || !screenshot || !playerId) {
+  if (!name || !screenshot) {
     return res.status(400).json({ error: "Pflichtfelder fehlen" });
   }
 
@@ -121,10 +107,10 @@ app.post("/items", (req, res) => {
     category: category || null,
     screenshot,
 
-    // IDENTITÄT (noch playerId, später user_id)
-    donor: playerId,
+    // ECHTE IDENTITÄT
+    donorUserId: req.user.id,
 
-    claimedBy: null,
+    claimedByUserId: null,
     contact: null,
     claimedAt: null,
 
@@ -137,7 +123,7 @@ app.post("/items", (req, res) => {
   };
 
   items.push(newItem);
-  saveItems(items);
+  saveJSON(ITEMS_PATH, items);
   res.status(201).json(newItem);
 });
 
@@ -145,7 +131,7 @@ app.post("/items", (req, res) => {
    CLAIM (C1)
    =============================== */
 app.post("/items/:id/claim", (req, res) => {
-  const { playerId, contact } = req.body;
+  const { contact } = req.body;
   const item = items.find(i => i.id === Number(req.params.id));
 
   if (!item) return res.status(404).json({ error: "Item not found" });
@@ -154,11 +140,11 @@ app.post("/items/:id/claim", (req, res) => {
   }
 
   item.status = "reserviert";
-  item.claimedBy = playerId;
+  item.claimedByUserId = req.user.id;
   item.contact = contact || null;
   item.claimedAt = new Date().toISOString();
 
-  saveItems(items);
+  saveJSON(ITEMS_PATH, items);
   res.json({ success: true });
 });
 
@@ -166,14 +152,10 @@ app.post("/items/:id/claim", (req, res) => {
    HANDOVER – DONOR CONFIRM (C2)
    =============================== */
 app.post("/items/:id/handover/donor", (req, res) => {
-  const { playerId } = req.body;
   const item = items.find(i => i.id === Number(req.params.id));
 
   if (!item) return res.status(404).json({ error: "Item not found" });
-  if (item.status !== "reserviert") {
-    return res.status(409).json({ error: "Wrong state" });
-  }
-  if (item.donor !== playerId) {
+  if (item.donorUserId !== req.user.id) {
     return res.status(403).json({ error: "Not donor" });
   }
 
@@ -184,7 +166,7 @@ app.post("/items/:id/handover/donor", (req, res) => {
     item.status = "übergeben";
   }
 
-  saveItems(items);
+  saveJSON(ITEMS_PATH, items);
   res.json({ success: true, status: item.status });
 });
 
@@ -192,14 +174,10 @@ app.post("/items/:id/handover/donor", (req, res) => {
    HANDOVER – RECEIVER CONFIRM (C2)
    =============================== */
 app.post("/items/:id/handover/receiver", (req, res) => {
-  const { playerId } = req.body;
   const item = items.find(i => i.id === Number(req.params.id));
 
   if (!item) return res.status(404).json({ error: "Item not found" });
-  if (item.status !== "reserviert") {
-    return res.status(409).json({ error: "Wrong state" });
-  }
-  if (item.claimedBy !== playerId) {
+  if (item.claimedByUserId !== req.user.id) {
     return res.status(403).json({ error: "Not receiver" });
   }
 
@@ -210,7 +188,7 @@ app.post("/items/:id/handover/receiver", (req, res) => {
     item.status = "übergeben";
   }
 
-  saveItems(items);
+  saveJSON(ITEMS_PATH, items);
   res.json({ success: true, status: item.status });
 });
 
