@@ -1120,32 +1120,6 @@ body{
 })();
 </script>
 
-<script>
-const API = "https://lootliste-production.up.railway.app";
-
-/**
- * Holt / merkt sich die User-ID vom Backend
- * und aktualisiert das Label im Header
- */
-async function ensureUser() {
-  const res = await fetch(API + "/items", {
-    headers: {
-      "X-User-Id": localStorage.getItem("lootliste_user_id") || ""
-    }
-  });
-
-  const uid = res.headers.get("X-User-Id");
-  if (uid) {
-    localStorage.setItem("lootliste_user_id", uid);
-
-    const label = document.getElementById("playerIdLabel");
-    if (label) label.textContent = "ID: " + uid;
-  }
-}
-
-ensureUser();
-</script>
-
 <script type="module">
     import { renderCards } from "./render.cards.js";
 
