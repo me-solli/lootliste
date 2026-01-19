@@ -1158,14 +1158,19 @@ async function loadItems() {
     }
   });
 
-  // 🔐 User-ID aus Response übernehmen + anzeigen
-  const uid = res.headers.get("X-User-Id");
-  if (uid) {
-    localStorage.setItem("lootliste_user_id", uid);
+// 🔐 User-ID aus Header ODER LocalStorage anzeigen
+const headerUid = res.headers.get("X-User-Id");
+if (headerUid) {
+  localStorage.setItem("lootliste_user_id", headerUid);
+}
 
-    const label = document.getElementById("playerIdLabel");
-    if (label) label.textContent = "ID: " + uid;
-  }
+const uid =
+  localStorage.getItem("lootliste_user_id");
+
+const label = document.getElementById("playerIdLabel");
+if (label && uid) {
+  label.textContent = "ID: " + uid;
+}
 
   const data = await res.json();
 
