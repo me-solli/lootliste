@@ -1121,8 +1121,12 @@ body{
 </script>
 
 <script type="module">
-    import { renderCards } from "./render.cards.js";
+  import { renderCards } from "./render.cards.js";
 
+  // 🔌 API (WICHTIG: Modul-Scope!)
+  const API = "https://lootliste-production.up.railway.app";
+
+  // DOM
   const container = document.querySelector(".cards");
   const skeletons = document.getElementById("skeletons");
 
@@ -1138,13 +1142,14 @@ body{
   const resultsCount = document.getElementById("resultsCount");
   const emptyState   = document.getElementById("emptyState");
 
-const state = {
-  items: [],
-  filtered: [],
-  type: "",
-  search: "",
-  sort: "rating-desc"
-};
+  // State
+  const state = {
+    items: [],
+    filtered: [],
+    type: "",
+    search: "",
+    sort: "rating-desc"
+  };
 
 async function loadItems() {
   const res = await fetch(API + "/items", {
