@@ -1179,8 +1179,14 @@ async function loadItems() {
     }
   });
 
+  // 🔐 User-ID aus Response übernehmen + anzeigen
   const uid = res.headers.get("X-User-Id");
-  if (uid) localStorage.setItem("lootliste_user_id", uid);
+  if (uid) {
+    localStorage.setItem("lootliste_user_id", uid);
+
+    const label = document.getElementById("playerIdLabel");
+    if (label) label.textContent = "ID: " + uid;
+  }
 
   const data = await res.json();
 
@@ -1190,21 +1196,6 @@ async function loadItems() {
   state.items = available;
   state.filtered = available;
 }
-
-  function updateMeta() {
-    const list = state.filtered;
-
-    // Counts
-    metaCount && (metaCount.textContent = list.length);
-    heroCount && (heroCount.textContent = list.length);
-
-    // Avg rating
-    if (heroAvg) {
-      const ratings = list.map(i => i.rating).filter(Boolean);
-      heroAvg.textContent = ratings.length
-        ? (ratings.reduce((a,b)=>a+b,0) / ratings.length).toFixed(1)
-        : "–";
-    }
 
     // Unique donors
     if (heroDonor) {
