@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 /* ===============================
-   BASIC SETUP
+   BASIC / CORS
    =============================== */
 app.use(express.json());
 
@@ -49,23 +49,47 @@ function saveItems(items) {
   fs.writeFileSync(ITEMS_PATH, JSON.stringify(items, null, 2), "utf-8");
 }
 
+/* ===============================
+   LOAD + MIGRATION (SAFE)
+   =============================== */
 let items = loadItems();
 
-/* ===============================
-   ID HELPERS
-   =============================== */
-function createItemId() {
-  return Date.now();
-}
+items = items.map(it => ({
+  id: it.id ?? Date.now(),
+  name: it.name ?? "Unbenannt",
+  status: it.status ?? "verfügbar",
+  createdAt: it.createdAt ?? new Date().toISOString(),
 
+  quality: it.quality ?? null,
+  category: it.category ?? null,
+  screenshot: it.screenshot ?? null,
+
+  // IDENTITÄT (ÜBERGANG)
+  donor: it.donor ?? "Community",
+
+  // CLAIM (C1)
+  claimedBy: it.claimedBy ?? null,
+  contact: it.contact ?? null,
+  claimedAt: it.claimedAt ?? null,
+
+  // HANDOVER (C2)
+  handover: it.handover ?? {
+    donorConfirmed: false,
+    receiverConfirmed: false,
+    donorConfirmedAt: null,
+    receiverConfirmedAt: null
+  }
+}));
+
+saveItems(items);
+
+/* ===============================
+   TEMP IDENTITÄT (ÜBERGANG)
+   =============================== */
 function createTempPlayerId() {
-  // Übergangslösung – wird später durch echte user_id ersetzt
   return "plr_" + crypto.randomBytes(4).toString("hex");
 }
 
-/* ===============================
-   TEMP PLAYER (ÜBERGANG)
-   =============================== */
 app.post("/player", (req, res) => {
   res.json({ playerId: createTempPlayerId() });
 });
@@ -88,7 +112,7 @@ app.post("/items", (req, res) => {
   }
 
   const newItem = {
-    id: createItemId(),
+    id: Date.now(),
     name,
     status: "verfügbar",
     createdAt: new Date().toISOString(),
@@ -97,8 +121,8 @@ app.post("/items", (req, res) => {
     category: category || null,
     screenshot,
 
-    // IDENTITÄT (Übergang)
-    donor: playerId, // später: user_id
+    // IDENTITÄT (noch playerId, später user_id)
+    donor: playerId,
 
     claimedBy: null,
     contact: null,
@@ -114,12 +138,11 @@ app.post("/items", (req, res) => {
 
   items.push(newItem);
   saveItems(items);
-
   res.status(201).json(newItem);
 });
 
 /* ===============================
-   CLAIM (RESERVIEREN)
+   CLAIM (C1)
    =============================== */
 app.post("/items/:id/claim", (req, res) => {
   const { playerId, contact } = req.body;
@@ -140,7 +163,7 @@ app.post("/items/:id/claim", (req, res) => {
 });
 
 /* ===============================
-   HANDOVER – DONOR CONFIRM
+   HANDOVER – DONOR CONFIRM (C2)
    =============================== */
 app.post("/items/:id/handover/donor", (req, res) => {
   const { playerId } = req.body;
@@ -166,7 +189,7 @@ app.post("/items/:id/handover/donor", (req, res) => {
 });
 
 /* ===============================
-   HANDOVER – RECEIVER CONFIRM
+   HANDOVER – RECEIVER CONFIRM (C2)
    =============================== */
 app.post("/items/:id/handover/receiver", (req, res) => {
   const { playerId } = req.body;
@@ -192,7 +215,7 @@ app.post("/items/:id/handover/receiver", (req, res) => {
 });
 
 /* ===============================
-   SERVER START
+   SERVER
    =============================== */
 app.listen(PORT, () => {
   console.log("Backend läuft auf Port", PORT);
