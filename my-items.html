@@ -1,104 +1,241 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Meine Items – Lootliste</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>Meine Items – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="style.css" />
+<style>
+/* ================================
+   BASIS / TOKENS (aus index)
+================================ */
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+  --soft:#1a1a1a;
+}
 
-  <style>
-    .empty-box{
-      margin-top:40px;
-      padding:22px;
-      border:1px dashed #333;
-      border-radius:10px;
-      text-align:center;
-      opacity:.8;
-    }
-    .items-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-      gap:22px;
-      margin-top:30px;
-    }
-    .item-card{
-      background:#0f0f0f;
-      border:1px solid #1f1f1f;
-      border-radius:14px;
-      padding:16px;
-      display:flex;
-      gap:14px;
-    }
-    .item-card img{
-      width:88px;
-      height:88px;
-      object-fit:cover;
-      border-radius:8px;
-      background:#000;
-    }
-    .item-meta h3{
-      margin:0 0 6px;
-      font-size:18px;
-    }
-    .item-meta .sub{
-      opacity:.7;
-      font-size:14px;
-    }
-    .item-meta .status{
-      margin-top:6px;
-      font-size:13px;
-      opacity:.85;
-    }
-    .user-box{
-      margin-top:10px;
-      font-size:13px;
-      opacity:.75;
-    }
-    .user-box code{
-      background:#111;
-      padding:2px 6px;
-      border-radius:6px;
-      font-size:12px;
-    }
-    .reset-btn{
-      margin-top:10px;
-      background:none;
-      border:1px solid #333;
-      color:#aaa;
-      padding:6px 10px;
-      border-radius:8px;
-      cursor:pointer;
-      font-size:12px;
-    }
-    .reset-btn:hover{
-      border-color:#666;
-      color:#fff;
-    }
-  </style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#eaeaea;
+}
+
+.wrapper{
+  max-width:1500px;
+  margin:0 auto;
+}
+
+/* ================================
+   HERO (vereinfachte Variante)
+================================ */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
+}
+
+.hero-inner{
+  padding:36px 36px 32px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+}
+
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
+}
+
+.hero p{
+  margin:8px 0 0;
+  opacity:.85;
+}
+
+/* Auth Box */
+.auth-box{
+  position:absolute;
+  top:22px;
+  right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
+  font-size:13px;
+}
+
+.auth-box img{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+}
+
+.auth-link{
+  margin-left:6px;
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.85;
+}
+.auth-link:hover{opacity:1;text-decoration:underline}
+
+/* ================================
+   CONTENT
+================================ */
+.container{
+  padding:34px 28px 60px;
+}
+
+/* User Info */
+.user-box{
+  margin-bottom:22px;
+  font-size:13px;
+  opacity:.75;
+}
+.user-box code{
+  background:#111;
+  padding:3px 8px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+.empty-box{
+  margin-top:30px;
+  padding:26px 24px;
+  border:1px dashed rgba(255,255,255,.18);
+  border-radius:16px;
+  text-align:center;
+  font-size:14px;
+  color:#cfcfcf;
+  background:rgba(255,255,255,.03);
+}
+
+.empty-box ul{
+  text-align:left;
+  max-width:420px;
+  margin:12px auto;
+  padding-left:18px;
+}
+
+.reset-btn{
+  margin-top:14px;
+  padding:8px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.04);
+  color:#ddd;
+  font-size:13px;
+  cursor:pointer;
+}
+.reset-btn:hover{
+  border-color:var(--gold);
+  color:#fff;
+}
+
+/* ================================
+   ITEMS GRID / CARDS
+================================ */
+.items-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:22px;
+}
+
+.item-card{
+  display:flex;
+  gap:16px;
+  padding:16px;
+  border-radius:20px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.045),
+    rgba(255,255,255,.02)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.item-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 28px rgba(0,0,0,.45);
+}
+
+.item-card img{
+  width:96px;
+  height:96px;
+  border-radius:14px;
+  object-fit:cover;
+  background:#000;
+  cursor:zoom-in;
+}
+
+.item-meta h3{
+  margin:0 0 6px;
+  font-size:18px;
+  font-weight:600;
+  color:#f0f0f0;
+}
+
+.item-meta .sub{
+  font-size:13px;
+  color:#b5b5b5;
+}
+
+.item-meta .status{
+  margin-top:8px;
+  font-size:13px;
+  color:#9a9a9a;
+}
+</style>
 </head>
 
 <body>
-
 <div class="wrapper">
-  <section class="section">
-    <h1>Meine eingereichten Items</h1>
-    <p class="muted">Items, die wirklich deiner aktuellen User-ID gehören</p>
 
-    <div class="user-box">
-      Aktive User-ID:
-      <code id="uid">–</code>
+<header class="hero">
+  <div class="hero-inner">
+
+    <div class="auth-box">
+      <img src="img/avatars/default.png" alt="Avatar">
+      <span id="uidLabel">–</span>
+      <a href="index.html" class="auth-link">Zur Lootliste</a>
     </div>
 
-    <div id="output"></div>
-  </section>
+    <h1>Meine eingereichten Items</h1>
+    <p>Items, die deiner aktuellen User-ID zugeordnet sind</p>
+
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="user-box">
+    Aktive User-ID:
+    <code id="uid">–</code>
+  </div>
+
+  <div id="output"></div>
+
+</div>
 </div>
 
 <script>
 /* ===============================
    CONFIG
 ================================ */
-const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
+const API = "https://lootliste-production.up.railway.app/items";
 const ACTIVE_SEASON = "non-ladder";
 
 /* ===============================
@@ -106,6 +243,7 @@ const ACTIVE_SEASON = "non-ladder";
 ================================ */
 let userId = localStorage.getItem("lootliste_user_id");
 document.getElementById("uid").textContent = userId || "keine";
+document.getElementById("uidLabel").textContent = userId ? "ID: " + userId : "Gast";
 
 /* ===============================
    LOAD ITEMS
@@ -116,19 +254,15 @@ document.getElementById("uid").textContent = userId || "keine";
   if(!userId){
     output.innerHTML = `
       <div class="empty-box">
-        ❌ Keine User-ID gefunden.<br><br>
-        Du befindest dich vermutlich in einem neuen Browser
-        oder Inkognito-Fenster.<br><br>
-        <button class="reset-btn" onclick="location.reload()">
-          Seite neu laden
-        </button>
+        Keine User-ID gefunden.<br><br>
+        Wahrscheinlich neuer Browser oder Inkognito-Fenster.
       </div>
     `;
     return;
   }
 
   try{
-    const res = await fetch(BACKEND_URL);
+    const res = await fetch(API);
     const items = await res.json();
 
     const mine = items.filter(i =>
@@ -139,12 +273,11 @@ document.getElementById("uid").textContent = userId || "keine";
     if(mine.length === 0){
       output.innerHTML = `
         <div class="empty-box">
-          ⚠️ Keine Items für diese User-ID gefunden.<br><br>
-          Das passiert z. B. bei:
-          <ul style="text-align:left;max-width:420px;margin:10px auto;">
-            <li>anderem Browser</li>
+          Keine Items für diese User-ID gefunden.
+          <ul>
+            <li>anderer Browser</li>
             <li>Inkognito-Fenster</li>
-            <li>gelöschtem LocalStorage</li>
+            <li>LocalStorage gelöscht</li>
           </ul>
           <button class="reset-btn" onclick="resetUser()">
             User-ID zurücksetzen
@@ -177,15 +310,12 @@ document.getElementById("uid").textContent = userId || "keine";
     console.error(err);
     output.innerHTML = `
       <div class="empty-box">
-        ❌ Fehler beim Laden der Items.
+        Fehler beim Laden der Items.
       </div>
     `;
   }
 })();
 
-/* ===============================
-   HELPERS
-================================ */
 function resetUser(){
   localStorage.removeItem("lootliste_user_id");
   location.reload();
