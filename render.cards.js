@@ -1,40 +1,51 @@
 const API = "https://lootliste-production.up.railway.app";
 
+// erlaubte Item-Typen laut Icon-Bar
+const VALID_TYPES = [
+  "waffe",
+  "helm",
+  "ruestung",
+  "schild",
+  "guertel",
+  "handschuhe",
+  "schuhe",
+  "amulett",
+  "ring",
+  "charm",
+  "rune",
+  "sonstiges"
+];
+
 export function renderCards(items, container) {
   container.innerHTML = "";
 
   items.forEach(item => {
     const card = document.createElement("article");
     card.className = "card";
-    card.dataset.type = item.category || "";
+
+    // ✅ type strikt & sicher
+    const type = VALID_TYPES.includes(item.type) ? item.type : "default";
+    card.dataset.type = type;
 
     card.innerHTML = `
       ${item.screenshot ? `
         <div class="card-image">
-          <img src="${item.screenshot}" alt="Screenshot von ${item.name}">
+          <img src="${item.screenshot}" alt="Screenshot von ${item.name || "Item"}">
         </div>
       ` : ""}
 
       <div class="card-body">
 
-        <div class="item-name">${item.name}</div>
+        <div class="item-name">${item.name || "Unbekanntes Item"}</div>
 
-        ${(item.quality || item.category) ? `
+        ${item.quality ? `
           <div class="item-meta">
-            ${item.quality ? `<span class="quality">${item.quality}</span>` : ""}
-            ${item.category ? `<span class="category">${item.category}</span>` : ""}
+            <span class="quality">${item.quality}</span>
           </div>
         ` : ""}
 
         ${item.sub ? `<div class="item-sub">${item.sub}</div>` : ""}
         ${item.roll ? `<div class="item-roll">${item.roll}</div>` : ""}
-
-        ${typeof item.rating === "number" ? `
-          <div class="stars">
-            ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}
-            <span class="stars-num">${item.rating}/5</span>
-          </div>
-        ` : ""}
 
         <div class="player">
           Spender: ${item.donor || "Community"}
@@ -79,12 +90,11 @@ export function renderCards(items, container) {
           return;
         }
 
-        // ✅ UX-Feedback (Toast)
         if (typeof showToast === "function") {
           showToast("Item reserviert – Kontakt gespeichert");
         }
 
-        // ✅ Card sauber entfernen
+        // Card sauber entfernen
         card.style.opacity = "0";
         card.style.transform = "scale(0.96)";
         setTimeout(() => card.remove(), 200);
