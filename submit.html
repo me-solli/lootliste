@@ -11,7 +11,6 @@
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
-  --soft:#1a1a1a;
 }
 
 *{box-sizing:border-box}
@@ -53,7 +52,7 @@ body{
   opacity:.85;
 }
 
-/* Auth Box */
+/* AUTH BOX */
 .auth-box{
   position:absolute;
   top:22px;
@@ -90,7 +89,6 @@ body{
   padding:40px 28px 70px;
 }
 
-/* User Info */
 .user-box{
   margin-bottom:22px;
   font-size:13px;
@@ -103,7 +101,7 @@ body{
   font-size:12px;
 }
 
-/* FORM CARD */
+/* FORM */
 .form-card{
   background:linear-gradient(
     to bottom,
@@ -121,7 +119,6 @@ label{
   margin-bottom:6px;
   font-size:14px;
   font-weight:600;
-  color:#e6e6e6;
 }
 
 input,select{
@@ -134,12 +131,6 @@ input,select{
   font-size:14px;
 }
 
-input:focus,select:focus{
-  outline:none;
-  border-color:var(--gold);
-  box-shadow:0 0 0 1px rgba(245,196,81,.3);
-}
-
 button{
   margin-top:26px;
   padding:14px;
@@ -148,17 +139,14 @@ button{
   font-weight:600;
   border-radius:14px;
   border:1px solid rgba(245,196,81,.4);
-  cursor:pointer;
   background:linear-gradient(
     to right,
     rgba(245,196,81,.25),
     rgba(245,196,81,.15)
   );
   color:#f5e6b3;
+  cursor:pointer;
 }
-
-button:hover{ border-color:var(--gold); }
-button:disabled{ opacity:.5; cursor:not-allowed; }
 
 .status{
   margin-top:16px;
@@ -170,7 +158,6 @@ button:disabled{ opacity:.5; cursor:not-allowed; }
   margin-top:14px;
   display:none;
 }
-
 .preview img{
   max-width:65%;
   border-radius:14px;
@@ -187,7 +174,6 @@ button:disabled{ opacity:.5; cursor:not-allowed; }
   justify-content:center;
   z-index:9999;
 }
-
 .overlay img{
   max-width:90vw;
   max-height:90vh;
@@ -233,7 +219,7 @@ button:disabled{ opacity:.5; cursor:not-allowed; }
       </div>
 
       <label>Item-Name</label>
-      <input id="name" required placeholder="z. B. Harlequin Crest (Shako)">
+      <input id="name" required>
 
       <label>Qualität</label>
       <select id="quality" required>
@@ -275,40 +261,52 @@ button:disabled{ opacity:.5; cursor:not-allowed; }
 
 <script>
 /* ===============================
-   USER ID (ECHT)
-================================ */
-function getUserId(){
-  let id = localStorage.getItem("lootliste_user_id");
-  if(!id){
-    id = "usr_" + crypto.randomUUID().slice(0,12);
-    localStorage.setItem("lootliste_user_id", id);
-  }
-  return id;
-}
-const userId = getUserId();
-
-/* ===============================
-   USER ANZEIGE (ECHT)
-================================ */
-const label = document.getElementById("playerIdLabel");
-const userDisplay = document.getElementById("userDisplay");
-
-if (userId) {
-  const displayName = "Spieler " + userId.slice(4, 9);
-  label.textContent = displayName;
-  userDisplay.textContent = displayName;
-} else {
-  label.textContent = label.dataset.placeholder || "Spieler lädt…";
-  userDisplay.textContent = "–";
-}
-
-/* ===============================
    CONFIG
 ================================ */
-const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
+const API_BASE  = "https://lootliste-production.up.railway.app";
+const API_ITEMS = API_BASE + "/items";
 const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
 const ACTIVE_SEASON = "non-ladder";
+
+/* ===============================
+   USER / ACCOUNT ANZEIGE
+================================ */
+const userId = localStorage.getItem("lootliste_user_id");
+const label = document.getElementById("playerIdLabel");
+const userDisplay = document.getElementById("userDisplay");
+
+async function setUserLabel() {
+  if (!label) return;
+
+  if (!userId) {
+    label.textContent = label.dataset.placeholder || "Spieler lädt…";
+    userDisplay.textContent = "–";
+    return;
+  }
+
+  try {
+    const res = await fetch(API_BASE + "/me", {
+      headers: { "X-User-Id": userId }
+    });
+    const data = await res.json();
+
+    if (data.username) {
+      label.textContent = data.username;
+      userDisplay.textContent = data.username;
+    } else {
+      const fallback = "Spieler " + userId.slice(4, 9);
+      label.textContent = fallback;
+      userDisplay.textContent = fallback;
+    }
+  } catch {
+    const fallback = "Spieler " + userId.slice(4, 9);
+    label.textContent = fallback;
+    userDisplay.textContent = fallback;
+  }
+}
+
+setUserLabel();
 
 /* ===============================
    PREVIEW
@@ -361,7 +359,7 @@ document.getElementById("form").addEventListener("submit", async e => {
     const screenshot = await uploadImage(fileInput.files[0]);
     status.textContent = "💾 Speichere Item…";
 
-    await fetch(BACKEND_URL, {
+    await fetch(API_ITEMS, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -369,9 +367,7 @@ document.getElementById("form").addEventListener("submit", async e => {
         quality: document.getElementById("quality").value,
         type: document.getElementById("type").value,
         screenshot,
-        donorUserId: userId,
-        season: ACTIVE_SEASON,
-        status: "verfügbar"
+        season: ACTIVE_SEASON
       })
     });
 
@@ -379,7 +375,7 @@ document.getElementById("form").addEventListener("submit", async e => {
     e.target.reset();
     preview.style.display = "none";
 
-  }catch(err){
+  } catch(err) {
     console.error(err);
     status.textContent = "❌ Fehler beim Einreichen";
   }
