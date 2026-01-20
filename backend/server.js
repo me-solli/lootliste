@@ -121,7 +121,7 @@ app.post("/items", (req, res) => {
     type: type || category || null,
     screenshot,
 
-    donorUserId: req.user.id,
+    donorId: req.user.id,
 
     claimedByUserId: null,
     contact: null,
