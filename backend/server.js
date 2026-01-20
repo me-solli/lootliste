@@ -2,7 +2,6 @@
 // IMPORTS
 // ===============================
 import express from "express";
-import cors from "cors";
 import fs from "fs";
 import path from "path";
 
@@ -20,15 +19,20 @@ const ITEMS_FILE = path.join(DATA_DIR, "items.json");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 
 // ===============================
-// MIDDLEWARE  ✅ CORS FINAL
+// MIDDLEWARE (CORS MANUELL)
 // ===============================
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "X-User-Id"]
-}));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-User-Id");
 
-app.options("*", cors());
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
 app.use(express.json());
 
 // ===============================
@@ -102,7 +106,7 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
-// POST ITEM  ✅ donorUserId FINAL
+// POST ITEM (MIT donorUserId)
 // ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season } = req.body;
@@ -121,7 +125,6 @@ app.post("/items", (req, res) => {
     status: "verfügbar",
     createdAt: new Date().toISOString(),
 
-    // 🔑 EINDEUTIGER BESITZER
     donorUserId: req.user.id,
 
     claimedByUserId: null,
@@ -140,50 +143,6 @@ app.post("/items", (req, res) => {
   saveJSON(ITEMS_FILE, items);
 
   res.status(201).json(newItem);
-});
-
-// ===============================
-// CLAIM ITEM
-// ===============================
-app.post("/items/:id/claim", (req, res) => {
-  const item = items.find(i => i.id == req.params.id);
-  if (!item) return res.status(404).json({ error: "Item not found" });
-
-  if (item.status !== "verfügbar") {
-    return res.status(400).json({ error: "Item not available" });
-  }
-
-  item.status = "reserviert";
-  item.claimedByUserId = req.user.id;
-  item.claimedAt = new Date().toISOString();
-
-  saveJSON(ITEMS_FILE, items);
-  res.json(item);
-});
-
-// ===============================
-// CONFIRM HANDOVER
-// ===============================
-app.post("/items/:id/confirm", (req, res) => {
-  const item = items.find(i => i.id == req.params.id);
-  if (!item) return res.status(404).json({ error: "Item not found" });
-
-  if (req.user.id === item.donorUserId) {
-    item.handover.donorConfirmed = true;
-    item.handover.donorConfirmedAt = new Date().toISOString();
-  }
-
-  if (req.user.id === item.claimedByUserId) {
-    item.handover.receiverConfirmed = true;
-    item.handover.receiverConfirmedAt = new Date().toISOString();
-  }
-
-  if (item.handover.donorConfirmed && item.handover.receiverConfirmed) {
-    item.status = "vergeben";
-  }
-
-  saveJSON(ITEMS_FILE, items);
-  res.json(item);
 });
 
 // ===============================
