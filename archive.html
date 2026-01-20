@@ -11,7 +11,6 @@
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
-  --soft:#1a1a1a;
   --blue:#8fd1ff;
 }
 
@@ -54,7 +53,7 @@ body{
   opacity:.85;
 }
 
-/* Auth Box */
+/* AUTH BOX */
 .auth-box{
   position:absolute;
   top:22px;
@@ -89,7 +88,7 @@ body{
   padding:34px 28px 60px;
 }
 
-/* EMPTY STATE */
+/* EMPTY */
 .empty-box{
   margin-top:30px;
   padding:26px 24px;
@@ -98,10 +97,9 @@ body{
   text-align:center;
   font-size:14px;
   color:#cfcfcf;
-  background:rgba(255,255,255,.03);
 }
 
-/* ARCHIVE GRID */
+/* ARCHIVE */
 .archive-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
@@ -117,18 +115,11 @@ body{
     rgba(255,255,255,.02)
   );
   border:1px solid rgba(255,255,255,.08);
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-
-.archive-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 28px rgba(0,0,0,.45);
 }
 
 .archive-name{
   font-size:18px;
   font-weight:600;
-  color:#f0f0f0;
 }
 
 .archive-meta{
@@ -168,34 +159,57 @@ body{
 <div class="container">
   <div id="list"></div>
 </div>
+
 </div>
 
 <script>
 /* ===============================
-   USER ID + ANZEIGE (ECHT)
+   CONFIG
+================================ */
+const API_BASE  = "https://lootliste-production.up.railway.app";
+const API_ITEMS = API_BASE + "/items";
+
+/* ===============================
+   USER / ACCOUNT ANZEIGE
 ================================ */
 const userId = localStorage.getItem("lootliste_user_id");
 const label  = document.getElementById("playerIdLabel");
 
-if (userId) {
-  label.textContent = "Spieler " + userId.slice(4, 9);
-} else {
-  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+async function setUserLabel() {
+  if (!label) return;
+
+  if (!userId) {
+    label.textContent = label.dataset.placeholder || "Spieler lädt…";
+    return;
+  }
+
+  try {
+    const res = await fetch(API_BASE + "/me", {
+      headers: { "X-User-Id": userId }
+    });
+    const data = await res.json();
+
+    if (data.username) {
+      label.textContent = data.username;
+    } else {
+      label.textContent = "Spieler " + userId.slice(4, 9);
+    }
+  } catch {
+    label.textContent = "Spieler " + userId.slice(4, 9);
+  }
 }
 
-/* ===============================
-   CONFIG
-================================ */
-const API  = "https://lootliste-production.up.railway.app";
-const list = document.getElementById("list");
+setUserLabel();
 
+/* ===============================
+   LOAD ARCHIVE
+================================ */
+const list = document.getElementById("list");
 loadArchive();
 
 async function loadArchive(){
-  const res = await fetch(API + "/items", {
-    headers: {
-      "X-User-Id": userId || ""
-    }
+  const res = await fetch(API_ITEMS, {
+    headers: { "X-User-Id": userId || "" }
   });
   const items = await res.json();
 
