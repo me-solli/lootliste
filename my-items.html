@@ -88,39 +88,49 @@ h1{
 =============================== */
 const API = "https://lootliste-production.up.railway.app";
 const ACTIVE_SEASON = "non-ladder";
-
-/* ===============================
-   USER-ID (ZENTRAL)
-=============================== */
-const userId = localStorage.getItem("lootliste_user_id");
 const list = document.getElementById("list");
 
-if (!userId) {
-  list.innerHTML =
-    "<div class='empty'>Keine User-ID gefunden.</div>";
-} else {
-  loadMyItems();
+/* ===============================
+   INIT
+=============================== */
+init();
+
+async function init(){
+  await loadMyItems();
 }
 
 /* ===============================
-   LOAD MY ITEMS
+   LOAD MY ITEMS (BACKEND = SOURCE OF TRUTH)
 =============================== */
 async function loadMyItems(){
   list.innerHTML = "";
 
   const res = await fetch(API + "/items", {
     headers: {
-      "X-User-Id": userId
+      "X-User-Id": localStorage.getItem("lootliste_user_id") || ""
     }
   });
 
+  // 🔐 User-ID IMMER aus Backend-Header übernehmen
+  const headerUid = res.headers.get("X-User-Id");
+  if (headerUid) {
+    localStorage.setItem("lootliste_user_id", headerUid);
+  }
+
+  const userId = localStorage.getItem("lootliste_user_id");
+  if (!userId) {
+    list.innerHTML =
+      "<div class='empty'>Keine User-ID gefunden.</div>";
+    return;
+  }
+
   const items = await res.json();
 
-  // 🔑 NUR meine Items + aktive Season
-const mine = items.filter(i =>
-  i.donorId === userId &&
-  (i.season ?? "non-ladder") === ACTIVE_SEASON
-);
+  // 🔑 NUR meine Items + aktive Season (mit Fallback)
+  const mine = items.filter(i =>
+    i.donorId === userId &&
+    (i.season ?? "non-ladder") === ACTIVE_SEASON
+  );
 
   if (mine.length === 0) {
     list.innerHTML =
