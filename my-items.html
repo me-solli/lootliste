@@ -58,42 +58,9 @@ h1{
   font-size:13px;
 }
 
-.status.verfügbar{
-  color:#4cff4c;
-}
-
-.status.reserviert{
-  color:#f5c451;
-}
-
-.status.übergeben{
-  color:#8fd1ff;
-}
-
-.contact{
-  margin-top:6px;
-  font-size:13px;
-  opacity:.9;
-}
-
-.actions{
-  margin-top:12px;
-}
-
-.btn{
-  padding:8px 14px;
-  font-size:13px;
-  border-radius:999px;
-  border:1px solid rgba(245,196,81,.4);
-  background:transparent;
-  color:#f5c451;
-  cursor:pointer;
-}
-
-.btn:disabled{
-  opacity:.5;
-  cursor:default;
-}
+.status.verfügbar{ color:#4cff4c }
+.status.reserviert{ color:#f5c451 }
+.status.vergeben{ color:#8fd1ff }
 
 .empty{
   padding:18px;
@@ -109,32 +76,55 @@ h1{
 <div class="wrapper">
 
 <h1>Meine eingereichten Items</h1>
-<div class="sub">Übersicht deiner Items und deren Status</div>
+<div class="sub">Items, die du in der aktuellen Season eingereicht hast</div>
 
 <div id="list" class="items"></div>
 
 </div>
 
 <script>
+/* ===============================
+   CONFIG
+=============================== */
 const API = "https://lootliste-production.up.railway.app";
-const playerId = localStorage.getItem("playerId");
+const ACTIVE_SEASON = "non-ladder";
+
+/* ===============================
+   USER-ID (ZENTRAL)
+=============================== */
+const userId = localStorage.getItem("lootliste_user_id");
 const list = document.getElementById("list");
 
-if (!playerId) {
-  list.innerHTML = "<div class='empty'>Keine Spieler-ID gefunden.</div>";
+if (!userId) {
+  list.innerHTML =
+    "<div class='empty'>Keine User-ID gefunden.</div>";
 } else {
   loadMyItems();
 }
 
+/* ===============================
+   LOAD MY ITEMS
+=============================== */
 async function loadMyItems(){
   list.innerHTML = "";
-  const res = await fetch(API + "/items");
+
+  const res = await fetch(API + "/items", {
+    headers: {
+      "X-User-Id": userId
+    }
+  });
+
   const items = await res.json();
 
-  const mine = items.filter(i => i.donor === playerId);
+  // 🔑 NUR meine Items + aktive Season
+  const mine = items.filter(i =>
+    i.donor === userId &&
+    i.season === ACTIVE_SEASON
+  );
 
   if (mine.length === 0) {
-    list.innerHTML = "<div class='empty'>Du hast noch keine Items eingereicht.</div>";
+    list.innerHTML =
+      "<div class='empty'>Du hast in dieser Season noch keine Items eingereicht.</div>";
     return;
   }
 
@@ -142,61 +132,22 @@ async function loadMyItems(){
     const el = document.createElement("div");
     el.className = "item";
 
-    const donorConfirmed = item.handover?.donorConfirmed;
-
     el.innerHTML = `
       <div class="item-name">${item.name}</div>
 
       <div class="item-meta">
-        Erstellt: ${new Date(item.createdAt).toLocaleDateString("de-DE")}
+        Kategorie: ${item.type || "–"} ·
+        Erstellt: ${
+          item.createdAt
+            ? new Date(item.createdAt).toLocaleDateString("de-DE")
+            : "–"
+        }
       </div>
 
       <div class="status ${item.status}">
         Status: ${item.status}
       </div>
-
-      ${
-        item.status === "reserviert" && item.contact
-          ? `<div class="contact">Kontakt: ${item.contact}</div>`
-          : ""
-      }
-
-      ${
-        item.status === "reserviert"
-          ? `
-            <div class="actions">
-              <button class="btn" ${donorConfirmed ? "disabled" : ""}>
-                ${donorConfirmed ? "Übergabe bestätigt" : "Übergabe erfolgt"}
-              </button>
-            </div>
-          `
-          : ""
-      }
     `;
-
-    if (item.status === "reserviert" && !donorConfirmed) {
-      const btn = el.querySelector(".btn");
-
-      btn.addEventListener("click", async () => {
-        btn.disabled = true;
-        btn.textContent = "…";
-
-        const res = await fetch(`${API}/items/${item.id}/handover/donor`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ playerId })
-        });
-
-        if (!res.ok) {
-          alert("Übergabe konnte nicht bestätigt werden.");
-          btn.disabled = false;
-          btn.textContent = "Übergabe erfolgt";
-          return;
-        }
-
-        btn.textContent = "Übergabe bestätigt";
-      });
-    }
 
     list.appendChild(el);
   });
