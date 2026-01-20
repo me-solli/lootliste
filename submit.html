@@ -6,9 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-/* ================================
-   BASIS / TOKENS
-================================ */
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
@@ -31,9 +28,7 @@ body{
   margin:0 auto;
 }
 
-/* ================================
-   HERO
-================================ */
+/* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
@@ -79,6 +74,10 @@ body{
   border-radius:50%;
 }
 
+.auth-name{
+  font-weight:500;
+}
+
 .auth-link{
   margin-left:6px;
   font-size:12px;
@@ -88,9 +87,7 @@ body{
 }
 .auth-link:hover{opacity:1;text-decoration:underline}
 
-/* ================================
-   CONTENT
-================================ */
+/* CONTENT */
 .container{
   max-width:820px;
   margin:0 auto;
@@ -110,9 +107,7 @@ body{
   font-size:12px;
 }
 
-/* ================================
-   FORM CARD
-================================ */
+/* FORM CARD */
 .form-card{
   background:linear-gradient(
     to bottom,
@@ -149,9 +144,6 @@ input:focus,select:focus{
   box-shadow:0 0 0 1px rgba(245,196,81,.3);
 }
 
-/* ================================
-   BUTTON
-================================ */
 button{
   margin-top:26px;
   padding:14px;
@@ -169,27 +161,15 @@ button{
   color:#f5e6b3;
 }
 
-button:hover{
-  border-color:var(--gold);
-}
+button:hover{ border-color:var(--gold); }
+button:disabled{ opacity:.5; cursor:not-allowed; }
 
-button:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-/* ================================
-   STATUS
-================================ */
 .status{
   margin-top:16px;
   font-size:14px;
   opacity:.85;
 }
 
-/* ================================
-   PREVIEW
-================================ */
 .preview{
   margin-top:14px;
   display:none;
@@ -202,9 +182,6 @@ button:disabled{
   cursor:zoom-in;
 }
 
-/* ================================
-   OVERLAY
-================================ */
 .overlay{
   position:fixed;
   inset:0;
@@ -232,7 +209,7 @@ button:disabled{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="uidLabel">–</span>
+      <span class="auth-name">me_solli</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
@@ -246,13 +223,12 @@ button:disabled{
 <div class="container">
 
   <div class="user-box">
-    Aktive User-ID:
-    <code id="uid">–</code>
+    Aktiver Nutzer:
+    <code>me_solli</code>
   </div>
 
   <div class="form-card">
     <form id="form">
-
       <label>Screenshot (Pflicht)</label>
       <input type="file" id="image" accept="image/*" required>
 
@@ -291,7 +267,6 @@ button:disabled{
 
       <button type="submit">Item einreichen</button>
       <div class="status" id="status"></div>
-
     </form>
   </div>
 
@@ -303,17 +278,13 @@ button:disabled{
 </div>
 
 <script>
-/* ===============================
-   CONFIG
-=============================== */
+/* CONFIG */
 const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
 const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
 const ACTIVE_SEASON = "non-ladder";
 
-/* ===============================
-   USER ID
-=============================== */
+/* USER ID (intern) */
 function getUserId(){
   let id = localStorage.getItem("lootliste_user_id");
   if(!id){
@@ -322,14 +293,9 @@ function getUserId(){
   }
   return id;
 }
-
 const userId = getUserId();
-document.getElementById("uid").textContent = userId;
-document.getElementById("uidLabel").textContent = "ID: " + userId;
 
-/* ===============================
-   PREVIEW / ZOOM
-=============================== */
+/* PREVIEW */
 const fileInput  = document.getElementById("image");
 const preview    = document.getElementById("preview");
 const previewImg = document.getElementById("previewImg");
@@ -348,9 +314,7 @@ fileInput.addEventListener("change", () => {
 previewImg.onclick = () => overlay.style.display = "flex";
 overlay.onclick    = () => overlay.style.display = "none";
 
-/* ===============================
-   CLOUDINARY
-=============================== */
+/* CLOUDINARY */
 async function uploadImage(file){
   const fd = new FormData();
   fd.append("file", file);
@@ -366,9 +330,7 @@ async function uploadImage(file){
   return data.secure_url;
 }
 
-/* ===============================
-   SUBMIT
-=============================== */
+/* SUBMIT */
 document.getElementById("form").addEventListener("submit", async e => {
   e.preventDefault();
   const status = document.getElementById("status");
