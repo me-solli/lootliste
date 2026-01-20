@@ -6,9 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-/* ================================
-   BASIS / TOKENS
-================================ */
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
@@ -29,9 +26,7 @@ body{
   margin:0 auto;
 }
 
-/* ================================
-   HERO
-================================ */
+/* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
@@ -56,18 +51,14 @@ body{
   opacity:.85;
 }
 
-/* ================================
-   CONTENT
-================================ */
+/* CONTENT */
 .container{
   max-width:420px;
   margin:0 auto;
   padding:40px 24px 70px;
 }
 
-/* ================================
-   CARD
-================================ */
+/* CARD */
 .card{
   background:linear-gradient(
     to bottom,
@@ -266,7 +257,7 @@ loginForm.addEventListener("submit", async e => {
   location.href = "index.html";
 });
 
-/* REGISTER */
+/* REGISTER – UPGRADE BESTEHENDER ID */
 registerForm.addEventListener("submit", async e => {
   e.preventDefault();
   status.textContent = "⏳ Account wird erstellt…";
@@ -276,7 +267,8 @@ registerForm.addEventListener("submit", async e => {
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
       username: regUser.value.trim(),
-      password: regPass.value
+      password: regPass.value,
+      userId: localStorage.getItem("lootliste_user_id")
     })
   });
 
