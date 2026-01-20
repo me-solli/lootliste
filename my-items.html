@@ -14,7 +14,7 @@
       border:1px dashed #333;
       border-radius:10px;
       text-align:center;
-      opacity:.75;
+      opacity:.8;
     }
     .items-grid{
       display:grid;
@@ -50,6 +50,31 @@
       font-size:13px;
       opacity:.85;
     }
+    .user-box{
+      margin-top:10px;
+      font-size:13px;
+      opacity:.75;
+    }
+    .user-box code{
+      background:#111;
+      padding:2px 6px;
+      border-radius:6px;
+      font-size:12px;
+    }
+    .reset-btn{
+      margin-top:10px;
+      background:none;
+      border:1px solid #333;
+      color:#aaa;
+      padding:6px 10px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:12px;
+    }
+    .reset-btn:hover{
+      border-color:#666;
+      color:#fff;
+    }
   </style>
 </head>
 
@@ -59,6 +84,11 @@
   <section class="section">
     <h1>Meine eingereichten Items</h1>
     <p class="muted">Items, die wirklich deiner aktuellen User-ID gehören</p>
+
+    <div class="user-box">
+      Aktive User-ID:
+      <code id="uid">–</code>
+    </div>
 
     <div id="output"></div>
   </section>
@@ -74,8 +104,8 @@ const ACTIVE_SEASON = "non-ladder";
 /* ===============================
    USER ID
 ================================ */
-const userId = localStorage.getItem("lootliste_user_id");
-console.log("MY-ITEMS → LOCAL USER ID:", userId);
+let userId = localStorage.getItem("lootliste_user_id");
+document.getElementById("uid").textContent = userId || "keine";
 
 /* ===============================
    LOAD ITEMS
@@ -86,8 +116,12 @@ console.log("MY-ITEMS → LOCAL USER ID:", userId);
   if(!userId){
     output.innerHTML = `
       <div class="empty-box">
-        ❌ Keine User-ID gefunden.<br>
-        Bitte Seite neu laden oder erneut ein Item einreichen.
+        ❌ Keine User-ID gefunden.<br><br>
+        Du befindest dich vermutlich in einem neuen Browser
+        oder Inkognito-Fenster.<br><br>
+        <button class="reset-btn" onclick="location.reload()">
+          Seite neu laden
+        </button>
       </div>
     `;
     return;
@@ -97,21 +131,24 @@ console.log("MY-ITEMS → LOCAL USER ID:", userId);
     const res = await fetch(BACKEND_URL);
     const items = await res.json();
 
-    console.log("MY-ITEMS → TOTAL ITEMS:", items.length);
-    console.log("MY-ITEMS → RAW ITEMS:", items);
-
-    /* 🔑 EINZIG WICHTIGER FIX */
     const mine = items.filter(i =>
       i.donorUserId === userId &&
       (i.season ?? "non-ladder") === ACTIVE_SEASON
     );
 
-    console.log("MY-ITEMS → MATCHING ITEMS:", mine);
-
     if(mine.length === 0){
       output.innerHTML = `
         <div class="empty-box">
-          Kein Item im Backend hat <b>donorUserId = ${userId}</b>.
+          ⚠️ Keine Items für diese User-ID gefunden.<br><br>
+          Das passiert z. B. bei:
+          <ul style="text-align:left;max-width:420px;margin:10px auto;">
+            <li>anderem Browser</li>
+            <li>Inkognito-Fenster</li>
+            <li>gelöschtem LocalStorage</li>
+          </ul>
+          <button class="reset-btn" onclick="resetUser()">
+            User-ID zurücksetzen
+          </button>
         </div>
       `;
       return;
@@ -123,7 +160,6 @@ console.log("MY-ITEMS → LOCAL USER ID:", userId);
     mine.forEach(item => {
       const card = document.createElement("div");
       card.className = "item-card";
-
       card.innerHTML = `
         <img src="${item.screenshot}" alt="">
         <div class="item-meta">
@@ -132,7 +168,6 @@ console.log("MY-ITEMS → LOCAL USER ID:", userId);
           <div class="status">Status: ${item.status}</div>
         </div>
       `;
-
       grid.appendChild(card);
     });
 
@@ -147,6 +182,14 @@ console.log("MY-ITEMS → LOCAL USER ID:", userId);
     `;
   }
 })();
+
+/* ===============================
+   HELPERS
+================================ */
+function resetUser(){
+  localStorage.removeItem("lootliste_user_id");
+  location.reload();
+}
 </script>
 
 </body>
