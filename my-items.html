@@ -117,10 +117,10 @@ async function loadMyItems(){
   const items = await res.json();
 
   // 🔑 NUR meine Items + aktive Season
-  const mine = items.filter(i =>
-    i.donor === userId &&
-    i.season === ACTIVE_SEASON
-  );
+const mine = items.filter(i =>
+  i.donorId === userId &&
+  (i.season ?? "non-ladder") === ACTIVE_SEASON
+);
 
   if (mine.length === 0) {
     list.innerHTML =
