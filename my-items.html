@@ -198,7 +198,7 @@ body{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="uidLabel">me_solli</span>
+      <span id="playerIdLabel" data-placeholder="Spieler lädt…"></span>
       <a href="index.html" class="auth-link">Zur Lootliste</a>
     </div>
 
@@ -212,7 +212,7 @@ body{
 
   <div class="user-box">
     Aktiver Nutzer:
-    <code>me_solli</code>
+    <code id="userDisplay">–</code>
   </div>
 
   <div id="output"></div>
@@ -228,9 +228,21 @@ const API = "https://lootliste-production.up.railway.app/items";
 const ACTIVE_SEASON = "non-ladder";
 
 /* ===============================
-   USER ID (intern, unverändert)
+   USER ID + ANZEIGE (ECHT)
 ================================ */
 const userId = localStorage.getItem("lootliste_user_id");
+
+const label = document.getElementById("playerIdLabel");
+const userDisplay = document.getElementById("userDisplay");
+
+if (userId) {
+  const displayName = "Spieler " + userId.slice(4, 9);
+  label.textContent = displayName;
+  userDisplay.textContent = displayName;
+} else {
+  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+  userDisplay.textContent = "–";
+}
 
 /* ===============================
    LOAD ITEMS
@@ -249,7 +261,11 @@ const userId = localStorage.getItem("lootliste_user_id");
   }
 
   try{
-    const res = await fetch(API);
+    const res = await fetch(API, {
+      headers: {
+        "X-User-Id": userId
+      }
+    });
     const items = await res.json();
 
     const mine = items.filter(i =>
