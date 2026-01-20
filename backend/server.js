@@ -22,7 +22,7 @@ const USERS_FILE = path.join(DATA_DIR, "users.json");
 const ACCOUNTS_FILE = path.join(DATA_DIR, "accounts.json");
 
 // ===============================
-// MIDDLEWARE (CORS MANUELL)
+// MIDDLEWARE (CORS)
 // ===============================
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -68,7 +68,7 @@ let users = loadJSON(USERS_FILE, []);
 let accounts = loadJSON(ACCOUNTS_FILE, []);
 
 // ===============================
-// USER SYSTEM (GAST – BLEIBT)
+// USER SYSTEM (GAST / SOFT-ACCOUNT)
 // ===============================
 function createUser() {
   const id = "usr_" + crypto.randomBytes(6).toString("hex");
@@ -81,7 +81,7 @@ function createUser() {
   return user;
 }
 
-// automatische Gast-User-ID
+// automatische User-ID (Gast oder registriert)
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
   let user = users.find(u => u.id === headerId);
@@ -106,13 +106,17 @@ function findAccountByUsername(username) {
   return accounts.find(a => a.username === username);
 }
 
+function findAccountByUserId(userId) {
+  return accounts.find(a => a.userId === userId);
+}
+
 // ===============================
-// AUTH – REGISTER (MINIMAL)
+// AUTH – REGISTER (UPGRADE EXISTIERENDER ID)
 // ===============================
 app.post("/auth/register", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, userId } = req.body;
 
-  if (!username || !password) {
+  if (!username || !password || !userId) {
     return res.status(400).json({ error: "Missing fields" });
   }
 
@@ -120,15 +124,18 @@ app.post("/auth/register", async (req, res) => {
     return res.status(409).json({ error: "Username already exists" });
   }
 
-  const userId = "usr_" + crypto.randomBytes(6).toString("hex");
+  if (findAccountByUserId(userId)) {
+    return res.status(409).json({ error: "Account already exists for this user" });
+  }
+
   const passwordHash = await bcrypt.hash(password, 10);
 
   const account = {
-    userId,
+    userId, // 🔥 WICHTIG: bestehende ID
     username,
     passwordHash,
     createdAt: new Date().toISOString(),
-    lastLoginAt: null
+    lastLoginAt: new Date().toISOString()
   };
 
   accounts.push(account);
@@ -163,6 +170,23 @@ app.post("/auth/login", async (req, res) => {
 });
 
 // ===============================
+// ME – AKTUELLER USER (READ-ONLY)
+// ===============================
+app.get("/me", (req, res) => {
+  const userId = req.user.id;
+  const account = findAccountByUserId(userId);
+
+  if (!account) {
+    return res.json({ userId });
+  }
+
+  res.json({
+    userId: account.userId,
+    username: account.username
+  });
+});
+
+// ===============================
 // HEALTHCHECK
 // ===============================
 app.get("/", (req, res) => {
@@ -177,7 +201,7 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
-// POST ITEM (MIT donorUserId)
+// POST ITEM
 // ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season } = req.body;
