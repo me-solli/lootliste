@@ -75,10 +75,6 @@ body{
   border-radius:50%;
 }
 
-.auth-name{
-  font-weight:500;
-}
-
 .auth-link{
   margin-left:6px;
   font-size:12px;
@@ -157,7 +153,7 @@ body{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span class="auth-name">me_solli</span>
+      <span id="playerIdLabel" data-placeholder="Spieler lädt…"></span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
       <a href="my-claims.html" class="auth-link">Meine Claims</a>
@@ -176,15 +172,31 @@ body{
 
 <script>
 /* ===============================
+   USER ID + ANZEIGE (ECHT)
+================================ */
+const userId = localStorage.getItem("lootliste_user_id");
+const label  = document.getElementById("playerIdLabel");
+
+if (userId) {
+  label.textContent = "Spieler " + userId.slice(4, 9);
+} else {
+  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+}
+
+/* ===============================
    CONFIG
 ================================ */
-const API = "https://lootliste-production.up.railway.app";
+const API  = "https://lootliste-production.up.railway.app";
 const list = document.getElementById("list");
 
 loadArchive();
 
 async function loadArchive(){
-  const res = await fetch(API + "/items");
+  const res = await fetch(API + "/items", {
+    headers: {
+      "X-User-Id": userId || ""
+    }
+  });
   const items = await res.json();
 
   const done = items
