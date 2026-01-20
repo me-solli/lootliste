@@ -241,21 +241,26 @@ document.getElementById("form").addEventListener("submit", async e => {
   const status = document.getElementById("status");
   status.textContent = "📤 Lade Screenshot hoch…";
 
-  try{
+  try {
     const screenshot = await uploadImage(fileInput.files[0]);
 
     status.textContent = "💾 Speichere Item…";
 
     await fetch(BACKEND_URL, {
       method: "POST",
-      headers: { "Content-Type":"application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: document.getElementById("name").value.trim(),
         quality: document.getElementById("quality").value,
         type: document.getElementById("type").value,
         screenshot,
-        donorId: userId,          // 🔑 GENAU WIE BACKEND
-        season: ACTIVE_SEASON,    // 🆕 vorbereitet
+
+        // 🔑 KORREKTES FELD – exakt wie Backend & my-items
+        donorUserId: userId,
+
+        // 🆕 Season (passt schon)
+        season: ACTIVE_SEASON,
+
         status: "verfügbar"
       })
     });
