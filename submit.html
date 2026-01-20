@@ -175,87 +175,101 @@ const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
 
 /* ===============================
-   Player-ID (stabil)
+   SEASON (ZENTRAL)
 =============================== */
-let playerId = localStorage.getItem("playerId");
-if(!playerId){
-  playerId = "plr_" + Math.random().toString(16).slice(2,10);
-  localStorage.setItem("playerId",playerId);
-}
-document.getElementById("playerInfo").textContent = "Deine ID: " + playerId;
+const ACTIVE_SEASON = "non-ladder";
 
 /* ===============================
-   Screenshot Preview + Zoom
+   USER-ID (ZENTRAL & STABIL)
 =============================== */
-const fileInput = document.getElementById("image");
-const preview = document.getElementById("preview");
+function getUserId(){
+  let id = localStorage.getItem("lootliste_user_id");
+  if(!id){
+    id = "usr_" + crypto.randomUUID().slice(0,8);
+    localStorage.setItem("lootliste_user_id", id);
+  }
+  return id;
+}
+
+const userId = getUserId();
+document.getElementById("playerInfo").textContent =
+  "Deine ID: " + userId;
+
+/* ===============================
+   SCREENSHOT PREVIEW + ZOOM
+=============================== */
+const fileInput  = document.getElementById("image");
+const preview    = document.getElementById("preview");
 const previewImg = document.getElementById("previewImg");
-const overlay = document.getElementById("overlay");
+const overlay    = document.getElementById("overlay");
 const overlayImg = document.getElementById("overlayImg");
 
-fileInput.addEventListener("change",()=>{
+fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
-  if(!file) return;
+  if (!file) return;
+
   const url = URL.createObjectURL(file);
   previewImg.src = url;
   overlayImg.src = url;
   preview.style.display = "block";
 });
 
-previewImg.onclick = ()=>overlay.style.display="flex";
-overlay.onclick = ()=>overlay.style.display="none";
+previewImg.onclick = () => overlay.style.display = "flex";
+overlay.onclick    = () => overlay.style.display = "none";
 
 /* ===============================
-   Cloudinary Upload
+   CLOUDINARY UPLOAD
 =============================== */
 async function uploadImage(file){
   const fd = new FormData();
-  fd.append("file",file);
-  fd.append("upload_preset",UPLOAD_PRESET);
+  fd.append("file", file);
+  fd.append("upload_preset", UPLOAD_PRESET);
 
   const res = await fetch(
     `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-    {method:"POST",body:fd}
+    { method:"POST", body:fd }
   );
+
   const data = await res.json();
   if(!data.secure_url) throw new Error("Upload fehlgeschlagen");
   return data.secure_url;
 }
 
 /* ===============================
-   Submit
+   SUBMIT
 =============================== */
-document.getElementById("form").addEventListener("submit",async e=>{
+document.getElementById("form").addEventListener("submit", async e => {
   e.preventDefault();
   const status = document.getElementById("status");
-  status.textContent="📤 Lade Screenshot hoch…";
+  status.textContent = "📤 Lade Screenshot hoch…";
 
   try{
     const file = fileInput.files[0];
     const screenshot = await uploadImage(file);
 
-    status.textContent="💾 Speichere Item…";
+    status.textContent = "💾 Speichere Item…";
 
-    await fetch(BACKEND_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        name:document.getElementById("name").value.trim(),
-        quality:document.getElementById("quality").value,
-        type:document.getElementById("type").value,
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({
+        name: document.getElementById("name").value.trim(),
+        quality: document.getElementById("quality").value,
+        type: document.getElementById("type").value,
         screenshot,
-        playerId,
-        status:"verfügbar"
+        donor: userId,
+        season: ACTIVE_SEASON,
+        status: "verfügbar"
       })
     });
 
-    status.textContent="✅ Item erfolgreich eingereicht";
+    status.textContent = "✅ Item erfolgreich eingereicht";
     e.target.reset();
-    preview.style.display="none";
+    preview.style.display = "none";
 
   }catch(err){
     console.error(err);
-    status.textContent="❌ Fehler beim Einreichen";
+    status.textContent = "❌ Fehler beim Einreichen";
   }
 });
 </script>
