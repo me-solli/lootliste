@@ -68,7 +68,7 @@ let users = loadJSON(USERS_FILE, []);
 let accounts = loadJSON(ACCOUNTS_FILE, []);
 
 // ===============================
-// USER SYSTEM (GAST / SOFT-ACCOUNT)
+// USER SYSTEM (GAST / ACCOUNT)
 // ===============================
 function createUser() {
   const id = "usr_" + crypto.randomBytes(6).toString("hex");
@@ -81,11 +81,25 @@ function createUser() {
   return user;
 }
 
-// automatische User-ID (Gast oder registriert)
+// 🔐 Zentrale User-Middleware (FINAL & KORREKT)
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
-  let user = users.find(u => u.id === headerId);
+  let user = null;
 
+  // 1️⃣ existiert als normaler Gast-User
+  if (headerId) {
+    user = users.find(u => u.id === headerId);
+  }
+
+  // 2️⃣ existiert als registrierter Account (auch ohne users.json)
+  if (!user && headerId) {
+    const acc = accounts.find(a => a.userId === headerId);
+    if (acc) {
+      user = { id: headerId };
+    }
+  }
+
+  // 3️⃣ sonst: neuer Gast
   if (!user) {
     user = createUser();
   }
@@ -111,7 +125,7 @@ function findAccountByUserId(userId) {
 }
 
 // ===============================
-// AUTH – REGISTER (UPGRADE EXISTIERENDER ID)
+// AUTH – REGISTER (UPGRADE BESTEHENDER ID)
 // ===============================
 app.post("/auth/register", async (req, res) => {
   const { username, password, userId } = req.body;
@@ -131,7 +145,7 @@ app.post("/auth/register", async (req, res) => {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const account = {
-    userId, // 🔥 WICHTIG: bestehende ID
+    userId,               // 🔥 gleiche ID wie Gast
     username,
     passwordHash,
     createdAt: new Date().toISOString(),
