@@ -1187,35 +1187,54 @@ async function loadItems() {
     }
   });
 
-  // 🔐 User-ID aus Header ODER LocalStorage setzen & anzeigen
+  // 🔐 User-ID aus Header ODER LocalStorage setzen
   const headerUid = res.headers.get("X-User-Id");
   if (headerUid) {
     localStorage.setItem("lootliste_user_id", headerUid);
   }
 
-const label = document.getElementById("playerIdLabel");
-const uid = localStorage.getItem("lootliste_user_id");
+  const label = document.getElementById("playerIdLabel");
+  const userId = localStorage.getItem("lootliste_user_id");
 
-if (label) {
-  if (uid) {
-    label.textContent = "Spieler " + uid.slice(4, 9);
-  } else {
-    label.textContent =
-      label.dataset.placeholder || "Spieler lädt…";
+  // 👤 Anzeige: Username (falls registriert) → sonst Spieler xxxx
+  async function setUserLabel() {
+    if (!label) return;
+
+    if (!userId) {
+      label.textContent =
+        label.dataset.placeholder || "Spieler lädt…";
+      return;
+    }
+
+    try {
+      const meRes = await fetch(API + "/me", {
+        headers: { "X-User-Id": userId }
+      });
+      const me = await meRes.json();
+
+      if (me.username) {
+        label.textContent = me.username;
+      } else {
+        label.textContent = "Spieler " + userId.slice(4, 9);
+      }
+    } catch {
+      label.textContent = "Spieler " + userId.slice(4, 9);
+    }
   }
-}
 
-const data = await res.json();
+  setUserLabel();
 
-// 🔒 Öffentliche Liste:
-// nur verfügbare Items DER AKTIVEN SEASON
-const available = data.filter(i =>
-  i.status === "verfügbar" &&
-  (i.season ?? "non-ladder") === ACTIVE_SEASON
-);
+  const data = await res.json();
 
-state.items = available;
-state.filtered = available;
+  // 🔒 Öffentliche Liste:
+  // nur verfügbare Items DER AKTIVEN SEASON
+  const available = data.filter(i =>
+    i.status === "verfügbar" &&
+    (i.season ?? "non-ladder") === ACTIVE_SEASON
+  );
+
+  state.items = available;
+  state.filtered = available;
 }
 
 function updateMeta() {
