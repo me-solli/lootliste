@@ -74,10 +74,6 @@ body{
   border-radius:50%;
 }
 
-.auth-name{
-  font-weight:500;
-}
-
 .auth-link{
   margin-left:6px;
   font-size:12px;
@@ -209,7 +205,7 @@ button:disabled{ opacity:.5; cursor:not-allowed; }
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span class="auth-name">me_solli</span>
+      <span id="playerIdLabel" data-placeholder="Spieler lädt…"></span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
@@ -224,7 +220,7 @@ button:disabled{ opacity:.5; cursor:not-allowed; }
 
   <div class="user-box">
     Aktiver Nutzer:
-    <code>me_solli</code>
+    <code id="userDisplay">–</code>
   </div>
 
   <div class="form-card">
@@ -278,13 +274,9 @@ button:disabled{ opacity:.5; cursor:not-allowed; }
 </div>
 
 <script>
-/* CONFIG */
-const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
-const CLOUD_NAME = "dcczi93p6";
-const UPLOAD_PRESET = "lootliste_unsigned";
-const ACTIVE_SEASON = "non-ladder";
-
-/* USER ID (intern) */
+/* ===============================
+   USER ID (ECHT)
+================================ */
 function getUserId(){
   let id = localStorage.getItem("lootliste_user_id");
   if(!id){
@@ -295,7 +287,32 @@ function getUserId(){
 }
 const userId = getUserId();
 
-/* PREVIEW */
+/* ===============================
+   USER ANZEIGE (ECHT)
+================================ */
+const label = document.getElementById("playerIdLabel");
+const userDisplay = document.getElementById("userDisplay");
+
+if (userId) {
+  const displayName = "Spieler " + userId.slice(4, 9);
+  label.textContent = displayName;
+  userDisplay.textContent = displayName;
+} else {
+  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+  userDisplay.textContent = "–";
+}
+
+/* ===============================
+   CONFIG
+================================ */
+const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
+const CLOUD_NAME = "dcczi93p6";
+const UPLOAD_PRESET = "lootliste_unsigned";
+const ACTIVE_SEASON = "non-ladder";
+
+/* ===============================
+   PREVIEW
+================================ */
 const fileInput  = document.getElementById("image");
 const preview    = document.getElementById("preview");
 const previewImg = document.getElementById("previewImg");
@@ -314,7 +331,9 @@ fileInput.addEventListener("change", () => {
 previewImg.onclick = () => overlay.style.display = "flex";
 overlay.onclick    = () => overlay.style.display = "none";
 
-/* CLOUDINARY */
+/* ===============================
+   CLOUDINARY
+================================ */
 async function uploadImage(file){
   const fd = new FormData();
   fd.append("file", file);
@@ -330,7 +349,9 @@ async function uploadImage(file){
   return data.secure_url;
 }
 
-/* SUBMIT */
+/* ===============================
+   SUBMIT
+================================ */
 document.getElementById("form").addEventListener("submit", async e => {
   e.preventDefault();
   const status = document.getElementById("status");
