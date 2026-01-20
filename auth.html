@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<title>Account – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+/* ================================
+   BASIS / TOKENS
+================================ */
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --border:#2a2a2a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#eaeaea;
+}
+
+.wrapper{
+  max-width:1500px;
+  margin:0 auto;
+}
+
+/* ================================
+   HERO
+================================ */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
+}
+
+.hero-inner{
+  padding:36px 36px 32px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+}
+
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
+}
+
+.hero p{
+  margin:8px 0 0;
+  opacity:.85;
+}
+
+/* ================================
+   CONTENT
+================================ */
+.container{
+  max-width:420px;
+  margin:0 auto;
+  padding:40px 24px 70px;
+}
+
+/* ================================
+   CARD
+================================ */
+.card{
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.045),
+    rgba(255,255,255,.02)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  padding:26px;
+}
+
+.tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:18px;
+}
+
+.tab{
+  flex:1;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.04);
+  color:#ddd;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.tab.active{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+label{
+  display:block;
+  margin-top:16px;
+  margin-bottom:6px;
+  font-size:14px;
+  font-weight:600;
+}
+
+input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid #333;
+  background:#111;
+  color:#eee;
+  font-size:14px;
+}
+
+input:focus{
+  outline:none;
+  border-color:var(--gold);
+}
+
+button{
+  margin-top:22px;
+  padding:14px;
+  width:100%;
+  font-size:15px;
+  font-weight:600;
+  border-radius:14px;
+  border:1px solid rgba(245,196,81,.4);
+  cursor:pointer;
+  background:linear-gradient(
+    to right,
+    rgba(245,196,81,.25),
+    rgba(245,196,81,.15)
+  );
+  color:#f5e6b3;
+}
+
+button:hover{
+  border-color:var(--gold);
+}
+
+.status{
+  margin-top:14px;
+  font-size:14px;
+  opacity:.85;
+  min-height:18px;
+}
+
+.back{
+  display:block;
+  margin-top:26px;
+  text-align:center;
+  font-size:13px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.85;
+}
+.back:hover{text-decoration:underline}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Account</h1>
+    <p>Einloggen oder neuen Account erstellen</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="card">
+
+    <div class="tabs">
+      <button class="tab active" id="tabLogin">Login</button>
+      <button class="tab" id="tabRegister">Registrieren</button>
+    </div>
+
+    <!-- LOGIN -->
+    <form id="loginForm">
+      <label>Username</label>
+      <input id="loginUser" autocomplete="username" required>
+
+      <label>Passwort</label>
+      <input id="loginPass" type="password" autocomplete="current-password" required>
+
+      <button type="submit">Einloggen</button>
+    </form>
+
+    <!-- REGISTER -->
+    <form id="registerForm" style="display:none">
+      <label>Username</label>
+      <input id="regUser" autocomplete="username" required>
+
+      <label>Passwort</label>
+      <input id="regPass" type="password" autocomplete="new-password" required>
+
+      <button type="submit">Account erstellen</button>
+    </form>
+
+    <div class="status" id="status"></div>
+
+  </div>
+
+  <a class="back" href="index.html">← zurück zur Lootliste</a>
+
+</div>
+</div>
+
+<script>
+const API = "https://lootliste-production.up.railway.app";
+
+const tabLogin = document.getElementById("tabLogin");
+const tabRegister = document.getElementById("tabRegister");
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+const status = document.getElementById("status");
+
+/* Tabs */
+tabLogin.onclick = () => {
+  tabLogin.classList.add("active");
+  tabRegister.classList.remove("active");
+  loginForm.style.display = "block";
+  registerForm.style.display = "none";
+  status.textContent = "";
+};
+
+tabRegister.onclick = () => {
+  tabRegister.classList.add("active");
+  tabLogin.classList.remove("active");
+  loginForm.style.display = "none";
+  registerForm.style.display = "block";
+  status.textContent = "";
+};
+
+/* LOGIN */
+loginForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  status.textContent = "⏳ Einloggen…";
+
+  const res = await fetch(API + "/auth/login", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      username: loginUser.value.trim(),
+      password: loginPass.value
+    })
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    status.textContent = "❌ Login fehlgeschlagen";
+    return;
+  }
+
+  localStorage.setItem("lootliste_user_id", data.userId);
+  status.textContent = "✅ Eingeloggt";
+  location.href = "index.html";
+});
+
+/* REGISTER */
+registerForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  status.textContent = "⏳ Account wird erstellt…";
+
+  const res = await fetch(API + "/auth/register", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      username: regUser.value.trim(),
+      password: regPass.value
+    })
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    status.textContent = "❌ Username bereits vergeben";
+    return;
+  }
+
+  localStorage.setItem("lootliste_user_id", data.userId);
+  status.textContent = "✅ Account erstellt & eingeloggt";
+  location.href = "index.html";
+});
+</script>
+
+</body>
+</html>
