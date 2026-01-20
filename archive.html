@@ -1,70 +1,157 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Archiv – Übergebene Items</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
+/* ================================
+   BASIS / TOKENS
+================================ */
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+  --soft:#1a1a1a;
+  --blue:#8fd1ff;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:#0b0b0b;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
 
 .wrapper{
-  max-width:1100px;
+  max-width:1500px;
   margin:0 auto;
-  padding:30px 20px;
 }
 
-h1{
-  font-size:22px;
-  margin-bottom:6px;
+/* ================================
+   HERO
+================================ */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
 }
 
-.sub{
-  font-size:13px;
-  opacity:.7;
-  margin-bottom:22px;
+.hero-inner{
+  padding:36px 36px 32px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
 }
 
-.items{
-  display:grid;
-  gap:14px;
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
 }
 
-.item{
-  padding:16px 18px;
-  border:1px solid #262626;
+.hero p{
+  margin:8px 0 0;
+  opacity:.85;
+}
+
+/* Auth Box */
+.auth-box{
+  position:absolute;
+  top:22px;
+  right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
   border-radius:14px;
-  background:#111;
-}
-
-.item-name{
-  font-size:16px;
-  font-weight:600;
-}
-
-.meta{
-  margin-top:6px;
+  background:rgba(0,0,0,.55);
   font-size:13px;
-  opacity:.75;
 }
 
-.status{
-  margin-top:6px;
-  font-size:13px;
-  color:#8fd1ff;
+.auth-box img{
+  width:28px;
+  height:28px;
+  border-radius:50%;
 }
 
-.empty{
-  padding:18px;
-  border:1px dashed #333;
-  border-radius:14px;
-  opacity:.7;
+.auth-link{
+  margin-left:6px;
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.85;
+}
+.auth-link:hover{opacity:1;text-decoration:underline}
+
+/* ================================
+   CONTENT
+================================ */
+.container{
+  padding:34px 28px 60px;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+.empty-box{
+  margin-top:30px;
+  padding:26px 24px;
+  border:1px dashed rgba(255,255,255,.18);
+  border-radius:16px;
+  text-align:center;
   font-size:14px;
+  color:#cfcfcf;
+  background:rgba(255,255,255,.03);
+}
+
+/* ================================
+   ARCHIVE GRID / CARDS
+================================ */
+.archive-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:22px;
+}
+
+.archive-card{
+  padding:18px;
+  border-radius:20px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.045),
+    rgba(255,255,255,.02)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.archive-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 28px rgba(0,0,0,.45);
+}
+
+.archive-name{
+  font-size:18px;
+  font-weight:600;
+  color:#f0f0f0;
+}
+
+.archive-meta{
+  margin-top:6px;
+  font-size:13px;
+  color:#b5b5b5;
+}
+
+.archive-status{
+  margin-top:10px;
+  font-size:13px;
+  color:var(--blue);
 }
 </style>
 </head>
@@ -72,14 +159,33 @@ h1{
 <body>
 <div class="wrapper">
 
-<h1>Archiv</h1>
-<div class="sub">Abgeschlossene Übergaben</div>
+<header class="hero">
+  <div class="hero-inner">
 
-<div id="list" class="items"></div>
+    <div class="auth-box">
+      <img src="img/avatars/default.png" alt="Avatar">
+      <a href="index.html" class="auth-link">Lootliste</a>
+      <a href="my-items.html" class="auth-link">Meine Items</a>
+      <a href="my-claims.html" class="auth-link">Meine Claims</a>
+    </div>
 
+    <h1>Archiv</h1>
+    <p>Abgeschlossene Übergaben</p>
+
+  </div>
+</header>
+
+<div class="container">
+
+  <div id="list"></div>
+
+</div>
 </div>
 
 <script>
+/* ===============================
+   CONFIG
+================================ */
 const API = "https://lootliste-production.up.railway.app";
 const list = document.getElementById("list");
 
@@ -92,36 +198,54 @@ async function loadArchive(){
   const done = items
     .filter(i => i.status === "übergeben")
     .sort((a,b) => {
-      const da = a.handover?.receiverConfirmedAt || a.handover?.donorConfirmedAt || "";
-      const db = b.handover?.receiverConfirmedAt || b.handover?.donorConfirmedAt || "";
+      const da =
+        a.handover?.receiverConfirmedAt ||
+        a.handover?.donorConfirmedAt ||
+        "";
+      const db =
+        b.handover?.receiverConfirmedAt ||
+        b.handover?.donorConfirmedAt ||
+        "";
       return db.localeCompare(da);
     });
 
   if (done.length === 0) {
-    list.innerHTML = "<div class='empty'>Noch keine abgeschlossenen Übergaben.</div>";
+    list.innerHTML = `
+      <div class="empty-box">
+        Noch keine abgeschlossenen Übergaben.
+      </div>
+    `;
     return;
   }
 
+  const grid = document.createElement("div");
+  grid.className = "archive-grid";
+
   done.forEach(item => {
-    const el = document.createElement("div");
-    el.className = "item";
+    const card = document.createElement("div");
+    card.className = "archive-card";
 
     const date =
       item.handover?.receiverConfirmedAt ||
       item.handover?.donorConfirmedAt ||
       item.claimedAt;
 
-    el.innerHTML = `
-      <div class="item-name">${item.name}</div>
-      <div class="meta">
-        Kategorie: ${item.category || "–"} ·
-        Übergeben am: ${date ? new Date(date).toLocaleDateString("de-DE") : "–"}
+    card.innerHTML = `
+      <div class="archive-name">${item.name}</div>
+      <div class="archive-meta">
+        Kategorie: ${item.category || item.type || "–"} ·
+        Übergeben am:
+        ${date ? new Date(date).toLocaleDateString("de-DE") : "–"}
       </div>
-      <div class="status">Status: übergeben</div>
+      <div class="archive-status">
+        Status: übergeben
+      </div>
     `;
 
-    list.appendChild(el);
+    grid.appendChild(card);
   });
+
+  list.appendChild(grid);
 }
 </script>
 
