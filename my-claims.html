@@ -185,7 +185,7 @@ body{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="uidLabel">me_solli</span>
+      <span id="playerIdLabel" data-placeholder="Spieler lädt…"></span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
@@ -200,7 +200,7 @@ body{
 
   <div class="user-box">
     Aktiver Nutzer:
-    <code>me_solli</code>
+    <code id="userDisplay">–</code>
   </div>
 
   <div id="list"></div>
@@ -214,6 +214,21 @@ body{
 ================================ */
 const API = "https://lootliste-production.up.railway.app";
 const playerId = localStorage.getItem("lootliste_user_id");
+
+/* ===============================
+   USER ID + ANZEIGE (ECHT)
+================================ */
+const label = document.getElementById("playerIdLabel");
+const userDisplay = document.getElementById("userDisplay");
+
+if (playerId) {
+  const displayName = "Spieler " + playerId.slice(4, 9);
+  label.textContent = displayName;
+  userDisplay.textContent = displayName;
+} else {
+  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+  userDisplay.textContent = "–";
+}
 
 /* ===============================
    LOAD CLAIMS
@@ -233,7 +248,11 @@ if (!playerId) {
 
 async function loadMyClaims(){
   list.innerHTML = "";
-  const res = await fetch(API + "/items");
+  const res = await fetch(API + "/items", {
+    headers: {
+      "X-User-Id": playerId
+    }
+  });
   const items = await res.json();
 
   const mine = items.filter(i => i.claimedBy === playerId);
@@ -309,10 +328,9 @@ async function loadMyClaims(){
         const data = await res.json();
 
         if (data.status === "übergeben") {
-          card.querySelector(".claim-status").textContent =
-            "Status: übergeben";
-          card.querySelector(".claim-status").className =
-            "claim-status übergeben";
+          const statusEl = card.querySelector(".claim-status");
+          statusEl.textContent = "Status: übergeben";
+          statusEl.className = "claim-status übergeben";
         }
 
         btn.textContent = "Erhalt bestätigt";
