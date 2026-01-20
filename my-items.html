@@ -6,9 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-/* ================================
-   BASIS / TOKENS (aus index)
-================================ */
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
@@ -31,9 +28,7 @@ body{
   margin:0 auto;
 }
 
-/* ================================
-   HERO (vereinfachte Variante)
-================================ */
+/* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
@@ -88,9 +83,7 @@ body{
 }
 .auth-link:hover{opacity:1;text-decoration:underline}
 
-/* ================================
-   CONTENT
-================================ */
+/* CONTENT */
 .container{
   padding:34px 28px 60px;
 }
@@ -108,9 +101,7 @@ body{
   font-size:12px;
 }
 
-/* ================================
-   EMPTY STATE
-================================ */
+/* EMPTY STATE */
 .empty-box{
   margin-top:30px;
   padding:26px 24px;
@@ -144,9 +135,7 @@ body{
   color:#fff;
 }
 
-/* ================================
-   ITEMS GRID / CARDS
-================================ */
+/* ITEMS GRID */
 .items-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -209,12 +198,12 @@ body{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="uidLabel">–</span>
+      <span id="uidLabel">me_solli</span>
       <a href="index.html" class="auth-link">Zur Lootliste</a>
     </div>
 
     <h1>Meine eingereichten Items</h1>
-    <p>Items, die deiner aktuellen User-ID zugeordnet sind</p>
+    <p>Items, die deinem Account zugeordnet sind</p>
 
   </div>
 </header>
@@ -222,8 +211,8 @@ body{
 <div class="container">
 
   <div class="user-box">
-    Aktive User-ID:
-    <code id="uid">–</code>
+    Aktiver Nutzer:
+    <code>me_solli</code>
   </div>
 
   <div id="output"></div>
@@ -239,11 +228,9 @@ const API = "https://lootliste-production.up.railway.app/items";
 const ACTIVE_SEASON = "non-ladder";
 
 /* ===============================
-   USER ID
+   USER ID (intern, unverändert)
 ================================ */
-let userId = localStorage.getItem("lootliste_user_id");
-document.getElementById("uid").textContent = userId || "keine";
-document.getElementById("uidLabel").textContent = userId ? "ID: " + userId : "Gast";
+const userId = localStorage.getItem("lootliste_user_id");
 
 /* ===============================
    LOAD ITEMS
@@ -273,7 +260,7 @@ document.getElementById("uidLabel").textContent = userId ? "ID: " + userId : "Ga
     if(mine.length === 0){
       output.innerHTML = `
         <div class="empty-box">
-          Keine Items für diese User-ID gefunden.
+          Keine Items für diesen Nutzer gefunden.
           <ul>
             <li>anderer Browser</li>
             <li>Inkognito-Fenster</li>
