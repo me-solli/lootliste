@@ -1248,33 +1248,47 @@ async function loadItems() {
   const label = document.getElementById("playerIdLabel");
   const userId = localStorage.getItem("lootliste_user_id");
 
-  // 👤 Anzeige: Username (falls registriert) → sonst Spieler xxxx
-  async function setUserLabel() {
-    if (!label) return;
+// 👤 Anzeige: Username (falls registriert) → sonst Spieler xxxx
+async function setUserLabel() {
+  const label = document.getElementById("playerIdLabel");
+  const submitLink = document.querySelector(".auth-submit");
 
-    if (!userId) {
-      label.textContent =
-        label.dataset.placeholder || "Spieler lädt…";
-      return;
-    }
+  if (!label) return;
 
-    try {
-      const meRes = await fetch(API + "/me", {
-        headers: { "X-User-Id": userId }
-      });
-      const me = await meRes.json();
+  // Kein User → Placeholder + Submit ausblenden
+  if (!userId) {
+    label.textContent =
+      label.dataset.placeholder || "Spieler lädt…";
 
-      if (me.username) {
-        label.textContent = me.username;
-      } else {
-        label.textContent = "Spieler " + userId.slice(4, 9);
-      }
-    } catch {
-      label.textContent = "Spieler " + userId.slice(4, 9);
-    }
+    if (submitLink) submitLink.style.display = "none";
+    return;
   }
 
-  setUserLabel();
+  try {
+    const meRes = await fetch(API + "/me", {
+      headers: { "X-User-Id": userId }
+    });
+    const me = await meRes.json();
+
+    if (me.username) {
+      label.textContent = me.username;
+    } else {
+      label.textContent = "Spieler " + userId.slice(4, 9);
+    }
+
+    // Eingeloggt → Submit anzeigen
+    if (submitLink) submitLink.style.display = "";
+
+  } catch {
+    label.textContent = "Spieler " + userId.slice(4, 9);
+
+    // Fallback: trotzdem eingeloggt
+    if (submitLink) submitLink.style.display = "";
+  }
+}
+
+// Initial setzen
+setUserLabel();
 
   const data = await res.json();
 
