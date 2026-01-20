@@ -11,7 +11,6 @@
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
-  --soft:#1a1a1a;
 }
 
 *{box-sizing:border-box}
@@ -53,7 +52,7 @@ body{
   opacity:.85;
 }
 
-/* Auth Box */
+/* AUTH BOX */
 .auth-box{
   position:absolute;
   top:22px;
@@ -88,7 +87,6 @@ body{
   padding:34px 28px 60px;
 }
 
-/* User Info */
 .user-box{
   margin-bottom:22px;
   font-size:13px;
@@ -101,41 +99,7 @@ body{
   font-size:12px;
 }
 
-/* EMPTY STATE */
-.empty-box{
-  margin-top:30px;
-  padding:26px 24px;
-  border:1px dashed rgba(255,255,255,.18);
-  border-radius:16px;
-  text-align:center;
-  font-size:14px;
-  color:#cfcfcf;
-  background:rgba(255,255,255,.03);
-}
-
-.empty-box ul{
-  text-align:left;
-  max-width:420px;
-  margin:12px auto;
-  padding-left:18px;
-}
-
-.reset-btn{
-  margin-top:14px;
-  padding:8px 14px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(255,255,255,.04);
-  color:#ddd;
-  font-size:13px;
-  cursor:pointer;
-}
-.reset-btn:hover{
-  border-color:var(--gold);
-  color:#fff;
-}
-
-/* ITEMS GRID */
+/* ITEMS */
 .items-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -153,12 +117,6 @@ body{
     rgba(255,255,255,.02)
   );
   border:1px solid rgba(255,255,255,.08);
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-
-.item-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 28px rgba(0,0,0,.45);
 }
 
 .item-card img{
@@ -167,14 +125,11 @@ body{
   border-radius:14px;
   object-fit:cover;
   background:#000;
-  cursor:zoom-in;
 }
 
 .item-meta h3{
   margin:0 0 6px;
   font-size:18px;
-  font-weight:600;
-  color:#f0f0f0;
 }
 
 .item-meta .sub{
@@ -182,10 +137,14 @@ body{
   color:#b5b5b5;
 }
 
-.item-meta .status{
-  margin-top:8px;
-  font-size:13px;
-  color:#9a9a9a;
+.empty-box{
+  margin-top:30px;
+  padding:26px 24px;
+  border:1px dashed rgba(255,255,255,.18);
+  border-radius:16px;
+  text-align:center;
+  font-size:14px;
+  color:#cfcfcf;
 }
 </style>
 </head>
@@ -199,11 +158,12 @@ body{
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
       <span id="playerIdLabel" data-placeholder="Spieler lädt…"></span>
-      <a href="index.html" class="auth-link">Zur Lootliste</a>
+      <a href="index.html" class="auth-link">Lootliste</a>
+      <a href="submit.html" class="auth-link">Item einreichen</a>
     </div>
 
-    <h1>Meine eingereichten Items</h1>
-    <p>Items, die deinem Account zugeordnet sind</p>
+    <h1>Meine Items</h1>
+    <p>Alle Items, die du selbst eingereicht hast</p>
 
   </div>
 </header>
@@ -224,25 +184,48 @@ body{
 /* ===============================
    CONFIG
 ================================ */
-const API = "https://lootliste-production.up.railway.app/items";
+const API_BASE = "https://lootliste-production.up.railway.app";
+const API_ITEMS = API_BASE + "/items";
 const ACTIVE_SEASON = "non-ladder";
 
 /* ===============================
-   USER ID + ANZEIGE (ECHT)
+   USER / ACCOUNT ANZEIGE
 ================================ */
 const userId = localStorage.getItem("lootliste_user_id");
-
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 
-if (userId) {
-  const displayName = "Spieler " + userId.slice(4, 9);
-  label.textContent = displayName;
-  userDisplay.textContent = displayName;
-} else {
-  label.textContent = label.dataset.placeholder || "Spieler lädt…";
-  userDisplay.textContent = "–";
+async function setUserLabel() {
+  if (!label) return;
+
+  if (!userId) {
+    label.textContent = label.dataset.placeholder || "Spieler lädt…";
+    if (userDisplay) userDisplay.textContent = "–";
+    return;
+  }
+
+  try {
+    const res = await fetch(API_BASE + "/me", {
+      headers: { "X-User-Id": userId }
+    });
+    const data = await res.json();
+
+    if (data.username) {
+      label.textContent = data.username;
+      if (userDisplay) userDisplay.textContent = data.username;
+    } else {
+      const fallback = "Spieler " + userId.slice(4, 9);
+      label.textContent = fallback;
+      if (userDisplay) userDisplay.textContent = fallback;
+    }
+  } catch {
+    const fallback = "Spieler " + userId.slice(4, 9);
+    label.textContent = fallback;
+    if (userDisplay) userDisplay.textContent = fallback;
+  }
 }
+
+setUserLabel();
 
 /* ===============================
    LOAD ITEMS
@@ -250,79 +233,52 @@ if (userId) {
 (async () => {
   const output = document.getElementById("output");
 
-  if(!userId){
+  if (!userId) {
     output.innerHTML = `
       <div class="empty-box">
-        Keine User-ID gefunden.<br><br>
-        Wahrscheinlich neuer Browser oder Inkognito-Fenster.
+        Keine User-ID gefunden.
       </div>
     `;
     return;
   }
 
-  try{
-    const res = await fetch(API, {
-      headers: {
-        "X-User-Id": userId
-      }
-    });
-    const items = await res.json();
+  const res = await fetch(API_ITEMS, {
+    headers: { "X-User-Id": userId }
+  });
+  const items = await res.json();
 
-    const mine = items.filter(i =>
-      i.donorUserId === userId &&
-      (i.season ?? "non-ladder") === ACTIVE_SEASON
-    );
+  const mine = items.filter(i =>
+    i.donorUserId === userId &&
+    (i.season ?? "non-ladder") === ACTIVE_SEASON
+  );
 
-    if(mine.length === 0){
-      output.innerHTML = `
-        <div class="empty-box">
-          Keine Items für diesen Nutzer gefunden.
-          <ul>
-            <li>anderer Browser</li>
-            <li>Inkognito-Fenster</li>
-            <li>LocalStorage gelöscht</li>
-          </ul>
-          <button class="reset-btn" onclick="resetUser()">
-            User-ID zurücksetzen
-          </button>
-        </div>
-      `;
-      return;
-    }
-
-    const grid = document.createElement("div");
-    grid.className = "items-grid";
-
-    mine.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "item-card";
-      card.innerHTML = `
-        <img src="${item.screenshot}" alt="">
-        <div class="item-meta">
-          <h3>${item.name}</h3>
-          <div class="sub">${item.quality} · ${item.type}</div>
-          <div class="status">Status: ${item.status}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-
-    output.appendChild(grid);
-
-  }catch(err){
-    console.error(err);
+  if (mine.length === 0) {
     output.innerHTML = `
       <div class="empty-box">
-        Fehler beim Laden der Items.
+        Du hast noch keine Items eingereicht.
       </div>
     `;
+    return;
   }
-})();
 
-function resetUser(){
-  localStorage.removeItem("lootliste_user_id");
-  location.reload();
-}
+  const grid = document.createElement("div");
+  grid.className = "items-grid";
+
+  mine.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "item-card";
+    card.innerHTML = `
+      <img src="${item.screenshot}" alt="">
+      <div class="item-meta">
+        <h3>${item.name}</h3>
+        <div class="sub">${item.quality} · ${item.type}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  output.appendChild(grid);
+})();
 </script>
 
 </body>
