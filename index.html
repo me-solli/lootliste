@@ -1205,13 +1205,17 @@ if (label) {
   }
 }
 
-  const data = await res.json();
+const data = await res.json();
 
-  // 🔒 Öffentliche Liste: nur verfügbare Items
-  const available = data.filter(i => i.status === "verfügbar");
+// 🔒 Öffentliche Liste:
+// nur verfügbare Items DER AKTIVEN SEASON
+const available = data.filter(i =>
+  i.status === "verfügbar" &&
+  i.season === ACTIVE_SEASON
+);
 
-  state.items = available;
-  state.filtered = available;
+state.items = available;
+state.filtered = available;
 }
 
 function updateMeta() {
