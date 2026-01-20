@@ -20,9 +20,15 @@ const ITEMS_FILE = path.join(DATA_DIR, "items.json");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 
 // ===============================
-// MIDDLEWARE
+// MIDDLEWARE  ✅ CORS FINAL
 // ===============================
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "X-User-Id"]
+}));
+
+app.options("*", cors());
 app.use(express.json());
 
 // ===============================
@@ -96,7 +102,7 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
-// POST ITEM  ✅ FIX: donorUserId
+// POST ITEM  ✅ donorUserId FINAL
 // ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season } = req.body;
@@ -115,7 +121,7 @@ app.post("/items", (req, res) => {
     status: "verfügbar",
     createdAt: new Date().toISOString(),
 
-    // 🔑 EINDEUTIGER BESITZER (FINAL)
+    // 🔑 EINDEUTIGER BESITZER
     donorUserId: req.user.id,
 
     claimedByUserId: null,
