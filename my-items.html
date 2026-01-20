@@ -76,7 +76,7 @@ h1{
 <div class="wrapper">
 
 <h1>Meine eingereichten Items</h1>
-<div class="sub">Items, die du in der aktuellen Season eingereicht hast</div>
+<div class="sub">Items, die wirklich deiner aktuellen User-ID gehören</div>
 
 <div id="list" class="items"></div>
 
@@ -91,50 +91,47 @@ const ACTIVE_SEASON = "non-ladder";
 const list = document.getElementById("list");
 
 /* ===============================
-   INIT
+   START
 =============================== */
-init();
-
-async function init(){
-  await loadMyItems();
-}
+loadMyItems();
 
 /* ===============================
-   LOAD MY ITEMS (BACKEND = SOURCE OF TRUTH)
+   LOAD MY ITEMS (HART & TRANSPARENT)
 =============================== */
 async function loadMyItems(){
   list.innerHTML = "";
 
-  const res = await fetch(API + "/items", {
-    headers: {
-      "X-User-Id": localStorage.getItem("lootliste_user_id") || ""
-    }
-  });
-
-  // 🔐 User-ID IMMER aus Backend-Header übernehmen
-  const headerUid = res.headers.get("X-User-Id");
-  if (headerUid) {
-    localStorage.setItem("lootliste_user_id", headerUid);
-  }
-
   const userId = localStorage.getItem("lootliste_user_id");
+
   if (!userId) {
     list.innerHTML =
-      "<div class='empty'>Keine User-ID gefunden.</div>";
+      "<div class='empty'>Keine User-ID im Browser gefunden.</div>";
     return;
   }
 
+  console.log("MY-ITEMS → LOCAL USER ID:", userId);
+
+  const res = await fetch(API + "/items", {
+    headers: {
+      "X-User-Id": userId
+    }
+  });
+
   const items = await res.json();
 
-  // 🔑 NUR meine Items + aktive Season (mit Fallback)
+  console.log("MY-ITEMS → TOTAL ITEMS:", items.length);
+  console.log("MY-ITEMS → RAW ITEMS:", items);
+
   const mine = items.filter(i =>
     i.donorId === userId &&
     (i.season ?? "non-ladder") === ACTIVE_SEASON
   );
 
+  console.log("MY-ITEMS → MATCHING ITEMS:", mine);
+
   if (mine.length === 0) {
     list.innerHTML =
-      "<div class='empty'>Du hast in dieser Season noch keine Items eingereicht.</div>";
+      "<div class='empty'>Kein Item im Backend hat <b>donorId = " + userId + "</b>.</div>";
     return;
   }
 
