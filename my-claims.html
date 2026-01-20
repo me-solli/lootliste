@@ -1,96 +1,195 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Meine erhaltenen Items – Lootliste</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<title>Meine Claims – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
+/* ================================
+   BASIS / TOKENS (identisch)
+================================ */
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+  --soft:#1a1a1a;
+  --blue:#8fd1ff;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:#0b0b0b;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
 
 .wrapper{
-  max-width:1100px;
+  max-width:1500px;
   margin:0 auto;
-  padding:30px 20px;
 }
 
-h1{
-  font-size:22px;
-  margin-bottom:6px;
+/* ================================
+   HERO
+================================ */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
 }
 
-.sub{
-  font-size:13px;
-  opacity:.7;
-  margin-bottom:22px;
+.hero-inner{
+  padding:36px 36px 32px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
 }
 
-.items{
-  display:grid;
-  gap:14px;
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
 }
 
-.item{
-  padding:16px 18px;
-  border:1px solid #2a2a2a;
-  border-radius:14px;
-  background:#121212;
-}
-
-.item-name{
-  font-size:16px;
-  font-weight:600;
-}
-
-.item-meta{
-  margin-top:6px;
-  font-size:13px;
+.hero p{
+  margin:8px 0 0;
   opacity:.85;
 }
 
-.status{
-  margin-top:8px;
+/* Auth Box */
+.auth-box{
+  position:absolute;
+  top:22px;
+  right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
   font-size:13px;
 }
 
-.status.reserviert{
-  color:#f5c451;
+.auth-box img{
+  width:28px;
+  height:28px;
+  border-radius:50%;
 }
 
-.status.übergeben{
-  color:#8fd1ff;
+.auth-link{
+  margin-left:6px;
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.85;
 }
+.auth-link:hover{opacity:1;text-decoration:underline}
+
+/* ================================
+   CONTENT
+================================ */
+.container{
+  padding:34px 28px 60px;
+}
+
+/* User Info */
+.user-box{
+  margin-bottom:22px;
+  font-size:13px;
+  opacity:.75;
+}
+.user-box code{
+  background:#111;
+  padding:3px 8px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+.empty-box{
+  margin-top:30px;
+  padding:26px 24px;
+  border:1px dashed rgba(255,255,255,.18);
+  border-radius:16px;
+  text-align:center;
+  font-size:14px;
+  color:#cfcfcf;
+  background:rgba(255,255,255,.03);
+}
+
+/* ================================
+   CLAIMS GRID / CARDS
+================================ */
+.claims-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:22px;
+}
+
+.claim-card{
+  padding:18px;
+  border-radius:20px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.045),
+    rgba(255,255,255,.02)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.claim-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 28px rgba(0,0,0,.45);
+}
+
+.claim-name{
+  font-size:18px;
+  font-weight:600;
+  color:#f0f0f0;
+}
+
+.claim-meta{
+  margin-top:6px;
+  font-size:13px;
+  color:#b5b5b5;
+}
+
+.claim-status{
+  margin-top:10px;
+  font-size:13px;
+}
+
+.claim-status.reserviert{ color:var(--gold); }
+.claim-status.übergeben{ color:var(--blue); }
 
 .actions{
-  margin-top:12px;
+  margin-top:14px;
 }
 
 .btn{
-  padding:8px 14px;
+  padding:8px 16px;
   font-size:13px;
   border-radius:999px;
   border:1px solid rgba(143,209,255,.5);
-  background:transparent;
-  color:#8fd1ff;
+  background:rgba(143,209,255,.06);
+  color:var(--blue);
   cursor:pointer;
+}
+
+.btn:hover{
+  border-color:var(--blue);
 }
 
 .btn:disabled{
   opacity:.5;
   cursor:default;
-}
-
-.empty{
-  padding:18px;
-  border:1px dashed #333;
-  border-radius:14px;
-  opacity:.7;
-  font-size:14px;
 }
 </style>
 </head>
@@ -98,20 +197,57 @@ h1{
 <body>
 <div class="wrapper">
 
-<h1>Meine erhaltenen Items</h1>
-<div class="sub">Items, die du reserviert hast</div>
+<header class="hero">
+  <div class="hero-inner">
 
-<div id="list" class="items"></div>
+    <div class="auth-box">
+      <img src="img/avatars/default.png" alt="Avatar">
+      <span id="uidLabel">–</span>
+      <a href="index.html" class="auth-link">Lootliste</a>
+      <a href="my-items.html" class="auth-link">Meine Items</a>
+    </div>
 
+    <h1>Meine Claims</h1>
+    <p>Items, die du reserviert oder erhalten hast</p>
+
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="user-box">
+    Aktive User-ID:
+    <code id="uid">–</code>
+  </div>
+
+  <div id="list"></div>
+
+</div>
 </div>
 
 <script>
+/* ===============================
+   CONFIG
+================================ */
 const API = "https://lootliste-production.up.railway.app";
-const playerId = localStorage.getItem("playerId");
+const playerId = localStorage.getItem("lootliste_user_id");
+
+document.getElementById("uid").textContent = playerId || "keine";
+document.getElementById("uidLabel").textContent =
+  playerId ? "ID: " + playerId : "Gast";
+
+/* ===============================
+   LOAD CLAIMS
+================================ */
 const list = document.getElementById("list");
 
 if (!playerId) {
-  list.innerHTML = "<div class='empty'>Keine Spieler-ID gefunden.</div>";
+  list.innerHTML = `
+    <div class="empty-box">
+      Keine User-ID gefunden.<br><br>
+      Wahrscheinlich neuer Browser oder Inkognito-Fenster.
+    </div>
+  `;
 } else {
   loadMyClaims();
 }
@@ -124,24 +260,34 @@ async function loadMyClaims(){
   const mine = items.filter(i => i.claimedBy === playerId);
 
   if (mine.length === 0) {
-    list.innerHTML = "<div class='empty'>Du hast noch keine Items reserviert.</div>";
+    list.innerHTML = `
+      <div class="empty-box">
+        Du hast aktuell keine reservierten oder erhaltenen Items.
+      </div>
+    `;
     return;
   }
 
+  const grid = document.createElement("div");
+  grid.className = "claims-grid";
+
   mine.forEach(item => {
-    const el = document.createElement("div");
-    el.className = "item";
+    const card = document.createElement("div");
+    card.className = "claim-card";
 
     const receiverConfirmed = item.handover?.receiverConfirmed;
 
-    el.innerHTML = `
-      <div class="item-name">${item.name}</div>
+    card.innerHTML = `
+      <div class="claim-name">${item.name}</div>
 
-      <div class="item-meta">
-        Reserviert am: ${new Date(item.claimedAt).toLocaleDateString("de-DE")}
+      <div class="claim-meta">
+        Reserviert am:
+        ${item.claimedAt
+          ? new Date(item.claimedAt).toLocaleDateString("de-DE")
+          : "–"}
       </div>
 
-      <div class="status ${item.status}">
+      <div class="claim-status ${item.status}">
         Status: ${item.status}
       </div>
 
@@ -159,14 +305,14 @@ async function loadMyClaims(){
     `;
 
     if (item.status === "reserviert" && !receiverConfirmed) {
-      const btn = el.querySelector(".btn");
+      const btn = card.querySelector(".btn");
 
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         btn.textContent = "…";
 
         const res = await fetch(
-          `${API}/items/${item.id}/handover/receiver`,
+          \`\${API}/items/\${item.id}/handover/receiver\`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -184,16 +330,20 @@ async function loadMyClaims(){
         const data = await res.json();
 
         if (data.status === "übergeben") {
-          el.querySelector(".status").textContent = "Status: übergeben";
-          el.querySelector(".status").className = "status übergeben";
+          card.querySelector(".claim-status").textContent =
+            "Status: übergeben";
+          card.querySelector(".claim-status").className =
+            "claim-status übergeben";
         }
 
         btn.textContent = "Erhalt bestätigt";
       });
     }
 
-    list.appendChild(el);
+    grid.appendChild(card);
   });
+
+  list.appendChild(grid);
 }
 </script>
 
