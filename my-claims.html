@@ -6,9 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-/* ================================
-   BASIS / TOKENS (identisch)
-================================ */
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
@@ -32,9 +29,7 @@ body{
   margin:0 auto;
 }
 
-/* ================================
-   HERO
-================================ */
+/* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
@@ -89,9 +84,7 @@ body{
 }
 .auth-link:hover{opacity:1;text-decoration:underline}
 
-/* ================================
-   CONTENT
-================================ */
+/* CONTENT */
 .container{
   padding:34px 28px 60px;
 }
@@ -109,9 +102,7 @@ body{
   font-size:12px;
 }
 
-/* ================================
-   EMPTY STATE
-================================ */
+/* EMPTY STATE */
 .empty-box{
   margin-top:30px;
   padding:26px 24px;
@@ -123,9 +114,7 @@ body{
   background:rgba(255,255,255,.03);
 }
 
-/* ================================
-   CLAIMS GRID / CARDS
-================================ */
+/* CLAIMS GRID */
 .claims-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
@@ -183,14 +172,8 @@ body{
   cursor:pointer;
 }
 
-.btn:hover{
-  border-color:var(--blue);
-}
-
-.btn:disabled{
-  opacity:.5;
-  cursor:default;
-}
+.btn:hover{ border-color:var(--blue); }
+.btn:disabled{ opacity:.5; cursor:default; }
 </style>
 </head>
 
@@ -202,7 +185,7 @@ body{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="uidLabel">–</span>
+      <span id="uidLabel">me_solli</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
@@ -216,8 +199,8 @@ body{
 <div class="container">
 
   <div class="user-box">
-    Aktive User-ID:
-    <code id="uid">–</code>
+    Aktiver Nutzer:
+    <code>me_solli</code>
   </div>
 
   <div id="list"></div>
@@ -231,10 +214,6 @@ body{
 ================================ */
 const API = "https://lootliste-production.up.railway.app";
 const playerId = localStorage.getItem("lootliste_user_id");
-
-document.getElementById("uid").textContent = playerId || "keine";
-document.getElementById("uidLabel").textContent =
-  playerId ? "ID: " + playerId : "Gast";
 
 /* ===============================
    LOAD CLAIMS
