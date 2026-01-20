@@ -1,91 +1,210 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Item einreichen – Lootliste</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
+/* ================================
+   BASIS / TOKENS
+================================ */
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+  --soft:#1a1a1a;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:system-ui,sans-serif;
-  background:radial-gradient(ellipse at top,#2a0f0f,#0b0505 60%);
-  color:#eee;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#eaeaea;
 }
 
-header{
-  padding:40px 20px;
-  background:linear-gradient(to right,#3a0d0d,#1a0505);
-  border-bottom:1px solid #3a1a1a;
+.wrapper{
+  max-width:1500px;
+  margin:0 auto;
 }
 
-h1{margin:0;color:#f2c94c}
-
-main{
-  max-width:720px;
-  margin:40px auto;
-  padding:0 20px;
+/* ================================
+   HERO
+================================ */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
 }
 
-.box{
-  background:rgba(20,8,8,.9);
-  border:1px solid #3a1a1a;
+.hero-inner{
+  padding:36px 36px 32px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+}
+
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
+}
+
+.hero p{
+  margin:8px 0 0;
+  opacity:.85;
+}
+
+/* Auth Box */
+.auth-box{
+  position:absolute;
+  top:22px;
+  right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
   border-radius:14px;
-  padding:26px;
+  background:rgba(0,0,0,.55);
+  font-size:13px;
+}
+
+.auth-box img{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+}
+
+.auth-link{
+  margin-left:6px;
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.85;
+}
+.auth-link:hover{opacity:1;text-decoration:underline}
+
+/* ================================
+   CONTENT
+================================ */
+.container{
+  max-width:820px;
+  margin:0 auto;
+  padding:40px 28px 70px;
+}
+
+/* User Info */
+.user-box{
+  margin-bottom:22px;
+  font-size:13px;
+  opacity:.75;
+}
+.user-box code{
+  background:#111;
+  padding:3px 8px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+/* ================================
+   FORM CARD
+================================ */
+.form-card{
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.045),
+    rgba(255,255,255,.02)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  padding:28px;
 }
 
 label{
   display:block;
   margin-top:18px;
   margin-bottom:6px;
+  font-size:14px;
   font-weight:600;
+  color:#e6e6e6;
 }
 
 input,select{
   width:100%;
-  padding:11px;
-  border-radius:8px;
-  border:1px solid #444;
-  background:#120606;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid #333;
+  background:#111;
   color:#eee;
-  font-size:1rem;
+  font-size:14px;
 }
 
+input:focus,select:focus{
+  outline:none;
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px rgba(245,196,81,.3);
+}
+
+/* ================================
+   BUTTON
+================================ */
 button{
   margin-top:26px;
   padding:14px;
   width:100%;
-  font-size:1rem;
+  font-size:15px;
   font-weight:600;
-  border-radius:10px;
-  border:none;
+  border-radius:14px;
+  border:1px solid rgba(245,196,81,.4);
   cursor:pointer;
-  background:linear-gradient(to right,#b83232,#7a1c1c);
-  color:#fff;
+  background:linear-gradient(
+    to right,
+    rgba(245,196,81,.25),
+    rgba(245,196,81,.15)
+  );
+  color:#f5e6b3;
 }
 
-button:disabled{opacity:.5;cursor:not-allowed}
-
-.status{margin-top:16px;font-size:.95rem}
-.player{margin-top:14px;font-size:.9rem;opacity:.85}
-
-a{
-  color:#f2c94c;
-  text-decoration:none;
-  display:inline-block;
-  margin-top:26px;
+button:hover{
+  border-color:var(--gold);
 }
 
-/* Preview */
-.preview{margin-top:14px;display:none}
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+/* ================================
+   STATUS
+================================ */
+.status{
+  margin-top:16px;
+  font-size:14px;
+  opacity:.85;
+}
+
+/* ================================
+   PREVIEW
+================================ */
+.preview{
+  margin-top:14px;
+  display:none;
+}
+
 .preview img{
-  max-width:60%;
-  border-radius:10px;
-  border:1px solid #3a1a1a;
+  max-width:65%;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.15);
   cursor:zoom-in;
 }
 
-/* Zoom */
+/* ================================
+   OVERLAY
+================================ */
 .overlay{
   position:fixed;
   inset:0;
@@ -93,73 +212,91 @@ a{
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:999;
+  z-index:9999;
 }
+
 .overlay img{
   max-width:90vw;
   max-height:90vh;
-  border-radius:12px;
+  border-radius:14px;
   cursor:zoom-out;
 }
 </style>
 </head>
 
 <body>
+<div class="wrapper">
 
-<header>
-  <h1>Item einreichen</h1>
+<header class="hero">
+  <div class="hero-inner">
+
+    <div class="auth-box">
+      <img src="img/avatars/default.png" alt="Avatar">
+      <span id="uidLabel">–</span>
+      <a href="index.html" class="auth-link">Lootliste</a>
+      <a href="my-items.html" class="auth-link">Meine Items</a>
+    </div>
+
+    <h1>Item einreichen</h1>
+    <p>Community-Drop zur Lootliste hinzufügen</p>
+
+  </div>
 </header>
 
-<main>
-<div class="box">
-<form id="form">
+<div class="container">
 
-<label>Screenshot (Pflicht)</label>
-<input type="file" id="image" accept="image/*" required>
+  <div class="user-box">
+    Aktive User-ID:
+    <code id="uid">–</code>
+  </div>
 
-<div class="preview" id="preview">
-  <img id="previewImg" alt="Vorschau">
+  <div class="form-card">
+    <form id="form">
+
+      <label>Screenshot (Pflicht)</label>
+      <input type="file" id="image" accept="image/*" required>
+
+      <div class="preview" id="preview">
+        <img id="previewImg" alt="Vorschau">
+      </div>
+
+      <label>Item-Name</label>
+      <input id="name" required placeholder="z. B. Harlequin Crest (Shako)">
+
+      <label>Qualität</label>
+      <select id="quality" required>
+        <option value="">Bitte wählen</option>
+        <option value="unique">Unique</option>
+        <option value="set">Set</option>
+        <option value="rare">Rare</option>
+        <option value="magic">Magic</option>
+      </select>
+
+      <label>Kategorie</label>
+      <select id="type" required>
+        <option value="">Bitte wählen</option>
+        <option value="waffe">Waffe</option>
+        <option value="helm">Helm</option>
+        <option value="ruestung">Rüstung</option>
+        <option value="schild">Schild</option>
+        <option value="guertel">Gürtel</option>
+        <option value="handschuhe">Handschuhe</option>
+        <option value="schuhe">Schuhe</option>
+        <option value="amulett">Amulett</option>
+        <option value="ring">Ring</option>
+        <option value="charm">Charm</option>
+        <option value="rune">Rune</option>
+        <option value="sonstiges">Sonstiges</option>
+      </select>
+
+      <button type="submit">Item einreichen</button>
+      <div class="status" id="status"></div>
+
+    </form>
+  </div>
+
 </div>
-
-<label>Item-Name</label>
-<input id="name" required placeholder="z. B. Harlequin Crest (Shako)">
-
-<label>Qualität</label>
-<select id="quality" required>
-  <option value="">Bitte wählen</option>
-  <option value="unique">Unique</option>
-  <option value="set">Set</option>
-  <option value="rare">Rare</option>
-  <option value="magic">Magic</option>
-</select>
-
-<label>Kategorie</label>
-<select id="type" required>
-  <option value="">Bitte wählen</option>
-  <option value="waffe">Waffe</option>
-  <option value="helm">Helm</option>
-  <option value="ruestung">Rüstung</option>
-  <option value="schild">Schild</option>
-  <option value="guertel">Gürtel</option>
-  <option value="handschuhe">Handschuhe</option>
-  <option value="schuhe">Schuhe</option>
-  <option value="amulett">Amulett</option>
-  <option value="ring">Ring</option>
-  <option value="charm">Charm</option>
-  <option value="rune">Rune</option>
-  <option value="sonstiges">Sonstiges</option>
-</select>
-
-<div class="player" id="playerInfo"></div>
-
-<button type="submit">Item einreichen</button>
-<div class="status" id="status"></div>
-
-</form>
 </div>
-
-<a href="index.html">← zurück zur Lootliste</a>
-</main>
 
 <div class="overlay" id="overlay">
   <img id="overlayImg">
@@ -172,14 +309,10 @@ a{
 const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
 const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
-
-/* ===============================
-   SEASON
-=============================== */
 const ACTIVE_SEASON = "non-ladder";
 
 /* ===============================
-   USER ID (MATCHT BACKEND)
+   USER ID
 =============================== */
 function getUserId(){
   let id = localStorage.getItem("lootliste_user_id");
@@ -191,8 +324,8 @@ function getUserId(){
 }
 
 const userId = getUserId();
-document.getElementById("playerInfo").textContent =
-  "Deine ID: " + userId;
+document.getElementById("uid").textContent = userId;
+document.getElementById("uidLabel").textContent = "ID: " + userId;
 
 /* ===============================
    PREVIEW / ZOOM
@@ -243,7 +376,6 @@ document.getElementById("form").addEventListener("submit", async e => {
 
   try {
     const screenshot = await uploadImage(fileInput.files[0]);
-
     status.textContent = "💾 Speichere Item…";
 
     await fetch(BACKEND_URL, {
@@ -254,13 +386,8 @@ document.getElementById("form").addEventListener("submit", async e => {
         quality: document.getElementById("quality").value,
         type: document.getElementById("type").value,
         screenshot,
-
-        // 🔑 KORREKTES FELD – exakt wie Backend & my-items
         donorUserId: userId,
-
-        // 🆕 Season (passt schon)
         season: ACTIVE_SEASON,
-
         status: "verfügbar"
       })
     });
