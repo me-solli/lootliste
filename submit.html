@@ -76,7 +76,7 @@ a{
   margin-top:26px;
 }
 
-/* Screenshot Preview */
+/* Preview */
 .preview{margin-top:14px;display:none}
 .preview img{
   max-width:60%;
@@ -85,7 +85,7 @@ a{
   cursor:zoom-in;
 }
 
-/* Zoom Overlay */
+/* Zoom */
 .overlay{
   position:fixed;
   inset:0;
@@ -161,7 +161,6 @@ a{
 <a href="index.html">← zurück zur Lootliste</a>
 </main>
 
-<!-- Zoom Overlay -->
 <div class="overlay" id="overlay">
   <img id="overlayImg">
 </div>
@@ -175,17 +174,17 @@ const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
 
 /* ===============================
-   SEASON (ZENTRAL)
+   SEASON
 =============================== */
 const ACTIVE_SEASON = "non-ladder";
 
 /* ===============================
-   USER-ID (ZENTRAL & STABIL)
+   USER ID (MATCHT BACKEND)
 =============================== */
 function getUserId(){
   let id = localStorage.getItem("lootliste_user_id");
   if(!id){
-    id = "usr_" + crypto.randomUUID().slice(0,8);
+    id = "usr_" + crypto.randomUUID().slice(0,12);
     localStorage.setItem("lootliste_user_id", id);
   }
   return id;
@@ -196,7 +195,7 @@ document.getElementById("playerInfo").textContent =
   "Deine ID: " + userId;
 
 /* ===============================
-   SCREENSHOT PREVIEW + ZOOM
+   PREVIEW / ZOOM
 =============================== */
 const fileInput  = document.getElementById("image");
 const preview    = document.getElementById("preview");
@@ -207,7 +206,6 @@ const overlayImg = document.getElementById("overlayImg");
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
-
   const url = URL.createObjectURL(file);
   previewImg.src = url;
   overlayImg.src = url;
@@ -218,7 +216,7 @@ previewImg.onclick = () => overlay.style.display = "flex";
 overlay.onclick    = () => overlay.style.display = "none";
 
 /* ===============================
-   CLOUDINARY UPLOAD
+   CLOUDINARY
 =============================== */
 async function uploadImage(file){
   const fd = new FormData();
@@ -244,8 +242,7 @@ document.getElementById("form").addEventListener("submit", async e => {
   status.textContent = "📤 Lade Screenshot hoch…";
 
   try{
-    const file = fileInput.files[0];
-    const screenshot = await uploadImage(file);
+    const screenshot = await uploadImage(fileInput.files[0]);
 
     status.textContent = "💾 Speichere Item…";
 
@@ -257,8 +254,8 @@ document.getElementById("form").addEventListener("submit", async e => {
         quality: document.getElementById("quality").value,
         type: document.getElementById("type").value,
         screenshot,
-        donor: userId,
-        season: ACTIVE_SEASON,
+        donorId: userId,          // 🔑 GENAU WIE BACKEND
+        season: ACTIVE_SEASON,    // 🆕 vorbereitet
         status: "verfügbar"
       })
     });
