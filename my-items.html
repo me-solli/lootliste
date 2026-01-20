@@ -1,164 +1,152 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Meine Items – Lootliste</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Meine Items – Lootliste</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:#0b0b0b;
-  color:#eaeaea;
-}
+  <link rel="stylesheet" href="style.css" />
 
-.wrapper{
-  max-width:1100px;
-  margin:0 auto;
-  padding:30px 20px;
-}
-
-h1{
-  font-size:22px;
-  margin-bottom:6px;
-}
-
-.sub{
-  font-size:13px;
-  opacity:.7;
-  margin-bottom:22px;
-}
-
-.items{
-  display:grid;
-  gap:14px;
-}
-
-.item{
-  padding:16px 18px;
-  border:1px solid #2a2a2a;
-  border-radius:14px;
-  background:#121212;
-}
-
-.item-name{
-  font-size:16px;
-  font-weight:600;
-}
-
-.item-meta{
-  margin-top:6px;
-  font-size:13px;
-  opacity:.85;
-}
-
-.status{
-  margin-top:8px;
-  font-size:13px;
-}
-
-.status.verfügbar{ color:#4cff4c }
-.status.reserviert{ color:#f5c451 }
-.status.vergeben{ color:#8fd1ff }
-
-.empty{
-  padding:18px;
-  border:1px dashed #333;
-  border-radius:14px;
-  opacity:.7;
-  font-size:14px;
-}
-</style>
+  <style>
+    .empty-box{
+      margin-top:40px;
+      padding:22px;
+      border:1px dashed #333;
+      border-radius:10px;
+      text-align:center;
+      opacity:.75;
+    }
+    .items-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:22px;
+      margin-top:30px;
+    }
+    .item-card{
+      background:#0f0f0f;
+      border:1px solid #1f1f1f;
+      border-radius:14px;
+      padding:16px;
+      display:flex;
+      gap:14px;
+    }
+    .item-card img{
+      width:88px;
+      height:88px;
+      object-fit:cover;
+      border-radius:8px;
+      background:#000;
+    }
+    .item-meta h3{
+      margin:0 0 6px;
+      font-size:18px;
+    }
+    .item-meta .sub{
+      opacity:.7;
+      font-size:14px;
+    }
+    .item-meta .status{
+      margin-top:6px;
+      font-size:13px;
+      opacity:.85;
+    }
+  </style>
 </head>
 
 <body>
+
 <div class="wrapper">
+  <section class="section">
+    <h1>Meine eingereichten Items</h1>
+    <p class="muted">Items, die wirklich deiner aktuellen User-ID gehören</p>
 
-<h1>Meine eingereichten Items</h1>
-<div class="sub">Items, die wirklich deiner aktuellen User-ID gehören</div>
-
-<div id="list" class="items"></div>
-
+    <div id="output"></div>
+  </section>
 </div>
 
 <script>
 /* ===============================
    CONFIG
-=============================== */
-const API = "https://lootliste-production.up.railway.app";
+================================ */
+const BACKEND_URL = "https://lootliste-production.up.railway.app/items";
 const ACTIVE_SEASON = "non-ladder";
-const list = document.getElementById("list");
 
 /* ===============================
-   START
-=============================== */
-loadMyItems();
+   USER ID
+================================ */
+const userId = localStorage.getItem("lootliste_user_id");
+console.log("MY-ITEMS → LOCAL USER ID:", userId);
 
 /* ===============================
-   LOAD MY ITEMS (HART & TRANSPARENT)
-=============================== */
-async function loadMyItems(){
-  list.innerHTML = "";
+   LOAD ITEMS
+================================ */
+(async () => {
+  const output = document.getElementById("output");
 
-  const userId = localStorage.getItem("lootliste_user_id");
-
-  if (!userId) {
-    list.innerHTML =
-      "<div class='empty'>Keine User-ID im Browser gefunden.</div>";
-    return;
-  }
-
-  console.log("MY-ITEMS → LOCAL USER ID:", userId);
-
-  const res = await fetch(API + "/items", {
-    headers: {
-      "X-User-Id": userId
-    }
-  });
-
-  const items = await res.json();
-
-  console.log("MY-ITEMS → TOTAL ITEMS:", items.length);
-  console.log("MY-ITEMS → RAW ITEMS:", items);
-
-  const mine = items.filter(i =>
-    i.donorId === userId &&
-    (i.season ?? "non-ladder") === ACTIVE_SEASON
-  );
-
-  console.log("MY-ITEMS → MATCHING ITEMS:", mine);
-
-  if (mine.length === 0) {
-    list.innerHTML =
-      "<div class='empty'>Kein Item im Backend hat <b>donorId = " + userId + "</b>.</div>";
-    return;
-  }
-
-  mine.forEach(item => {
-    const el = document.createElement("div");
-    el.className = "item";
-
-    el.innerHTML = `
-      <div class="item-name">${item.name}</div>
-
-      <div class="item-meta">
-        Kategorie: ${item.type || "–"} ·
-        Erstellt: ${
-          item.createdAt
-            ? new Date(item.createdAt).toLocaleDateString("de-DE")
-            : "–"
-        }
-      </div>
-
-      <div class="status ${item.status}">
-        Status: ${item.status}
+  if(!userId){
+    output.innerHTML = `
+      <div class="empty-box">
+        ❌ Keine User-ID gefunden.<br>
+        Bitte Seite neu laden oder erneut ein Item einreichen.
       </div>
     `;
+    return;
+  }
 
-    list.appendChild(el);
-  });
-}
+  try{
+    const res = await fetch(BACKEND_URL);
+    const items = await res.json();
+
+    console.log("MY-ITEMS → TOTAL ITEMS:", items.length);
+    console.log("MY-ITEMS → RAW ITEMS:", items);
+
+    /* 🔑 EINZIG WICHTIGER FIX */
+    const mine = items.filter(i =>
+      i.donorUserId === userId &&
+      (i.season ?? "non-ladder") === ACTIVE_SEASON
+    );
+
+    console.log("MY-ITEMS → MATCHING ITEMS:", mine);
+
+    if(mine.length === 0){
+      output.innerHTML = `
+        <div class="empty-box">
+          Kein Item im Backend hat <b>donorUserId = ${userId}</b>.
+        </div>
+      `;
+      return;
+    }
+
+    const grid = document.createElement("div");
+    grid.className = "items-grid";
+
+    mine.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "item-card";
+
+      card.innerHTML = `
+        <img src="${item.screenshot}" alt="">
+        <div class="item-meta">
+          <h3>${item.name}</h3>
+          <div class="sub">${item.quality} · ${item.type}</div>
+          <div class="status">Status: ${item.status}</div>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    output.appendChild(grid);
+
+  }catch(err){
+    console.error(err);
+    output.innerHTML = `
+      <div class="empty-box">
+        ❌ Fehler beim Laden der Items.
+      </div>
+    `;
+  }
+})();
 </script>
 
 </body>
