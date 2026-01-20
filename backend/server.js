@@ -1,85 +1,73 @@
+// ===============================
+// IMPORTS
+// ===============================
 import express from "express";
+import cors from "cors";
 import fs from "fs";
 import path from "path";
-import crypto from "crypto";
 
+// ===============================
+// APP SETUP
+// ===============================
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-/* ===============================
-   BASIC / CORS
-=============================== */
-app.use(express.json());
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, X-User-Id"
-  );
-  res.setHeader(
-    "Access-Control-Expose-Headers",
-    "X-User-Id"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,POST,OPTIONS"
-  );
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
-/* ===============================
-   HEALTHCHECK
-=============================== */
-app.get("/", (req, res) => {
-  res.status(200).send("OK");
-});
-
-/* ===============================
-   DATA (Railway Volume)
-=============================== */
+// ===============================
+// DATA PATH (Railway Volume)
+// ===============================
 const DATA_DIR = "/data";
-const ITEMS_PATH = path.join(DATA_DIR, "items.json");
-const USERS_PATH = path.join(DATA_DIR, "users.json");
+const ITEMS_FILE = path.join(DATA_DIR, "items.json");
+const USERS_FILE = path.join(DATA_DIR, "users.json");
 
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+// ===============================
+// MIDDLEWARE
+// ===============================
+app.use(cors());
+app.use(express.json());
+
+// ===============================
+// HELPERS
+// ===============================
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
 }
 
 function loadJSON(file, fallback) {
-  if (!fs.existsSync(file)) return fallback;
   try {
-    return JSON.parse(fs.readFileSync(file, "utf-8"));
+    if (!fs.existsSync(file)) return fallback;
+    return JSON.parse(fs.readFileSync(file, "utf8"));
   } catch {
     return fallback;
   }
 }
 
 function saveJSON(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2), "utf-8");
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
-let items = loadJSON(ITEMS_PATH, []);
-let users = loadJSON(USERS_PATH, []);
+// ===============================
+// INIT DATA
+// ===============================
+ensureDataDir();
+let items = loadJSON(ITEMS_FILE, []);
+let users = loadJSON(USERS_FILE, []);
 
-/* ===============================
-   USER SYSTEM (MINIMAL & EXPLIZIT)
-=============================== */
+// ===============================
+// USER SYSTEM (STABIL)
+// ===============================
 function createUser() {
+  const id = "usr_" + Math.random().toString(16).slice(2, 14);
   const user = {
-    id: "usr_" + crypto.randomBytes(6).toString("hex"),
+    id,
     createdAt: new Date().toISOString()
   };
   users.push(user);
-  saveJSON(USERS_PATH, users);
+  saveJSON(USERS_FILE, users);
   return user;
 }
 
-// Middleware: garantiert IMMER eine User-ID
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
   let user = users.find(u => u.id === headerId);
@@ -93,37 +81,42 @@ app.use((req, res, next) => {
   next();
 });
 
-/* ===============================
-   GET ITEMS
-=============================== */
+// ===============================
+// HEALTHCHECK
+// ===============================
+app.get("/", (req, res) => {
+  res.send("Lootliste Backend OK");
+});
+
+// ===============================
+// GET ITEMS
+// ===============================
 app.get("/items", (req, res) => {
   res.json(items);
 });
 
-/* ===============================
-   POST ITEM
-=============================== */
+// ===============================
+// POST ITEM  ✅ FIX: donorUserId
+// ===============================
 app.post("/items", (req, res) => {
-  const { name, quality, type, category, screenshot, season } = req.body;
+  const { name, quality, type, screenshot, season } = req.body;
 
-  if (!name || !screenshot) {
-    return res.status(400).json({ error: "Pflichtfelder fehlen" });
+  if (!name || !quality || !type || !screenshot || !season) {
+    return res.status(400).json({ error: "Missing fields" });
   }
 
   const newItem = {
     id: Date.now(),
     name,
+    quality,
+    type,
+    screenshot,
+    season,
     status: "verfügbar",
     createdAt: new Date().toISOString(),
 
-    quality: quality || null,
-    type: type || category || null,
-    screenshot,
-
-    season: season || "non-ladder",
-
-    // 🔑 EINDEUTIGER BESITZER
-    donorId: req.user.id,
+    // 🔑 EINDEUTIGER BESITZER (FINAL)
+    donorUserId: req.user.id,
 
     claimedByUserId: null,
     contact: null,
@@ -138,79 +131,58 @@ app.post("/items", (req, res) => {
   };
 
   items.push(newItem);
-  saveJSON(ITEMS_PATH, items);
+  saveJSON(ITEMS_FILE, items);
 
   res.status(201).json(newItem);
 });
 
-/* ===============================
-   CLAIM
-=============================== */
+// ===============================
+// CLAIM ITEM
+// ===============================
 app.post("/items/:id/claim", (req, res) => {
-  const { contact } = req.body;
-  const item = items.find(i => i.id === Number(req.params.id));
-
+  const item = items.find(i => i.id == req.params.id);
   if (!item) return res.status(404).json({ error: "Item not found" });
+
   if (item.status !== "verfügbar") {
-    return res.status(409).json({ error: "Item not available" });
+    return res.status(400).json({ error: "Item not available" });
   }
 
   item.status = "reserviert";
   item.claimedByUserId = req.user.id;
-  item.contact = contact || null;
   item.claimedAt = new Date().toISOString();
 
-  saveJSON(ITEMS_PATH, items);
-  res.json({ success: true });
+  saveJSON(ITEMS_FILE, items);
+  res.json(item);
 });
 
-/* ===============================
-   HANDOVER – DONOR CONFIRM
-=============================== */
-app.post("/items/:id/handover/donor", (req, res) => {
-  const item = items.find(i => i.id === Number(req.params.id));
-
+// ===============================
+// CONFIRM HANDOVER
+// ===============================
+app.post("/items/:id/confirm", (req, res) => {
+  const item = items.find(i => i.id == req.params.id);
   if (!item) return res.status(404).json({ error: "Item not found" });
-  if (item.donorId !== req.user.id) {
-    return res.status(403).json({ error: "Not donor" });
+
+  if (req.user.id === item.donorUserId) {
+    item.handover.donorConfirmed = true;
+    item.handover.donorConfirmedAt = new Date().toISOString();
   }
 
-  item.handover.donorConfirmed = true;
-  item.handover.donorConfirmedAt = new Date().toISOString();
-
-  if (item.handover.receiverConfirmed) {
-    item.status = "übergeben";
+  if (req.user.id === item.claimedByUserId) {
+    item.handover.receiverConfirmed = true;
+    item.handover.receiverConfirmedAt = new Date().toISOString();
   }
 
-  saveJSON(ITEMS_PATH, items);
-  res.json({ success: true, status: item.status });
+  if (item.handover.donorConfirmed && item.handover.receiverConfirmed) {
+    item.status = "vergeben";
+  }
+
+  saveJSON(ITEMS_FILE, items);
+  res.json(item);
 });
 
-/* ===============================
-   HANDOVER – RECEIVER CONFIRM
-=============================== */
-app.post("/items/:id/handover/receiver", (req, res) => {
-  const item = items.find(i => i.id === Number(req.params.id));
-
-  if (!item) return res.status(404).json({ error: "Item not found" });
-  if (item.claimedByUserId !== req.user.id) {
-    return res.status(403).json({ error: "Not receiver" });
-  }
-
-  item.handover.receiverConfirmed = true;
-  item.handover.receiverConfirmedAt = new Date().toISOString();
-
-  if (item.handover.donorConfirmed) {
-    item.status = "übergeben";
-  }
-
-  saveJSON(ITEMS_PATH, items);
-  res.json({ success: true, status: item.status });
-});
-
-/* ===============================
-   SERVER
-=============================== */
+// ===============================
+// START SERVER
+// ===============================
 app.listen(PORT, () => {
   console.log("Backend läuft auf Port", PORT);
 });
