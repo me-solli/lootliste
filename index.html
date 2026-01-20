@@ -1211,7 +1211,7 @@ const data = await res.json();
 // nur verfügbare Items DER AKTIVEN SEASON
 const available = data.filter(i =>
   i.status === "verfügbar" &&
-  i.season === ACTIVE_SEASON
+  (i.season ?? "non-ladder") === ACTIVE_SEASON
 );
 
 state.items = available;
