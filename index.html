@@ -1254,13 +1254,13 @@ function updateMeta() {
 function applyFilters() {
   let list = [...state.items];
 
-  // Type (robust: lowercase + Plural-Fallback)
-  if (state.type) {
-    list = list.filter(i => {
-      const c = (i.category || "").toLowerCase();
-      return c === state.type || c === state.type + "n";
-    });
-  }
+// Type (robust: type first, fallback category)
+if (state.type) {
+  list = list.filter(i => {
+    const t = (i.type || i.category || "").toLowerCase();
+    return t === state.type;
+  });
+}
 
   // Search
   if (state.search) {
