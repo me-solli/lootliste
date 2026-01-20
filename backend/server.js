@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 /* ===============================
    BASIC / CORS
-   =============================== */
+=============================== */
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -34,14 +34,14 @@ app.use((req, res, next) => {
 
 /* ===============================
    HEALTHCHECK
-   =============================== */
+=============================== */
 app.get("/", (req, res) => {
   res.status(200).send("OK");
 });
 
 /* ===============================
    DATA (Railway Volume)
-   =============================== */
+=============================== */
 const DATA_DIR = "/data";
 const ITEMS_PATH = path.join(DATA_DIR, "items.json");
 const USERS_PATH = path.join(DATA_DIR, "users.json");
@@ -68,7 +68,7 @@ let users = loadJSON(USERS_PATH, []);
 
 /* ===============================
    USER SYSTEM (MINIMAL, STABIL)
-   =============================== */
+=============================== */
 function createUser() {
   const user = {
     id: "usr_" + crypto.randomBytes(6).toString("hex"),
@@ -89,23 +89,23 @@ app.use((req, res, next) => {
   }
 
   req.user = user;
-  // User-ID immer zurückgeben, damit das Frontend sie speichern kann
   res.setHeader("X-User-Id", user.id);
   next();
 });
 
 /* ===============================
    GET ITEMS
-   =============================== */
+=============================== */
 app.get("/items", (req, res) => {
   res.json(items);
 });
 
 /* ===============================
    POST ITEM
-   =============================== */
+   (type clean, category nur Fallback)
+=============================== */
 app.post("/items", (req, res) => {
-  const { name, quality, category, screenshot } = req.body;
+  const { name, quality, type, category, screenshot } = req.body;
 
   if (!name || !screenshot) {
     return res.status(400).json({ error: "Pflichtfelder fehlen" });
@@ -118,10 +118,9 @@ app.post("/items", (req, res) => {
     createdAt: new Date().toISOString(),
 
     quality: quality || null,
-    category: category || null,
+    type: type || category || null,
     screenshot,
 
-    // ECHTE IDENTITÄT
     donorUserId: req.user.id,
 
     claimedByUserId: null,
@@ -142,8 +141,8 @@ app.post("/items", (req, res) => {
 });
 
 /* ===============================
-   CLAIM (C1)
-   =============================== */
+   CLAIM
+=============================== */
 app.post("/items/:id/claim", (req, res) => {
   const { contact } = req.body;
   const item = items.find(i => i.id === Number(req.params.id));
@@ -163,8 +162,8 @@ app.post("/items/:id/claim", (req, res) => {
 });
 
 /* ===============================
-   HANDOVER – DONOR CONFIRM (C2)
-   =============================== */
+   HANDOVER – DONOR CONFIRM
+=============================== */
 app.post("/items/:id/handover/donor", (req, res) => {
   const item = items.find(i => i.id === Number(req.params.id));
 
@@ -185,8 +184,8 @@ app.post("/items/:id/handover/donor", (req, res) => {
 });
 
 /* ===============================
-   HANDOVER – RECEIVER CONFIRM (C2)
-   =============================== */
+   HANDOVER – RECEIVER CONFIRM
+=============================== */
 app.post("/items/:id/handover/receiver", (req, res) => {
   const item = items.find(i => i.id === Number(req.params.id));
 
@@ -208,7 +207,7 @@ app.post("/items/:id/handover/receiver", (req, res) => {
 
 /* ===============================
    SERVER
-   =============================== */
+=============================== */
 app.listen(PORT, () => {
   console.log("Backend läuft auf Port", PORT);
 });
