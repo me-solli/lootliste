@@ -67,7 +67,7 @@ let items = loadJSON(ITEMS_PATH, []);
 let users = loadJSON(USERS_PATH, []);
 
 /* ===============================
-   USER SYSTEM (MINIMAL, STABIL)
+   USER SYSTEM (MINIMAL & EXPLIZIT)
 =============================== */
 function createUser() {
   const user = {
@@ -79,7 +79,7 @@ function createUser() {
   return user;
 }
 
-// Middleware: stellt immer req.user sicher
+// Middleware: garantiert IMMER eine User-ID
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
   let user = users.find(u => u.id === headerId);
@@ -102,10 +102,9 @@ app.get("/items", (req, res) => {
 
 /* ===============================
    POST ITEM
-   (type clean, category nur Fallback)
 =============================== */
 app.post("/items", (req, res) => {
-  const { name, quality, type, category, screenshot } = req.body;
+  const { name, quality, type, category, screenshot, season } = req.body;
 
   if (!name || !screenshot) {
     return res.status(400).json({ error: "Pflichtfelder fehlen" });
@@ -121,6 +120,9 @@ app.post("/items", (req, res) => {
     type: type || category || null,
     screenshot,
 
+    season: season || "non-ladder",
+
+    // 🔑 EINDEUTIGER BESITZER
     donorId: req.user.id,
 
     claimedByUserId: null,
@@ -137,6 +139,7 @@ app.post("/items", (req, res) => {
 
   items.push(newItem);
   saveJSON(ITEMS_PATH, items);
+
   res.status(201).json(newItem);
 });
 
@@ -168,7 +171,7 @@ app.post("/items/:id/handover/donor", (req, res) => {
   const item = items.find(i => i.id === Number(req.params.id));
 
   if (!item) return res.status(404).json({ error: "Item not found" });
-  if (item.donorUserId !== req.user.id) {
+  if (item.donorId !== req.user.id) {
     return res.status(403).json({ error: "Not donor" });
   }
 
