@@ -1198,7 +1198,7 @@ const uid = localStorage.getItem("lootliste_user_id");
 
 if (label) {
   if (uid) {
-    label.textContent = "me_solli";
+    label.textContent = "Spieler " + uid.slice(4, 9);
   } else {
     label.textContent =
       label.dataset.placeholder || "Spieler lädt…";
