@@ -4,6 +4,8 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
+import bcrypt from "bcrypt";
 
 // ===============================
 // APP SETUP
@@ -17,6 +19,7 @@ const PORT = process.env.PORT || 8080;
 const DATA_DIR = "/data";
 const ITEMS_FILE = path.join(DATA_DIR, "items.json");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
+const ACCOUNTS_FILE = path.join(DATA_DIR, "accounts.json");
 
 // ===============================
 // MIDDLEWARE (CORS MANUELL)
@@ -29,7 +32,6 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
-
   next();
 });
 
@@ -63,12 +65,13 @@ function saveJSON(file, data) {
 ensureDataDir();
 let items = loadJSON(ITEMS_FILE, []);
 let users = loadJSON(USERS_FILE, []);
+let accounts = loadJSON(ACCOUNTS_FILE, []);
 
 // ===============================
-// USER SYSTEM (STABIL)
+// USER SYSTEM (GAST – BLEIBT)
 // ===============================
 function createUser() {
-  const id = "usr_" + Math.random().toString(16).slice(2, 14);
+  const id = "usr_" + crypto.randomBytes(6).toString("hex");
   const user = {
     id,
     createdAt: new Date().toISOString()
@@ -78,6 +81,7 @@ function createUser() {
   return user;
 }
 
+// automatische Gast-User-ID
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
   let user = users.find(u => u.id === headerId);
@@ -89,6 +93,73 @@ app.use((req, res, next) => {
   req.user = user;
   res.setHeader("X-User-Id", user.id);
   next();
+});
+
+// ===============================
+// ACCOUNT HELPERS
+// ===============================
+function saveAccounts() {
+  saveJSON(ACCOUNTS_FILE, accounts);
+}
+
+function findAccountByUsername(username) {
+  return accounts.find(a => a.username === username);
+}
+
+// ===============================
+// AUTH – REGISTER (MINIMAL)
+// ===============================
+app.post("/auth/register", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  if (findAccountByUsername(username)) {
+    return res.status(409).json({ error: "Username already exists" });
+  }
+
+  const userId = "usr_" + crypto.randomBytes(6).toString("hex");
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const account = {
+    userId,
+    username,
+    passwordHash,
+    createdAt: new Date().toISOString(),
+    lastLoginAt: null
+  };
+
+  accounts.push(account);
+  saveAccounts();
+
+  res.json({ userId, username });
+});
+
+// ===============================
+// AUTH – LOGIN
+// ===============================
+app.post("/auth/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  const account = findAccountByUsername(username);
+  if (!account) {
+    return res.status(401).json({ error: "Invalid credentials" });
+  }
+
+  const ok = await bcrypt.compare(password, account.passwordHash);
+  if (!ok) {
+    return res.status(401).json({ error: "Invalid credentials" });
+  }
+
+  account.lastLoginAt = new Date().toISOString();
+  saveAccounts();
+
+  res.json({
+    userId: account.userId,
+    username: account.username
+  });
 });
 
 // ===============================
