@@ -11,7 +11,6 @@
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
-  --soft:#1a1a1a;
   --blue:#8fd1ff;
 }
 
@@ -54,7 +53,7 @@ body{
   opacity:.85;
 }
 
-/* Auth Box */
+/* AUTH BOX */
 .auth-box{
   position:absolute;
   top:22px;
@@ -89,7 +88,6 @@ body{
   padding:34px 28px 60px;
 }
 
-/* User Info */
 .user-box{
   margin-bottom:22px;
   font-size:13px;
@@ -102,7 +100,7 @@ body{
   font-size:12px;
 }
 
-/* EMPTY STATE */
+/* EMPTY */
 .empty-box{
   margin-top:30px;
   padding:26px 24px;
@@ -111,10 +109,9 @@ body{
   text-align:center;
   font-size:14px;
   color:#cfcfcf;
-  background:rgba(255,255,255,.03);
 }
 
-/* CLAIMS GRID */
+/* CLAIMS */
 .claims-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
@@ -130,18 +127,11 @@ body{
     rgba(255,255,255,.02)
   );
   border:1px solid rgba(255,255,255,.08);
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-
-.claim-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 28px rgba(0,0,0,.45);
 }
 
 .claim-name{
   font-size:18px;
   font-weight:600;
-  color:#f0f0f0;
 }
 
 .claim-meta{
@@ -154,26 +144,8 @@ body{
   margin-top:10px;
   font-size:13px;
 }
-
 .claim-status.reserviert{ color:var(--gold); }
 .claim-status.übergeben{ color:var(--blue); }
-
-.actions{
-  margin-top:14px;
-}
-
-.btn{
-  padding:8px 16px;
-  font-size:13px;
-  border-radius:999px;
-  border:1px solid rgba(143,209,255,.5);
-  background:rgba(143,209,255,.06);
-  color:var(--blue);
-  cursor:pointer;
-}
-
-.btn:hover{ border-color:var(--blue); }
-.btn:disabled{ opacity:.5; cursor:default; }
 </style>
 </head>
 
@@ -212,34 +184,57 @@ body{
 /* ===============================
    CONFIG
 ================================ */
-const API = "https://lootliste-production.up.railway.app";
-const playerId = localStorage.getItem("lootliste_user_id");
+const API_BASE = "https://lootliste-production.up.railway.app";
+const API_ITEMS = API_BASE + "/items";
 
 /* ===============================
-   USER ID + ANZEIGE (ECHT)
+   USER / ACCOUNT ANZEIGE
 ================================ */
+const userId = localStorage.getItem("lootliste_user_id");
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 
-if (playerId) {
-  const displayName = "Spieler " + playerId.slice(4, 9);
-  label.textContent = displayName;
-  userDisplay.textContent = displayName;
-} else {
-  label.textContent = label.dataset.placeholder || "Spieler lädt…";
-  userDisplay.textContent = "–";
+async function setUserLabel() {
+  if (!label) return;
+
+  if (!userId) {
+    label.textContent = label.dataset.placeholder || "Spieler lädt…";
+    if (userDisplay) userDisplay.textContent = "–";
+    return;
+  }
+
+  try {
+    const res = await fetch(API_BASE + "/me", {
+      headers: { "X-User-Id": userId }
+    });
+    const data = await res.json();
+
+    if (data.username) {
+      label.textContent = data.username;
+      if (userDisplay) userDisplay.textContent = data.username;
+    } else {
+      const fallback = "Spieler " + userId.slice(4, 9);
+      label.textContent = fallback;
+      if (userDisplay) userDisplay.textContent = fallback;
+    }
+  } catch {
+    const fallback = "Spieler " + userId.slice(4, 9);
+    label.textContent = fallback;
+    if (userDisplay) userDisplay.textContent = fallback;
+  }
 }
+
+setUserLabel();
 
 /* ===============================
    LOAD CLAIMS
 ================================ */
 const list = document.getElementById("list");
 
-if (!playerId) {
+if (!userId) {
   list.innerHTML = `
     <div class="empty-box">
-      Keine User-ID gefunden.<br><br>
-      Wahrscheinlich neuer Browser oder Inkognito-Fenster.
+      Keine User-ID gefunden.
     </div>
   `;
 } else {
@@ -247,15 +242,12 @@ if (!playerId) {
 }
 
 async function loadMyClaims(){
-  list.innerHTML = "";
-  const res = await fetch(API + "/items", {
-    headers: {
-      "X-User-Id": playerId
-    }
+  const res = await fetch(API_ITEMS, {
+    headers: { "X-User-Id": userId }
   });
   const items = await res.json();
 
-  const mine = items.filter(i => i.claimedBy === playerId);
+  const mine = items.filter(i => i.claimedBy === userId);
 
   if (mine.length === 0) {
     list.innerHTML = `
@@ -273,69 +265,18 @@ async function loadMyClaims(){
     const card = document.createElement("div");
     card.className = "claim-card";
 
-    const receiverConfirmed = item.handover?.receiverConfirmed;
-
     card.innerHTML = `
       <div class="claim-name">${item.name}</div>
-
       <div class="claim-meta">
         Reserviert am:
         ${item.claimedAt
           ? new Date(item.claimedAt).toLocaleDateString("de-DE")
           : "–"}
       </div>
-
       <div class="claim-status ${item.status}">
         Status: ${item.status}
       </div>
-
-      ${
-        item.status === "reserviert"
-          ? `
-            <div class="actions">
-              <button class="btn" ${receiverConfirmed ? "disabled" : ""}>
-                ${receiverConfirmed ? "Erhalt bestätigt" : "Item erhalten"}
-              </button>
-            </div>
-          `
-          : ""
-      }
     `;
-
-    if (item.status === "reserviert" && !receiverConfirmed) {
-      const btn = card.querySelector(".btn");
-
-      btn.addEventListener("click", async () => {
-        btn.disabled = true;
-        btn.textContent = "…";
-
-        const res = await fetch(
-          \`\${API}/items/\${item.id}/handover/receiver\`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ playerId })
-          }
-        );
-
-        if (!res.ok) {
-          alert("Bestätigung fehlgeschlagen.");
-          btn.disabled = false;
-          btn.textContent = "Item erhalten";
-          return;
-        }
-
-        const data = await res.json();
-
-        if (data.status === "übergeben") {
-          const statusEl = card.querySelector(".claim-status");
-          statusEl.textContent = "Status: übergeben";
-          statusEl.className = "claim-status übergeben";
-        }
-
-        btn.textContent = "Erhalt bestätigt";
-      });
-    }
 
     grid.appendChild(card);
   });
