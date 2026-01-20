@@ -837,6 +837,51 @@ body{
   .hero-stats{
   gap: 14px;
 }
+
+/* ================================
+   AUTH BOX – STACKED (VARIANTE A)
+================================ */
+
+.auth-box--stacked{
+  align-items:flex-start;
+}
+
+.auth-meta{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.auth-name{
+  font-size:13px;
+  font-weight:600;
+}
+
+.auth-submit{
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.9;
+}
+
+.auth-submit:hover{
+  text-decoration:underline;
+  opacity:1;
+}
+
+.auth-links{
+  font-size:12px;
+  opacity:.75;
+}
+
+.auth-links a{
+  color:#eaeaea;
+  text-decoration:none;
+}
+
+.auth-links a:hover{
+  text-decoration:underline;
+}
   
 </style>
 </head>
@@ -850,22 +895,29 @@ body{
 <header class="hero">
   <div class="hero-inner">
 
-    <div class="auth-box">
-      <img src="img/avatars/default.png" alt="Avatar" width="28" height="28">
+<div class="auth-box auth-box--stacked">
+  <img src="img/avatars/default.png" alt="Avatar" width="28" height="28">
 
-      <!-- User-ID wird IMMER per JS gesetzt -->
-      <span
-        class="auth-name"
-        id="playerIdLabel"
-        data-placeholder="Spieler lädt…"
-      ></span>
+  <div class="auth-meta">
+    <span
+      class="auth-name"
+      id="playerIdLabel"
+      data-placeholder="Spieler lädt…"
+    ></span>
 
-      <a href="my-items.html" class="auth-link">Meine Items</a>
-      <span class="auth-sep">·</span>
-      <a href="my-claims.html" class="auth-link">Meine Claims</a>
-      <span class="auth-sep">·</span>
-      <a href="archive.html" class="auth-link">Archiv</a>
+    <a href="submit.html" class="auth-submit">
+      + Item einreichen
+    </a>
+
+    <div class="auth-links">
+      <a href="my-items.html">Meine Items</a>
+      <span>·</span>
+      <a href="my-claims.html">Meine Claims</a>
+      <span>·</span>
+      <a href="archive.html">Archiv</a>
     </div>
+  </div>
+</div>
 
     <h1 class="hero-logo">
       <img src="img/logo_d2r.png" alt="D2R Lootliste Logo">
