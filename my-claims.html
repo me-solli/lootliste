@@ -23,10 +23,7 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{
-  max-width:1500px;
-  margin:0 auto;
-}
+.wrapper{max-width:1500px;margin:0 auto}
 
 /* HERO */
 .hero{
@@ -42,16 +39,8 @@ body{
   background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
 }
 
-.hero h1{
-  margin:0;
-  font-size:34px;
-  font-weight:700;
-}
-
-.hero p{
-  margin:8px 0 0;
-  opacity:.85;
-}
+.hero h1{margin:0;font-size:34px;font-weight:700}
+.hero p{margin:8px 0 0;opacity:.85}
 
 /* AUTH BOX */
 .auth-box{
@@ -84,9 +73,7 @@ body{
 .auth-link:hover{opacity:1;text-decoration:underline}
 
 /* CONTENT */
-.container{
-  padding:34px 28px 60px;
-}
+.container{padding:34px 28px 60px}
 
 .user-box{
   margin-bottom:22px;
@@ -144,8 +131,8 @@ body{
   margin-top:10px;
   font-size:13px;
 }
-.claim-status.reserviert{ color:var(--gold); }
-.claim-status.übergeben{ color:var(--blue); }
+.claim-status.reserviert{color:var(--gold)}
+.claim-status.vergeben{color:var(--blue)}
 </style>
 </head>
 
@@ -188,66 +175,71 @@ const API_BASE = "https://lootliste-production.up.railway.app";
 const API_ITEMS = API_BASE + "/items";
 
 /* ===============================
-   USER / ACCOUNT ANZEIGE
+   IDS
 ================================ */
-const userId = localStorage.getItem("lootliste_user_id");
+const deviceId  = localStorage.getItem("lootliste_user_id");
+const accountId = localStorage.getItem("lootliste_account_id");
+
+/* ===============================
+   USER LABEL
+================================ */
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 
 async function setUserLabel() {
   if (!label) return;
 
-  if (!userId) {
-    label.textContent = label.dataset.placeholder || "Spieler lädt…";
-    if (userDisplay) userDisplay.textContent = "–";
-    return;
-  }
+  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+  if (userDisplay) userDisplay.textContent = "–";
+
+  if (!accountId) return;
 
   try {
     const res = await fetch(API_BASE + "/me", {
-      headers: { "X-User-Id": userId }
+      headers: {
+        "X-User-Id": deviceId || "",
+        "X-Account-Id": accountId
+      }
     });
     const data = await res.json();
 
     if (data.username) {
       label.textContent = data.username;
       if (userDisplay) userDisplay.textContent = data.username;
-    } else {
-      const fallback = "Spieler " + userId.slice(4, 9);
-      label.textContent = fallback;
-      if (userDisplay) userDisplay.textContent = fallback;
     }
-  } catch {
-    const fallback = "Spieler " + userId.slice(4, 9);
-    label.textContent = fallback;
-    if (userDisplay) userDisplay.textContent = fallback;
-  }
+  } catch {}
 }
 
 setUserLabel();
 
 /* ===============================
-   LOAD CLAIMS
+   LOAD MY CLAIMS (ACCOUNT)
 ================================ */
 const list = document.getElementById("list");
 
-if (!userId) {
+if (!accountId) {
   list.innerHTML = `
     <div class="empty-box">
-      Keine User-ID gefunden.
+      Du bist nicht eingeloggt.
     </div>
   `;
 } else {
   loadMyClaims();
 }
 
-async function loadMyClaims(){
+async function loadMyClaims() {
   const res = await fetch(API_ITEMS, {
-    headers: { "X-User-Id": userId }
+    headers: {
+      "X-User-Id": deviceId || "",
+      "X-Account-Id": accountId
+    }
   });
+
   const items = await res.json();
 
-  const mine = items.filter(i => i.claimedBy === userId);
+  const mine = items.filter(i =>
+    i.claimedByAccountId === accountId
+  );
 
   if (mine.length === 0) {
     list.innerHTML = `
