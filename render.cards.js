@@ -23,36 +23,52 @@ export function renderCards(items, container) {
     const card = document.createElement("article");
     card.className = "card";
 
-    // ✅ type strikt & sicher
+    // Typ sauber absichern
     const type = VALID_TYPES.includes(item.type) ? item.type : "default";
     card.dataset.type = type;
+
+    // Qualitätsklasse für Item-Namen
+    const qualityClass = item.quality
+      ? `quality-${item.quality}`
+      : "quality-normal";
 
     card.innerHTML = `
       ${item.screenshot ? `
         <div class="card-image">
-          <img src="${item.screenshot}" alt="Screenshot von ${item.name || "Item"}">
+          <img
+            src="${item.screenshot}"
+            alt="Screenshot von ${item.name || "Item"}"
+            loading="lazy"
+          >
         </div>
       ` : ""}
 
       <div class="card-body">
 
-        <div class="item-name">${item.name || "Unbekanntes Item"}</div>
+        <div class="item-name ${qualityClass}">
+          ${item.name || "Unbekanntes Item"}
+        </div>
 
-        ${item.quality ? `
-          <div class="item-meta">
-            <span class="quality">${item.quality}</span>
+        ${item.sub ? `
+          <div class="item-sub">
+            ${item.sub}
           </div>
         ` : ""}
 
-        ${item.sub ? `<div class="item-sub">${item.sub}</div>` : ""}
-        ${item.roll ? `<div class="item-roll">${item.roll}</div>` : ""}
+        ${item.roll ? `
+          <div class="item-roll">
+            ${item.roll}
+          </div>
+        ` : ""}
 
         <div class="player">
           Spender: ${item.donor || "Community"}
         </div>
 
         <div class="claim-row">
-          <button class="claim-btn">🖐️ Nehmen</button>
+          <button class="claim-btn">
+            🖐️ Nehmen
+          </button>
         </div>
 
       </div>
@@ -63,7 +79,7 @@ export function renderCards(items, container) {
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
 
-      const playerId = localStorage.getItem("playerId");
+      const playerId = localStorage.getItem("lootliste_user_id");
       if (!playerId) {
         alert("Spieler-ID fehlt. Seite neu laden.");
         return;
