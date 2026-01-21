@@ -137,26 +137,23 @@ body{
   color:#b5b5b5;
 }
 
-/* ACTIONS */
+/* ACTION */
 .item-actions{
   margin-top:10px;
-  display:flex;
-  gap:8px;
 }
 
-.item-actions button{
-  padding:6px 10px;
+.btn-delete{
+  padding:6px 12px;
   font-size:12px;
   border-radius:10px;
-  border:1px solid rgba(255,255,255,.15);
+  border:1px solid rgba(255,107,107,.35);
   background:#111;
-  color:#fff;
+  color:#ff6b6b;
   cursor:pointer;
 }
 
-.item-actions .btn-delete{
-  color:#ff6b6b;
-  border-color:rgba(255,107,107,.35);
+.btn-delete:hover{
+  background:rgba(255,107,107,.1);
 }
 
 .empty-box{
@@ -248,7 +245,7 @@ async function setUserLabel() {
 setUserLabel();
 
 /* ===============================
-   LOAD MY ITEMS (ACCOUNT)
+   LOAD MY ITEMS
 ================================ */
 (async () => {
   const output = document.getElementById("output");
@@ -291,6 +288,7 @@ setUserLabel();
   mine.forEach(item => {
     const card = document.createElement("div");
     card.className = "item-card";
+
     card.innerHTML = `
       <img src="${item.screenshot || "img/placeholder.png"}" alt="">
       <div class="item-meta">
@@ -298,13 +296,11 @@ setUserLabel();
         <div class="sub">${item.quality || "–"} · ${item.type || "–"}</div>
 
         <div class="item-actions">
-          <button class="btn-edit">✏️ Bearbeiten</button>
           <button class="btn-delete">🗑️ Löschen</button>
         </div>
       </div>
     `;
 
-    /* DELETE */
     card.querySelector(".btn-delete").addEventListener("click", async () => {
       if (!confirm("Item wirklich löschen?")) return;
 
@@ -326,11 +322,6 @@ setUserLabel();
       } catch {
         alert("Netzwerkfehler beim Löschen.");
       }
-    });
-
-    /* EDIT (VORBEREITET) */
-    card.querySelector(".btn-edit").addEventListener("click", () => {
-      alert("Bearbeiten folgt im nächsten Schritt 😉");
     });
 
     grid.appendChild(card);
