@@ -100,7 +100,13 @@ label{
   font-size:14px;
   font-weight:600;
 }
-input,select{
+small.hint{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+  opacity:.65;
+}
+input,select,textarea{
   width:100%;
   padding:12px 14px;
   border-radius:12px;
@@ -109,6 +115,7 @@ input,select{
   color:#eee;
   font-size:14px;
 }
+textarea{resize:none}
 button{
   margin-top:26px;
   padding:14px;
@@ -125,7 +132,11 @@ button{
   color:#f5e6b3;
   cursor:pointer;
 }
-.status{margin-top:16px;font-size:14px;opacity:.85}
+button:disabled{
+  opacity:.6;
+  cursor:default;
+}
+.status{margin-top:16px;font-size:14px;opacity:.9}
 
 .preview{margin-top:14px;display:none}
 .preview img{
@@ -149,6 +160,13 @@ button{
   border-radius:14px;
   cursor:zoom-out;
 }
+
+.notice{
+  margin-top:18px;
+  font-size:12px;
+  opacity:.65;
+}
+.notice strong{color:var(--gold)}
 </style>
 </head>
 
@@ -175,7 +193,9 @@ button{
 
   <div class="user-box">
     Aktiver Nutzer:
-    <code id="userDisplay">–</code>
+    <code id="userDisplay">–</code><br>
+    Saison:
+    <code>Non-Ladder</code>
   </div>
 
   <div class="form-card">
@@ -183,6 +203,7 @@ button{
 
       <label>Screenshot (Pflicht)</label>
       <input type="file" id="image" accept="image/*" required>
+      <small class="hint">📸 Bitte komplettes Itemfenster inkl. Werte anzeigen</small>
 
       <div class="preview" id="preview">
         <img id="previewImg" alt="Vorschau">
@@ -217,8 +238,19 @@ button{
         <option value="sonstiges">Sonstiges</option>
       </select>
 
-      <button type="submit">Item einreichen</button>
+      <label>Interne Notiz (optional)</label>
+      <textarea id="note" maxlength="50" rows="2"
+        placeholder="z. B. für Javazon, evtl. dupe?"></textarea>
+      <small class="hint">Nur für dich sichtbar</small>
+
+      <button type="submit" id="submitBtn">Item einreichen</button>
       <div class="status" id="status"></div>
+
+      <div class="notice">
+        <strong>ℹ️ Hinweis:</strong> Dieses Item erscheint nach dem Einreichen öffentlich
+        in der Lootliste.
+      </div>
+
     </form>
   </div>
 
@@ -241,6 +273,7 @@ const accountId = localStorage.getItem("lootliste_account_id");
 
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
+const submitBtn = document.getElementById("submitBtn");
 
 async function setUserLabel(){
   const headers = {};
@@ -295,7 +328,11 @@ async function uploadImage(file){
 /* SUBMIT */
 document.getElementById("form").addEventListener("submit",async e=>{
   e.preventDefault();
+  if(submitBtn.disabled) return;
+
   const status=document.getElementById("status");
+  submitBtn.disabled=true;
+  submitBtn.textContent="Wird eingereicht…";
   status.textContent="📤 Lade Screenshot hoch…";
 
   try{
@@ -314,17 +351,21 @@ document.getElementById("form").addEventListener("submit",async e=>{
         quality:document.getElementById("quality").value,
         type:document.getElementById("type").value,
         screenshot,
-        season:ACTIVE_SEASON
+        season:ACTIVE_SEASON,
+        note_private:document.getElementById("note").value.trim()
       })
     });
 
-    status.textContent="✅ Item erfolgreich eingereicht";
+    status.innerHTML='✅ Item eingereicht – <a href="my-items.html">Meine Items ansehen</a>';
     e.target.reset();
     preview.style.display="none";
 
   }catch(err){
     console.error(err);
     status.textContent="❌ Fehler beim Einreichen";
+  }finally{
+    submitBtn.disabled=false;
+    submitBtn.textContent="Item einreichen";
   }
 });
 </script>
