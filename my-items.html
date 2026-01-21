@@ -137,6 +137,28 @@ body{
   color:#b5b5b5;
 }
 
+/* ACTIONS */
+.item-actions{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+}
+
+.item-actions button{
+  padding:6px 10px;
+  font-size:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.15);
+  background:#111;
+  color:#fff;
+  cursor:pointer;
+}
+
+.item-actions .btn-delete{
+  color:#ff6b6b;
+  border-color:rgba(255,107,107,.35);
+}
+
 .empty-box{
   margin-top:30px;
   padding:26px 24px;
@@ -220,9 +242,7 @@ async function setUserLabel() {
       label.textContent = data.username;
       if (userDisplay) userDisplay.textContent = data.username;
     }
-  } catch {
-    /* stiller Fallback */
-  }
+  } catch {}
 }
 
 setUserLabel();
@@ -276,8 +296,43 @@ setUserLabel();
       <div class="item-meta">
         <h3>${item.name || "Unbekanntes Item"}</h3>
         <div class="sub">${item.quality || "–"} · ${item.type || "–"}</div>
+
+        <div class="item-actions">
+          <button class="btn-edit">✏️ Bearbeiten</button>
+          <button class="btn-delete">🗑️ Löschen</button>
+        </div>
       </div>
     `;
+
+    /* DELETE */
+    card.querySelector(".btn-delete").addEventListener("click", async () => {
+      if (!confirm("Item wirklich löschen?")) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/items/${item.id}`, {
+          method: "DELETE",
+          headers: {
+            "X-User-Id": deviceId || "",
+            "X-Account-Id": accountId
+          }
+        });
+
+        if (!res.ok) {
+          alert("Item konnte nicht gelöscht werden.");
+          return;
+        }
+
+        card.remove();
+      } catch {
+        alert("Netzwerkfehler beim Löschen.");
+      }
+    });
+
+    /* EDIT (VORBEREITET) */
+    card.querySelector(".btn-edit").addEventListener("click", () => {
+      alert("Bearbeiten folgt im nächsten Schritt 😉");
+    });
+
     grid.appendChild(card);
   });
 
