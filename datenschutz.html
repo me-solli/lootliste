@@ -6,160 +6,266 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root{
+  --gold:#f5c451;
+  --border:#2a2a2a;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  background:#0b0b0b;
-  color:#e6e6e6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  padding:32px 24px 60px;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
 }
 
-h1,h2{
-  color:#d4af37;
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
 }
 
-h1{margin-top:0}
+/* HERO */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
+}
 
-p,ul{
+.hero-inner{
+  padding:44px 36px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+}
+
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
+}
+
+.hero p{
+  margin:10px 0 0;
+  opacity:.85;
+}
+
+/* CONTENT */
+.container{
+  padding:40px 28px 70px;
+}
+
+.section{
   max-width:760px;
-  line-height:1.6;
+  margin-bottom:36px;
 }
 
-ul{padding-left:18px}
+.section h2{
+  margin:0 0 10px;
+  font-size:18px;
+  font-weight:600;
+  color:var(--gold);
+}
 
-li{margin-bottom:6px}
+.section p{
+  margin:8px 0;
+  line-height:1.6;
+  font-size:14px;
+  opacity:.9;
+}
 
+.section ul{
+  margin:8px 0 8px 18px;
+  padding:0;
+}
+
+.section li{
+  margin-bottom:6px;
+  font-size:14px;
+  opacity:.9;
+}
+
+.section .small{
+  font-size:12px;
+  opacity:.7;
+}
+
+/* INFO BOX */
+.info-box{
+  padding:18px 20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.04),
+    rgba(255,255,255,.015)
+  );
+}
+
+/* LINKS */
 a{
-  color:#d4af37;
+  color:var(--gold);
   text-decoration:none;
 }
 
-.small{
-  opacity:.75;
-  font-size:13px;
+a:hover{
+  text-decoration:underline;
 }
 
-.footer-link{
-  margin-top:36px;
+/* FOOTER NAV */
+.footer-nav{
+  margin-top:50px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav a{
+  margin-right:14px;
 }
 </style>
 </head>
 
 <body>
+<div class="wrapper">
 
-<h1>Datenschutzerklärung</h1>
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Datenschutzerklärung</h1>
+    <p>Informationen zum Umgang mit personenbezogenen Daten</p>
+  </div>
+</header>
 
-<h2>1. Verantwortlicher</h2>
-<p>
-Verantwortlich für die Datenverarbeitung im Sinne der DSGVO:<br>
-Daniel Soll<br>
-Ingolstädter Straße 47<br>
-80807 München<br>
-Deutschland<br>
-E-Mail: <a href="mailto:kontakt@d2r-lootliste.de">kontakt@d2r-lootliste.de</a>
-</p>
+<!-- CONTENT -->
+<div class="container">
 
-<h2>2. Charakter der Website</h2>
-<p>
-Diese Website ist ein privates, nicht-kommerzielles Community-Projekt
-zur Anzeige einer Lootliste für <strong>Diablo II: Resurrected</strong>.
-</p>
+  <div class="section info-box">
+    <p><strong>Verantwortlicher im Sinne der DSGVO:</strong></p>
+    <p>
+      Daniel Soll<br>
+      Ingolstädter Straße 47<br>
+      80807 München<br>
+      Deutschland
+    </p>
 
-<p>
-Zum aktuellen Zeitpunkt werden keine verpflichtenden Nutzerkonten angeboten
-und es findet keine dauerhafte personenbezogene Nutzerverwaltung statt.
-</p>
+    <p>
+      <strong>Kontakt:</strong><br>
+      E-Mail:
+      <a href="mailto:kontakt@d2r-lootliste.de">
+        kontakt@d2r-lootliste.de
+      </a>
+    </p>
+  </div>
 
-<h2>3. Verarbeitete Daten</h2>
-<p>
-Bei der rein informativen Nutzung dieser Website werden grundsätzlich
-keine personenbezogenen Daten aktiv erhoben.
-</p>
+  <div class="section">
+    <h2>Charakter der Website</h2>
+    <p>
+      Diese Website ist ein privates, nicht-kommerzielles Community-Projekt
+      zur Darstellung einer Lootliste für
+      <strong>Diablo II: Resurrected</strong>.
+    </p>
+    <p>
+      Es handelt sich nicht um einen kommerziellen Dienst
+      und nicht um ein Angebot mit Gewinnerzielungsabsicht.
+    </p>
+  </div>
 
-<p>
-Technisch bedingt können folgende Informationen verarbeitet werden:
-</p>
+  <div class="section">
+    <h2>Verarbeitete Daten</h2>
+    <p>
+      Bei der rein informativen Nutzung dieser Website
+      werden keine personenbezogenen Daten aktiv erhoben.
+    </p>
+    <p>
+      Technisch bedingt können folgende Informationen verarbeitet werden:
+    </p>
+    <ul>
+      <li>Item- und Statusdaten der Lootliste</li>
+      <li>temporäre, lokal gespeicherte Zustände (z. B. Filter, Ansichten)</li>
+      <li>anonyme technische Zugriffsdaten des Hosting-Anbieters</li>
+    </ul>
+  </div>
 
-<ul>
-  <li>Item-Daten und Statusinformationen der Lootliste</li>
-  <li>temporäre, lokal gespeicherte Zustände (z. B. Filter, Ansichten)</li>
-  <li>anonyme technische Zugriffsdaten, die vom Hosting-Anbieter bereitgestellt werden</li>
-</ul>
+  <div class="section">
+    <h2>Lokale Speicherung</h2>
+    <p>
+      Zur technischen Funktion der Website können Informationen
+      lokal im Browser gespeichert werden
+      (z. B. mittels <code>localStorage</code>).
+    </p>
+    <p>
+      Diese Daten verbleiben ausschließlich auf dem Endgerät des Nutzers
+      und werden nicht serverseitig ausgewertet.
+    </p>
+  </div>
 
-<h2>4. Lokale Speicherung</h2>
-<p>
-Zur Darstellung und Funktion der Lootliste können Informationen
-ausschließlich lokal im Browser gespeichert werden
-(z. B. mittels <code>localStorage</code> oder vergleichbarer Webspeicher-Techniken).
-</p>
+  <div class="section">
+    <h2>Cookies & Tracking</h2>
+    <p>
+      Diese Website verwendet keine Cookies zu Marketing-,
+      Analyse- oder Tracking-Zwecken.
+    </p>
+    <p>
+      Es kommen keine externen Analyse-, Werbe- oder Social-Media-Dienste zum Einsatz.
+    </p>
+  </div>
 
-<p>
-Diese Daten verbleiben auf dem Endgerät des Nutzers
-und werden nicht serverseitig ausgewertet.
-</p>
+  <div class="section">
+    <h2>Hosting</h2>
+    <p>
+      Die Website wird über externe Hosting- und Infrastruktur-Dienste
+      bereitgestellt (z. B. GitHub Pages, Railway).
+    </p>
+    <p>
+      Dabei können durch diese Anbieter technische Zugriffsdaten
+      in Server-Logs verarbeitet werden
+      (z. B. IP-Adresse, Zeitpunkt des Zugriffs).
+    </p>
+    <p>
+      Diese Verarbeitung liegt im Verantwortungsbereich der jeweiligen Anbieter
+      und erfolgt gemäß deren Datenschutzerklärungen.
+    </p>
+  </div>
 
-<h2>5. Cookies & Tracking</h2>
-<p>
-Diese Website verwendet keine Cookies zu Marketing-,
-Analyse- oder Tracking-Zwecken.
-</p>
+  <div class="section">
+    <h2>Zukünftige Erweiterungen</h2>
+    <p>
+      Für zukünftige optionale Funktionen
+      (z. B. Benutzerkonten oder Login-Systeme)
+      kann eine weitergehende Verarbeitung personenbezogener Daten erforderlich werden.
+    </p>
+    <p>
+      In diesem Fall wird diese Datenschutzerklärung
+      vor Aktivierung entsprechender Funktionen angepasst.
+    </p>
+  </div>
 
-<p>
-Es kommen keine externen Analyse-, Werbe- oder Social-Media-Dienste zum Einsatz.
-</p>
+  <div class="section">
+    <h2>Rechte der betroffenen Personen</h2>
+    <p>
+      Betroffene Personen haben gemäß DSGVO insbesondere das Recht auf:
+    </p>
+    <ul>
+      <li>Auskunft über gespeicherte personenbezogene Daten</li>
+      <li>Berichtigung unrichtiger Daten</li>
+      <li>Löschung personenbezogener Daten</li>
+      <li>Einschränkung der Verarbeitung</li>
+    </ul>
+    <p>
+      Anfragen können jederzeit per E-Mail an den Verantwortlichen gerichtet werden.
+    </p>
+    <p class="small">
+      Stand: Januar 2026
+    </p>
+  </div>
 
-<h2>6. Hosting</h2>
-<p>
-Die Website wird über einen externen Hosting-Anbieter bereitgestellt
-(z. B. GitHub Pages).
-</p>
+  <div class="footer-nav">
+    <a href="index.html">← Zurück zur Lootliste</a>
+  </div>
 
-<p>
-Im Rahmen des Hostings können durch den Anbieter technische Zugriffsdaten
-in Server-Logs verarbeitet werden
-(z. B. IP-Adresse, Zeitpunkt des Zugriffs).
-</p>
-
-<p>
-Diese Verarbeitung liegt im Verantwortungsbereich des jeweiligen Hosting-Anbieters
-und erfolgt gemäß dessen Datenschutzerklärung.
-</p>
-
-<h2>7. Zukünftige Erweiterungen</h2>
-<p>
-Für zukünftige Funktionen (z. B. optionale Benutzerkonten,
-Login-Systeme oder erweiterte Community-Funktionen)
-kann eine weitergehende Verarbeitung personenbezogener Daten erforderlich werden.
-</p>
-
-<p>
-In diesem Fall wird diese Datenschutzerklärung
-vor Aktivierung entsprechender Funktionen angepasst.
-</p>
-
-<h2>8. Rechte der betroffenen Personen</h2>
-<p>
-Betroffene Personen haben gemäß DSGVO insbesondere das Recht auf:
-</p>
-
-<ul>
-  <li>Auskunft über gespeicherte personenbezogene Daten</li>
-  <li>Berichtigung unrichtiger Daten</li>
-  <li>Löschung personenbezogener Daten</li>
-  <li>Einschränkung der Verarbeitung</li>
-</ul>
-
-<p>
-Anfragen können jederzeit per E-Mail an den Verantwortlichen gerichtet werden.
-</p>
-
-<p class="small">
-Stand: Januar 2026
-</p>
-
-<p class="footer-link">
-<a href="index.html">← Zurück zur Lootliste</a>
-</p>
-
+</div>
+</div>
 </body>
 </html>
