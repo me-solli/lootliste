@@ -344,17 +344,62 @@ body{
 .filter-panel input,.filter-panel select{padding:10px 12px;background:#111;border:1px solid #333;color:#fff;border-radius:10px}
 
 /* ================================
-   CARDS (OPTIK BASIS)
+   CARDS (OPTIK BASIS – KOMPAKT)
 ================================ */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.card{display:flex;background:linear-gradient(180deg,#191919,#0f0f0f);border:1px solid var(--border);border-radius:20px;overflow:hidden}
-.card-image{width:120px;background:#0b0b0b;display:flex;align-items:center;justify-content:center}
-.card-image img{width:72px;height:72px}
-.card-body{padding:16px;display:flex;flex-direction:column;gap:6px}
-.item-name{font-size:16px;font-weight:600}
-.item-sub{font-size:11px;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase}
-.stars{color:var(--gold)}
-.player{font-size:13px;opacity:.85}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  gap:18px;
+}
+
+.card{
+  display:flex;
+  background:linear-gradient(180deg,#191919,#0f0f0f);
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.card-image{
+  width:120px;
+  background:#0b0b0b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.card-image img{
+  width:72px;
+  height:72px;
+}
+
+.card-body{
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.item-name{
+  font-size:16px;
+  font-weight:600;
+}
+
+.item-sub{
+  font-size:11px;
+  color:#8a8a8a;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+}
+
+.stars{
+  color:var(--gold);
+}
+
+.player{
+  font-size:13px;
+  opacity:.85;
+}
 
 /* ================================
    FAKE BLOCKS (VISUAL)
