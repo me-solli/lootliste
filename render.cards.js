@@ -22,66 +22,92 @@ export function renderCards(items, container) {
   items.forEach(item => {
     const card = document.createElement("article");
     card.className = "card";
+    card.dataset.open = "false";
 
     // Typ strikt & sicher
-    const type = VALID_TYPES.includes(item.type) ? item.type : "default";
+    const type = VALID_TYPES.includes(item.type) ? item.type : "sonstiges";
     card.dataset.type = type;
 
-    // Qualitätsklasse für Item-Namen
+    // Qualitätsklasse
     const qualityClass = item.quality
       ? `quality-${item.quality}`
       : "quality-normal";
 
-    // Spender / Quelle sauber unterscheiden
+    // Kategorie-Label (sichtbar im Header)
+    const categoryLabel = item.sub
+      ? `${type} • ${item.sub}`
+      : type;
+
+    // Spender / Quelle
     const sourceLabel = item.donor
       ? `Spender: ${item.donor}`
       : "Quelle: Community-Drop";
 
     card.innerHTML = `
-      ${item.screenshot ? `
-        <div class="card-image">
-          <img
-            src="${item.screenshot}"
-            alt="Screenshot von ${item.name || "Item"}"
-            loading="lazy"
-          >
+      <!-- HEADER (immer sichtbar) -->
+      <button class="card-header" type="button">
+        <span class="card-chevron">▶</span>
+
+        <div class="card-title">
+          <div class="item-name ${qualityClass}">
+            ${item.name || "Unbekanntes Item"}
+          </div>
+          <div class="item-category">
+            ${categoryLabel}
+          </div>
         </div>
-      ` : ""}
+      </button>
 
-      <div class="card-body">
+      <!-- DETAILS (ausklappbar) -->
+      <div class="card-details">
 
-        <div class="item-name ${qualityClass}">
-          ${item.name || "Unbekanntes Item"}
-        </div>
-
-        ${item.sub ? `
-          <div class="item-sub">
-            ${item.sub}
+        ${item.screenshot ? `
+          <div class="card-image">
+            <img
+              src="${item.screenshot}"
+              alt="Screenshot von ${item.name || "Item"}"
+              loading="lazy"
+            >
           </div>
         ` : ""}
 
-        ${item.roll ? `
-          <div class="item-roll">
-            ${item.roll}
+        <div class="card-body">
+
+          ${item.roll ? `
+            <div class="item-roll">
+              ${item.roll}
+            </div>
+          ` : ""}
+
+          <div class="player">
+            ${sourceLabel}
           </div>
-        ` : ""}
 
-        <div class="player">
-          ${sourceLabel}
+          <div class="claim-row">
+            <button class="claim-btn">
+              🖐️ Nehmen
+            </button>
+          </div>
+
         </div>
-
-        <div class="claim-row">
-          <button class="claim-btn">
-            🖐️ Nehmen
-          </button>
-        </div>
-
       </div>
     `;
 
+    /* =========================
+       TOGGLE (Header Click)
+    ========================== */
+    const header = card.querySelector(".card-header");
+    header.addEventListener("click", () => {
+      const open = card.dataset.open === "true";
+      card.dataset.open = (!open).toString();
+    });
+
+    /* =========================
+       CLAIM LOGIK
+    ========================== */
     const btn = card.querySelector(".claim-btn");
 
-    // 🔒 Eigenes Item → nicht nehmbar
+    // 🔒 Eigenes Item
     if (item.isOwner) {
       btn.disabled = true;
       btn.textContent = "🔒 Dein Item";
@@ -89,7 +115,7 @@ export function renderCards(items, container) {
     }
 
     btn.addEventListener("click", async (e) => {
-      e.stopPropagation();
+      e.stopPropagation(); // verhindert Zuklappen
 
       if (btn.disabled) return;
 
