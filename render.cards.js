@@ -33,7 +33,7 @@ export function renderCards(items, container) {
       ? `quality-${item.quality}`
       : "quality-normal";
 
-    // Kategorie-Label (sichtbar im Header)
+    // Kategorie-Label (Header)
     const categoryLabel = item.sub
       ? `${type} • ${item.sub}`
       : type;
@@ -47,6 +47,13 @@ export function renderCards(items, container) {
       <!-- HEADER (immer sichtbar) -->
       <button class="card-header" type="button">
         <span class="card-chevron">▶</span>
+
+        <img
+          class="item-type-icon"
+          src="img/icons/${type}.png"
+          alt="${type}"
+          loading="lazy"
+        >
 
         <div class="card-title">
           <div class="item-name ${qualityClass}">
@@ -94,7 +101,7 @@ export function renderCards(items, container) {
     `;
 
     /* =========================
-       TOGGLE (Header Click)
+       TOGGLE (nur Header)
     ========================== */
     const header = card.querySelector(".card-header");
     header.addEventListener("click", () => {
