@@ -348,8 +348,9 @@ body{
 ================================ */
 .cards{
   display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(320px, 360px));
   gap:18px;
+  justify-content:center;
 }
 
 .card{
@@ -380,9 +381,15 @@ body{
   gap:6px;
 }
 
+/* NAME IMMER EINZEILIG */
 .item-name{
   font-size:16px;
   font-weight:600;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
 }
 
 .item-sub{
