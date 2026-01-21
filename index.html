@@ -763,8 +763,10 @@ body{
 
 /* Grid ruhiger */
 .cards{
-  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(320px, 360px));
   gap:18px;
+  justify-content:center;
 }
 
 /* Card-Grundstil */
