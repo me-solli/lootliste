@@ -168,7 +168,7 @@ button:disabled{opacity:.6;cursor:default}
 .notice{
   margin-top:18px;
   font-size:12px;
-  opacity:.75;
+  opacity:.65;
 }
 .notice strong{color:var(--gold)}
 
@@ -189,17 +189,14 @@ button:disabled{opacity:.6;cursor:default}
 
 <header class="hero">
   <div class="hero-inner">
-
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
       <span id="playerIdLabel">–</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
-
     <h1>Item einreichen</h1>
     <p>Community-Drop zur Lootliste hinzufügen</p>
-
   </div>
 </header>
 
@@ -299,14 +296,14 @@ const userDisplay = document.getElementById("userDisplay");
 const submitBtn = document.getElementById("submitBtn");
 const qualitySelect = document.getElementById("quality");
 
-async function setUserLabel(){
+/* USER */
+(async()=>{
   const headers = {};
   if (deviceId) headers["X-User-Id"] = deviceId;
   if (accountId) headers["X-Account-Id"] = accountId;
 
   const res = await fetch(API_BASE + "/me", { headers });
   const data = await res.json();
-
   if (data.username) {
     label.textContent = data.username;
     userDisplay.textContent = data.username;
@@ -314,10 +311,9 @@ async function setUserLabel(){
     label.textContent = "Gast";
     userDisplay.textContent = "Gast";
   }
-}
-setUserLabel();
+})();
 
-/* QUALITY COLOR BINDING */
+/* QUALITY COLOR */
 qualitySelect.addEventListener("change", () => {
   qualitySelect.className = "";
   if (qualitySelect.value) {
@@ -357,6 +353,23 @@ async function uploadImage(file){
   return data.secure_url;
 }
 
+/* COOLDOWN CHECK */
+const cooldown = Number(localStorage.getItem("lootliste_submit_cooldown") || 0);
+if (Date.now() < cooldown) {
+  const timer = setInterval(() => {
+    const remaining = Math.ceil((cooldown - Date.now()) / 1000);
+    if (remaining <= 0) {
+      clearInterval(timer);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Item einreichen";
+      localStorage.removeItem("lootliste_submit_cooldown");
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.textContent = `Bitte ${remaining}s warten…`;
+    }
+  }, 1000);
+}
+
 /* SUBMIT */
 document.getElementById("form").addEventListener("submit",async e=>{
   e.preventDefault();
@@ -389,6 +402,11 @@ document.getElementById("form").addEventListener("submit",async e=>{
     });
 
     status.innerHTML='✅ Item eingereicht – <a href="my-items.html">Meine Items ansehen</a>';
+
+    // MINI-ABUSE-BREMSE
+    const until = Date.now() + 60 * 1000;
+    localStorage.setItem("lootliste_submit_cooldown", until);
+
     e.target.reset();
     preview.style.display="none";
     qualitySelect.className="";
