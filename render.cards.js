@@ -81,8 +81,17 @@ export function renderCards(items, container) {
 
     const btn = card.querySelector(".claim-btn");
 
+    // 🔒 Eigenes Item → nicht nehmbar
+    if (item.isOwner) {
+      btn.disabled = true;
+      btn.textContent = "🔒 Dein Item";
+      btn.classList.add("is-owner");
+    }
+
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
+
+      if (btn.disabled) return;
 
       const playerId = localStorage.getItem("lootliste_user_id");
       if (!playerId) {
