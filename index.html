@@ -1010,32 +1010,32 @@ body{
 ================================ */
 
 .card-details{
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
 
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 16px;
-  align-items: start;
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:18px;
+  align-items:center;
 
   transition:
     max-height .35s ease,
     opacity .25s ease;
 
-  padding: 0 16px;
+  padding:0 16px;
 }
 
 /* OFFEN */
 .card[data-open="true"] .card-details{
-  max-height: 520px;
-  opacity: 1;
-  padding: 16px;
+  max-height:520px;
+  opacity:1;
+  padding:16px;
 }
 
 /* Pfeil drehen */
 .card[data-open="true"] .card-chevron{
-  transform: rotate(90deg);
+  transform:rotate(90deg);
 }
 
 /* ================================
