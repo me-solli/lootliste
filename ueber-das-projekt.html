@@ -1,134 +1,193 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Über das Projekt – D2R Lootliste</title>
+<meta charset="UTF-8">
+<title>Über das Projekt | D2R Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
-      background: #0f0f0f;
-      color: #e0e0e0;
-    }
+<style>
+:root{
+  --gold:#f5c451;
+  --border:#2a2a2a;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 32px 20px 64px;
-    }
+*{box-sizing:border-box}
 
-    h1, h2 {
-      color: #c8aa6e;
-      font-weight: 600;
-    }
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
+}
 
-    h1 {
-      margin-top: 0;
-      margin-bottom: 8px;
-    }
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
+}
 
-    h2 {
-      margin-top: 36px;
-      margin-bottom: 12px;
-      font-size: 1.2rem;
-    }
+/* HERO */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
+}
 
-    p {
-      line-height: 1.6;
-      margin: 8px 0 0;
-    }
+.hero-inner{
+  padding:44px 36px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+}
 
-    .back-link {
-      display: inline-block;
-      margin-bottom: 18px;
-      color: #c8aa6e;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
+}
 
-    .back-link:hover {
-      color: #f0d58c;
-      text-shadow: 0 0 6px rgba(240, 213, 140, 0.6);
-    }
+.hero p{
+  margin:10px 0 0;
+  opacity:.85;
+}
 
-    .status-box {
-      margin-top: 24px;
-      padding: 14px 16px;
-      background: rgba(200, 170, 110, 0.08);
-      border-left: 3px solid #c8aa6e;
-      font-size: 0.95rem;
-    }
+/* CONTENT */
+.container{
+  padding:40px 28px 70px;
+}
 
-    footer {
-      margin-top: 48px;
-      font-size: 0.8rem;
-      color: #999;
-      border-top: 1px solid #222;
-      padding-top: 12px;
-    }
-  </style>
+.section{
+  max-width:760px;
+  margin-bottom:36px;
+}
+
+.section h2{
+  margin:0 0 10px;
+  font-size:18px;
+  font-weight:600;
+  color:var(--gold);
+}
+
+.section p{
+  margin:8px 0;
+  line-height:1.6;
+  font-size:14px;
+  opacity:.9;
+}
+
+/* INFO / STATUS BOX */
+.info-box{
+  padding:18px 20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.04),
+    rgba(255,255,255,.015)
+  );
+}
+
+/* LINKS */
+a{
+  color:var(--gold);
+  text-decoration:none;
+}
+
+a:hover{
+  text-decoration:underline;
+}
+
+/* FOOTER NAV */
+.footer-nav{
+  margin-top:50px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav a{
+  margin-right:14px;
+}
+</style>
 </head>
+
 <body>
+<div class="wrapper">
 
-  <div class="container">
-
-    <a href="index.html" class="back-link">← Zur Lootliste</a>
-
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
     <h1>Über das Projekt</h1>
+    <p>Worum es bei der D2R Lootliste geht – und worum nicht</p>
+  </div>
+</header>
 
+<!-- CONTENT -->
+<div class="container">
+
+  <div class="section">
     <p>
-      Diese Lootliste ist ein unabhängiges Community-Projekt für
-      <strong>Diablo II: Resurrected</strong>.
-      Sie dient dazu, Items innerhalb einer Spielgemeinschaft transparent,
+      Diese Lootliste ist ein unabhängiges, privates Community-Projekt
+      für <strong>Diablo II: Resurrected</strong>.
+      Ziel ist es, Items innerhalb einer Spielgemeinschaft transparent,
       fair und nachvollziehbar weiterzugeben – ohne Echtgeld-Bezug,
       ohne kommerzielle Interessen und ohne versteckte Vorteile.
     </p>
 
     <p>
-      Im Mittelpunkt steht nicht Geschwindigkeit oder maximale Automatisierung,
-      sondern Vertrauen, Übersicht und ein System, das für alle Beteiligten
-      verständlich bleibt.
+      Im Mittelpunkt stehen Übersicht, Vertrauen und ein System,
+      das für alle Beteiligten verständlich bleibt.
+      Maximale Automatisierung oder Wettbewerbsgedanken
+      sind bewusst nicht Teil des Konzepts.
     </p>
+  </div>
 
+  <div class="section">
     <h2>Aktueller Projektstatus</h2>
     <p>
-      Das Projekt befindet sich derzeit in einer öffentlichen Vorbereitungs-
-      und Testphase.
+      Die Lootliste befindet sich in einer offenen,
+      öffentlich nutzbaren Phase.
     </p>
 
     <p>
-      Es sind aktuell keine Benutzerkonten aktiv.
-      Es findet keine dauerhafte Speicherung persönlicher Informationen statt.
-      Die Lootliste ist frei einsehbar und bewusst schlank gehalten.
+      Es gibt keine verpflichtenden Benutzerkonten
+      und keine dauerhafte Speicherung persönlicher Daten.
+      Die Lootliste ist frei einsehbar
+      und bewusst schlank gehalten.
     </p>
 
     <p>
       Der Fokus liegt auf einem stabilen Grundsystem:
-      Items erfassen, Bedarf sichtbar machen und eine faire Vergabe ermöglichen.
+      Items erfassen, Verfügbarkeit sichtbar machen
+      und eine faire Weitergabe ermöglichen.
     </p>
+  </div>
 
-    <div class="status-box">
-      <strong>Aktueller Spielmodus:</strong><br />
-      Diablo II: Resurrected – <strong>Non-Ladder</strong><br />
+  <div class="section info-box">
+    <p>
+      <strong>Aktueller Spielmodus:</strong><br>
+      Diablo II: Resurrected – <strong>Non-Ladder</strong><br>
       Ladder-Items werden derzeit nicht unterstützt.
-    </div>
+    </p>
+  </div>
 
+  <div class="section">
     <h2>Projekt-Ausblick</h2>
     <p>
-      Mögliche Erweiterungen sind optional und werden nur umgesetzt,
+      Mögliche Erweiterungen sind optional
+      und werden nur umgesetzt,
       wenn sie dem Grundgedanken des Projekts dienen.
-      Dazu zählen unter anderem eine klare Trennung verschiedener Spielmodi
-      oder zusätzliche Mechaniken zur Transparenz und Fairness.
     </p>
 
     <p>
-      Es besteht kein Anspruch auf Vollständigkeit, dauerhafte Verfügbarkeit
-      oder feste Zeitpläne für zukünftige Funktionen.
+      Dazu können z. B. eine klare Trennung verschiedener Spielmodi
+      oder zusätzliche Transparenz-Mechaniken gehören.
+      Es besteht jedoch kein Anspruch
+      auf feste Zeitpläne oder Funktionszusagen.
     </p>
+  </div>
 
+  <div class="section">
     <h2>Grundsätze</h2>
     <p>
       Dieses Projekt folgt einfachen Leitlinien:
@@ -139,15 +198,17 @@
 
     <p>
       Fehler können passieren.
-      Wichtig ist, dass sie sichtbar, korrigierbar
-      und ohne Nachteile für Nutzer bleiben.
+      Wichtig ist, dass sie sichtbar bleiben,
+      korrigierbar sind
+      und keine Nachteile für die Community erzeugen.
     </p>
-
-    <footer>
-      Community-Projekt · Kein offizielles Blizzard-Angebot
-    </footer>
-
   </div>
 
+  <div class="footer-nav">
+    <a href="index.html">← Zurück zur Lootliste</a>
+  </div>
+
+</div>
+</div>
 </body>
 </html>
