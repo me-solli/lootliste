@@ -1272,19 +1272,26 @@ async function loadItems() {
     localStorage.setItem("lootliste_user_id", headerUid);
   }
 
-  const data = await res.json();
+const data = await res.json();
 
-  // 🔒 Öffentliche Liste:
-  // nur verfügbare Items DER AKTIVEN SEASON
-  state.items = data.filter(i =>
+// 🔒 Öffentliche Liste:
+// nur verfügbare Items DER AKTIVEN SEASON
+state.items = data
+  .filter(i =>
     i.status === "verfügbar" &&
     (i.season ?? "non-ladder") === ACTIVE_SEASON
-  );
+  )
+  .map(item => ({
+    ...item,
+    isOwner:
+      currentAccountId &&
+      item.donorAccountId === currentAccountId
+  }));
 
-  state.filtered = [...state.items];
+state.filtered = [...state.items];
 
-  // Username laden
-  await setUserLabel();
+// Username laden
+await setUserLabel();
 }
 
 // 👤 Anzeige: Username (falls Account) → sonst Gast
