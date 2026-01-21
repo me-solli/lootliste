@@ -21,6 +21,27 @@ body{
 }
 .wrapper{max-width:1500px;margin:0 auto}
 
+/* =====================
+   SYSTEM QUALITY COLORS
+   (IDENTISCH ZUM INDEX)
+===================== */
+.quality-unique{
+  color:#f5c451;
+  border-color:#f5c451;
+}
+.quality-set{
+  color:#6fcf97;
+  border-color:#6fcf97;
+}
+.quality-rare{
+  color:#f2c94c;
+  border-color:#f2c94c;
+}
+.quality-magic{
+  color:#56ccf2;
+  border-color:#56ccf2;
+}
+
 /* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
@@ -274,6 +295,7 @@ const accountId = localStorage.getItem("lootliste_account_id");
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 const submitBtn = document.getElementById("submitBtn");
+const qualitySelect = document.getElementById("quality");
 
 async function setUserLabel(){
   const headers = {};
@@ -292,6 +314,14 @@ async function setUserLabel(){
   }
 }
 setUserLabel();
+
+/* QUALITY COLOR BINDING */
+qualitySelect.addEventListener("change", () => {
+  qualitySelect.className = "";
+  if (qualitySelect.value) {
+    qualitySelect.classList.add("quality-" + qualitySelect.value);
+  }
+});
 
 /* PREVIEW */
 const fileInput=document.getElementById("image");
@@ -348,7 +378,7 @@ document.getElementById("form").addEventListener("submit",async e=>{
       },
       body:JSON.stringify({
         name:document.getElementById("name").value.trim(),
-        quality:document.getElementById("quality").value,
+        quality:qualitySelect.value,
         type:document.getElementById("type").value,
         screenshot,
         season:ACTIVE_SEASON,
@@ -359,6 +389,7 @@ document.getElementById("form").addEventListener("submit",async e=>{
     status.innerHTML='✅ Item eingereicht – <a href="my-items.html">Meine Items ansehen</a>';
     e.target.reset();
     preview.style.display="none";
+    qualitySelect.className="";
 
   }catch(err){
     console.error(err);
