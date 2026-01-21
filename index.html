@@ -1103,6 +1103,18 @@ body{
     drop-shadow(0 0 6px rgba(0,0,0,.85));
   flex-shrink: 0;
 }
+
+  /* ================================
+   ACTIVE CARD HIGHLIGHT
+================================ */
+
+.card[data-open="true"]{
+  border-color: rgba(245,196,81,.45);
+  box-shadow:
+    0 0 0 1px rgba(245,196,81,.25),
+    0 0 22px rgba(245,196,81,.18),
+    inset 0 0 12px rgba(245,196,81,.08);
+}
   
 </style>
 </head>
