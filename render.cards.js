@@ -23,7 +23,7 @@ export function renderCards(items, container) {
     const card = document.createElement("article");
     card.className = "card";
 
-    // Typ sauber absichern
+    // Typ strikt & sicher
     const type = VALID_TYPES.includes(item.type) ? item.type : "default";
     card.dataset.type = type;
 
@@ -31,6 +31,11 @@ export function renderCards(items, container) {
     const qualityClass = item.quality
       ? `quality-${item.quality}`
       : "quality-normal";
+
+    // Spender / Quelle sauber unterscheiden
+    const sourceLabel = item.donor
+      ? `Spender: ${item.donor}`
+      : "Quelle: Community-Drop";
 
     card.innerHTML = `
       ${item.screenshot ? `
@@ -62,7 +67,7 @@ export function renderCards(items, container) {
         ` : ""}
 
         <div class="player">
-          Spender: ${item.donor || "Community"}
+          ${sourceLabel}
         </div>
 
         <div class="claim-row">
