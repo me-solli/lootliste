@@ -23,24 +23,11 @@ body{
 
 /* =====================
    SYSTEM QUALITY COLORS
-   (IDENTISCH ZUM INDEX)
 ===================== */
-.quality-unique{
-  color:#f5c451;
-  border-color:#f5c451;
-}
-.quality-set{
-  color:#6fcf97;
-  border-color:#6fcf97;
-}
-.quality-rare{
-  color:#f2c94c;
-  border-color:#f2c94c;
-}
-.quality-magic{
-  color:#56ccf2;
-  border-color:#56ccf2;
-}
+.quality-unique{color:#f5c451;border-color:#f5c451}
+.quality-set{color:#6fcf97;border-color:#6fcf97}
+.quality-rare{color:#f2c94c;border-color:#f2c94c}
+.quality-magic{color:#56ccf2;border-color:#56ccf2}
 
 /* HERO */
 .hero{
@@ -57,7 +44,7 @@ body{
 .hero h1{margin:0;font-size:34px;font-weight:700}
 .hero p{margin:8px 0 0;opacity:.85}
 
-/* AUTH BOX */
+/* AUTH */
 .auth-box{
   position:absolute;
   top:22px;
@@ -71,11 +58,7 @@ body{
   background:rgba(0,0,0,.55);
   font-size:13px;
 }
-.auth-box img{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-}
+.auth-box img{width:28px;height:28px;border-radius:50%}
 .auth-link{
   margin-left:6px;
   font-size:12px;
@@ -153,12 +136,11 @@ button{
   color:#f5e6b3;
   cursor:pointer;
 }
-button:disabled{
-  opacity:.6;
-  cursor:default;
-}
+button:disabled{opacity:.6;cursor:default}
+
 .status{margin-top:16px;font-size:14px;opacity:.9}
 
+/* PREVIEW */
 .preview{margin-top:14px;display:none}
 .preview img{
   max-width:65%;
@@ -182,12 +164,23 @@ button:disabled{
   cursor:zoom-out;
 }
 
+/* NOTICES */
 .notice{
   margin-top:18px;
   font-size:12px;
-  opacity:.65;
+  opacity:.75;
 }
 .notice strong{color:var(--gold)}
+
+.notice-fairplay{
+  margin-top:18px;
+  padding:14px 16px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  font-size:13px;
+  opacity:.9;
+}
 </style>
 </head>
 
@@ -265,11 +258,20 @@ button:disabled{
       <small class="hint">Nur für dich sichtbar</small>
 
       <button type="submit" id="submitBtn">Item einreichen</button>
+
+      <!-- FAIR PLAY -->
+      <div class="notice-fairplay">
+        <strong>Fair-Play-Hinweis</strong><br>
+        Bitte reiche nur Items ein, die du tatsächlich weitergeben möchtest.
+        Diese Lootliste basiert auf Vertrauen und freiwilliger Community-Teilnahme.
+        Offensichtlicher Missbrauch oder Spam kann zur Entfernung von Inhalten führen.
+      </div>
+
       <div class="status" id="status"></div>
 
       <div class="notice">
-        <strong>ℹ️ Hinweis:</strong> Dieses Item erscheint nach dem Einreichen öffentlich
-        in der Lootliste.
+        <strong>ℹ️ Hinweis:</strong>
+        Dieses Item erscheint nach dem Einreichen öffentlich in der Lootliste.
       </div>
 
     </form>
