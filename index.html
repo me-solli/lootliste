@@ -1261,34 +1261,58 @@ body{
 async function loadItems() {
   const res = await fetch(API + "/items", {
     headers: {
-      "X-User-Id": localStorage.getItem("lootliste_user_id") || ""
+      "X-User-Id": localStorage.getItem("lootliste_user_id") || "",
+      "X-Account-Id": localStorage.getItem("lootliste_account_id") || ""
     }
   });
 
-  // 🔐 User-ID aus Header ODER LocalStorage setzen
+  // 🔐 Device-ID aus Header ODER LocalStorage setzen
   const headerUid = res.headers.get("X-User-Id");
   if (headerUid) {
     localStorage.setItem("lootliste_user_id", headerUid);
   }
 
-  const label = document.getElementById("playerIdLabel");
-  const userId = localStorage.getItem("lootliste_user_id");
+  // danach User-Label aktualisieren
+  await setUserLabel();
 
-// 👤 Anzeige: Username (falls registriert) → sonst Spieler xxxx
+  const items = await res.json();
+  return items;
+}
+
+
+// 👤 Anzeige: Username (falls Account) → sonst Gast
 async function setUserLabel() {
   const label = document.getElementById("playerIdLabel");
   const submitLink = document.querySelector(".auth-submit");
 
   if (!label) return;
 
-  // Kein User → Placeholder + Submit ausblenden
-  if (!userId) {
-    label.textContent =
-      label.dataset.placeholder || "Spieler lädt…";
+  const deviceId  = localStorage.getItem("lootliste_user_id");
+  const accountId = localStorage.getItem("lootliste_account_id");
 
-    if (submitLink) submitLink.style.display = "none";
-    return;
+  // Default: lädt…
+  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+  if (submitLink) submitLink.style.display = "none";
+
+  const headers = {};
+  if (deviceId)  headers["X-User-Id"] = deviceId;
+  if (accountId) headers["X-Account-Id"] = accountId;
+
+  try {
+    const res = await fetch(API + "/me", { headers });
+    const data = await res.json();
+
+    if (data.username) {
+      label.textContent = data.username;
+      if (submitLink) submitLink.style.display = "";
+    } else {
+      label.textContent = "Gast";
+    }
+  } catch (err) {
+    console.error("User-Label Fehler:", err);
+    label.textContent = "Gast";
   }
+}
 
   try {
     const meRes = await fetch(API + "/me", {
