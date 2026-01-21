@@ -81,17 +81,17 @@ function createUser() {
   return user;
 }
 
-// 🔐 Zentrale User-Middleware (FINAL & KORREKT)
+// 🔐 Zentrale User-Middleware (FINAL)
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
   let user = null;
 
-  // 1️⃣ existiert als normaler Gast-User
+  // 1️⃣ existiert als Gast
   if (headerId) {
     user = users.find(u => u.id === headerId);
   }
 
-  // 2️⃣ existiert als registrierter Account (auch ohne users.json)
+  // 2️⃣ existiert als registrierter Account
   if (!user && headerId) {
     const acc = accounts.find(a => a.userId === headerId);
     if (acc) {
@@ -125,7 +125,7 @@ function findAccountByUserId(userId) {
 }
 
 // ===============================
-// AUTH – REGISTER (UPGRADE BESTEHENDER ID)
+// AUTH – REGISTER
 // ===============================
 app.post("/auth/register", async (req, res) => {
   const { username, password, userId } = req.body;
@@ -145,7 +145,7 @@ app.post("/auth/register", async (req, res) => {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const account = {
-    userId,               // 🔥 gleiche ID wie Gast
+    userId,
     username,
     passwordHash,
     createdAt: new Date().toISOString(),
@@ -184,7 +184,7 @@ app.post("/auth/login", async (req, res) => {
 });
 
 // ===============================
-// ME – AKTUELLER USER (READ-ONLY)
+// ME
 // ===============================
 app.get("/me", (req, res) => {
   const userId = req.user.id;
@@ -215,7 +215,7 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
-// POST ITEM
+// POST ITEM (FINAL)
 // ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season } = req.body;
@@ -223,6 +223,9 @@ app.post("/items", (req, res) => {
   if (!name || !quality || !type || !screenshot || !season) {
     return res.status(400).json({ error: "Missing fields" });
   }
+
+  // 🔑 Spender eindeutig aus Account holen
+  const account = findAccountByUserId(req.user.id);
 
   const newItem = {
     id: Date.now(),
@@ -234,7 +237,9 @@ app.post("/items", (req, res) => {
     status: "verfügbar",
     createdAt: new Date().toISOString(),
 
+    // 🔒 FINAL: Spender kommt IMMER vom Account
     donorUserId: req.user.id,
+    donor: account ? account.username : null,
 
     claimedByUserId: null,
     contact: null,
