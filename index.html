@@ -908,6 +908,121 @@ body{
 .auth-links a:hover{
   text-decoration:underline;
 }
+
+  /* ================================
+   CARD HEADER (COLLAPSED VIEW)
+================================ */
+
+.card-header{
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.card-header:hover{
+  background: rgba(255,255,255,.03);
+}
+
+/* Pfeil */
+.card-chevron{
+  font-size: 14px;
+  color: #9a9a9a;
+  transition: transform .25s ease;
+  flex-shrink: 0;
+}
+
+/* Titel-Block */
+.card-title{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Kategorie */
+.item-category{
+  font-size: 11px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+/* ================================
+   CARD DETAILS (EXPANDABLE)
+================================ */
+
+.card-details{
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height .35s ease,
+    opacity .25s ease;
+  padding: 0 16px;
+}
+
+/* OFFEN */
+.card[data-open="true"] .card-details{
+  max-height: 520px;
+  opacity: 1;
+  padding-bottom: 16px;
+}
+
+/* Pfeil drehen */
+.card[data-open="true"] .card-chevron{
+  transform: rotate(90deg);
+}
+
+/* ================================
+   DETAILS CONTENT
+================================ */
+
+.card-details .card-image{
+  margin-top: 10px;
+}
+
+.card-details .card-image img{
+  width: 100%;
+  max-width: 220px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+/* Body spacing */
+.card-details .card-body{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Claim Row */
+.claim-row{
+  margin-top: 6px;
+}
+
+/* ================================
+   RUHIGER COLLAPSED LOOK
+================================ */
+
+/* wenn geschlossen → KEIN Hover-Push */
+.card[data-open="false"]:hover{
+  transform: none;
+  box-shadow: none;
+}
+
+/* ================================
+   MOBILE FEINSCHLIFF
+================================ */
+
+@media (max-width: 900px){
+  .cards{
+    grid-template-columns: 1fr;
+  }
+}
   
 </style>
 </head>
