@@ -1319,17 +1319,6 @@ async function setUserLabel() {
   }
 }
 
-  // 🔒 Öffentliche Liste:
-  // nur verfügbare Items DER AKTIVEN SEASON
-  const available = data.filter(i =>
-    i.status === "verfügbar" &&
-    (i.season ?? "non-ladder") === ACTIVE_SEASON
-  );
-
-  state.items = available;
-  state.filtered = available;
-}
-
 function updateMeta() {
   const list = state.filtered;
 
