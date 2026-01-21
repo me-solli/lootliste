@@ -1232,6 +1232,9 @@ const ACTIVE_SEASON = "non-ladder";
 
 // 🔌 API (WICHTIG: Modul-Scope!)
 const API = "https://lootliste-production.up.railway.app";
+  
+  const currentAccountId =
+  localStorage.getItem("lootliste_account_id") || null;
 
 // DOM
 const container = document.querySelector(".cards");
