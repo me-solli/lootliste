@@ -185,70 +185,74 @@ body{
    CONFIG
 ================================ */
 const API_BASE = "https://lootliste-production.up.railway.app";
-const API_ITEMS = API_BASE + "/items";
 const ACTIVE_SEASON = "non-ladder";
+
+/* ===============================
+   IDS
+================================ */
+const deviceId  = localStorage.getItem("lootliste_user_id");
+const accountId = localStorage.getItem("lootliste_account_id");
 
 /* ===============================
    USER / ACCOUNT ANZEIGE
 ================================ */
-const userId = localStorage.getItem("lootliste_user_id");
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 
 async function setUserLabel() {
   if (!label) return;
 
-  if (!userId) {
-    label.textContent = label.dataset.placeholder || "Spieler lädt…";
-    if (userDisplay) userDisplay.textContent = "–";
-    return;
-  }
+  label.textContent = label.dataset.placeholder || "Spieler lädt…";
+  if (userDisplay) userDisplay.textContent = "–";
+
+  if (!accountId) return;
 
   try {
     const res = await fetch(API_BASE + "/me", {
-      headers: { "X-User-Id": userId }
+      headers: {
+        "X-User-Id": deviceId || "",
+        "X-Account-Id": accountId
+      }
     });
     const data = await res.json();
 
     if (data.username) {
       label.textContent = data.username;
       if (userDisplay) userDisplay.textContent = data.username;
-    } else {
-      const fallback = "Spieler " + userId.slice(4, 9);
-      label.textContent = fallback;
-      if (userDisplay) userDisplay.textContent = fallback;
     }
   } catch {
-    const fallback = "Spieler " + userId.slice(4, 9);
-    label.textContent = fallback;
-    if (userDisplay) userDisplay.textContent = fallback;
+    /* stiller Fallback */
   }
 }
 
 setUserLabel();
 
 /* ===============================
-   LOAD ITEMS
+   LOAD MY ITEMS (ACCOUNT)
 ================================ */
 (async () => {
   const output = document.getElementById("output");
 
-  if (!userId) {
+  if (!accountId) {
     output.innerHTML = `
       <div class="empty-box">
-        Keine User-ID gefunden.
+        Du bist nicht eingeloggt.
       </div>
     `;
     return;
   }
 
-  const res = await fetch(API_ITEMS, {
-    headers: { "X-User-Id": userId }
+  const res = await fetch(API_BASE + "/items", {
+    headers: {
+      "X-User-Id": deviceId || "",
+      "X-Account-Id": accountId
+    }
   });
+
   const items = await res.json();
 
   const mine = items.filter(i =>
-    i.donorUserId === userId &&
+    i.donorAccountId === accountId &&
     (i.season ?? "non-ladder") === ACTIVE_SEASON
   );
 
