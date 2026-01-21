@@ -26,18 +26,22 @@ body{
   margin:0 auto;
 }
 
-/* ===== HERO HEADER (NEU) ===== */
+/* ===== HERO HEADER (DEV BANNER) ===== */
 .hero{
-  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  background:url("img/dev_banner.png") center center / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:200px;
+  min-height:220px;
   position:relative;
 }
 
 .hero-inner{
   padding:44px 36px;
-  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.35),
+    rgba(0,0,0,.75)
+  );
 }
 
 .hero h1{
@@ -173,6 +177,9 @@ footer a{
   }
   .dev-pixel-wrap::after{
     left:42%;
+  }
+  .hero{
+    min-height:180px;
   }
 }
 </style>
