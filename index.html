@@ -1225,38 +1225,38 @@ body{
 <script type="module">
   import { renderCards } from "./render.cards.js";
 
-    // ===============================
-  // SEASON (ZENTRAL)
-  // ===============================
-  const ACTIVE_SEASON = "non-ladder";
+// ===============================
+// SEASON (ZENTRAL)
+// ===============================
+const ACTIVE_SEASON = "non-ladder";
 
-  // 🔌 API (WICHTIG: Modul-Scope!)
-  const API = "https://lootliste-production.up.railway.app";
+// 🔌 API (WICHTIG: Modul-Scope!)
+const API = "https://lootliste-production.up.railway.app";
 
-  // DOM
-  const container = document.querySelector(".cards");
-  const skeletons = document.getElementById("skeletons");
+// DOM
+const container = document.querySelector(".cards");
+const skeletons = document.getElementById("skeletons");
 
-  // Meta / Hero
-  const metaCount = document.getElementById("metaItemCount");
-  const metaDate  = document.getElementById("metaDate");
-  const heroCount = document.getElementById("heroItemCount");
-  const heroAvg   = document.getElementById("heroAvgRating");
-  const heroDonor = document.getElementById("heroDonorCount");
+// Meta / Hero
+const metaCount = document.getElementById("metaItemCount");
+const metaDate  = document.getElementById("metaDate");
+const heroCount = document.getElementById("heroItemCount");
+const heroAvg   = document.getElementById("heroAvgRating");
+const heroDonor = document.getElementById("heroDonorCount");
 
-  // Results / Empty
-  const resultsInfo  = document.getElementById("resultsInfo");
-  const resultsCount = document.getElementById("resultsCount");
-  const emptyState   = document.getElementById("emptyState");
+// Results / Empty
+const resultsInfo  = document.getElementById("resultsInfo");
+const resultsCount = document.getElementById("resultsCount");
+const emptyState   = document.getElementById("emptyState");
 
-  // State
-  const state = {
-    items: [],
-    filtered: [],
-    type: "",
-    search: "",
-    sort: "rating-desc"
-  };
+// State
+const state = {
+  items: [],
+  filtered: [],
+  type: "",
+  search: "",
+  sort: "rating-desc"
+};
 
 async function loadItems() {
   const res = await fetch(API + "/items", {
@@ -1272,13 +1272,20 @@ async function loadItems() {
     localStorage.setItem("lootliste_user_id", headerUid);
   }
 
-  // danach User-Label aktualisieren
+  const data = await res.json();
+
+  // 🔒 Öffentliche Liste:
+  // nur verfügbare Items DER AKTIVEN SEASON
+  state.items = data.filter(i =>
+    i.status === "verfügbar" &&
+    (i.season ?? "non-ladder") === ACTIVE_SEASON
+  );
+
+  state.filtered = [...state.items];
+
+  // Username laden
   await setUserLabel();
-
-  const items = await res.json();
-  return items;
 }
-
 
 // 👤 Anzeige: Username (falls Account) → sonst Gast
 async function setUserLabel() {
@@ -1290,7 +1297,6 @@ async function setUserLabel() {
   const deviceId  = localStorage.getItem("lootliste_user_id");
   const accountId = localStorage.getItem("lootliste_account_id");
 
-  // Default: lädt…
   label.textContent = label.dataset.placeholder || "Spieler lädt…";
   if (submitLink) submitLink.style.display = "none";
 
@@ -1308,8 +1314,7 @@ async function setUserLabel() {
     } else {
       label.textContent = "Gast";
     }
-  } catch (err) {
-    console.error("User-Label Fehler:", err);
+  } catch {
     label.textContent = "Gast";
   }
 }
