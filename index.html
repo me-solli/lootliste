@@ -1115,6 +1115,32 @@ body{
     0 0 22px rgba(245,196,81,.18),
     inset 0 0 12px rgba(245,196,81,.08);
 }
+
+  /* ================================
+   ACTIVE CARD – CHEVRON GLOW
+================================ */
+
+.card[data-open="true"] .card-chevron{
+  color: #f5c451;
+  text-shadow:
+    0 0 6px rgba(245,196,81,.55),
+    0 0 14px rgba(245,196,81,.35);
+}
+
+  /* ================================
+   ACTIVE CARD – LIFT EFFECT
+================================ */
+
+.card{
+  transition:
+    box-shadow .25s ease,
+    transform .25s ease,
+    border-color .25s ease;
+}
+
+.card[data-open="true"]{
+  transform: translateY(-4px);
+}
   
 </style>
 </head>
