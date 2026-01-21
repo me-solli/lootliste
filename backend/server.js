@@ -22,7 +22,7 @@ const USERS_FILE = path.join(DATA_DIR, "users.json");
 const ACCOUNTS_FILE = path.join(DATA_DIR, "accounts.json");
 
 // ===============================
-// MIDDLEWARE (CORS) ✅ FIXED
+// MIDDLEWARE (CORS)
 // ===============================
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -88,7 +88,7 @@ function createDevice() {
 }
 
 // ===============================
-// DEVICE MIDDLEWARE (STABIL)
+// DEVICE MIDDLEWARE
 // ===============================
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
@@ -156,7 +156,7 @@ app.post("/auth/register", async (req, res) => {
 });
 
 // ===============================
-// AUTH – LOGIN (MULTI DEVICE)
+// AUTH – LOGIN
 // ===============================
 app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body;
@@ -236,7 +236,7 @@ app.post("/items", (req, res) => {
     status: "verfügbar",
     createdAt: new Date().toISOString(),
 
-    // ✅ MULTI DEVICE – Items gehören dem ACCOUNT
+    // 🔒 OWNER (ACCOUNT)
     donorAccountId: account ? account.id : null,
     donor: account ? account.username : null,
 
@@ -254,6 +254,50 @@ app.post("/items", (req, res) => {
   saveJSON(ITEMS_FILE, items);
 
   res.status(201).json(newItem);
+});
+
+// ===============================
+// UPDATE ITEM (NUR OWNER)
+// ===============================
+app.put("/items/:id", (req, res) => {
+  const accountId = req.headers["x-account-id"];
+  const itemId = Number(req.params.id);
+
+  const item = items.find(i => i.id === itemId);
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (!accountId || item.donorAccountId !== accountId) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  Object.assign(item, req.body);
+  saveJSON(ITEMS_FILE, items);
+
+  res.json(item);
+});
+
+// ===============================
+// DELETE ITEM (NUR OWNER)
+// ===============================
+app.delete("/items/:id", (req, res) => {
+  const accountId = req.headers["x-account-id"];
+  const itemId = Number(req.params.id);
+
+  const index = items.findIndex(i => i.id === itemId);
+  if (index === -1) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (!accountId || items[index].donorAccountId !== accountId) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  items.splice(index, 1);
+  saveJSON(ITEMS_FILE, items);
+
+  res.json({ success: true });
 });
 
 // ===============================
