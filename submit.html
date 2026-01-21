@@ -22,10 +22,7 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{
-  max-width:1500px;
-  margin:0 auto;
-}
+.wrapper{max-width:1500px;margin:0 auto}
 
 /* HERO */
 .hero{
@@ -41,16 +38,8 @@ body{
   background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
 }
 
-.hero h1{
-  margin:0;
-  font-size:34px;
-  font-weight:700;
-}
-
-.hero p{
-  margin:8px 0 0;
-  opacity:.85;
-}
+.hero h1{margin:0;font-size:34px;font-weight:700}
+.hero p{margin:8px 0 0;opacity:.85}
 
 /* AUTH BOX */
 .auth-box{
@@ -94,6 +83,7 @@ body{
   font-size:13px;
   opacity:.75;
 }
+
 .user-box code{
   background:#111;
   padding:3px 8px;
@@ -148,16 +138,9 @@ button{
   cursor:pointer;
 }
 
-.status{
-  margin-top:16px;
-  font-size:14px;
-  opacity:.85;
-}
+.status{margin-top:16px;font-size:14px;opacity:.85}
 
-.preview{
-  margin-top:14px;
-  display:none;
-}
+.preview{margin-top:14px;display:none}
 .preview img{
   max-width:65%;
   border-radius:14px;
@@ -191,7 +174,7 @@ button{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="playerIdLabel" data-placeholder="Spieler lädt…"></span>
+      <span id="playerIdLabel">–</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
@@ -211,6 +194,7 @@ button{
 
   <div class="form-card">
     <form id="form">
+
       <label>Screenshot (Pflicht)</label>
       <input type="file" id="image" accept="image/*" required>
 
@@ -260,124 +244,101 @@ button{
 </div>
 
 <script>
-/* ===============================
-   CONFIG
-================================ */
-const API_BASE  = "https://lootliste-production.up.railway.app";
+const API_BASE = "https://lootliste-production.up.railway.app";
 const API_ITEMS = API_BASE + "/items";
 const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
 const ACTIVE_SEASON = "non-ladder";
 
-/* ===============================
-   USER / ACCOUNT ANZEIGE
-================================ */
 const userId = localStorage.getItem("lootliste_user_id");
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 
-async function setUserLabel() {
-  if (!label) return;
-
-  if (!userId) {
-    label.textContent = label.dataset.placeholder || "Spieler lädt…";
+async function setUserLabel(){
+  if(!userId){
+    label.textContent = "–";
     userDisplay.textContent = "–";
     return;
   }
 
-  try {
-    const res = await fetch(API_BASE + "/me", {
-      headers: { "X-User-Id": userId }
-    });
-    const data = await res.json();
+  const res = await fetch(API_BASE + "/me", {
+    headers:{ "X-User-Id": userId }
+  });
+  const data = await res.json();
 
-    if (data.username) {
-      label.textContent = data.username;
-      userDisplay.textContent = data.username;
-    } else {
-      const fallback = "Spieler " + userId.slice(4, 9);
-      label.textContent = fallback;
-      userDisplay.textContent = fallback;
-    }
-  } catch {
-    const fallback = "Spieler " + userId.slice(4, 9);
-    label.textContent = fallback;
-    userDisplay.textContent = fallback;
-  }
+  const name = data.username || "Spieler " + userId.slice(4,9);
+  label.textContent = name;
+  userDisplay.textContent = name;
 }
 
 setUserLabel();
 
-/* ===============================
-   PREVIEW
-================================ */
-const fileInput  = document.getElementById("image");
-const preview    = document.getElementById("preview");
-const previewImg = document.getElementById("previewImg");
-const overlay    = document.getElementById("overlay");
-const overlayImg = document.getElementById("overlayImg");
+/* PREVIEW */
+const fileInput=document.getElementById("image");
+const preview=document.getElementById("preview");
+const previewImg=document.getElementById("previewImg");
+const overlay=document.getElementById("overlay");
+const overlayImg=document.getElementById("overlayImg");
 
-fileInput.addEventListener("change", () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  previewImg.src = url;
-  overlayImg.src = url;
-  preview.style.display = "block";
-});
+fileInput.onchange=()=>{
+  const f=fileInput.files[0];
+  if(!f)return;
+  const url=URL.createObjectURL(f);
+  previewImg.src=url;
+  overlayImg.src=url;
+  preview.style.display="block";
+};
 
-previewImg.onclick = () => overlay.style.display = "flex";
-overlay.onclick    = () => overlay.style.display = "none";
+previewImg.onclick=()=>overlay.style.display="flex";
+overlay.onclick=()=>overlay.style.display="none";
 
-/* ===============================
-   CLOUDINARY
-================================ */
+/* CLOUDINARY */
 async function uploadImage(file){
-  const fd = new FormData();
-  fd.append("file", file);
-  fd.append("upload_preset", UPLOAD_PRESET);
+  const fd=new FormData();
+  fd.append("file",file);
+  fd.append("upload_preset",UPLOAD_PRESET);
 
-  const res = await fetch(
+  const res=await fetch(
     `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-    { method:"POST", body:fd }
+    {method:"POST",body:fd}
   );
-
-  const data = await res.json();
+  const data=await res.json();
   if(!data.secure_url) throw new Error("Upload fehlgeschlagen");
   return data.secure_url;
 }
 
-/* ===============================
-   SUBMIT
-================================ */
-document.getElementById("form").addEventListener("submit", async e => {
+/* SUBMIT – FINAL */
+document.getElementById("form").addEventListener("submit",async e=>{
   e.preventDefault();
-  const status = document.getElementById("status");
-  status.textContent = "📤 Lade Screenshot hoch…";
+  const status=document.getElementById("status");
+  status.textContent="📤 Lade Screenshot hoch…";
 
-  try {
-    const screenshot = await uploadImage(fileInput.files[0]);
-    status.textContent = "💾 Speichere Item…";
+  try{
+    const screenshot=await uploadImage(fileInput.files[0]);
+    status.textContent="💾 Speichere Item…";
 
-    await fetch(API_ITEMS, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: document.getElementById("name").value.trim(),
-        quality: document.getElementById("quality").value,
-        type: document.getElementById("type").value,
+    await fetch(API_ITEMS,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "X-User-Id": userId   // 🔥 DAS WAR DER FEHLENDE TEIL
+      },
+      body:JSON.stringify({
+        name:document.getElementById("name").value.trim(),
+        quality:document.getElementById("quality").value,
+        type:document.getElementById("type").value,
         screenshot,
-        season: ACTIVE_SEASON
+        season:ACTIVE_SEASON
       })
     });
 
-    status.textContent = "✅ Item erfolgreich eingereicht";
+    status.textContent="✅ Item erfolgreich eingereicht";
     e.target.reset();
-    preview.style.display = "none";
+    preview.style.display="none";
 
-  } catch(err) {
+  }catch(err){
     console.error(err);
-    status.textContent = "❌ Fehler beim Einreichen";
+    status.textContent="❌ Fehler beim Einreichen";
   }
 });
 </script>
