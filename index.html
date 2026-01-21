@@ -1044,6 +1044,7 @@ body{
 
 .card-details .card-image{
   margin-top: 10px;
+  grid-column: 1;
 }
 
 .card-details .card-image img{
@@ -1053,16 +1054,17 @@ body{
   border: 1px solid rgba(255,255,255,.08);
 }
 
-/* Body spacing */
+/* Rechter Detailbereich */
 .card-details .card-body{
+  grid-column: 2;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 /* Claim Row */
-.claim-row{
+.card-details .claim-row{
   margin-top: 6px;
 }
 
