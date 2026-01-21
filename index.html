@@ -1006,9 +1006,16 @@ body{
   max-height: 0;
   opacity: 0;
   overflow: hidden;
+
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 16px;
+  align-items: start;
+
   transition:
     max-height .35s ease,
     opacity .25s ease;
+
   padding: 0 16px;
 }
 
@@ -1016,7 +1023,7 @@ body{
 .card[data-open="true"] .card-details{
   max-height: 520px;
   opacity: 1;
-  padding-bottom: 16px;
+  padding: 16px;
 }
 
 /* Pfeil drehen */
