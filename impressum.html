@@ -6,99 +6,184 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root{
+  --gold:#f5c451;
+  --border:#2a2a2a;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  background:#0b0b0b;
-  color:#e6e6e6;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  padding:32px 24px 60px;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
 }
 
-h1{
-  color:#d4af37;
-  margin-top:0;
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
 }
 
-h2{
-  color:#d4af37;
-  font-size:16px;
-  margin-top:28px;
+/* HERO */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
 }
 
-p{
+.hero-inner{
+  padding:44px 36px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+}
+
+.hero h1{
+  margin:0;
+  font-size:34px;
+  font-weight:700;
+}
+
+.hero p{
+  margin:10px 0 0;
+  opacity:.85;
+}
+
+/* CONTENT */
+.container{
+  padding:40px 28px 70px;
+}
+
+.section{
   max-width:760px;
-  line-height:1.6;
-  margin:10px 0;
+  margin-bottom:36px;
 }
 
+.section h2{
+  margin:0 0 10px;
+  font-size:18px;
+  font-weight:600;
+  color:var(--gold);
+}
+
+.section p{
+  margin:8px 0;
+  line-height:1.6;
+  font-size:14px;
+  opacity:.9;
+}
+
+.section .small{
+  font-size:12px;
+  opacity:.7;
+}
+
+/* INFO BOX */
+.info-box{
+  padding:18px 20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.04),
+    rgba(255,255,255,.015)
+  );
+}
+
+/* LINKS */
 a{
-  color:#d4af37;
+  color:var(--gold);
   text-decoration:none;
 }
 
-.small{
-  opacity:.75;
-  font-size:13px;
+a:hover{
+  text-decoration:underline;
 }
 
-.footer-link{
-  margin-top:36px;
+/* FOOTER NAV */
+.footer-nav{
+  margin-top:50px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav a{
+  margin-right:14px;
 }
 </style>
 </head>
 
 <body>
+<div class="wrapper">
 
-<h1>Impressum</h1>
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Impressum</h1>
+    <p>Angaben gemäß § 5 TMG</p>
+  </div>
+</header>
 
-<h2>Angaben gemäß § 5 TMG</h2>
+<!-- CONTENT -->
+<div class="container">
 
-<p>
-<strong>Verantwortlich für den Inhalt:</strong><br>
-Daniel Soll<br>
-Ingolstädter Straße 47<br>
-80807 München<br>
-Deutschland
-</p>
+  <div class="section info-box">
+    <p><strong>Verantwortlich für den Inhalt:</strong></p>
+    <p>
+      Daniel Soll<br>
+      Ingolstädter Straße 47<br>
+      80807 München<br>
+      Deutschland
+    </p>
 
-<p>
-<strong>Kontakt:</strong><br>
-E-Mail: <a href="mailto:kontakt@d2r-lootliste.de">kontakt@d2r-lootliste.de</a>
-</p>
+    <p>
+      <strong>Kontakt:</strong><br>
+      E-Mail:
+      <a href="mailto:kontakt@d2r-lootliste.de">
+        kontakt@d2r-lootliste.de
+      </a>
+    </p>
+  </div>
 
-<h2>Projektcharakter</h2>
-<p>
-Dieses Angebot ist ein privates, nicht-kommerzielles Community-Projekt
-ohne Gewinnerzielungsabsicht.
-Es handelt sich weder um ein Produkt noch um einen Dienst im
-geschäftlichen Sinne.
-</p>
+  <div class="section">
+    <h2>Projektcharakter</h2>
+    <p>
+      Dieses Angebot ist ein privates, nicht-kommerzielles Community-Projekt
+      ohne Gewinnerzielungsabsicht.
+      Es stellt weder ein Produkt noch eine Dienstleistung im geschäftlichen
+      Sinne dar.
+    </p>
+    <p>
+      Es besteht kein Anspruch auf dauerhafte Verfügbarkeit,
+      Vollständigkeit oder Aktualität der bereitgestellten Inhalte.
+    </p>
+  </div>
 
-<p>
-Es besteht kein Anspruch auf dauerhafte Verfügbarkeit,
-Vollständigkeit oder Aktualität der bereitgestellten Inhalte.
-</p>
+  <div class="section">
+    <h2>Haftungsausschluss</h2>
+    <p>
+      Die Nutzung der bereitgestellten Inhalte erfolgt auf eigene Verantwortung.
+      Für die Herkunft, Echtheit oder mögliche Duplikate von Spiel-Items
+      („Dupes“) wird keine Haftung übernommen.
+    </p>
+    <p>
+      Alle genannten Spiel-, Produkt- und Markennamen dienen ausschließlich
+      der Beschreibung und verbleiben im Eigentum der jeweiligen Rechteinhaber.
+    </p>
+    <p class="small">
+      Diablo II: Resurrected ist eine Marke von Blizzard Entertainment, Inc.<br>
+      Dieses Projekt steht in keiner offiziellen Verbindung zu Blizzard Entertainment.
+    </p>
+  </div>
 
-<h2>Haftungsausschluss</h2>
-<p>
-Die Nutzung der bereitgestellten Informationen erfolgt auf eigene Verantwortung.
-Für die Herkunft, Echtheit oder mögliche Duplikate von Spiel-Items
-(„Dupes“) wird keine Haftung übernommen.
-</p>
+  <div class="footer-nav">
+    <a href="index.html">← Zurück zur Lootliste</a>
+  </div>
 
-<p>
-Alle genannten Spiel-, Produkt- und Markennamen dienen ausschließlich
-der Beschreibung und verbleiben im Eigentum der jeweiligen Rechteinhaber.
-</p>
-
-<p class="small">
-Diablo II: Resurrected ist eine Marke von Blizzard Entertainment, Inc.<br>
-Dieses Projekt steht in keiner offiziellen Verbindung zu Blizzard Entertainment.
-</p>
-
-<p class="footer-link">
-<a href="index.html">← Zurück zur Lootliste</a>
-</p>
-
+</div>
+</div>
 </body>
 </html>
