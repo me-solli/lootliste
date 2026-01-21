@@ -272,10 +272,10 @@ setUserLabel();
     const card = document.createElement("div");
     card.className = "item-card";
     card.innerHTML = `
-      <img src="${item.screenshot}" alt="">
+      <img src="${item.screenshot || "img/placeholder.png"}" alt="">
       <div class="item-meta">
-        <h3>${item.name}</h3>
-        <div class="sub">${item.quality} · ${item.type}</div>
+        <h3>${item.name || "Unbekanntes Item"}</h3>
+        <div class="sub">${item.quality || "–"} · ${item.type || "–"}</div>
       </div>
     `;
     grid.appendChild(card);
