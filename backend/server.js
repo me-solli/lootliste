@@ -22,12 +22,18 @@ const USERS_FILE = path.join(DATA_DIR, "users.json");
 const ACCOUNTS_FILE = path.join(DATA_DIR, "accounts.json");
 
 // ===============================
-// MIDDLEWARE (CORS)
+// MIDDLEWARE (CORS) ✅ FIXED
 // ===============================
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-User-Id");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, X-User-Id, X-Account-Id"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
@@ -117,7 +123,7 @@ function findAccountById(accountId) {
 }
 
 // ===============================
-// AUTH – REGISTER (ACCOUNT)
+// AUTH – REGISTER
 // ===============================
 app.post("/auth/register", async (req, res) => {
   const { username, password } = req.body;
