@@ -101,12 +101,19 @@ export function renderCards(items, container) {
     `;
 
     /* =========================
-       TOGGLE (nur Header)
+       TOGGLE (NUR EINE CARD OFFEN)
     ========================== */
     const header = card.querySelector(".card-header");
     header.addEventListener("click", () => {
-      const open = card.dataset.open === "true";
-      card.dataset.open = (!open).toString();
+      const isOpen = card.dataset.open === "true";
+
+      // alle anderen Cards schließen
+      document.querySelectorAll(".card[data-open='true']").forEach(c => {
+        c.dataset.open = "false";
+      });
+
+      // aktuelle togglen
+      card.dataset.open = isOpen ? "false" : "true";
     });
 
     /* =========================
