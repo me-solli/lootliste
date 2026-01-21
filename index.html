@@ -1314,34 +1314,6 @@ async function setUserLabel() {
   }
 }
 
-  try {
-    const meRes = await fetch(API + "/me", {
-      headers: { "X-User-Id": userId }
-    });
-    const me = await meRes.json();
-
-    if (me.username) {
-      label.textContent = me.username;
-    } else {
-      label.textContent = "Spieler " + userId.slice(4, 9);
-    }
-
-    // Eingeloggt → Submit anzeigen
-    if (submitLink) submitLink.style.display = "";
-
-  } catch {
-    label.textContent = "Spieler " + userId.slice(4, 9);
-
-    // Fallback: trotzdem eingeloggt
-    if (submitLink) submitLink.style.display = "";
-  }
-}
-
-// Initial setzen
-setUserLabel();
-
-  const data = await res.json();
-
   // 🔒 Öffentliche Liste:
   // nur verfügbare Items DER AKTIVEN SEASON
   const available = data.filter(i =>
