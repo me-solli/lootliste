@@ -20,6 +20,15 @@ body{
 }
 .wrapper{max-width:1500px;margin:0 auto}
 
+/* =====================
+   SYSTEM QUALITY COLORS
+   (IDENTISCH ZUM INDEX)
+===================== */
+.quality-unique{ color:#f5c451; }
+.quality-set{ color:#6fcf97; }
+.quality-rare{ color:#f2c94c; }
+.quality-magic{ color:#56ccf2; }
+
 /* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
@@ -240,6 +249,7 @@ const userDisplay = document.getElementById("userDisplay");
     }
   });
   const items=await res.json();
+
   const mine=items.filter(i =>
     i.donorAccountId===accountId &&
     (i.season??"non-ladder")===ACTIVE_SEASON
@@ -260,19 +270,24 @@ const userDisplay = document.getElementById("userDisplay");
   mine.forEach(i=>{
     const c=document.createElement("div");
     c.className="item-card";
+
+    const qualityClass = i.quality ? "quality-" + i.quality : "";
+
     c.innerHTML=`
       <img src="${i.screenshot||""}">
       <div class="item-meta">
-        <h3>${i.name||"Unbekanntes Item"}</h3>
+        <h3 class="${qualityClass}">${i.name||"Unbekanntes Item"}</h3>
         <div class="sub">${i.quality} · ${i.type}</div>
         <div class="badge">Status: ${i.status||"verfügbar"}</div>
         ${i.note_private?`<div class="note">📝 ${i.note_private}</div>`:""}
       </div>`;
+
     const img=c.querySelector("img");
     img.onclick=()=>{
       document.getElementById("overlayImg").src=img.src;
       document.getElementById("overlay").style.display="flex";
     };
+
     grid.appendChild(c);
   });
 
