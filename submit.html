@@ -12,16 +12,13 @@
   --panel:#121212;
   --border:#2a2a2a;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
-
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* HERO */
@@ -32,12 +29,10 @@ body{
   min-height:200px;
   position:relative;
 }
-
 .hero-inner{
   padding:36px 36px 32px;
   background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
 }
-
 .hero h1{margin:0;font-size:34px;font-weight:700}
 .hero p{margin:8px 0 0;opacity:.85}
 
@@ -55,13 +50,11 @@ body{
   background:rgba(0,0,0,.55);
   font-size:13px;
 }
-
 .auth-box img{
   width:28px;
   height:28px;
   border-radius:50%;
 }
-
 .auth-link{
   margin-left:6px;
   font-size:12px;
@@ -77,13 +70,11 @@ body{
   margin:0 auto;
   padding:40px 28px 70px;
 }
-
 .user-box{
   margin-bottom:22px;
   font-size:13px;
   opacity:.75;
 }
-
 .user-box code{
   background:#111;
   padding:3px 8px;
@@ -102,7 +93,6 @@ body{
   border-radius:22px;
   padding:28px;
 }
-
 label{
   display:block;
   margin-top:18px;
@@ -110,7 +100,6 @@ label{
   font-size:14px;
   font-weight:600;
 }
-
 input,select{
   width:100%;
   padding:12px 14px;
@@ -120,7 +109,6 @@ input,select{
   color:#eee;
   font-size:14px;
 }
-
 button{
   margin-top:26px;
   padding:14px;
@@ -137,7 +125,6 @@ button{
   color:#f5e6b3;
   cursor:pointer;
 }
-
 .status{margin-top:16px;font-size:14px;opacity:.85}
 
 .preview{margin-top:14px;display:none}
@@ -147,7 +134,6 @@ button{
   border:1px solid rgba(255,255,255,.15);
   cursor:zoom-in;
 }
-
 .overlay{
   position:fixed;
   inset:0;
@@ -250,27 +236,28 @@ const CLOUD_NAME = "dcczi93p6";
 const UPLOAD_PRESET = "lootliste_unsigned";
 const ACTIVE_SEASON = "non-ladder";
 
-const userId = localStorage.getItem("lootliste_user_id");
+const deviceId  = localStorage.getItem("lootliste_user_id");
+const accountId = localStorage.getItem("lootliste_account_id");
+
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 
 async function setUserLabel(){
-  if(!userId){
-    label.textContent = "–";
-    userDisplay.textContent = "–";
-    return;
-  }
+  const headers = {};
+  if (deviceId) headers["X-User-Id"] = deviceId;
+  if (accountId) headers["X-Account-Id"] = accountId;
 
-  const res = await fetch(API_BASE + "/me", {
-    headers:{ "X-User-Id": userId }
-  });
+  const res = await fetch(API_BASE + "/me", { headers });
   const data = await res.json();
 
-  const name = data.username || "Spieler " + userId.slice(4,9);
-  label.textContent = name;
-  userDisplay.textContent = name;
+  if (data.username) {
+    label.textContent = data.username;
+    userDisplay.textContent = data.username;
+  } else {
+    label.textContent = "Gast";
+    userDisplay.textContent = "Gast";
+  }
 }
-
 setUserLabel();
 
 /* PREVIEW */
@@ -288,7 +275,6 @@ fileInput.onchange=()=>{
   overlayImg.src=url;
   preview.style.display="block";
 };
-
 previewImg.onclick=()=>overlay.style.display="flex";
 overlay.onclick=()=>overlay.style.display="none";
 
@@ -297,7 +283,6 @@ async function uploadImage(file){
   const fd=new FormData();
   fd.append("file",file);
   fd.append("upload_preset",UPLOAD_PRESET);
-
   const res=await fetch(
     `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
     {method:"POST",body:fd}
@@ -307,7 +292,7 @@ async function uploadImage(file){
   return data.secure_url;
 }
 
-/* SUBMIT – FINAL */
+/* SUBMIT */
 document.getElementById("form").addEventListener("submit",async e=>{
   e.preventDefault();
   const status=document.getElementById("status");
@@ -321,7 +306,8 @@ document.getElementById("form").addEventListener("submit",async e=>{
       method:"POST",
       headers:{
         "Content-Type":"application/json",
-        "X-User-Id": userId   // 🔥 DAS WAR DER FEHLENDE TEIL
+        ...(deviceId  ? {"X-User-Id": deviceId}   : {}),
+        ...(accountId ? {"X-Account-Id": accountId} : {})
       },
       body:JSON.stringify({
         name:document.getElementById("name").value.trim(),
