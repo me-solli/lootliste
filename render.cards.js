@@ -135,7 +135,7 @@ export function renderCards(items, container) {
 
       const playerId = localStorage.getItem("lootliste_user_id");
       if (!playerId) {
-   alert("Bitte anmelden oder registrieren, um Items nehmen zu können.");
+        alert("Bitte anmelden oder registrieren, um Items nehmen zu können.");
         return;
       }
 
@@ -179,3 +179,9 @@ export function renderCards(items, container) {
     container.appendChild(card);
   });
 }
+
+/* =========================
+   DEMO / DEBUG HOOK
+   (nur für Konsole & Demos)
+========================== */
+window.renderCards = renderCards;
