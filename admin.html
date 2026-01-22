@@ -6,15 +6,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-/* ================= TOKENS (an index.html angelehnt) ================= */
+/* ================= TOKENS ================= */
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
   --soft:#1a1a1a;
-  --green:#6fcf97;
-  --yellow:#f2c94c;
+  --green:#4cff4c;
+  --yellow:#f0e68c;
+  --blue:#6fa8ff;
   --red:#ff6b6b;
 }
 
@@ -28,6 +29,13 @@ body{
 }
 
 .wrapper{max-width:1500px;margin:0 auto;padding:28px}
+
+/* ================= ITEM QUALITÄTSFARBEN ================= */
+.quality-unique{ color:#c7a44a; }
+.quality-set{ color:#4cff4c; }
+.quality-rare{ color:#f0e68c; }
+.quality-magic{ color:#6fa8ff; }
+.quality-normal{ color:#eaeaea; }
 
 /* ================= LOGIN ================= */
 .login-box{
@@ -181,8 +189,8 @@ tr:hover{background:rgba(255,255,255,.03)}
   background:#111;
   border:1px solid rgba(255,255,255,.18);
 }
-.badge.green{color:var(--green);border-color:rgba(111,207,151,.45)}
-.badge.yellow{color:var(--yellow);border-color:rgba(242,201,76,.45)}
+.badge.green{color:var(--green)}
+.badge.yellow{color:var(--yellow)}
 .badge.muted{color:#aaa}
 
 /* ================= ACTIONS ================= */
@@ -240,7 +248,6 @@ tr:hover{background:rgba(255,255,255,.03)}
     <div class="stat"><strong id="statAccounts">0</strong> Accounts</div>
   </div>
 
-  <!-- Filter optional -->
   <div class="filter-bar">
     <select id="filterStatus">
       <option value="">Status: alle</option>
@@ -285,26 +292,27 @@ async function checkLogin(){
   const data = await res.json();
 
   if(data.username === ADMIN_USERNAME){
-    document.getElementById("adminName").textContent=data.username;
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("adminUI").classList.remove("hidden");
+    adminName.textContent=data.username;
+    loginBox.classList.add("hidden");
+    adminUI.classList.remove("hidden");
     loadItems();
   }else{
-    document.getElementById("loginBox").classList.remove("hidden");
+    loginBox.classList.remove("hidden");
   }
 }
 
-document.getElementById("loginBtn").onclick = async ()=>{
-  const u=document.getElementById("loginUser").value;
-  const p=document.getElementById("loginPass").value;
-  const err=document.getElementById("loginError");
+/* ================= LOGIN ================= */
+loginBtn.onclick = async ()=>{
+  const err=loginError;
   err.textContent="";
-
   try{
     const res=await fetch(API+"/auth/login",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({username:u,password:p})
+      body:JSON.stringify({
+        username:loginUser.value,
+        password:loginPass.value
+      })
     });
     if(!res.ok){ err.textContent="Login fehlgeschlagen"; return; }
     const data=await res.json();
@@ -322,37 +330,34 @@ async function loadItems(){
 }
 
 function renderStats(items){
-  document.getElementById("statTotal").textContent = items.length;
-  document.getElementById("statAvailable").textContent =
-    items.filter(i=>i.status==="verfügbar").length;
-  document.getElementById("statReserved").textContent =
-    items.filter(i=>i.status!=="verfügbar").length;
-  document.getElementById("statAccounts").textContent =
+  statTotal.textContent = items.length;
+  statAvailable.textContent = items.filter(i=>i.status==="verfügbar").length;
+  statReserved.textContent = items.filter(i=>i.status!=="verfügbar").length;
+  statAccounts.textContent =
     new Set(items.map(i=>i.donorAccountId).filter(Boolean)).size;
 }
 
-function statusBadge(status){
-  if(status==="verfügbar") return `<span class="badge green">verfügbar</span>`;
-  return `<span class="badge yellow">${status||"–"}</span>`;
+function statusBadge(s){
+  return s==="verfügbar"
+    ? `<span class="badge green">verfügbar</span>`
+    : `<span class="badge yellow">${s||"–"}</span>`;
 }
 
-function seasonBadge(season){
-  return `<span class="badge muted">${season||"–"}</span>`;
+function seasonBadge(s){
+  return `<span class="badge muted">${s||"–"}</span>`;
 }
 
 function renderTable(items){
-  const body=document.getElementById("tableBody");
-  body.innerHTML="";
-
-  const fs=document.getElementById("filterStatus").value;
-  const fse=document.getElementById("filterSeason").value;
+  tableBody.innerHTML="";
+  const fs=filterStatus.value;
+  const fse=filterSeason.value;
 
   items
     .filter(i=>!fs || i.status===fs)
     .filter(i=>!fse || i.season===fse)
     .forEach(i=>{
-      const type = i.type || "sonstiges";
-      const sub  = [type, i.quality].filter(Boolean).join(" · ");
+      const type=i.type||"sonstiges";
+      const quality=(i.quality||"normal").toLowerCase();
 
       const tr=document.createElement("tr");
       tr.innerHTML=`
@@ -360,11 +365,11 @@ function renderTable(items){
         <td>
           <div class="item-cell">
             <div class="item-icon">
-              <img src="img/icons/${type}.png" alt="${type}">
+              <img src="img/icons/${type}.png">
             </div>
             <div class="item-text">
-              <div class="item-name">${i.name||"Unbekanntes Item"}</div>
-              <div class="item-sub">${sub}</div>
+              <div class="item-name quality-${quality}">${i.name}</div>
+              <div class="item-sub">${type} · ${i.quality||"normal"}</div>
             </div>
           </div>
         </td>
@@ -377,14 +382,14 @@ function renderTable(items){
             ? `<button onclick="deleteItem(${i.id})">Delete</button>` : ``}
         </td>
       `;
-      body.appendChild(tr);
+      tableBody.appendChild(tr);
     });
 }
 
 /* ================= ACTIONS ================= */
 function softHide(id){
   localStorage.setItem("admin_hide_"+id,"1");
-  alert("Item lokal ausgeblendet (nur Admin-UI).");
+  alert("Item lokal ausgeblendet (nur Admin-UI)");
 }
 
 async function deleteItem(id){
@@ -397,8 +402,8 @@ async function deleteItem(id){
   else alert("Löschen nicht erlaubt");
 }
 
-document.getElementById("filterStatus").onchange=loadItems;
-document.getElementById("filterSeason").onchange=loadItems;
+filterStatus.onchange=loadItems;
+filterSeason.onchange=loadItems;
 
 checkLogin();
 </script>
