@@ -1581,7 +1581,7 @@ async function setUserLabel() {
   // Default-Zustand
   if (loginLink) loginLink.hidden = true;
   if (loginSep)  loginSep.hidden  = true;
-  if (authLinks) authLinks.hidden = true;
+  if (authLinks) authLinks.hidden = false;
 
   const headers = {};
   if (deviceId)  headers["X-User-Id"] = deviceId;
