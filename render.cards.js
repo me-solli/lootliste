@@ -134,7 +134,7 @@ export function renderCards(items, container) {
 
       const playerId = localStorage.getItem("lootliste_user_id");
       if (!playerId) {
-        alert("Bitte anmelden oder registrieren, um Items beanspruchen zu können.");
+        alert("Zum Beanspruchen von Items bitte oben rechts auf der Startseite einloggen oder registrieren.");
         return;
       }
 
