@@ -1715,6 +1715,16 @@ setTimeout(async () => {
     applyFilters();
   });
 
+  // 🔓 Logout (minimal, wie im Admin)
+document.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("auth-logout")) return;
+
+  localStorage.removeItem("lootliste_account_id");
+  localStorage.removeItem("lootliste_user_id");
+
+  location.reload();
+});
+
 </script>
 
   <script>
