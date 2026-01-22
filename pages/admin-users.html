@@ -129,6 +129,13 @@ button.ok{
 const API = "https://lootliste-production.up.railway.app";
 const STORAGE_KEY = "lootliste_restricted_users";
 
+/* ===== AUTH ===== */
+const accountId = localStorage.getItem("lootliste_account_id");
+if(!accountId){
+  document.body.innerHTML = "<div style='padding:30px'>Nicht eingeloggt.</div>";
+  throw new Error("No account id");
+}
+
 /* ===== STORAGE ===== */
 function getRestricted(){
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
@@ -138,15 +145,16 @@ function setRestricted(data){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-/* ===== LOAD USERS ===== */
+/* ===== LOAD ===== */
 async function load(){
   const [users, items] = await Promise.all([
-    fetch(API + "/accounts").then(r=>r.json()),
+    fetch(API + "/accounts",{
+      headers:{ "X-Account-Id": accountId }
+    }).then(r=>r.json()),
     fetch(API + "/items").then(r=>r.json())
   ]);
 
-  const restricted = getRestricted();
-  render(users, items, restricted);
+  render(users, items, getRestricted());
 }
 
 /* ===== RENDER ===== */
@@ -162,8 +170,8 @@ function render(users, items, restricted){
     tr.innerHTML = `
       <td>${u.username}</td>
       <td>
-        <span class="badge ${isRestricted?"restricted":"active"}">
-          ${isRestricted?"eingeschränkt":"aktiv"}
+        <span class="badge ${isRestricted ? "restricted" : "active"}">
+          ${isRestricted ? "eingeschränkt" : "aktiv"}
         </span>
       </td>
       <td>${donated}</td>
@@ -171,8 +179,8 @@ function render(users, items, restricted){
       <td>
         ${
           isRestricted
-          ? `<button class="ok" onclick="unrestrict('${u.username}')">freigeben</button>`
-          : `<button class="warn" onclick="restrict('${u.username}')">einschränken</button>`
+            ? `<button class="ok" onclick="unrestrict('${u.username}')">freigeben</button>`
+            : `<button class="warn" onclick="restrict('${u.username}')">einschränken</button>`
         }
       </td>
     `;
@@ -181,16 +189,16 @@ function render(users, items, restricted){
 }
 
 /* ===== ACTIONS ===== */
-function restrict(user){
+function restrict(username){
   const data = getRestricted();
-  data[user] = { since: new Date().toISOString() };
+  data[username] = { since: new Date().toISOString() };
   setRestricted(data);
   load();
 }
 
-function unrestrict(user){
+function unrestrict(username){
   const data = getRestricted();
-  delete data[user];
+  delete data[username];
   setRestricted(data);
   load();
 }
