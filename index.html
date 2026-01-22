@@ -1570,10 +1570,7 @@ await setUserLabel();
 async function setUserLabel() {
   const label = document.getElementById("playerIdLabel");
   const submitLink = document.querySelector(".auth-submit");
-
-  const loginLink = document.querySelector(".auth-login");
-  const loginSep  = document.querySelector(".auth-login-sep");
-  const accountLinks = document.querySelector(".auth-account-links");
+  const logoutBtn = document.querySelector(".auth-logout");
 
   if (!label) return;
 
@@ -1582,11 +1579,7 @@ async function setUserLabel() {
 
   label.textContent = label.dataset.placeholder || "Spieler lädt…";
   if (submitLink) submitLink.style.display = "none";
-
-  // Default-Zustand
-  if (loginLink) loginLink.hidden = true;
-  if (loginSep)  loginSep.hidden  = true;
-  if (accountLinks) accountLinks.hidden = true;
+  if (logoutBtn) logoutBtn.hidden = true;
 
   const headers = {};
   if (deviceId)  headers["X-User-Id"] = deviceId;
@@ -1600,18 +1593,13 @@ async function setUserLabel() {
       // ✅ Eingeloggt
       label.textContent = data.username;
       if (submitLink) submitLink.style.display = "";
-      if (accountLinks) accountLinks.hidden = false;
+      if (logoutBtn) logoutBtn.hidden = false;
     } else {
       // 👤 Gast
       label.textContent = "Gast";
-      if (loginLink) loginLink.hidden = false;
-      if (loginSep)  loginSep.hidden  = false;
     }
   } catch {
-    // 👤 Fehler = Gast
     label.textContent = "Gast";
-    if (loginLink) loginLink.hidden = false;
-    if (loginSep)  loginSep.hidden  = false;
   }
 }
 
