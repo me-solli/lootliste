@@ -1601,9 +1601,13 @@ if (loginSep)  loginSep.hidden  = true;
     } else {
       // 👤 Gast
       label.textContent = "Gast";
+      if (loginLink) loginLink.hidden = false;
+      if (loginSep)  loginSep.hidden  = false;
     }
   } catch {
     label.textContent = "Gast";
+    if (loginLink) loginLink.hidden = false;
+    if (loginSep)  loginSep.hidden  = false;
   }
 }
 
