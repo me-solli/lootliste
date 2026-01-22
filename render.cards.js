@@ -117,7 +117,7 @@ export function renderCards(items, container) {
     });
 
     /* =========================
-       CLAIM LOGIK
+       CLAIM LOGIK (BattleTag)
     ========================== */
     const btn = card.querySelector(".claim-btn");
 
@@ -130,17 +130,30 @@ export function renderCards(items, container) {
 
     btn.addEventListener("click", async (e) => {
       e.stopPropagation(); // verhindert Zuklappen
-
       if (btn.disabled) return;
 
       const playerId = localStorage.getItem("lootliste_user_id");
       if (!playerId) {
-        alert("Bitte anmelden oder registrieren, um Items nehmen zu können.");
+        alert("Bitte anmelden oder registrieren, um Items beanspruchen zu können.");
         return;
       }
 
-      const contact = prompt("Kontakt für Übergabe (z. B. Discord):");
-      if (!contact) return;
+      const battleTag = prompt(
+        "BattleTag für Übergabe (z. B. me_solli#1234):"
+      );
+
+      if (!battleTag) return;
+
+      // Mini-Validierung: genau ein #, links & rechts nicht leer
+      const parts = battleTag.split("#");
+      if (
+        parts.length !== 2 ||
+        parts[0].trim() === "" ||
+        parts[1].trim() === ""
+      ) {
+        alert("Bitte einen gültigen BattleTag im Format Name#1234 eingeben.");
+        return;
+      }
 
       btn.disabled = true;
       btn.textContent = "…";
@@ -149,22 +162,25 @@ export function renderCards(items, container) {
         const res = await fetch(`${API}/items/${item.id}/claim`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ playerId, contact })
+          body: JSON.stringify({
+            playerId,
+            battleTag: battleTag.trim()
+          })
         });
 
         if (!res.ok) {
           const err = await res.json();
-          alert(err.error || "Item konnte nicht genommen werden.");
+          alert(err.error || "Item konnte nicht beansprucht werden.");
           btn.disabled = false;
           btn.textContent = "🖐️ Nehmen";
           return;
         }
 
         if (typeof showToast === "function") {
-          showToast("Item reserviert – Kontakt gespeichert");
+          showToast("Item reserviert – BattleTag gespeichert");
         }
 
-        // Card sauber entfernen
+        // Card sauber entfernen (Demo-/Listen-UX)
         card.style.opacity = "0";
         card.style.transform = "scale(0.96)";
         setTimeout(() => card.remove(), 200);
