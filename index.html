@@ -1572,18 +1572,21 @@ async function setUserLabel() {
   const submitLink = document.querySelector(".auth-submit");
   const logoutBtn = document.querySelector(".auth-logout");
   const loginLink = document.querySelector(".auth-login");
-const loginSep  = document.querySelector(".auth-login-sep");
+  const loginSep  = document.querySelector(".auth-login-sep");
+  const accountLinks = document.querySelector(".auth-account-links");
 
   if (!label) return;
 
   const deviceId  = localStorage.getItem("lootliste_user_id");
   const accountId = localStorage.getItem("lootliste_account_id");
 
+  // Default: alles aus
   label.textContent = label.dataset.placeholder || "Spieler lädt…";
   if (submitLink) submitLink.style.display = "none";
   if (logoutBtn) logoutBtn.hidden = true;
   if (loginLink) loginLink.hidden = true;
-if (loginSep)  loginSep.hidden  = true;
+  if (loginSep)  loginSep.hidden  = true;
+  if (accountLinks) accountLinks.hidden = true;
 
   const headers = {};
   if (deviceId)  headers["X-User-Id"] = deviceId;
@@ -1598,6 +1601,7 @@ if (loginSep)  loginSep.hidden  = true;
       label.textContent = data.username;
       if (submitLink) submitLink.style.display = "";
       if (logoutBtn) logoutBtn.hidden = false;
+      if (accountLinks) accountLinks.hidden = false;
     } else {
       // 👤 Gast
       label.textContent = "Gast";
@@ -1605,6 +1609,7 @@ if (loginSep)  loginSep.hidden  = true;
       if (loginSep)  loginSep.hidden  = false;
     }
   } catch {
+    // 👤 Fehler = Gast
     label.textContent = "Gast";
     if (loginLink) loginLink.hidden = false;
     if (loginSep)  loginSep.hidden  = false;
