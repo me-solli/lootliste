@@ -1143,24 +1143,29 @@ body{
 }
 
   /* ================================
-   RESULT META BAR (SUBTLE)
+   META BAR – SUBTLE (FIXED)
 ================================ */
 
-.result-meta{
+.meta-bar{
   display:flex;
   justify-content:center;
-  gap:14px;
+  align-items:center;
+  gap:18px;
 
   font-size:12px;
   color:#9a9a9a;
   opacity:.75;
 
-  margin:10px 0 6px;
+  margin:6px 0 10px;
 }
 
-.result-meta strong{
-  font-weight:500;
-  color:#bdbdbd;
+.meta-bar > div{
+  white-space:nowrap;
+}
+
+/* „X Items gefunden“ extra ruhig */
+.results-info{
+  opacity:.65;
 }
   
 </style>
