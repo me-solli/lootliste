@@ -6,14 +6,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
+/* ================= TOKENS (an index.html angelehnt) ================= */
 :root{
   --gold:#f5c451;
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
   --soft:#1a1a1a;
-  --red:#ff6b6b;
   --green:#6fcf97;
+  --yellow:#f2c94c;
+  --red:#ff6b6b;
 }
 
 *{box-sizing:border-box}
@@ -25,10 +27,9 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1400px;margin:0 auto;padding:30px}
+.wrapper{max-width:1500px;margin:0 auto;padding:28px}
 
 /* ================= LOGIN ================= */
-
 .login-box{
   max-width:420px;
   margin:120px auto;
@@ -37,18 +38,8 @@ body{
   border:1px solid var(--border);
   border-radius:18px;
 }
-
-.login-box h1{
-  margin:0 0 12px;
-  font-size:22px;
-}
-
-.login-box p{
-  margin:0 0 18px;
-  font-size:13px;
-  opacity:.8;
-}
-
+.login-box h1{margin:0 0 10px;font-size:22px}
+.login-box p{margin:0 0 16px;font-size:13px;opacity:.8}
 .login-box input{
   width:100%;
   padding:10px 12px;
@@ -58,7 +49,6 @@ body{
   background:#111;
   color:#fff;
 }
-
 .login-box button{
   width:100%;
   padding:10px;
@@ -68,124 +58,155 @@ body{
   color:var(--gold);
   cursor:pointer;
 }
-
-.login-error{
-  margin-top:10px;
-  font-size:12px;
-  color:var(--red);
-}
+.login-error{margin-top:10px;font-size:12px;color:var(--red)}
 
 /* ================= HEADER ================= */
-
 .admin-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:26px;
+  margin-bottom:22px;
 }
-
-.admin-header h1{
-  font-size:26px;
-  margin:0;
-}
-
-.admin-user{
-  font-size:13px;
-  opacity:.85;
-}
+.admin-header h1{font-size:26px;margin:0}
+.admin-user{font-size:13px;opacity:.85}
 
 /* ================= DASHBOARD ================= */
-
 .dashboard{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:16px;
-  margin-bottom:30px;
+  margin-bottom:22px;
 }
-
 .stat{
   padding:16px;
   border-radius:16px;
-  background:rgba(255,255,255,.03);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.08);
 }
-
-.stat strong{
-  font-size:22px;
-  display:block;
-}
+.stat strong{font-size:22px;display:block}
 
 /* ================= FILTER ================= */
-
 .filter-bar{
   display:flex;
   gap:12px;
   flex-wrap:wrap;
-  margin-bottom:20px;
+  margin-bottom:14px;
 }
-
 .filter-bar select{
   padding:8px 10px;
   border-radius:10px;
   background:#111;
   border:1px solid #333;
   color:#fff;
+  font-size:12px;
 }
 
 /* ================= TABLE ================= */
-
+.table-wrap{
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  overflow:hidden;
+}
 table{
   width:100%;
   border-collapse:collapse;
   font-size:13px;
 }
-
-th,td{
-  padding:10px 8px;
-  border-bottom:1px solid #222;
-  vertical-align:top;
+thead{
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
 }
-
+th,td{
+  padding:12px 10px;
+  border-bottom:1px solid #222;
+  vertical-align:middle;
+}
 th{
   text-align:left;
   color:#bbb;
   font-weight:500;
+  font-size:12px;
+  letter-spacing:.3px;
+}
+tr:hover{background:rgba(255,255,255,.03)}
+
+/* ================= ITEM CELL ================= */
+.item-cell{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.item-icon{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background:#0b0b0b;
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.item-icon img{
+  width:26px;
+  height:26px;
+  filter:drop-shadow(0 0 6px rgba(0,0,0,.8));
+}
+.item-text{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.item-name{
+  font-size:14px;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:420px;
+}
+.item-sub{
+  font-size:11px;
+  color:#9a9a9a;
+  letter-spacing:.3px;
+  text-transform:uppercase;
 }
 
-tr:hover{
-  background:rgba(255,255,255,.03);
-}
-
+/* ================= BADGES ================= */
 .badge{
-  padding:2px 6px;
-  border-radius:6px;
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:999px;
   font-size:11px;
   background:#111;
-  border:1px solid rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.18);
 }
+.badge.green{color:var(--green);border-color:rgba(111,207,151,.45)}
+.badge.yellow{color:var(--yellow);border-color:rgba(242,201,76,.45)}
+.badge.muted{color:#aaa}
 
-.badge.green{color:var(--green)}
-.badge.red{color:var(--red)}
-
+/* ================= ACTIONS ================= */
 .actions button{
   font-size:11px;
-  padding:4px 6px;
-  margin-right:4px;
-  border-radius:6px;
+  padding:5px 8px;
+  margin-right:6px;
+  border-radius:8px;
   border:1px solid #333;
   background:#111;
   color:#ccc;
   cursor:pointer;
 }
-
 .actions button:hover{
   border-color:var(--gold);
   color:var(--gold);
 }
 
-/* ================= HIDDEN ================= */
-
+/* ================= UTILS ================= */
 .hidden{display:none}
+
+@media (max-width:900px){
+  .item-name{max-width:220px}
+}
 </style>
 </head>
 
@@ -196,10 +217,8 @@ tr:hover{
 <div id="loginBox" class="login-box hidden">
   <h1>Admin Login</h1>
   <p>Zugriff nur für Administrator.</p>
-
   <input id="loginUser" placeholder="Username">
   <input id="loginPass" type="password" placeholder="Passwort">
-
   <button id="loginBtn">Einloggen</button>
   <div id="loginError" class="login-error"></div>
 </div>
@@ -221,13 +240,13 @@ tr:hover{
     <div class="stat"><strong id="statAccounts">0</strong> Accounts</div>
   </div>
 
+  <!-- Filter optional -->
   <div class="filter-bar">
     <select id="filterStatus">
       <option value="">Status: alle</option>
       <option value="verfügbar">verfügbar</option>
       <option value="reserviert">reserviert</option>
     </select>
-
     <select id="filterSeason">
       <option value="">Season: alle</option>
       <option value="non-ladder">non-ladder</option>
@@ -235,19 +254,21 @@ tr:hover{
     </select>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Item</th>
-        <th>Status</th>
-        <th>Spender</th>
-        <th>Season</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:110px">ID</th>
+          <th>Item</th>
+          <th>Status</th>
+          <th>Spender</th>
+          <th>Season</th>
+          <th style="width:140px">Aktion</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
 
 </div>
 </div>
@@ -256,24 +277,20 @@ tr:hover{
 const API = "https://lootliste-production.up.railway.app";
 const ADMIN_USERNAME = "me_solli";
 
-const loginBox = document.getElementById("loginBox");
-const adminUI  = document.getElementById("adminUI");
-
+/* ================= AUTH ================= */
 async function checkLogin(){
   const res = await fetch(API+"/me",{
-    headers:{
-      "X-Account-Id":localStorage.getItem("lootliste_account_id")||""
-    }
+    headers:{ "X-Account-Id":localStorage.getItem("lootliste_account_id")||"" }
   });
   const data = await res.json();
 
   if(data.username === ADMIN_USERNAME){
     document.getElementById("adminName").textContent=data.username;
-    loginBox.classList.add("hidden");
-    adminUI.classList.remove("hidden");
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("adminUI").classList.remove("hidden");
     loadItems();
   }else{
-    loginBox.classList.remove("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
   }
 }
 
@@ -289,24 +306,17 @@ document.getElementById("loginBtn").onclick = async ()=>{
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({username:u,password:p})
     });
-
-    if(!res.ok){
-      err.textContent="Login fehlgeschlagen";
-      return;
-    }
-
+    if(!res.ok){ err.textContent="Login fehlgeschlagen"; return; }
     const data=await res.json();
     localStorage.setItem("lootliste_account_id",data.accountId);
     checkLogin();
-  }catch{
-    err.textContent="Netzwerkfehler";
-  }
+  }catch{ err.textContent="Netzwerkfehler"; }
 };
 
+/* ================= DATA ================= */
 async function loadItems(){
   const res = await fetch(API+"/items");
   const items = await res.json();
-
   renderStats(items);
   renderTable(items);
 }
@@ -321,6 +331,15 @@ function renderStats(items){
     new Set(items.map(i=>i.donorAccountId).filter(Boolean)).size;
 }
 
+function statusBadge(status){
+  if(status==="verfügbar") return `<span class="badge green">verfügbar</span>`;
+  return `<span class="badge yellow">${status||"–"}</span>`;
+}
+
+function seasonBadge(season){
+  return `<span class="badge muted">${season||"–"}</span>`;
+}
+
 function renderTable(items){
   const body=document.getElementById("tableBody");
   body.innerHTML="";
@@ -332,41 +351,48 @@ function renderTable(items){
     .filter(i=>!fs || i.status===fs)
     .filter(i=>!fse || i.season===fse)
     .forEach(i=>{
-      const tr=document.createElement("tr");
+      const type = i.type || "sonstiges";
+      const sub  = [type, i.quality].filter(Boolean).join(" · ");
 
+      const tr=document.createElement("tr");
       tr.innerHTML=`
         <td>${i.id}</td>
-        <td>${i.name}</td>
-        <td><span class="badge">${i.status}</span></td>
+        <td>
+          <div class="item-cell">
+            <div class="item-icon">
+              <img src="img/icons/${type}.png" alt="${type}">
+            </div>
+            <div class="item-text">
+              <div class="item-name">${i.name||"Unbekanntes Item"}</div>
+              <div class="item-sub">${sub}</div>
+            </div>
+          </div>
+        </td>
+        <td>${statusBadge(i.status)}</td>
         <td>${i.donor||"–"}</td>
-        <td>${i.season||"–"}</td>
+        <td>${seasonBadge(i.season)}</td>
         <td class="actions">
           <button onclick="softHide(${i.id})">Hide</button>
           ${i.donorAccountId===localStorage.getItem("lootliste_account_id")
-            ? `<button onclick="deleteItem(${i.id})">Delete</button>`
-            : ``}
+            ? `<button onclick="deleteItem(${i.id})">Delete</button>` : ``}
         </td>
       `;
       body.appendChild(tr);
     });
 }
 
+/* ================= ACTIONS ================= */
 function softHide(id){
-  const key="admin_hide_"+id;
-  localStorage.setItem(key,"1");
-  alert("Item lokal ausgeblendet (nur Admin-UI)");
+  localStorage.setItem("admin_hide_"+id,"1");
+  alert("Item lokal ausgeblendet (nur Admin-UI).");
 }
 
 async function deleteItem(id){
   if(!confirm("Item wirklich löschen?"))return;
-
   const res=await fetch(API+"/items/"+id,{
     method:"DELETE",
-    headers:{
-      "X-Account-Id":localStorage.getItem("lootliste_account_id")
-    }
+    headers:{ "X-Account-Id":localStorage.getItem("lootliste_account_id") }
   });
-
   if(res.ok) loadItems();
   else alert("Löschen nicht erlaubt");
 }
