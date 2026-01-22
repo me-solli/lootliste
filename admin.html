@@ -12,7 +12,6 @@
   --green:#4cff4c;
   --yellow:#f0e68c;
   --blue:#6fa8ff;
-  --red:#ff6b6b;
 }
 
 *{box-sizing:border-box}
@@ -24,33 +23,37 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1500px;margin:0 auto;padding:28px}
+/* ================== LOGIN PAGE ================== */
+#page-login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
-/* ===== QUALITY COLORS ===== */
-.quality-unique{color:#c7a44a}
-.quality-set{color:#4cff4c}
-.quality-rare{color:#f0e68c}
-.quality-magic{color:#6fa8ff}
-.quality-normal{color:#eaeaea}
-
-/* ===== LOGIN ===== */
 .login-box{
-  max-width:420px;
-  margin:120px auto;
+  width:420px;
   padding:28px;
   background:#121212;
   border:1px solid var(--border);
   border-radius:18px;
 }
+
+.login-box h1{
+  margin:0 0 18px;
+  font-size:22px;
+}
+
 .login-box input{
   width:100%;
-  padding:10px;
+  padding:10px 12px;
   margin-bottom:12px;
   background:#111;
   border:1px solid #333;
   color:#fff;
   border-radius:10px;
 }
+
 .login-box button{
   width:100%;
   padding:10px;
@@ -61,27 +64,53 @@ body{
   cursor:pointer;
 }
 
+.login-error{
+  margin-top:10px;
+  font-size:12px;
+  color:#ff6b6b;
+}
+
+/* ================== ADMIN PAGE ================== */
+#page-admin{
+  display:none;
+}
+
+.wrapper{
+  max-width:1500px;
+  margin:0 auto;
+  padding:28px;
+}
+
+/* ===== QUALITY COLORS ===== */
+.quality-unique{color:#c7a44a}
+.quality-set{color:#4cff4c}
+.quality-rare{color:#f0e68c}
+.quality-magic{color:#6fa8ff}
+.quality-normal{color:#eaeaea}
+
 /* ===== HEADER ===== */
 .admin-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 
-/* ===== DASH ===== */
+/* ===== DASHBOARD ===== */
 .dashboard{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:14px;
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
+
 .stat{
   padding:14px;
-  border-radius:14px;
   background:#121212;
   border:1px solid #222;
+  border-radius:14px;
 }
+
 .stat strong{font-size:20px}
 
 /* ===== FILTER ===== */
@@ -90,6 +119,7 @@ body{
   gap:10px;
   margin-bottom:12px;
 }
+
 select{
   padding:8px 10px;
   background:#111;
@@ -105,16 +135,22 @@ select{
   border-radius:18px;
   overflow:hidden;
 }
+
 table{
   width:100%;
   border-collapse:collapse;
   font-size:13px;
 }
+
 th,td{
   padding:10px;
   border-bottom:1px solid #222;
 }
-th{color:#aaa;font-weight:500}
+
+th{
+  color:#aaa;
+  font-weight:500;
+}
 
 /* ===== ITEM CELL ===== */
 .item-cell{
@@ -122,8 +158,10 @@ th{color:#aaa;font-weight:500}
   align-items:center;
   gap:12px;
 }
+
 .item-icon{
-  width:40px;height:40px;
+  width:40px;
+  height:40px;
   border-radius:10px;
   background:#000;
   border:1px solid #333;
@@ -132,9 +170,16 @@ th{color:#aaa;font-weight:500}
   justify-content:center;
   cursor:zoom-in;
 }
+
 .item-icon img{width:26px}
+
 .item-name{font-weight:600}
-.item-sub{font-size:11px;color:#999;text-transform:uppercase}
+
+.item-sub{
+  font-size:11px;
+  color:#999;
+  text-transform:uppercase;
+}
 
 /* ===== BADGES ===== */
 .badge{
@@ -144,12 +189,13 @@ th{color:#aaa;font-weight:500}
   background:#111;
   border:1px solid #333;
 }
+
 .badge.green{color:var(--green)}
 .badge.yellow{color:var(--yellow)}
 .badge.blue{color:var(--blue)}
 
-/* ===== OVERLAY ===== */
-.overlay{
+/* ===== SCREENSHOT OVERLAY ===== */
+#overlay{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.85);
@@ -158,7 +204,8 @@ th{color:#aaa;font-weight:500}
   justify-content:center;
   z-index:9999;
 }
-.overlay img{
+
+#overlay img{
   max-width:90%;
   max-height:90%;
   border-radius:14px;
@@ -167,60 +214,68 @@ th{color:#aaa;font-weight:500}
 </head>
 
 <body>
-<div class="wrapper">
 
-<div id="loginBox" class="login-box hidden">
-  <input id="loginUser" placeholder="Username">
-  <input id="loginPass" type="password" placeholder="Passwort">
-  <button id="loginBtn">Einloggen</button>
-</div>
-
-<div id="adminUI" class="hidden">
-
-  <div class="admin-header">
-    <h1>🛡️ Admin – Lootliste</h1>
-    <div>Eingeloggt als <strong id="adminName"></strong></div>
-  </div>
-
-  <div class="dashboard">
-    <div class="stat"><strong id="cAll">0</strong><br>Items</div>
-    <div class="stat"><strong id="cFree">0</strong><br>verfügbar</div>
-    <div class="stat"><strong id="cRes">0</strong><br>reserviert</div>
-    <div class="stat"><strong id="cDone">0</strong><br>vergeben</div>
-  </div>
-
-  <div class="filter-bar">
-    <select id="filterStatus">
-      <option value="">Status: alle</option>
-      <option value="verfügbar">verfügbar</option>
-      <option value="reserviert">reserviert</option>
-      <option value="vergeben">vergeben</option>
-    </select>
-    <select id="filterSeason">
-      <option value="">Season: alle</option>
-      <option value="non-ladder">non-ladder</option>
-      <option value="ladder">ladder</option>
-    </select>
-  </div>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Item</th>
-          <th>Status</th>
-          <th>Spender</th>
-          <th>Season</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+<!-- ================= LOGIN PAGE ================= -->
+<div id="page-login">
+  <div class="login-box">
+    <h1>Admin Login</h1>
+    <input id="loginUser" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Passwort">
+    <button id="loginBtn">Einloggen</button>
+    <div id="loginError" class="login-error"></div>
   </div>
 </div>
+
+<!-- ================= ADMIN PAGE ================= -->
+<div id="page-admin">
+  <div class="wrapper">
+
+    <div class="admin-header">
+      <h1>🛡️ Admin – Lootliste</h1>
+      <div>Eingeloggt als <strong id="adminName"></strong></div>
+    </div>
+
+    <div class="dashboard">
+      <div class="stat"><strong id="cAll">0</strong><br>Items</div>
+      <div class="stat"><strong id="cFree">0</strong><br>verfügbar</div>
+      <div class="stat"><strong id="cRes">0</strong><br>reserviert</div>
+      <div class="stat"><strong id="cDone">0</strong><br>vergeben</div>
+    </div>
+
+    <div class="filter-bar">
+      <select id="filterStatus">
+        <option value="">Status: alle</option>
+        <option value="verfügbar">verfügbar</option>
+        <option value="reserviert">reserviert</option>
+        <option value="vergeben">vergeben</option>
+      </select>
+      <select id="filterSeason">
+        <option value="">Season: alle</option>
+        <option value="non-ladder">non-ladder</option>
+        <option value="ladder">ladder</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Status</th>
+            <th>Spender</th>
+            <th>Season</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+  </div>
 </div>
 
-<div id="overlay" class="overlay" onclick="this.style.display='none'">
+<!-- SCREENSHOT OVERLAY -->
+<div id="overlay" onclick="this.style.display='none'">
   <img id="overlayImg">
 </div>
 
@@ -228,34 +283,52 @@ th{color:#aaa;font-weight:500}
 const API="https://lootliste-production.up.railway.app";
 const ADMIN="me_solli";
 
+/* ===== INIT ===== */
 async function init(){
-  const me=await fetch(API+"/me",{headers:{
-    "X-Account-Id":localStorage.getItem("lootliste_account_id")||""
-  }}).then(r=>r.json());
+  const acc = localStorage.getItem("lootliste_account_id");
+  if(!acc) return;
 
-  if(me.username!==ADMIN){
-    loginBox.classList.remove("hidden");
-    return;
+  const me = await fetch(API+"/me",{headers:{ "X-Account-Id":acc }}).then(r=>r.json());
+  if(me.username === ADMIN){
+    showAdmin(me.username);
+    loadItems();
   }
-  adminName.textContent=me.username;
-  adminUI.classList.remove("hidden");
-  load();
 }
 
-loginBtn.onclick=async()=>{
-  const r=await fetch(API+"/auth/login",{method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({username:loginUser.value,password:loginPass.value})
-  });
-  if(r.ok){
-    const d=await r.json();
-    localStorage.setItem("lootliste_account_id",d.accountId);
-    location.reload();
+/* ===== LOGIN ===== */
+loginBtn.onclick = async ()=>{
+  loginError.textContent="";
+  try{
+    const res = await fetch(API+"/auth/login",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
+        username:loginUser.value,
+        password:loginPass.value
+      })
+    });
+    if(!res.ok){
+      loginError.textContent="Login fehlgeschlagen";
+      return;
+    }
+    const data = await res.json();
+    localStorage.setItem("lootliste_account_id",data.accountId);
+    showAdmin(data.username);
+    loadItems();
+  }catch{
+    loginError.textContent="Netzwerkfehler";
   }
 };
 
-async function load(){
-  const items=await fetch(API+"/items").then(r=>r.json());
+function showAdmin(username){
+  page-login.style.display="none";
+  page-admin.style.display="block";
+  adminName.textContent=username;
+}
+
+/* ===== DATA ===== */
+async function loadItems(){
+  const items = await fetch(API+"/items").then(r=>r.json());
   render(items);
 }
 
@@ -270,17 +343,18 @@ function render(items){
   const fs=filterStatus.value;
   const fse=filterSeason.value;
 
-  const all=items.map(i=>({
+  const list = items.map(i=>({
     ...i,
-    phase:isDone(i)?"vergeben":i.status
+    phase: isDone(i) ? "vergeben" : i.status
   }));
 
-  cAll.textContent=all.length;
-  cFree.textContent=all.filter(i=>i.phase==="verfügbar").length;
-  cRes.textContent=all.filter(i=>i.phase==="reserviert").length;
-  cDone.textContent=all.filter(i=>i.phase==="vergeben").length;
+  cAll.textContent=list.length;
+  cFree.textContent=list.filter(i=>i.phase==="verfügbar").length;
+  cRes.textContent=list.filter(i=>i.phase==="reserviert").length;
+  cDone.textContent=list.filter(i=>i.phase==="vergeben").length;
 
-  all.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
+  list
+    .filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
     .forEach(i=>{
       const q=(i.quality||"normal").toLowerCase();
       const tr=document.createElement("tr");
@@ -311,8 +385,8 @@ function showShot(src){
   overlay.style.display="flex";
 }
 
-filterStatus.onchange=load;
-filterSeason.onchange=load;
+filterStatus.onchange=loadItems;
+filterSeason.onchange=loadItems;
 
 init();
 </script>
