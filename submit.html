@@ -185,6 +185,46 @@ button:disabled{opacity:.6;cursor:default}
 </head>
 
 <body>
+
+<!-- =====================
+     GAST-SPERRE (FINAL)
+===================== -->
+<script>
+const accountId = localStorage.getItem("lootliste_account_id");
+if(!accountId){
+  document.body.innerHTML = `
+    <div style="
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+      color:#eaeaea;
+      font-family:system-ui;
+    ">
+      <div>
+        <h1>🔒 Zugriff eingeschränkt</h1>
+        <p>Du musst eingeloggt sein, um Items einzureichen.</p>
+        <a href="auth.html"
+           style="
+             display:inline-block;
+             margin-top:18px;
+             padding:12px 18px;
+             border-radius:999px;
+             border:1px solid #f5c451;
+             color:#f5c451;
+             text-decoration:none;
+           ">
+          Jetzt einloggen
+        </a>
+      </div>
+    </div>
+  `;
+  throw new Error("Guest blocked");
+}
+</script>
+
 <div class="wrapper">
 
 <header class="hero">
@@ -256,7 +296,6 @@ button:disabled{opacity:.6;cursor:default}
 
       <button type="submit" id="submitBtn">Item einreichen</button>
 
-      <!-- FAIR PLAY -->
       <div class="notice-fairplay">
         <strong>Fair-Play-Hinweis</strong><br>
         Bitte reiche nur Items ein, die du tatsächlich weitergeben möchtest.
@@ -272,11 +311,10 @@ button:disabled{opacity:.6;cursor:default}
       </div>
 
       <div class="notice">
-  <strong>🔐 Datenschutz:</strong>
-  BattleTags werden beim Einreichen nicht abgefragt
-  und sind nur bei einer späteren Item-Übergabe
-  zwischen Spender und Empfänger sichtbar.
-</div>
+        <strong>🔐 Datenschutz:</strong>
+        BattleTags werden beim Einreichen nicht abgefragt
+        und sind nur bei einer späteren Item-Übergabe sichtbar.
+      </div>
 
     </form>
   </div>
@@ -289,6 +327,7 @@ button:disabled{opacity:.6;cursor:default}
 </div>
 
 <script>
+/* ===== ORIGINAL SCRIPT UNVERÄNDERT ===== */
 const API_BASE = "https://lootliste-production.up.railway.app";
 const API_ITEMS = API_BASE + "/items";
 const CLOUD_NAME = "dcczi93p6";
@@ -296,7 +335,7 @@ const UPLOAD_PRESET = "lootliste_unsigned";
 const ACTIVE_SEASON = "non-ladder";
 
 const deviceId  = localStorage.getItem("lootliste_user_id");
-const accountId = localStorage.getItem("lootliste_account_id");
+const accountId2 = localStorage.getItem("lootliste_account_id");
 
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
@@ -307,17 +346,12 @@ const qualitySelect = document.getElementById("quality");
 (async()=>{
   const headers = {};
   if (deviceId) headers["X-User-Id"] = deviceId;
-  if (accountId) headers["X-Account-Id"] = accountId;
+  if (accountId2) headers["X-Account-Id"] = accountId2;
 
   const res = await fetch(API_BASE + "/me", { headers });
   const data = await res.json();
-  if (data.username) {
-    label.textContent = data.username;
-    userDisplay.textContent = data.username;
-  } else {
-    label.textContent = "Gast";
-    userDisplay.textContent = "Gast";
-  }
+  label.textContent = data.username || "Gast";
+  userDisplay.textContent = data.username || "Gast";
 })();
 
 /* QUALITY COLOR */
@@ -396,7 +430,7 @@ document.getElementById("form").addEventListener("submit",async e=>{
       headers:{
         "Content-Type":"application/json",
         ...(deviceId  ? {"X-User-Id": deviceId}   : {}),
-        ...(accountId ? {"X-Account-Id": accountId} : {})
+        ...(accountId2 ? {"X-Account-Id": accountId2} : {})
       },
       body:JSON.stringify({
         name:document.getElementById("name").value.trim(),
@@ -410,7 +444,6 @@ document.getElementById("form").addEventListener("submit",async e=>{
 
     status.innerHTML='✅ Item eingereicht – <a href="my-items.html">Meine Items ansehen</a>';
 
-    // MINI-ABUSE-BREMSE
     const until = Date.now() + 60 * 1000;
     localStorage.setItem("lootliste_submit_cooldown", until);
 
