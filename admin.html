@@ -6,13 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-/* ================= TOKENS ================= */
 :root{
   --gold:#f5c451;
-  --bg:#0b0b0b;
-  --panel:#121212;
   --border:#2a2a2a;
-  --soft:#1a1a1a;
   --green:#4cff4c;
   --yellow:#f0e68c;
   --blue:#6fa8ff;
@@ -30,89 +26,82 @@ body{
 
 .wrapper{max-width:1500px;margin:0 auto;padding:28px}
 
-/* ================= ITEM QUALITÄTSFARBEN ================= */
-.quality-unique{ color:#c7a44a; }
-.quality-set{ color:#4cff4c; }
-.quality-rare{ color:#f0e68c; }
-.quality-magic{ color:#6fa8ff; }
-.quality-normal{ color:#eaeaea; }
+/* ===== QUALITY COLORS ===== */
+.quality-unique{color:#c7a44a}
+.quality-set{color:#4cff4c}
+.quality-rare{color:#f0e68c}
+.quality-magic{color:#6fa8ff}
+.quality-normal{color:#eaeaea}
 
-/* ================= LOGIN ================= */
+/* ===== LOGIN ===== */
 .login-box{
   max-width:420px;
   margin:120px auto;
   padding:28px;
-  background:linear-gradient(180deg,#161616,#0f0f0f);
+  background:#121212;
   border:1px solid var(--border);
   border-radius:18px;
 }
-.login-box h1{margin:0 0 10px;font-size:22px}
-.login-box p{margin:0 0 16px;font-size:13px;opacity:.8}
 .login-box input{
   width:100%;
-  padding:10px 12px;
+  padding:10px;
   margin-bottom:12px;
-  border-radius:10px;
-  border:1px solid #333;
   background:#111;
+  border:1px solid #333;
   color:#fff;
+  border-radius:10px;
 }
 .login-box button{
   width:100%;
   padding:10px;
-  border-radius:12px;
-  border:1px solid rgba(245,196,81,.6);
   background:#111;
+  border:1px solid var(--gold);
   color:var(--gold);
+  border-radius:12px;
   cursor:pointer;
 }
-.login-error{margin-top:10px;font-size:12px;color:var(--red)}
 
-/* ================= HEADER ================= */
+/* ===== HEADER ===== */
 .admin-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:22px;
+  margin-bottom:20px;
 }
-.admin-header h1{font-size:26px;margin:0}
-.admin-user{font-size:13px;opacity:.85}
 
-/* ================= DASHBOARD ================= */
+/* ===== DASH ===== */
 .dashboard{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
-  margin-bottom:22px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+  margin-bottom:18px;
 }
 .stat{
-  padding:16px;
-  border-radius:16px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.08);
+  padding:14px;
+  border-radius:14px;
+  background:#121212;
+  border:1px solid #222;
 }
-.stat strong{font-size:22px;display:block}
+.stat strong{font-size:20px}
 
-/* ================= FILTER ================= */
+/* ===== FILTER ===== */
 .filter-bar{
   display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:14px;
+  gap:10px;
+  margin-bottom:12px;
 }
-.filter-bar select{
+select{
   padding:8px 10px;
-  border-radius:10px;
   background:#111;
   border:1px solid #333;
   color:#fff;
-  font-size:12px;
+  border-radius:10px;
 }
 
-/* ================= TABLE ================= */
+/* ===== TABLE ===== */
 .table-wrap{
-  background:rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.06);
+  background:#0f0f0f;
+  border:1px solid #222;
   border-radius:18px;
   overflow:hidden;
 }
@@ -121,99 +110,58 @@ table{
   border-collapse:collapse;
   font-size:13px;
 }
-thead{
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-}
 th,td{
-  padding:12px 10px;
+  padding:10px;
   border-bottom:1px solid #222;
-  vertical-align:middle;
 }
-th{
-  text-align:left;
-  color:#bbb;
-  font-weight:500;
-  font-size:12px;
-  letter-spacing:.3px;
-}
-tr:hover{background:rgba(255,255,255,.03)}
+th{color:#aaa;font-weight:500}
 
-/* ================= ITEM CELL ================= */
+/* ===== ITEM CELL ===== */
 .item-cell{
   display:flex;
   align-items:center;
   gap:12px;
 }
 .item-icon{
-  width:40px;
-  height:40px;
+  width:40px;height:40px;
   border-radius:10px;
-  background:#0b0b0b;
-  border:1px solid rgba(255,255,255,.12);
+  background:#000;
+  border:1px solid #333;
   display:flex;
   align-items:center;
   justify-content:center;
-  flex-shrink:0;
+  cursor:zoom-in;
 }
-.item-icon img{
-  width:26px;
-  height:26px;
-  filter:drop-shadow(0 0 6px rgba(0,0,0,.8));
-}
-.item-text{
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-.item-name{
-  font-size:14px;
-  font-weight:600;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width:420px;
-}
-.item-sub{
-  font-size:11px;
-  color:#9a9a9a;
-  letter-spacing:.3px;
-  text-transform:uppercase;
-}
+.item-icon img{width:26px}
+.item-name{font-weight:600}
+.item-sub{font-size:11px;color:#999;text-transform:uppercase}
 
-/* ================= BADGES ================= */
+/* ===== BADGES ===== */
 .badge{
-  display:inline-block;
   padding:3px 8px;
   border-radius:999px;
   font-size:11px;
   background:#111;
-  border:1px solid rgba(255,255,255,.18);
+  border:1px solid #333;
 }
 .badge.green{color:var(--green)}
 .badge.yellow{color:var(--yellow)}
-.badge.muted{color:#aaa}
+.badge.blue{color:var(--blue)}
 
-/* ================= ACTIONS ================= */
-.actions button{
-  font-size:11px;
-  padding:5px 8px;
-  margin-right:6px;
-  border-radius:8px;
-  border:1px solid #333;
-  background:#111;
-  color:#ccc;
-  cursor:pointer;
+/* ===== OVERLAY ===== */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
 }
-.actions button:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
-
-/* ================= UTILS ================= */
-.hidden{display:none}
-
-@media (max-width:900px){
-  .item-name{max-width:220px}
+.overlay img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:14px;
 }
 </style>
 </head>
@@ -221,31 +169,24 @@ tr:hover{background:rgba(255,255,255,.03)}
 <body>
 <div class="wrapper">
 
-<!-- LOGIN -->
 <div id="loginBox" class="login-box hidden">
-  <h1>Admin Login</h1>
-  <p>Zugriff nur für Administrator.</p>
   <input id="loginUser" placeholder="Username">
   <input id="loginPass" type="password" placeholder="Passwort">
   <button id="loginBtn">Einloggen</button>
-  <div id="loginError" class="login-error"></div>
 </div>
 
-<!-- ADMIN -->
 <div id="adminUI" class="hidden">
 
   <div class="admin-header">
     <h1>🛡️ Admin – Lootliste</h1>
-    <div class="admin-user">
-      Eingeloggt als <strong id="adminName"></strong>
-    </div>
+    <div>Eingeloggt als <strong id="adminName"></strong></div>
   </div>
 
   <div class="dashboard">
-    <div class="stat"><strong id="statTotal">0</strong> Items gesamt</div>
-    <div class="stat"><strong id="statAvailable">0</strong> verfügbar</div>
-    <div class="stat"><strong id="statReserved">0</strong> reserviert</div>
-    <div class="stat"><strong id="statAccounts">0</strong> Accounts</div>
+    <div class="stat"><strong id="cAll">0</strong><br>Items</div>
+    <div class="stat"><strong id="cFree">0</strong><br>verfügbar</div>
+    <div class="stat"><strong id="cRes">0</strong><br>reserviert</div>
+    <div class="stat"><strong id="cDone">0</strong><br>vergeben</div>
   </div>
 
   <div class="filter-bar">
@@ -253,6 +194,7 @@ tr:hover{background:rgba(255,255,255,.03)}
       <option value="">Status: alle</option>
       <option value="verfügbar">verfügbar</option>
       <option value="reserviert">reserviert</option>
+      <option value="vergeben">vergeben</option>
     </select>
     <select id="filterSeason">
       <option value="">Season: alle</option>
@@ -265,147 +207,114 @@ tr:hover{background:rgba(255,255,255,.03)}
     <table>
       <thead>
         <tr>
-          <th style="width:110px">ID</th>
+          <th>ID</th>
           <th>Item</th>
           <th>Status</th>
           <th>Spender</th>
           <th>Season</th>
-          <th style="width:140px">Aktion</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
-
 </div>
+</div>
+
+<div id="overlay" class="overlay" onclick="this.style.display='none'">
+  <img id="overlayImg">
 </div>
 
 <script>
-const API = "https://lootliste-production.up.railway.app";
-const ADMIN_USERNAME = "me_solli";
+const API="https://lootliste-production.up.railway.app";
+const ADMIN="me_solli";
 
-/* ================= AUTH ================= */
-async function checkLogin(){
-  const res = await fetch(API+"/me",{
-    headers:{ "X-Account-Id":localStorage.getItem("lootliste_account_id")||"" }
-  });
-  const data = await res.json();
+async function init(){
+  const me=await fetch(API+"/me",{headers:{
+    "X-Account-Id":localStorage.getItem("lootliste_account_id")||""
+  }}).then(r=>r.json());
 
-  if(data.username === ADMIN_USERNAME){
-    adminName.textContent=data.username;
-    loginBox.classList.add("hidden");
-    adminUI.classList.remove("hidden");
-    loadItems();
-  }else{
+  if(me.username!==ADMIN){
     loginBox.classList.remove("hidden");
+    return;
   }
+  adminName.textContent=me.username;
+  adminUI.classList.remove("hidden");
+  load();
 }
 
-/* ================= LOGIN ================= */
-loginBtn.onclick = async ()=>{
-  const err=loginError;
-  err.textContent="";
-  try{
-    const res=await fetch(API+"/auth/login",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        username:loginUser.value,
-        password:loginPass.value
-      })
-    });
-    if(!res.ok){ err.textContent="Login fehlgeschlagen"; return; }
-    const data=await res.json();
-    localStorage.setItem("lootliste_account_id",data.accountId);
-    checkLogin();
-  }catch{ err.textContent="Netzwerkfehler"; }
+loginBtn.onclick=async()=>{
+  const r=await fetch(API+"/auth/login",{method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({username:loginUser.value,password:loginPass.value})
+  });
+  if(r.ok){
+    const d=await r.json();
+    localStorage.setItem("lootliste_account_id",d.accountId);
+    location.reload();
+  }
 };
 
-/* ================= DATA ================= */
-async function loadItems(){
-  const res = await fetch(API+"/items");
-  const items = await res.json();
-  renderStats(items);
-  renderTable(items);
+async function load(){
+  const items=await fetch(API+"/items").then(r=>r.json());
+  render(items);
 }
 
-function renderStats(items){
-  statTotal.textContent = items.length;
-  statAvailable.textContent = items.filter(i=>i.status==="verfügbar").length;
-  statReserved.textContent = items.filter(i=>i.status!=="verfügbar").length;
-  statAccounts.textContent =
-    new Set(items.map(i=>i.donorAccountId).filter(Boolean)).size;
+function isDone(i){
+  return i.status==="vergeben" ||
+    i.handover?.donorConfirmed ||
+    i.handover?.receiverConfirmed;
 }
 
-function statusBadge(s){
-  return s==="verfügbar"
-    ? `<span class="badge green">verfügbar</span>`
-    : `<span class="badge yellow">${s||"–"}</span>`;
-}
-
-function seasonBadge(s){
-  return `<span class="badge muted">${s||"–"}</span>`;
-}
-
-function renderTable(items){
+function render(items){
   tableBody.innerHTML="";
   const fs=filterStatus.value;
   const fse=filterSeason.value;
 
-  items
-    .filter(i=>!fs || i.status===fs)
-    .filter(i=>!fse || i.season===fse)
-    .forEach(i=>{
-      const type=i.type||"sonstiges";
-      const quality=(i.quality||"normal").toLowerCase();
+  const all=items.map(i=>({
+    ...i,
+    phase:isDone(i)?"vergeben":i.status
+  }));
 
+  cAll.textContent=all.length;
+  cFree.textContent=all.filter(i=>i.phase==="verfügbar").length;
+  cRes.textContent=all.filter(i=>i.phase==="reserviert").length;
+  cDone.textContent=all.filter(i=>i.phase==="vergeben").length;
+
+  all.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
+    .forEach(i=>{
+      const q=(i.quality||"normal").toLowerCase();
       const tr=document.createElement("tr");
       tr.innerHTML=`
         <td>${i.id}</td>
         <td>
           <div class="item-cell">
-            <div class="item-icon">
-              <img src="img/icons/${type}.png">
+            <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
+              <img src="img/icons/${i.type||"sonstiges"}.png">
             </div>
-            <div class="item-text">
-              <div class="item-name quality-${quality}">${i.name}</div>
-              <div class="item-sub">${type} · ${i.quality||"normal"}</div>
+            <div>
+              <div class="item-name quality-${q}">${i.name}</div>
+              <div class="item-sub">${i.type} · ${i.quality}</div>
             </div>
           </div>
         </td>
-        <td>${statusBadge(i.status)}</td>
+        <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
         <td>${i.donor||"–"}</td>
-        <td>${seasonBadge(i.season)}</td>
-        <td class="actions">
-          <button onclick="softHide(${i.id})">Hide</button>
-          ${i.donorAccountId===localStorage.getItem("lootliste_account_id")
-            ? `<button onclick="deleteItem(${i.id})">Delete</button>` : ``}
-        </td>
+        <td>${i.season||"–"}</td>
       `;
       tableBody.appendChild(tr);
     });
 }
 
-/* ================= ACTIONS ================= */
-function softHide(id){
-  localStorage.setItem("admin_hide_"+id,"1");
-  alert("Item lokal ausgeblendet (nur Admin-UI)");
+function showShot(src){
+  if(!src) return;
+  overlayImg.src=src;
+  overlay.style.display="flex";
 }
 
-async function deleteItem(id){
-  if(!confirm("Item wirklich löschen?"))return;
-  const res=await fetch(API+"/items/"+id,{
-    method:"DELETE",
-    headers:{ "X-Account-Id":localStorage.getItem("lootliste_account_id") }
-  });
-  if(res.ok) loadItems();
-  else alert("Löschen nicht erlaubt");
-}
+filterStatus.onchange=load;
+filterSeason.onchange=load;
 
-filterStatus.onchange=loadItems;
-filterSeason.onchange=loadItems;
-
-checkLogin();
+init();
 </script>
 </body>
 </html>
