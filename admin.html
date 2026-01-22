@@ -1,1 +1,380 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Admin – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<style>
+:root{
+  --gold:#f5c451;
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --border:#2a2a2a;
+  --soft:#1a1a1a;
+  --red:#ff6b6b;
+  --green:#6fcf97;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#eaeaea;
+}
+
+.wrapper{max-width:1400px;margin:0 auto;padding:30px}
+
+/* ================= LOGIN ================= */
+
+.login-box{
+  max-width:420px;
+  margin:120px auto;
+  padding:28px;
+  background:linear-gradient(180deg,#161616,#0f0f0f);
+  border:1px solid var(--border);
+  border-radius:18px;
+}
+
+.login-box h1{
+  margin:0 0 12px;
+  font-size:22px;
+}
+
+.login-box p{
+  margin:0 0 18px;
+  font-size:13px;
+  opacity:.8;
+}
+
+.login-box input{
+  width:100%;
+  padding:10px 12px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:1px solid #333;
+  background:#111;
+  color:#fff;
+}
+
+.login-box button{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(245,196,81,.6);
+  background:#111;
+  color:var(--gold);
+  cursor:pointer;
+}
+
+.login-error{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--red);
+}
+
+/* ================= HEADER ================= */
+
+.admin-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:26px;
+}
+
+.admin-header h1{
+  font-size:26px;
+  margin:0;
+}
+
+.admin-user{
+  font-size:13px;
+  opacity:.85;
+}
+
+/* ================= DASHBOARD ================= */
+
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-bottom:30px;
+}
+
+.stat{
+  padding:16px;
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.stat strong{
+  font-size:22px;
+  display:block;
+}
+
+/* ================= FILTER ================= */
+
+.filter-bar{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.filter-bar select{
+  padding:8px 10px;
+  border-radius:10px;
+  background:#111;
+  border:1px solid #333;
+  color:#fff;
+}
+
+/* ================= TABLE ================= */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+
+th,td{
+  padding:10px 8px;
+  border-bottom:1px solid #222;
+  vertical-align:top;
+}
+
+th{
+  text-align:left;
+  color:#bbb;
+  font-weight:500;
+}
+
+tr:hover{
+  background:rgba(255,255,255,.03);
+}
+
+.badge{
+  padding:2px 6px;
+  border-radius:6px;
+  font-size:11px;
+  background:#111;
+  border:1px solid rgba(255,255,255,.15);
+}
+
+.badge.green{color:var(--green)}
+.badge.red{color:var(--red)}
+
+.actions button{
+  font-size:11px;
+  padding:4px 6px;
+  margin-right:4px;
+  border-radius:6px;
+  border:1px solid #333;
+  background:#111;
+  color:#ccc;
+  cursor:pointer;
+}
+
+.actions button:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+/* ================= HIDDEN ================= */
+
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<!-- LOGIN -->
+<div id="loginBox" class="login-box hidden">
+  <h1>Admin Login</h1>
+  <p>Zugriff nur für Administrator.</p>
+
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Passwort">
+
+  <button id="loginBtn">Einloggen</button>
+  <div id="loginError" class="login-error"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminUI" class="hidden">
+
+  <div class="admin-header">
+    <h1>🛡️ Admin – Lootliste</h1>
+    <div class="admin-user">
+      Eingeloggt als <strong id="adminName"></strong>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="stat"><strong id="statTotal">0</strong> Items gesamt</div>
+    <div class="stat"><strong id="statAvailable">0</strong> verfügbar</div>
+    <div class="stat"><strong id="statReserved">0</strong> reserviert</div>
+    <div class="stat"><strong id="statAccounts">0</strong> Accounts</div>
+  </div>
+
+  <div class="filter-bar">
+    <select id="filterStatus">
+      <option value="">Status: alle</option>
+      <option value="verfügbar">verfügbar</option>
+      <option value="reserviert">reserviert</option>
+    </select>
+
+    <select id="filterSeason">
+      <option value="">Season: alle</option>
+      <option value="non-ladder">non-ladder</option>
+      <option value="ladder">ladder</option>
+    </select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Spender</th>
+        <th>Season</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+</div>
+</div>
+
+<script>
+const API = "https://lootliste-production.up.railway.app";
+const ADMIN_USERNAME = "me_solli";
+
+const loginBox = document.getElementById("loginBox");
+const adminUI  = document.getElementById("adminUI");
+
+async function checkLogin(){
+  const res = await fetch(API+"/me",{
+    headers:{
+      "X-Account-Id":localStorage.getItem("lootliste_account_id")||""
+    }
+  });
+  const data = await res.json();
+
+  if(data.username === ADMIN_USERNAME){
+    document.getElementById("adminName").textContent=data.username;
+    loginBox.classList.add("hidden");
+    adminUI.classList.remove("hidden");
+    loadItems();
+  }else{
+    loginBox.classList.remove("hidden");
+  }
+}
+
+document.getElementById("loginBtn").onclick = async ()=>{
+  const u=document.getElementById("loginUser").value;
+  const p=document.getElementById("loginPass").value;
+  const err=document.getElementById("loginError");
+  err.textContent="";
+
+  try{
+    const res=await fetch(API+"/auth/login",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({username:u,password:p})
+    });
+
+    if(!res.ok){
+      err.textContent="Login fehlgeschlagen";
+      return;
+    }
+
+    const data=await res.json();
+    localStorage.setItem("lootliste_account_id",data.accountId);
+    checkLogin();
+  }catch{
+    err.textContent="Netzwerkfehler";
+  }
+};
+
+async function loadItems(){
+  const res = await fetch(API+"/items");
+  const items = await res.json();
+
+  renderStats(items);
+  renderTable(items);
+}
+
+function renderStats(items){
+  document.getElementById("statTotal").textContent = items.length;
+  document.getElementById("statAvailable").textContent =
+    items.filter(i=>i.status==="verfügbar").length;
+  document.getElementById("statReserved").textContent =
+    items.filter(i=>i.status!=="verfügbar").length;
+  document.getElementById("statAccounts").textContent =
+    new Set(items.map(i=>i.donorAccountId).filter(Boolean)).size;
+}
+
+function renderTable(items){
+  const body=document.getElementById("tableBody");
+  body.innerHTML="";
+
+  const fs=document.getElementById("filterStatus").value;
+  const fse=document.getElementById("filterSeason").value;
+
+  items
+    .filter(i=>!fs || i.status===fs)
+    .filter(i=>!fse || i.season===fse)
+    .forEach(i=>{
+      const tr=document.createElement("tr");
+
+      tr.innerHTML=`
+        <td>${i.id}</td>
+        <td>${i.name}</td>
+        <td><span class="badge">${i.status}</span></td>
+        <td>${i.donor||"–"}</td>
+        <td>${i.season||"–"}</td>
+        <td class="actions">
+          <button onclick="softHide(${i.id})">Hide</button>
+          ${i.donorAccountId===localStorage.getItem("lootliste_account_id")
+            ? `<button onclick="deleteItem(${i.id})">Delete</button>`
+            : ``}
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+}
+
+function softHide(id){
+  const key="admin_hide_"+id;
+  localStorage.setItem(key,"1");
+  alert("Item lokal ausgeblendet (nur Admin-UI)");
+}
+
+async function deleteItem(id){
+  if(!confirm("Item wirklich löschen?"))return;
+
+  const res=await fetch(API+"/items/"+id,{
+    method:"DELETE",
+    headers:{
+      "X-Account-Id":localStorage.getItem("lootliste_account_id")
+    }
+  });
+
+  if(res.ok) loadItems();
+  else alert("Löschen nicht erlaubt");
+}
+
+document.getElementById("filterStatus").onchange=loadItems;
+document.getElementById("filterSeason").onchange=loadItems;
+
+checkLogin();
+</script>
+</body>
+</html>
