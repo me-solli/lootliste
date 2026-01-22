@@ -75,6 +75,21 @@ body{
 /* CONTENT */
 .container{padding:34px 28px 60px}
 
+/* INFO */
+.info-box{
+  margin-bottom:26px;
+  padding:18px 20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.04),
+    rgba(255,255,255,.015)
+  );
+  font-size:14px;
+  opacity:.9;
+}
+
 /* EMPTY */
 .empty-box{
   margin-top:30px;
@@ -144,6 +159,14 @@ body{
 </header>
 
 <div class="container">
+
+  <!-- 🔐 PRIVACY HINWEIS -->
+  <div class="info-box">
+    Dieses Archiv dient der Transparenz abgeschlossener Item-Vergaben.
+    <strong>Kontakt- und BattleTag-Informationen sind hier bewusst nicht sichtbar</strong>
+    und bleiben ausschließlich zwischen Spender und Empfänger.
+  </div>
+
   <div id="list"></div>
 </div>
 
