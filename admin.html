@@ -81,19 +81,27 @@ body{
   padding:28px;
 }
 
-/* ===== QUALITY COLORS ===== */
-.quality-unique{color:#c7a44a}
-.quality-set{color:#4cff4c}
-.quality-rare{color:#f0e68c}
-.quality-magic{color:#6fa8ff}
-.quality-normal{color:#eaeaea}
-
 /* ===== HEADER ===== */
 .admin-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  margin-bottom:14px;
+}
+
+.admin-nav{
+  display:flex;
+  gap:10px;
   margin-bottom:18px;
+}
+
+.admin-nav a{
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  text-decoration:none;
+  color:var(--gold);
+  border:1px solid var(--gold);
 }
 
 /* ===== DASHBOARD ===== */
@@ -152,6 +160,19 @@ th{
   font-weight:500;
 }
 
+/* ===== BADGES ===== */
+.badge{
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:11px;
+  background:#111;
+  border:1px solid #333;
+}
+
+.badge.green{color:var(--green)}
+.badge.yellow{color:var(--yellow)}
+.badge.blue{color:var(--blue)}
+
 /* ===== ITEM CELL ===== */
 .item-cell{
   display:flex;
@@ -173,28 +194,7 @@ th{
 
 .item-icon img{width:26px}
 
-.item-name{font-weight:600}
-
-.item-sub{
-  font-size:11px;
-  color:#999;
-  text-transform:uppercase;
-}
-
-/* ===== BADGES ===== */
-.badge{
-  padding:3px 8px;
-  border-radius:999px;
-  font-size:11px;
-  background:#111;
-  border:1px solid #333;
-}
-
-.badge.green{color:var(--green)}
-.badge.yellow{color:var(--yellow)}
-.badge.blue{color:var(--blue)}
-
-/* ===== SCREENSHOT OVERLAY ===== */
+/* ===== OVERLAY ===== */
 #overlay{
   position:fixed;
   inset:0;
@@ -233,6 +233,12 @@ th{
     <div class="admin-header">
       <h1>🛡️ Admin – Lootliste</h1>
       <div>Eingeloggt als <strong id="adminName"></strong></div>
+    </div>
+
+    <!-- ADMIN NAV -->
+    <div class="admin-nav">
+      <a href="admin.html">📦 Items</a>
+      <a href="pages/admin-users.html">👥 User</a>
     </div>
 
     <div class="dashboard">
@@ -282,7 +288,6 @@ th{
 const API = "https://lootliste-production.up.railway.app";
 const ADMIN = "me_solli";
 
-/* ===== ELEMENTS ===== */
 const pageLogin = document.getElementById("page-login");
 const pageAdmin = document.getElementById("page-admin");
 const adminName = document.getElementById("adminName");
@@ -293,10 +298,7 @@ async function init(){
   if(!acc) return;
 
   try{
-    const me = await fetch(API+"/me",{
-      headers:{ "X-Account-Id":acc }
-    }).then(r=>r.json());
-
+    const me = await fetch(API+"/me",{ headers:{ "X-Account-Id":acc }}).then(r=>r.json());
     if(me.username === ADMIN){
       showAdmin(me.username);
       loadItems();
@@ -306,20 +308,19 @@ async function init(){
 
 /* ===== LOGIN ===== */
 loginBtn.onclick = async ()=>{
-  loginError.textContent = "";
-
+  loginError.textContent="";
   try{
     const res = await fetch(API+"/auth/login",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({
-        username: loginUser.value.trim(),
-        password: loginPass.value
+        username:loginUser.value.trim(),
+        password:loginPass.value
       })
     });
 
     if(!res.ok){
-      loginError.textContent = "Login fehlgeschlagen";
+      loginError.textContent="Login fehlgeschlagen";
       return;
     }
 
@@ -327,22 +328,21 @@ loginBtn.onclick = async ()=>{
     localStorage.setItem("lootliste_account_id", data.accountId);
 
     if(data.username !== ADMIN){
-      loginError.textContent = "Kein Admin-Zugriff";
+      loginError.textContent="Kein Admin-Zugriff";
       return;
     }
 
     showAdmin(data.username);
     loadItems();
-
   }catch{
-    loginError.textContent = "Netzwerkfehler";
+    loginError.textContent="Netzwerkfehler";
   }
 };
 
 function showAdmin(username){
-  pageLogin.style.display = "none";
-  pageAdmin.style.display = "block";
-  adminName.textContent = username;
+  pageLogin.style.display="none";
+  pageAdmin.style.display="block";
+  adminName.textContent=username;
 }
 
 /* ===== DATA ===== */
@@ -358,20 +358,19 @@ function isDone(i){
 }
 
 function render(items){
-  tableBody.innerHTML = "";
-
-  const fs = filterStatus.value;
-  const fse = filterSeason.value;
+  tableBody.innerHTML="";
+  const fs=filterStatus.value;
+  const fse=filterSeason.value;
 
   const list = items.map(i=>({
     ...i,
     phase: isDone(i) ? "vergeben" : i.status
   }));
 
-  cAll.textContent = list.length;
-  cFree.textContent = list.filter(i=>i.phase==="verfügbar").length;
-  cRes.textContent = list.filter(i=>i.phase==="reserviert").length;
-  cDone.textContent = list.filter(i=>i.phase==="vergeben").length;
+  cAll.textContent=list.length;
+  cFree.textContent=list.filter(i=>i.phase==="verfügbar").length;
+  cRes.textContent=list.filter(i=>i.phase==="reserviert").length;
+  cDone.textContent=list.filter(i=>i.phase==="vergeben").length;
 
   list
     .filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
@@ -386,8 +385,7 @@ function render(items){
               <img src="img/icons/${i.type||"sonstiges"}.png">
             </div>
             <div>
-              <div class="item-name quality-${q}">${i.name}</div>
-              <div class="item-sub">${i.type} · ${i.quality}</div>
+              <strong>${i.name}</strong>
             </div>
           </div>
         </td>
@@ -401,12 +399,12 @@ function render(items){
 
 function showShot(src){
   if(!src) return;
-  overlayImg.src = src;
-  overlay.style.display = "flex";
+  overlayImg.src=src;
+  overlay.style.display="flex";
 }
 
-filterStatus.onchange = loadItems;
-filterSeason.onchange = loadItems;
+filterStatus.onchange=loadItems;
+filterSeason.onchange=loadItems;
 
 init();
 </script>
