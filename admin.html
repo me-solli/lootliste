@@ -12,6 +12,7 @@
   --green:#4cff4c;
   --yellow:#f0e68c;
   --blue:#6fa8ff;
+  --red:#ff6b6b;
 }
 
 *{box-sizing:border-box}
@@ -89,6 +90,24 @@ body{
   margin-bottom:14px;
 }
 
+.admin-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:13px;
+}
+
+.logout-btn{
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid var(--red);
+  background:#111;
+  color:var(--red);
+  cursor:pointer;
+  font-size:12px;
+}
+
+/* ===== NAV ===== */
 .admin-nav{
   display:flex;
   gap:10px;
@@ -232,10 +251,12 @@ th{
 
     <div class="admin-header">
       <h1>🛡️ Admin – Lootliste</h1>
-      <div>Eingeloggt als <strong id="adminName"></strong></div>
+      <div class="admin-right">
+        <div>Eingeloggt als <strong id="adminName"></strong></div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
     </div>
 
-    <!-- ADMIN NAV -->
     <div class="admin-nav">
       <a href="admin.html">📦 Items</a>
       <a href="pages/admin-users.html">👥 User</a>
@@ -345,6 +366,14 @@ function showAdmin(username){
   adminName.textContent=username;
 }
 
+/* ===== LOGOUT ===== */
+function logout(){
+  localStorage.removeItem("lootliste_account_id");
+  pageAdmin.style.display="none";
+  pageLogin.style.display="flex";
+  loginPass.value="";
+}
+
 /* ===== DATA ===== */
 async function loadItems(){
   const items = await fetch(API+"/items").then(r=>r.json());
@@ -375,7 +404,6 @@ function render(items){
   list
     .filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
     .forEach(i=>{
-      const q=(i.quality||"normal").toLowerCase();
       const tr=document.createElement("tr");
       tr.innerHTML=`
         <td>${i.id}</td>
@@ -384,9 +412,7 @@ function render(items){
             <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
               <img src="img/icons/${i.type||"sonstiges"}.png">
             </div>
-            <div>
-              <strong>${i.name}</strong>
-            </div>
+            <strong>${i.name}</strong>
           </div>
         </td>
         <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
