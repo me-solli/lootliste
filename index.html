@@ -1566,6 +1566,10 @@ async function setUserLabel() {
   const label = document.getElementById("playerIdLabel");
   const submitLink = document.querySelector(".auth-submit");
 
+  // NEU: Login-Link + Separator
+  const loginLink = document.querySelector(".auth-login");
+  const loginSep  = document.querySelector(".auth-login-sep");
+
   if (!label) return;
 
   const deviceId  = localStorage.getItem("lootliste_user_id");
@@ -1573,6 +1577,10 @@ async function setUserLabel() {
 
   label.textContent = label.dataset.placeholder || "Spieler lädt…";
   if (submitLink) submitLink.style.display = "none";
+
+  // Standard: Login ausblenden
+  if (loginLink) loginLink.hidden = true;
+  if (loginSep)  loginSep.hidden  = true;
 
   const headers = {};
   if (deviceId)  headers["X-User-Id"] = deviceId;
@@ -1585,11 +1593,18 @@ async function setUserLabel() {
     if (data.username) {
       label.textContent = data.username;
       if (submitLink) submitLink.style.display = "";
+      // eingeloggt → Login bleibt verborgen
     } else {
       label.textContent = "Gast";
+      // Gast → Login anzeigen
+      if (loginLink) loginLink.hidden = false;
+      if (loginSep)  loginSep.hidden  = false;
     }
   } catch {
     label.textContent = "Gast";
+    // Fehlerfall = Gast
+    if (loginLink) loginLink.hidden = false;
+    if (loginSep)  loginSep.hidden  = false;
   }
 }
 
