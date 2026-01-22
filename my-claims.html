@@ -12,6 +12,7 @@
   --panel:#121212;
   --border:#2a2a2a;
   --blue:#8fd1ff;
+  --green:#8fd18f;
 }
 
 *{box-sizing:border-box}
@@ -33,16 +34,14 @@ body{
   min-height:200px;
   position:relative;
 }
-
 .hero-inner{
   padding:36px 36px 32px;
   background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
 }
-
 .hero h1{margin:0;font-size:34px;font-weight:700}
 .hero p{margin:8px 0 0;opacity:.85}
 
-/* AUTH BOX */
+/* AUTH */
 .auth-box{
   position:absolute;
   top:22px;
@@ -56,13 +55,11 @@ body{
   background:rgba(0,0,0,.55);
   font-size:13px;
 }
-
 .auth-box img{
   width:28px;
   height:28px;
   border-radius:50%;
 }
-
 .auth-link{
   margin-left:6px;
   font-size:12px;
@@ -132,7 +129,27 @@ body{
   font-size:13px;
 }
 .claim-status.reserviert{color:var(--gold)}
-.claim-status.vergeben{color:var(--blue)}
+.claim-status.wartet{color:var(--blue)}
+.claim-status.vergeben{color:var(--green)}
+
+/* CONFIRM */
+.confirm-box{
+  margin-top:12px;
+}
+.confirm-btn{
+  padding:6px 12px;
+  font-size:12px;
+  border-radius:10px;
+  border:1px solid rgba(143,209,143,.6);
+  background:#0f1a0f;
+  color:#cfe9cf;
+  cursor:pointer;
+}
+.confirm-done{
+  margin-top:6px;
+  font-size:12px;
+  color:#8fd18f;
+}
 </style>
 </head>
 
@@ -168,96 +185,86 @@ body{
 </div>
 
 <script>
-/* ===============================
-   CONFIG
-================================ */
+/* CONFIG */
 const API_BASE = "https://lootliste-production.up.railway.app";
 const API_ITEMS = API_BASE + "/items";
 
-/* ===============================
-   IDS
-================================ */
+/* IDS */
 const deviceId  = localStorage.getItem("lootliste_user_id");
 const accountId = localStorage.getItem("lootliste_account_id");
 
-/* ===============================
-   USER LABEL
-================================ */
+/* USER LABEL */
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
 
-async function setUserLabel() {
-  if (!label) return;
-
-  label.textContent = label.dataset.placeholder || "Spieler lädt…";
-  if (userDisplay) userDisplay.textContent = "–";
-
-  if (!accountId) return;
-
-  try {
-    const res = await fetch(API_BASE + "/me", {
-      headers: {
-        "X-User-Id": deviceId || "",
-        "X-Account-Id": accountId
-      }
-    });
-    const data = await res.json();
-
-    if (data.username) {
-      label.textContent = data.username;
-      if (userDisplay) userDisplay.textContent = data.username;
+(async()=>{
+  if(!accountId) return;
+  const res = await fetch(API_BASE + "/me",{
+    headers:{
+      "X-User-Id":deviceId||"",
+      "X-Account-Id":accountId
     }
-  } catch {}
-}
+  });
+  const data = await res.json();
+  if(data.username){
+    label.textContent=data.username;
+    userDisplay.textContent=data.username;
+  }
+})();
 
-setUserLabel();
-
-/* ===============================
-   LOAD MY CLAIMS (ACCOUNT)
-================================ */
+/* LOAD CLAIMS */
 const list = document.getElementById("list");
 
-if (!accountId) {
-  list.innerHTML = `
-    <div class="empty-box">
-      Du bist nicht eingeloggt.
-    </div>
-  `;
-} else {
+if(!accountId){
+  list.innerHTML=`<div class="empty-box">Du bist nicht eingeloggt.</div>`;
+}else{
   loadMyClaims();
 }
 
-async function loadMyClaims() {
-  const res = await fetch(API_ITEMS, {
-    headers: {
-      "X-User-Id": deviceId || "",
-      "X-Account-Id": accountId
+async function loadMyClaims(){
+  const res = await fetch(API_ITEMS,{
+    headers:{
+      "X-User-Id":deviceId||"",
+      "X-Account-Id":accountId
     }
   });
-
   const items = await res.json();
 
-  const mine = items.filter(i =>
-    i.claimedByAccountId === accountId
-  );
+  const mine = items.filter(i => i.claimedByAccountId === accountId);
 
-  if (mine.length === 0) {
-    list.innerHTML = `
+  if(!mine.length){
+    list.innerHTML=`
       <div class="empty-box">
         Du hast aktuell keine reservierten oder erhaltenen Items.
-      </div>
-    `;
+      </div>`;
     return;
   }
 
-  const grid = document.createElement("div");
-  grid.className = "claims-grid";
+  const grid=document.createElement("div");
+  grid.className="claims-grid";
 
-  mine.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "claim-card";
+  mine.forEach(item=>{
+    const card=document.createElement("div");
+    card.className="claim-card";
 
-    card.innerHTML = `
+    const handoverDone =
+      localStorage.getItem("handover_confirmed_"+item.id)==="yes";
+    const receivedDone =
+      localStorage.getItem("received_confirmed_"+item.id)==="yes";
+
+    let statusText="Reserviert";
+    let statusClass="reserviert";
+
+    if(handoverDone && !receivedDone){
+      statusText="Übergabe bestätigt (warte auf dich)";
+      statusClass="wartet";
+    }
+    if(receivedDone){
+      statusText="Vergeben (bestätigt)";
+      statusClass="vergeben";
+    }
+
+    card.innerHTML=`
       <div class="claim-name">${item.name}</div>
       <div class="claim-meta">
         Reserviert am:
@@ -265,14 +272,40 @@ async function loadMyClaims() {
           ? new Date(item.claimedAt).toLocaleDateString("de-DE")
           : "–"}
       </div>
-      <div class="claim-status ${item.status}">
-        Status: ${item.status}
+      <div class="claim-status ${statusClass}">
+        Status: ${statusText}
       </div>
+
+      ${handoverDone && !receivedDone ? `
+        <div class="confirm-box">
+          <button class="confirm-btn">✔ Item erhalten</button>
+        </div>
+      `:""}
+
+      ${receivedDone ? `
+        <div class="confirm-done">
+          ✔ Erhalt bestätigt
+        </div>
+      `:""}
     `;
+
+    const btn=card.querySelector(".confirm-btn");
+    if(btn){
+      btn.onclick=()=>{
+        if(confirm("Hast du das Item ingame erhalten?")){
+          localStorage.setItem(
+            "received_confirmed_"+item.id,
+            "yes"
+          );
+          location.reload();
+        }
+      };
+    }
 
     grid.appendChild(card);
   });
 
+  list.innerHTML="";
   list.appendChild(grid);
 }
 </script>
