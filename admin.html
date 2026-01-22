@@ -274,56 +274,75 @@ th{
   </div>
 </div>
 
-<!-- SCREENSHOT OVERLAY -->
 <div id="overlay" onclick="this.style.display='none'">
   <img id="overlayImg">
 </div>
 
 <script>
-const API="https://lootliste-production.up.railway.app";
-const ADMIN="me_solli";
+const API = "https://lootliste-production.up.railway.app";
+const ADMIN = "me_solli";
+
+/* ===== ELEMENTS ===== */
+const pageLogin = document.getElementById("page-login");
+const pageAdmin = document.getElementById("page-admin");
+const adminName = document.getElementById("adminName");
 
 /* ===== INIT ===== */
 async function init(){
   const acc = localStorage.getItem("lootliste_account_id");
   if(!acc) return;
 
-  const me = await fetch(API+"/me",{headers:{ "X-Account-Id":acc }}).then(r=>r.json());
-  if(me.username === ADMIN){
-    showAdmin(me.username);
-    loadItems();
-  }
+  try{
+    const me = await fetch(API+"/me",{
+      headers:{ "X-Account-Id":acc }
+    }).then(r=>r.json());
+
+    if(me.username === ADMIN){
+      showAdmin(me.username);
+      loadItems();
+    }
+  }catch{}
 }
 
 /* ===== LOGIN ===== */
 loginBtn.onclick = async ()=>{
-  loginError.textContent="";
+  loginError.textContent = "";
+
   try{
     const res = await fetch(API+"/auth/login",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({
-        username:loginUser.value,
-        password:loginPass.value
+        username: loginUser.value.trim(),
+        password: loginPass.value
       })
     });
+
     if(!res.ok){
-      loginError.textContent="Login fehlgeschlagen";
+      loginError.textContent = "Login fehlgeschlagen";
       return;
     }
+
     const data = await res.json();
-    localStorage.setItem("lootliste_account_id",data.accountId);
+    localStorage.setItem("lootliste_account_id", data.accountId);
+
+    if(data.username !== ADMIN){
+      loginError.textContent = "Kein Admin-Zugriff";
+      return;
+    }
+
     showAdmin(data.username);
     loadItems();
+
   }catch{
-    loginError.textContent="Netzwerkfehler";
+    loginError.textContent = "Netzwerkfehler";
   }
 };
 
 function showAdmin(username){
-  page-login.style.display="none";
-  page-admin.style.display="block";
-  adminName.textContent=username;
+  pageLogin.style.display = "none";
+  pageAdmin.style.display = "block";
+  adminName.textContent = username;
 }
 
 /* ===== DATA ===== */
@@ -339,19 +358,20 @@ function isDone(i){
 }
 
 function render(items){
-  tableBody.innerHTML="";
-  const fs=filterStatus.value;
-  const fse=filterSeason.value;
+  tableBody.innerHTML = "";
+
+  const fs = filterStatus.value;
+  const fse = filterSeason.value;
 
   const list = items.map(i=>({
     ...i,
     phase: isDone(i) ? "vergeben" : i.status
   }));
 
-  cAll.textContent=list.length;
-  cFree.textContent=list.filter(i=>i.phase==="verfügbar").length;
-  cRes.textContent=list.filter(i=>i.phase==="reserviert").length;
-  cDone.textContent=list.filter(i=>i.phase==="vergeben").length;
+  cAll.textContent = list.length;
+  cFree.textContent = list.filter(i=>i.phase==="verfügbar").length;
+  cRes.textContent = list.filter(i=>i.phase==="reserviert").length;
+  cDone.textContent = list.filter(i=>i.phase==="vergeben").length;
 
   list
     .filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
@@ -381,14 +401,15 @@ function render(items){
 
 function showShot(src){
   if(!src) return;
-  overlayImg.src=src;
-  overlay.style.display="flex";
+  overlayImg.src = src;
+  overlay.style.display = "flex";
 }
 
-filterStatus.onchange=loadItems;
-filterSeason.onchange=loadItems;
+filterStatus.onchange = loadItems;
+filterSeason.onchange = loadItems;
 
 init();
 </script>
+
 </body>
 </html>
