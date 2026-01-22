@@ -1568,7 +1568,6 @@ async function setUserLabel() {
 
   const loginLink = document.querySelector(".auth-login");
   const loginSep  = document.querySelector(".auth-login-sep");
-  const authLinks = document.querySelector(".auth-links"); // 👈 NEU
 
   if (!label) return;
 
@@ -1578,10 +1577,9 @@ async function setUserLabel() {
   label.textContent = label.dataset.placeholder || "Spieler lädt…";
   if (submitLink) submitLink.style.display = "none";
 
-  // Default-Zustand
+  // Default
   if (loginLink) loginLink.hidden = true;
   if (loginSep)  loginSep.hidden  = true;
-  if (authLinks) authLinks.hidden = false;
 
   const headers = {};
   if (deviceId)  headers["X-User-Id"] = deviceId;
@@ -1595,7 +1593,6 @@ async function setUserLabel() {
       // ✅ Eingeloggt
       label.textContent = data.username;
       if (submitLink) submitLink.style.display = "";
-      if (authLinks) authLinks.hidden = false;
     } else {
       // 👤 Gast
       label.textContent = "Gast";
