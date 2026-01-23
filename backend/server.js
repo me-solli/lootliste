@@ -338,13 +338,31 @@ app.put("/items/:id", (req, res) => {
     return res.status(404).json({ error: "Item not found" });
   }
 
-  if (!accountId || item.donorAccountId !== accountId) {
-    return res.status(403).json({ error: "Forbidden" });
+  // Donor darf immer updaten
+  if (item.donorAccountId === accountId) {
+    if (req.body.handoverConfirmed === true) {
+      item.handover.donorConfirmed = true;
+    }
   }
 
-  Object.assign(item, req.body);
-  saveJSON(ITEMS_FILE, items);
+  // Receiver darf seinen Erhalt bestätigen
+  if (item.claimedByAccountId === accountId) {
+    if (req.body.receivedConfirmed === true) {
+      item.handover.receiverConfirmed = true;
+    }
+  }
 
+  // 🟢 FINALER ABSCHLUSS
+  if (
+    item.status === "reserviert" &&
+    item.handover.donorConfirmed === true &&
+    item.handover.receiverConfirmed === true
+  ) {
+    item.status = "vergeben";
+    item.completedAt = new Date().toISOString();
+  }
+
+  saveJSON(ITEMS_FILE, items);
   res.json(item);
 });
 
