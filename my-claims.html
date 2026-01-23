@@ -112,7 +112,6 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 /* ===== BADGES ===== */
 .badge{padding:4px 10px;border-radius:999px;font-size:11px;background:#111;border:1px solid #333}
 .badge.green{color:var(--green)}
-.badge.yellow{color:var(--yellow)}
 .badge.blue{color:var(--blue)}
 .badge.orange{color:var(--orange)}
 
@@ -151,7 +150,11 @@ tr.needs-action{background:rgba(255,179,71,.06)}
   cursor:pointer;
 }
 .action-btn.green{border-color:rgba(143,209,143,.6);color:#cfe9cf}
-
+.action-btn.waiting{
+  opacity:.6;
+  cursor:not-allowed;
+  border-color:#666;
+}
 </style>
 </head>
 <body>
@@ -211,7 +214,6 @@ tr.needs-action{background:rgba(255,179,71,.06)}
   </div>
 
 </div>
-
 </div>
 
 <script>
@@ -226,25 +228,34 @@ const deviceId  = localStorage.getItem("lootliste_user_id");
   if(d.username) document.getElementById("playerName").textContent=d.username;
 })();
 
-if(!accountId){document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>"}
+if(!accountId){
+  document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
+}
 
 async function load(){
   const items = await fetch(API+"/items").then(r=>r.json());
   const mine = items.filter(i=>i.claimedByAccountId===accountId);
 
   let cResN=0,cWaitN=0,cDoneN=0;
-
   tableBody.innerHTML="";
 
   mine.forEach(i=>{
-    const received = localStorage.getItem("received_confirmed_"+i.id)==="yes";
-    const handover = localStorage.getItem("handover_confirmed_"+i.id)==="yes";
+    const receiverConfirmedUI =
+      localStorage.getItem("receiver_confirmed_ui_"+i.id)==="yes";
 
-    let phase="reserviert",label="Reserviert",cls="orange",needsAction=true;
+    let label="Reserviert", cls="orange", needsAction=true, actionHtml="";
 
-    if(received && !handover){phase="wartet";label="Wartet auf Spender";cls="blue";needsAction=false;cWaitN++;}
-    else if(received && handover){phase="vergeben";label="Abgeschlossen";cls="green";needsAction=false;cDoneN++;}
-    else{cResN++;}
+    if(i.status==="vergeben"){
+      label="Abgeschlossen"; cls="green"; needsAction=false; cDoneN++;
+    }
+    else if(receiverConfirmedUI){
+      label="Wartet auf Spender"; cls="blue"; needsAction=false; cWaitN++;
+      actionHtml=`<button class="action-btn waiting" disabled>⏳ Wartet auf Spender</button>`;
+    }
+    else{
+      cResN++;
+      actionHtml=`<button class="action-btn green" onclick="confirmReceive(${i.id})">✔ Item erhalten</button>`;
+    }
 
     const tr=document.createElement("tr");
     if(needsAction) tr.classList.add("needs-action");
@@ -266,11 +277,7 @@ async function load(){
           </div>
         </div>
       </td>
-      <td>
-        <div class="actions">
-          ${!received?`<button class="action-btn green" onclick="confirmReceive(${i.id})">✔ Item erhalten</button>`:""}
-        </div>
-      </td>
+      <td><div class="actions">${actionHtml}</div></td>
     `;
     tableBody.appendChild(tr);
   });
@@ -284,19 +291,15 @@ async function load(){
 async function confirmReceive(id){
   if(!confirm("Hast du das Item ingame erhalten?")) return;
 
-  try{
-    await fetch(API + "/items/" + id + "/confirm-receiver", {
-      method: "POST",
-      headers: {
-        "X-Account-Id": accountId
-      }
-    });
-  }catch(e){
-    alert("Fehler beim Bestätigen des Erhalts");
-    return;
-  }
+  await fetch(API + "/items/" + id + "/confirm-receiver", {
+    method: "POST",
+    headers: { "X-Account-Id": accountId }
+  });
 
-  location.reload();
+  // ✅ UI-Zwischenstatus setzen (nur Anzeige!)
+  localStorage.setItem("receiver_confirmed_ui_"+id,"yes");
+
+  load();
 }
 
 load();
