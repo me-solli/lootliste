@@ -13,6 +13,7 @@
   --yellow:#f0e68c;
   --blue:#6fa8ff;
   --red:#ff6b6b;
+  --orange:#ffb347;
 }
 *{box-sizing:border-box}
 
@@ -63,10 +64,7 @@ select{
   border-radius:10px;
 }
 
-.bulk-bar{
-  font-size:12px;
-  color:#aaa;
-}
+.bulk-bar{font-size:12px;color:#aaa}
 
 /* ===== TABLE ===== */
 .table-wrap{
@@ -80,12 +78,14 @@ th,td{padding:12px;border-bottom:1px solid #222;vertical-align:top}
 th{color:#aaa;font-weight:500;text-align:left}
 
 tr:hover{background:rgba(255,255,255,.02)}
+tr.needs-action{background:rgba(255,179,71,.06)}
 
 /* ===== BADGES ===== */
 .badge{padding:4px 10px;border-radius:999px;font-size:11px;background:#111;border:1px solid #333}
 .badge.green{color:var(--green)}
 .badge.yellow{color:var(--yellow)}
 .badge.blue{color:var(--blue)}
+.badge.orange{color:var(--orange)}
 
 /* ===== ITEM CELL ===== */
 .item-cell{display:flex;align-items:center;gap:12px}
@@ -111,6 +111,10 @@ tr:hover{background:rgba(255,255,255,.02)}
 }
 .detail-box.gold{border-color:rgba(245,196,81,.5);color:#f5e6b3}
 .detail-box.blue{border-color:rgba(111,168,255,.5);color:#8fd1ff}
+.detail-box.orange{border-color:rgba(255,179,71,.6);color:#ffd7a0}
+
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 8px}
+.kv span{color:#aaa}
 
 /* ===== ACTIONS ===== */
 .actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -142,7 +146,7 @@ tr:hover{background:rgba(255,255,255,.02)}
   <div class="dashboard">
     <div class="stat"><strong id="cAll">0</strong><small>Alle Items</small></div>
     <div class="stat"><strong id="cFree">0</strong><small>Verfügbar</small></div>
-    <div class="stat"><strong id="cRes">0</strong><small>Reserviert</small></div>
+    <div class="stat"><strong id="cRes">0</strong><small>Reserviert · Aktion nötig</small></div>
     <div class="stat"><strong id="cDone">0</strong><small>Abgeschlossen</small></div>
   </div>
 
@@ -160,7 +164,7 @@ tr:hover{background:rgba(255,255,255,.02)}
         <option value="ladder">ladder</option>
       </select>
     </div>
-    <div class="bulk-bar">Eigene Items · keine Adminrechte</div>
+    <div class="bulk-bar">Reservierte Items sind hervorgehoben · Aktion erforderlich</div>
   </div>
 
   <div class="table-wrap">
@@ -170,7 +174,7 @@ tr:hover{background:rgba(255,255,255,.02)}
           <th>ID</th>
           <th>Item</th>
           <th>Status</th>
-          <th>Infos</th>
+          <th>Reservierung</th>
           <th>Aktionen</th>
           <th>Season</th>
         </tr>
@@ -213,40 +217,54 @@ function render(list, accounts){
   const fs=filterStatus.value;
   const fse=filterSeason.value;
 
-  list.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse)).forEach(i=>{
-    const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
-    const tr=document.createElement("tr");
+  list
+    .filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
+    .sort((a,b)=>a.phase==="reserviert"?-1:1)
+    .forEach(i=>{
+      const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
+      const needsAction = i.phase==="reserviert" && !isDone(i);
 
-    tr.innerHTML=`
-      <td>${i.id}</td>
-      <td>
-        <div class="item-cell">
-          <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
-            <img src="img/icons/${i.type||"sonstiges"}.png">
+      const tr=document.createElement("tr");
+      if(needsAction) tr.classList.add("needs-action");
+
+      tr.innerHTML=`
+        <td>${i.id}</td>
+        <td>
+          <div class="item-cell">
+            <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
+              <img src="img/icons/${i.type||"sonstiges"}.png">
+            </div>
+            <div class="item-meta">
+              <strong>${i.name}</strong>
+              <small>${i.quality||""} · ${i.type||""}</small>
+            </div>
           </div>
-          <div class="item-meta">
-            <strong>${i.name}</strong>
-            <small>${i.quality||""} · ${i.type||""}</small>
+        </td>
+        <td>
+          <span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"orange"}">${i.phase}</span>
+          ${needsAction?"<div style='margin-top:4px;font-size:11px;color:var(--orange)'>⚠ Aktion nötig</div>":""}
+        </td>
+        <td>
+          ${i.phase==="reserviert"&&claimer?`
+            <div class="detail-box gold">
+              <div class="kv">
+                <span>Spieler</span><div>${claimer.username}</div>
+                <span>BattleTag</span><div>${i.contact||"–"}</div>
+              </div>
+            </div>
+          `:""}
+        </td>
+        <td>
+          <div class="actions">
+            ${needsAction?`<button class="action-btn green" onclick="confirmDone(${i.id})">✔ Übergabe</button>`:""}
+            ${i.phase==="verfügbar"?`<button class="action-btn red" onclick="removeItem(${i.id})">🗑 Entfernen</button>`:""}
           </div>
-        </div>
-      </td>
-      <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
-      <td>
-        <div class="detail-stack">
-          ${i.note_private?`<div class="detail-box"><strong>📝 Notiz</strong><br>${i.note_private}</div>`:""}
-          ${i.phase==="reserviert"&&claimer?`<div class="detail-box gold"><strong>Reserviert von:</strong> ${claimer.username}<br>${i.contact||""}</div>`:""}
-        </div>
-      </td>
-      <td>
-        <div class="actions">
-          ${i.phase==="reserviert"&&!isDone(i)?`<button class="action-btn green" onclick="confirmDone(${i.id})">✔ Übergabe</button>`:""}
-          ${i.phase==="verfügbar"?`<button class="action-btn red" onclick="removeItem(${i.id})">🗑 Entfernen</button>`:""}
-        </div>
-      </td>
-      <td>${i.season||"–"}</td>
-    `;
-    tableBody.appendChild(tr);
-  });
+        </td>
+        <td>${i.season||"–"}</td>
+      `;
+
+      tableBody.appendChild(tr);
+    });
 }
 
 function confirmDone(id){
