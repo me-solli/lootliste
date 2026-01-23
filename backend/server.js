@@ -81,7 +81,8 @@ function createDevice() {
   const id = "usr_" + crypto.randomBytes(6).toString("hex");
   const device = {
     id,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    lastRegisterAt: 0 // ⬅️ NEU: Registrierungs-Cooldown
   };
   users.push(device);
   saveJSON(USERS_FILE, users);
@@ -101,6 +102,12 @@ app.use((req, res, next) => {
 
   if (!device) {
     device = createDevice();
+  }
+
+  // Fallback für alte Devices
+  if (!device.lastRegisterAt) {
+    device.lastRegisterAt = 0;
+    saveJSON(USERS_FILE, users);
   }
 
   req.device = device;
@@ -143,13 +150,22 @@ function checkCooldown(account, seconds = 60) {
 }
 
 // ===============================
-// AUTH – REGISTER
+// AUTH – REGISTER (1 PRO STUNDE / DEVICE)
 // ===============================
 app.post("/auth/register", async (req, res) => {
   const { username, password } = req.body;
+  const device = req.device;
+  const now = Date.now();
 
   if (!username || !password) {
     return res.status(400).json({ error: "Missing fields" });
+  }
+
+  // 🧱 DEVICE-REGISTRIERUNGS-BREMSE (1 / Stunde)
+  if (device.lastRegisterAt && now - device.lastRegisterAt < 60 * 60 * 1000) {
+    return res.status(429).json({
+      error: "Bitte warte etwas, bevor du einen weiteren Account erstellst."
+    });
   }
 
   if (findAccountByUsername(username)) {
@@ -169,6 +185,10 @@ app.post("/auth/register", async (req, res) => {
 
   accounts.push(account);
   saveAccounts();
+
+  // ⬅️ Registrierung für dieses Device merken
+  device.lastRegisterAt = now;
+  saveJSON(USERS_FILE, users);
 
   res.json({
     accountId: account.id,
@@ -261,7 +281,6 @@ app.post("/items", (req, res) => {
 
   const account = accountId ? findAccountById(accountId) : null;
 
-  // 🧱 MINIMALER TROLL-BLOCKER
   if (account && !checkCooldown(account, 60)) {
     return res.status(429).json({
       error: "Bitte warte kurz, bevor du ein weiteres Item einreichst."
@@ -316,7 +335,6 @@ app.post("/items/:id/claim", (req, res) => {
     return res.status(401).json({ error: "Account not found" });
   }
 
-  // 🧱 MINIMALER TROLL-BLOCKER (60 Sekunden)
   if (!checkCooldown(account, 60)) {
     return res.status(429).json({
       error: "Bitte warte kurz, bevor du ein weiteres Item claimst."
