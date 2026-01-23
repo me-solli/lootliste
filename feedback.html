@@ -5,104 +5,198 @@
   <title>Feedback / Bug melden – Lootliste</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- falls du eine globale CSS hast -->
+  <!-- falls du globale Styles nutzt -->
   <link rel="stylesheet" href="style.css" />
 
   <style>
-    .feedback-container {
-      max-width: 720px;
-      margin: 40px auto;
-      padding: 20px;
+    :root{
+      --gold:#f5c451;
+      --bg:#0b0b0b;
+      --panel:#121212;
+      --border:#2a2a2a;
+      --soft:#1a1a1a;
     }
 
-    h1 {
-      margin-bottom: 10px;
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+      color:#eaeaea;
     }
 
-    .hint {
-      opacity: 0.8;
-      margin-bottom: 20px;
+    .feedback-wrap{
+      max-width:720px;
+      margin:60px auto;
+      padding:0 18px;
     }
 
-    textarea {
-      width: 100%;
-      min-height: 140px;
-      padding: 10px;
-      resize: vertical;
-      margin-bottom: 15px;
+    .feedback-panel{
+      background:linear-gradient(
+        to bottom,
+        rgba(255,255,255,.04),
+        rgba(255,255,255,.015)
+      );
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:22px 22px 24px;
     }
 
-    input[type="file"] {
-      margin-bottom: 20px;
+    h1{
+      margin:0 0 6px;
+      font-size:20px;
+      font-weight:600;
     }
 
-    button {
-      padding: 10px 18px;
-      cursor: pointer;
+    .feedback-hint{
+      font-size:13px;
+      color:#b5b5b5;
+      margin-bottom:18px;
+      line-height:1.4;
     }
 
-    .success {
-      margin-top: 20px;
-      padding: 12px;
-      background: #1f3b2c;
-      color: #b7ffce;
-      display: none;
+    textarea{
+      width:100%;
+      min-height:140px;
+      padding:12px 14px;
+      resize:vertical;
+
+      background:#0f0f0f;
+      color:#fff;
+      border:1px solid #333;
+      border-radius:12px;
+      font-size:14px;
     }
 
-    .error {
-      margin-top: 20px;
-      padding: 12px;
-      background: #3b1f1f;
-      color: #ffb7b7;
-      display: none;
+    textarea:focus{
+      outline:none;
+      border-color:var(--gold);
+      box-shadow:0 0 0 1px rgba(245,196,81,.35);
+    }
+
+    .file-row{
+      margin:14px 0 18px;
+      font-size:13px;
+      color:#aaa;
+    }
+
+    input[type="file"]{
+      margin-top:6px;
+      color:#ccc;
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    button{
+      padding:8px 16px;
+      font-size:13px;
+      border-radius:999px;
+      cursor:pointer;
+
+      background:rgba(245,196,81,.08);
+      color:var(--gold);
+      border:1px solid rgba(245,196,81,.35);
+
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .15s ease;
+    }
+
+    button:hover{
+      background:rgba(245,196,81,.15);
+      border-color:rgba(245,196,81,.65);
+      box-shadow:0 0 10px rgba(245,196,81,.35);
+      transform:translateY(-1px);
+    }
+
+    .success,
+    .error{
+      margin-top:16px;
+      padding:12px 14px;
+      border-radius:12px;
+      font-size:13px;
+      display:none;
+    }
+
+    .success{
+      background:rgba(76,255,76,.12);
+      border:1px solid rgba(76,255,76,.35);
+      color:#b7ffce;
+    }
+
+    .error{
+      background:rgba(255,80,80,.12);
+      border:1px solid rgba(255,80,80,.35);
+      color:#ffb7b7;
+    }
+
+    .back-link{
+      display:inline-block;
+      margin-top:14px;
+      font-size:12px;
+      color:#aaa;
+      text-decoration:none;
+      opacity:.8;
+    }
+
+    .back-link:hover{
+      text-decoration:underline;
+      opacity:1;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- optional: dein bestehender Header -->
-  <!-- <header>...</header> -->
+  <main class="feedback-wrap">
+    <div class="feedback-panel">
 
-  <main class="feedback-container">
-    <h1>Feedback / Bug melden</h1>
+      <h1>Feedback / Bug melden</h1>
 
-    <div class="hint">
-      Hast du einen Bug gefunden oder Feedback zur Lootliste?<br>
-      Kurz beschreiben – Screenshot optional.
-    </div>
+      <div class="feedback-hint">
+        Kurze Beschreibung reicht völlig.<br>
+        Screenshot optional – hilft beim Debuggen.
+      </div>
 
-    <form id="feedbackForm">
-      <textarea
-        name="description"
-        placeholder="Was ist passiert? Wo genau?"
-        required
-        minlength="10"
-      ></textarea>
+      <form id="feedbackForm">
+        <textarea
+          name="description"
+          placeholder="Was ist passiert? Auf welcher Seite?"
+          required
+          minlength="10"
+        ></textarea>
 
-      <input
-        type="file"
-        name="screenshot"
-        accept="image/*"
-      />
+        <div class="file-row">
+          Screenshot (optional):
+          <input type="file" name="screenshot" accept="image/*">
+        </div>
 
-      <!-- versteckte Infos -->
-      <input type="hidden" name="page" id="pageField" />
+        <input type="hidden" name="page" id="pageField" />
 
-      <button type="submit">Senden</button>
-    </form>
+        <div class="actions">
+          <button type="submit">Senden</button>
+        </div>
+      </form>
 
-    <div class="success" id="successBox">
-      ✅ Danke! Dein Feedback wurde gesendet.
-    </div>
+      <div class="success" id="successBox">
+        ✅ Danke! Dein Feedback wurde gespeichert.
+      </div>
 
-    <div class="error" id="errorBox">
-      ❌ Fehler beim Senden. Bitte später erneut versuchen.
+      <div class="error" id="errorBox">
+        ❌ Fehler beim Senden. Bitte später erneut versuchen.
+      </div>
+
+      <a href="index.html" class="back-link">
+        ← zurück zur Lootliste
+      </a>
+
     </div>
   </main>
-
-  <!-- optional: dein bestehender Footer -->
-  <!-- <footer>...</footer> -->
 
   <script>
     const form = document.getElementById("feedbackForm");
@@ -129,7 +223,7 @@
 
         form.reset();
         successBox.style.display = "block";
-      } catch (err) {
+      } catch {
         errorBox.style.display = "block";
       }
     });
