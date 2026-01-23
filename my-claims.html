@@ -132,6 +132,17 @@ body{
 .claim-status.wartet{color:var(--blue)}
 .claim-status.vergeben{color:var(--green)}
 
+/* CLAIM INFO (NEU) */
+.claim-info{
+  margin-top:8px;
+  padding:8px 10px;
+  font-size:12px;
+  border-radius:10px;
+  background:#0f0f0f;
+  border:1px solid rgba(245,196,81,.35);
+  color:#f5e6b3;
+}
+
 /* CONFIRM */
 .confirm-box{
   margin-top:12px;
@@ -266,12 +277,20 @@ async function loadMyClaims(){
 
     card.innerHTML=`
       <div class="claim-name">${item.name}</div>
+
       <div class="claim-meta">
         Reserviert am:
         ${item.claimedAt
           ? new Date(item.claimedAt).toLocaleDateString("de-DE")
           : "–"}
       </div>
+
+      <!-- NEU: CLAIM INFOS -->
+      <div class="claim-info">
+        <strong>Spender:</strong> ${item.donor || "–"}<br>
+        <strong>BattleTag:</strong> ${item.contact || "–"}
+      </div>
+
       <div class="claim-status ${statusClass}">
         Status: ${statusText}
       </div>
