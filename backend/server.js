@@ -300,7 +300,7 @@ app.post("/items", (req, res) => {
 });
 
 // ===============================
-// CLAIM ITEM
+// CLAIM ITEM (MIT 60s COOLDOWN)
 // ===============================
 app.post("/items/:id/claim", (req, res) => {
   const accountId = req.headers["x-account-id"];
@@ -309,6 +309,18 @@ app.post("/items/:id/claim", (req, res) => {
 
   if (!accountId) {
     return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const account = findAccountById(accountId);
+  if (!account) {
+    return res.status(401).json({ error: "Account not found" });
+  }
+
+  // 🧱 MINIMALER TROLL-BLOCKER (60 Sekunden)
+  if (!checkCooldown(account, 60)) {
+    return res.status(429).json({
+      error: "Bitte warte kurz, bevor du ein weiteres Item claimst."
+    });
   }
 
   const item = items.find(i => i.id === itemId);
