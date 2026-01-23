@@ -474,18 +474,16 @@ filterSeason.onchange=loadItems;
 /* ===== USERS ===== */
 async function loadUsers(){
   const users = await fetch(API+"/admin/accounts").then(r=>r.json());
-  const stats = await fetch(API+"/admin/stats").then(r=>r.json());
 
   userTable.innerHTML="";
   users.forEach(u=>{
-    const s = stats.find(x=>x.accountId===u.id)||{};
     const tr=document.createElement("tr");
     tr.innerHTML=`
       <td><strong>${u.username}</strong></td>
       <td>${new Date(u.createdAt).toLocaleString()}</td>
       <td>${new Date(u.lastLoginAt).toLocaleString()}</td>
-      <td>${s.itemsDonated||0}</td>
-      <td>${s.itemsReceived||0}</td>
+      <td>–</td>
+      <td>–</td>
     `;
     userTable.appendChild(tr);
   });
