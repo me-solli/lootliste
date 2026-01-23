@@ -10,9 +10,13 @@
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
-  --gold:#f5c451;
-  --gold-soft:#e6d7a3;
-  --green:#6fdc8c;
+
+  --unique:#c8a45d;
+  --set:#6fdc8c;
+  --rare:#e6d07a;
+  --magic:#6fa8dc;
+  --normal:#eaeaea;
+
   --muted:#9a9a9a;
 }
 
@@ -47,50 +51,49 @@ body{
   right:24px;
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:10px 14px;
+  gap:12px;
+  padding:10px 16px;
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:18px;
   background:rgba(0,0,0,.55);
   font-size:13px;
 }
-.auth-box img{width:28px;height:28px;border-radius:50%}
 .auth-link{
-  color:var(--gold);
+  color:#f5c451;
   text-decoration:none;
   font-size:12px;
-  opacity:.85;
 }
-.auth-link:hover{opacity:1;text-decoration:underline}
+.auth-link:hover{text-decoration:underline}
 
 /* CONTENT */
 .container{padding:36px 28px 90px}
 
 /* INFO */
 .info-box{
-  padding:22px 24px;
-  border-radius:20px;
+  padding:22px 26px;
+  border-radius:22px;
   border:1px solid rgba(245,196,81,.25);
   background:linear-gradient(to bottom,rgba(245,196,81,.08),rgba(245,196,81,.02));
-  color:var(--gold-soft);
-  margin-bottom:30px;
+  color:#e6d7a3;
+  margin-bottom:28px;
 }
 
-/* STATS */
+/* STATS – ruhig */
 .stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
-  margin-bottom:32px;
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:34px;
 }
 .stat{
-  background:var(--panel);
+  padding:18px 22px;
+  border-radius:18px;
   border:1px solid var(--border);
-  border-radius:16px;
-  padding:16px;
+  background:var(--panel);
+  min-width:220px;
 }
-.stat strong{font-size:22px}
-.stat small{display:block;margin-top:4px;color:var(--muted)}
+.stat strong{font-size:26px}
+.stat small{display:block;color:var(--muted);margin-top:4px}
 
 /* CONTROLS */
 .controls{
@@ -103,32 +106,19 @@ body{
 .controls select{
   background:#0f0f0f;
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px 12px;
+  border-radius:14px;
+  padding:10px 14px;
   color:#fff;
 }
 
-/* EMPTY */
-.empty{
-  margin-top:40px;
-  padding:34px;
-  border-radius:20px;
-  border:1px dashed rgba(245,196,81,.35);
-  text-align:center;
-  color:#e6e0c6;
-}
-
-/* MONTH GROUP */
-.month{
-  margin-bottom:44px;
-}
+/* GRID */
+.month{margin-bottom:46px}
 .month h2{
   margin:0 0 18px;
   font-size:22px;
-  color:var(--gold);
+  color:#f5c451;
 }
 
-/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
@@ -143,8 +133,8 @@ body{
   border-radius:22px;
   background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
   border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 10px 28px rgba(0,0,0,.4);
 }
+
 .card-icon{
   width:56px;height:56px;
   border-radius:14px;
@@ -153,24 +143,49 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  cursor:pointer;
 }
 .card-icon img{width:34px}
+
 .card-body{flex:1}
-.card-name{font-size:20px;font-weight:600}
-.card-meta{margin-top:6px;color:#c9c9c9}
+.card-name{
+  font-size:20px;
+  font-weight:600;
+}
+.card-name.unique{color:var(--unique)}
+.card-name.set{color:var(--set)}
+.card-name.rare{color:var(--rare)}
+.card-name.magic{color:var(--magic)}
+.card-name.normal{color:var(--normal)}
+
+.card-meta{
+  margin-top:6px;
+  color:#c9c9c9;
+  font-size:14px;
+}
+
 .card-status{
   margin-top:12px;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 12px;
-  border-radius:999px;
   font-size:13px;
-  color:var(--green);
-  background:rgba(111,220,140,.12);
-  border:1px solid rgba(111,220,140,.35);
+  color:#6fdc8c;
 }
-.card-status::before{content:"✔"}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.overlay img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:12px;
+  box-shadow:0 0 40px rgba(0,0,0,.8);
+}
 </style>
 </head>
 
@@ -180,16 +195,13 @@ body{
 <header class="hero">
   <div class="hero-inner">
     <div class="auth-box">
-      <img src="img/avatars/default.png">
-      <span id="userLabel">–</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
       <a href="my-claims.html" class="auth-link">Meine Claims</a>
     </div>
     <h1>Archiv</h1>
     <p>
-      Dieses Archiv zeigt erfolgreich abgeschlossene Vergaben aus der Community.<br>
-      <strong>Ein stiller Überblick darüber, was bereits weitergegeben wurde.</strong>
+      Ein ruhiger Überblick über erfolgreich abgeschlossene Vergaben aus der Community.
     </p>
   </div>
 </header>
@@ -204,15 +216,11 @@ body{
   <div class="stats">
     <div class="stat">
       <strong id="statCount">0</strong>
-      <small>Abgeschlossene Vergaben</small>
+      <small>vergebene Items</small>
     </div>
     <div class="stat">
-      <strong id="statFirst">–</strong>
-      <small>Erste Vergabe</small>
-    </div>
-    <div class="stat">
-      <strong id="statLast">–</strong>
-      <small>Letzte Vergabe</small>
+      <strong id="statSince">–</strong>
+      <small>Archiv aktiv seit</small>
     </div>
   </div>
 
@@ -227,7 +235,6 @@ body{
       <option value="amulett">Amulette</option>
       <option value="charm">Charms</option>
       <option value="rune">Runen</option>
-      <option value="sonstiges">Sonstiges</option>
     </select>
     <select id="sort">
       <option value="new">Neueste zuerst</option>
@@ -240,9 +247,15 @@ body{
 </div>
 </div>
 
+<div class="overlay" id="overlay" onclick="this.style.display='none'">
+  <img id="overlayImg">
+</div>
+
 <script>
 const API="https://lootliste-production.up.railway.app";
 const content=document.getElementById("content");
+const overlay=document.getElementById("overlay");
+const overlayImg=document.getElementById("overlayImg");
 
 const search=document.getElementById("search");
 const filterType=document.getElementById("filterType");
@@ -264,45 +277,42 @@ let all=[];
 
 function renderStats(){
   if(!all.length)return;
-  const dates=all.map(i=>new Date(i.completedAt||i.claimedAt));
   document.getElementById("statCount").textContent=all.length;
-  document.getElementById("statFirst").textContent=
-    new Date(Math.min(...dates)).toLocaleDateString("de-DE");
-  document.getElementById("statLast").textContent=
-    new Date(Math.max(...dates)).toLocaleDateString("de-DE");
+  const first=Math.min(...all.map(i=>new Date(i.completedAt||i.claimedAt)));
+  document.getElementById("statSince").textContent=
+    new Date(first).toLocaleDateString("de-DE");
+}
+
+function showShot(src){
+  if(!src)return;
+  overlayImg.src=src;
+  overlay.style.display="flex";
 }
 
 function render(){
   let list=[...all];
 
   if(search.value){
-    list=list.filter(i =>
-      i.name.toLowerCase().includes(search.value.toLowerCase())
-    );
+    list=list.filter(i=>i.name.toLowerCase().includes(search.value.toLowerCase()));
   }
   if(filterType.value){
-    list=list.filter(i => i.type === filterType.value);
+    list=list.filter(i=>i.type===filterType.value);
   }
 
   list.sort((a,b)=>{
     const da=new Date(a.completedAt||a.claimedAt);
     const db=new Date(b.completedAt||b.claimedAt);
-    return sort.value==="new" ? db-da : da-db;
+    return sort.value==="new"?db-da:da-db;
   });
 
   content.innerHTML="";
-  if(!list.length){
-    content.innerHTML=
-      "<div class='empty'>Keine passenden Einträge gefunden.</div>";
-    return;
-  }
+  if(!list.length)return;
 
   const groups={};
   list.forEach(i=>{
     const d=new Date(i.completedAt||i.claimedAt);
     const key=d.toLocaleDateString("de-DE",{month:"long",year:"numeric"});
-    groups[key]=groups[key]||[];
-    groups[key].push(i);
+    (groups[key]=groups[key]||[]).push(i);
   });
 
   Object.entries(groups).forEach(([month,items])=>{
@@ -314,16 +324,17 @@ function render(){
     grid.className="grid";
 
     items.forEach(i=>{
+      const q=(i.quality||"normal").toLowerCase();
       const card=document.createElement("div");
       card.className="card";
       card.innerHTML=`
-        <div class="card-icon">
+        <div class="card-icon" onclick="showShot('${i.screenshot||""}')">
           <img src="img/icons/${i.type||"sonstiges"}.png">
         </div>
         <div class="card-body">
-          <div class="card-name">${i.name}</div>
+          <div class="card-name ${q}">${i.name}</div>
           <div class="card-meta">
-            ${i.type||"–"} ·
+            ${i.quality||"–"} · ${i.type||"–"} ·
             ${new Date(i.completedAt||i.claimedAt).toLocaleDateString("de-DE")}
           </div>
           <div class="card-status">Übergabe abgeschlossen</div>
