@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Archiv – Abgeschlossene Übergaben</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --gold:#f5c451;
-  --gold-soft:#e7d08a;
-  --green:#6fdc8c;
   --bg:#0b0b0b;
   --panel:#121212;
   --border:#2a2a2a;
+  --gold:#f5c451;
+  --gold-soft:#e6d7a3;
+  --green:#6fdc8c;
+  --muted:#9a9a9a;
 }
 
 *{box-sizing:border-box}
@@ -20,8 +21,7 @@
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(ellipse at top,#1a1a1a 0%,#090909 65%);
+  background:radial-gradient(ellipse at top,#1a1a1a 0%,#090909 65%);
   color:#eaeaea;
 }
 
@@ -32,27 +32,13 @@ body{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 28px 28px;
   overflow:hidden;
-  min-height:220px;
-  position:relative;
 }
-
 .hero-inner{
-  padding:40px 36px 34px;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.82));
+  padding:42px 36px 34px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.35),rgba(0,0,0,.85));
 }
-
-.hero h1{
-  margin:0;
-  font-size:36px;
-  font-weight:700;
-  letter-spacing:.3px;
-}
-.hero p{
-  margin:10px 0 0;
-  opacity:.9;
-  max-width:720px;
-}
+.hero h1{margin:0;font-size:36px}
+.hero p{margin:10px 0 0;max-width:760px;opacity:.9}
 
 /* AUTH */
 .auth-box{
@@ -60,109 +46,106 @@ body{
   top:22px;
   right:24px;
   display:flex;
-  gap:10px;
   align-items:center;
+  gap:10px;
   padding:10px 14px;
   border:1px solid var(--border);
   border-radius:16px;
   background:rgba(0,0,0,.55);
   font-size:13px;
 }
-.auth-box img{
-  width:28px;height:28px;border-radius:50%;
-}
+.auth-box img{width:28px;height:28px;border-radius:50%}
 .auth-link{
-  margin-left:6px;
-  font-size:12px;
   color:var(--gold);
   text-decoration:none;
+  font-size:12px;
   opacity:.85;
 }
 .auth-link:hover{opacity:1;text-decoration:underline}
 
 /* CONTENT */
-.container{padding:36px 28px 70px}
+.container{padding:36px 28px 80px}
 
 /* INFO */
 .info-box{
-  margin-bottom:30px;
   padding:22px 24px;
+  border-radius:20px;
   border:1px solid rgba(245,196,81,.25);
-  border-radius:20px;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(245,196,81,.08),
-      rgba(245,196,81,.02)
-    );
-  font-size:15px;
+  background:linear-gradient(to bottom,rgba(245,196,81,.08),rgba(245,196,81,.02));
   color:var(--gold-soft);
+  margin-bottom:26px;
 }
 
-/* EMPTY */
-.empty-box{
-  margin-top:36px;
-  padding:34px 28px;
-  border:1px dashed rgba(245,196,81,.35);
-  border-radius:20px;
-  text-align:center;
-  font-size:15px;
-  color:#e6e0c6;
-  background:rgba(255,255,255,.02);
-}
-
-/* GRID */
-.archive-grid{
+/* STATS */
+.stats{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
-  gap:26px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  margin-bottom:26px;
 }
-
-/* CARD */
-.archive-card{
-  position:relative;
-  padding:22px 22px 24px;
-  border-radius:22px;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.06),
-      rgba(255,255,255,.015)
-    );
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.03),
-    0 12px 30px rgba(0,0,0,.35);
+.stat{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
 }
+.stat strong{font-size:22px}
+.stat small{display:block;margin-top:4px;color:var(--muted)}
 
-.archive-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:22px;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(111,220,140,.18),
-      rgba(111,220,140,0)
-    );
-  opacity:.35;
-  pointer-events:none;
+/* CONTROLS */
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:30px;
 }
-
-.archive-name{
-  font-size:20px;
-  font-weight:600;
+.controls input,
+.controls select{
+  background:#0f0f0f;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 12px;
   color:#fff;
 }
 
-.archive-meta{
-  margin-top:8px;
-  font-size:14px;
-  color:#c9c9c9;
+/* EMPTY */
+.empty{
+  margin-top:40px;
+  padding:34px;
+  border-radius:20px;
+  border:1px dashed rgba(245,196,81,.35);
+  text-align:center;
+  color:#e6e0c6;
 }
 
-.archive-status{
+/* MONTH GROUP */
+.month{
+  margin-bottom:36px;
+}
+.month h2{
+  margin:0 0 18px;
+  font-size:22px;
+  color:var(--gold);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+  gap:22px;
+}
+
+/* CARD */
+.card{
+  padding:22px;
+  border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 10px 28px rgba(0,0,0,.4);
+}
+.card-name{font-size:20px;font-weight:600}
+.card-meta{margin-top:8px;color:#c9c9c9}
+.card-status{
   margin-top:14px;
   display:inline-flex;
   align-items:center;
@@ -174,10 +157,7 @@ body{
   background:rgba(111,220,140,.12);
   border:1px solid rgba(111,220,140,.35);
 }
-.archive-status::before{
-  content:"✔";
-  font-size:14px;
-}
+.card-status::before{content:"✔"}
 </style>
 </head>
 
@@ -186,115 +166,137 @@ body{
 
 <header class="hero">
   <div class="hero-inner">
-
     <div class="auth-box">
-      <img src="img/avatars/default.png" alt="Avatar">
-      <span id="playerIdLabel">–</span>
+      <img src="img/avatars/default.png">
+      <span id="userLabel">–</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
       <a href="my-claims.html" class="auth-link">Meine Claims</a>
     </div>
-
     <h1>Archiv</h1>
-    <p>
-      Abgeschlossene Übergaben aus der Community.<br>
-      <strong>Diese Items haben ihren Weg gefunden.</strong>
-    </p>
-
+    <p>Dieses Archiv zeigt erfolgreich abgeschlossene Übergaben.<br>
+    <strong>Ein stiller Beweis dafür, dass das System funktioniert.</strong></p>
   </div>
 </header>
 
 <div class="container">
 
   <div class="info-box">
-    Dieses Archiv zeigt erfolgreich abgeschlossene Vergaben.
-    Es steht für Vertrauen, Fairness und funktionierende Übergaben.
-    <strong>Kontakt- oder BattleTag-Daten sind hier bewusst ausgeblendet.</strong>
+    Das Archiv ist kein Log und kein Pranger.<br>
+    Es zeigt nur, was erfolgreich abgeschlossen wurde – ohne Kontakt- oder Nutzerdaten.
   </div>
 
-  <div id="list"></div>
-</div>
+  <div class="stats">
+    <div class="stat"><strong id="statCount">0</strong><small>Abgeschlossene Items</small></div>
+    <div class="stat"><strong id="statFirst">–</strong><small>Erste Übergabe</small></div>
+    <div class="stat"><strong id="statLast">–</strong><small>Letzte Übergabe</small></div>
+  </div>
 
+  <div class="controls">
+    <input id="search" placeholder="Item suchen…">
+    <select id="filterType">
+      <option value="">Alle Typen</option>
+      <option value="waffe">Waffen</option>
+      <option value="ruestung">Rüstungen</option>
+      <option value="schild">Schilde</option>
+      <option value="ring">Ringe</option>
+      <option value="amulett">Amulette</option>
+      <option value="charm">Charms</option>
+      <option value="rune">Runen</option>
+    </select>
+    <select id="sort">
+      <option value="new">Neueste zuerst</option>
+      <option value="old">Älteste zuerst</option>
+    </select>
+  </div>
+
+  <div id="content"></div>
+
+</div>
 </div>
 
 <script>
-const API_BASE  = "https://lootliste-production.up.railway.app";
-const API_ITEMS = API_BASE + "/items";
+const API="https://lootliste-production.up.railway.app";
+const content=document.getElementById("content");
 
-const deviceId  = localStorage.getItem("lootliste_user_id");
-const accountId = localStorage.getItem("lootliste_account_id");
+const search=document.getElementById("search");
+const filterType=document.getElementById("filterType");
+const sort=document.getElementById("sort");
 
-const label = document.getElementById("playerIdLabel");
-const list  = document.getElementById("list");
+search.oninput=render;
+filterType.onchange=render;
+sort.onchange=render;
 
-/* USER LABEL */
+let all=[];
+
 (async()=>{
-  if(!label || !accountId) return;
-  try{
-    const r = await fetch(API_BASE + "/me",{
-      headers:{
-        "X-User-Id":deviceId||"",
-        "X-Account-Id":accountId
-      }
-    });
-    const d = await r.json();
-    if(d.username) label.textContent=d.username;
-  }catch{}
+  const r=await fetch(API+"/items");
+  const items=await r.json();
+  all=items.filter(i=>i.status==="vergeben");
+  renderStats();
+  render();
 })();
 
-/* LOAD ARCHIVE */
-loadArchive();
+function renderStats(){
+  if(!all.length)return;
+  const dates=all.map(i=>new Date(i.completedAt||i.claimedAt));
+  document.getElementById("statCount").textContent=all.length;
+  document.getElementById("statFirst").textContent=new Date(Math.min(...dates)).toLocaleDateString("de-DE");
+  document.getElementById("statLast").textContent=new Date(Math.max(...dates)).toLocaleDateString("de-DE");
+}
 
-async function loadArchive(){
-  const res = await fetch(API_ITEMS,{
-    headers:{
-      "X-User-Id":deviceId||"",
-      "X-Account-Id":accountId||""
-    }
+function render(){
+  let list=[...all];
+
+  if(search.value){
+    list=list.filter(i=>i.name.toLowerCase().includes(search.value.toLowerCase()));
+  }
+  if(filterType.value){
+    list=list.filter(i=>i.type===filterType.value);
+  }
+
+  list.sort((a,b)=>{
+    const da=new Date(a.completedAt||a.claimedAt);
+    const db=new Date(b.completedAt||b.claimedAt);
+    return sort.value==="new" ? db-da : da-db;
   });
-  const items = await res.json();
 
-  const done = items.filter(i =>
-    i.status === "vergeben"
-  );
-
-  if(!done.length){
-    list.innerHTML=`
-      <div class="empty-box">
-        Noch keine abgeschlossenen Übergaben.<br>
-        <em>Das Archiv füllt sich mit der Zeit.</em>
-      </div>`;
+  if(!list.length){
+    content.innerHTML=`<div class="empty">Keine passenden Einträge gefunden.</div>`;
     return;
   }
 
-  const grid=document.createElement("div");
-  grid.className="archive-grid";
-
-  done.forEach(item=>{
-    const date = item.completedAt || item.claimedAt;
-
-    const card=document.createElement("div");
-    card.className="archive-card";
-
-    card.innerHTML=`
-      <div class="archive-name">${item.name}</div>
-      <div class="archive-meta">
-        Kategorie: ${item.category || item.type || "–"} ·
-        Abgeschlossen am:
-        ${date ? new Date(date).toLocaleDateString("de-DE") : "–"}
-      </div>
-      <div class="archive-status">
-        Übergabe abgeschlossen
-      </div>
-    `;
-
-    grid.appendChild(card);
+  const groups={};
+  list.forEach(i=>{
+    const d=new Date(i.completedAt||i.claimedAt);
+    const key=d.toLocaleDateString("de-DE",{month:"long",year:"numeric"});
+    groups[key]=groups[key]||[];
+    groups[key].push(i);
   });
 
-  list.innerHTML="";
-  list.appendChild(grid);
+  content.innerHTML="";
+  Object.entries(groups).forEach(([month,items])=>{
+    const sec=document.createElement("div");
+    sec.className="month";
+    sec.innerHTML=`<h2>${month}</h2>`;
+    const grid=document.createElement("div");
+    grid.className="grid";
+
+    items.forEach(i=>{
+      const card=document.createElement("div");
+      card.className="card";
+      card.innerHTML=`
+        <div class="card-name">${i.name}</div>
+        <div class="card-meta">${i.type||"–"} · ${new Date(i.completedAt||i.claimedAt).toLocaleDateString("de-DE")}</div>
+        <div class="card-status">Übergabe abgeschlossen</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    sec.appendChild(grid);
+    content.appendChild(sec);
+  });
 }
 </script>
-
 </body>
 </html>
