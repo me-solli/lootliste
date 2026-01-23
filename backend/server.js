@@ -250,7 +250,7 @@ app.get("/items", (req, res) => {
 // POST ITEM (ACCOUNT-BASIERT)
 // ===============================
 app.post("/items", (req, res) => {
-  const { name, quality, type, screenshot, season } = req.body;
+  const { name, quality, type, screenshot, season, note_private } = req.body;
   const accountId = req.headers["x-account-id"];
 
   if (!name || !quality || !type || !screenshot || !season) {
@@ -271,6 +271,9 @@ app.post("/items", (req, res) => {
 
     donorAccountId: account ? account.id : null,
     donor: account ? account.username : null,
+
+    // ✅ PRIVATE NOTE (neu)
+    note_private: note_private || "",
 
     claimedByAccountId: null,
     contact: null,
