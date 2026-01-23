@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Meine Claims – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 :root{
   --gold:#f5c451;
-  --blue:#8fd1ff;
-  --green:#8fd18f;
   --border:#2a2a2a;
+  --green:#4cff4c;
+  --yellow:#f0e68c;
+  --blue:#6fa8ff;
+  --orange:#ffb347;
 }
-
 *{box-sizing:border-box}
 
 body{
@@ -22,24 +23,23 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1500px;margin:0 auto}
+.wrapper{max-width:1600px;margin:0 auto}
 
-/* HERO */
+/* ===== HERO ===== */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:200px;
-  position:relative;
+  min-height:180px;
 }
 .hero-inner{
-  padding:36px 36px 32px;
-  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
+  padding:32px 36px 28px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.7));
 }
-.hero h1{margin:0;font-size:34px;font-weight:700}
-.hero p{margin:8px 0 0;opacity:.85}
+.hero h1{margin:0;font-size:32px;font-weight:700}
+.hero p{margin:8px 0 0;opacity:.8}
 
-/* AUTH */
+/* AUTH BOX */
 .auth-box{
   position:absolute;
   top:22px;
@@ -50,109 +50,112 @@ body{
   padding:10px 14px;
   border:1px solid var(--border);
   border-radius:14px;
-  background:rgba(0,0,0,.55);
+  background:rgba(0,0,0,.5);
   font-size:13px;
 }
-.auth-box img{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-}
-.auth-link{
-  margin-left:6px;
-  font-size:12px;
-  color:var(--gold);
-  text-decoration:none;
-  opacity:.85;
-}
-.auth-link:hover{opacity:1;text-decoration:underline}
+.auth-box img{width:26px;height:26px;border-radius:50%}
+.auth-link{font-size:12px;color:var(--gold);text-decoration:none;opacity:.85}
+.auth-link:hover{text-decoration:underline;opacity:1}
 
-/* CONTENT */
+/* ===== CONTENT ===== */
 .container{padding:34px 28px 60px}
 
-.user-box{
-  margin-bottom:22px;
-  font-size:13px;
-  opacity:.75;
-}
-.user-box code{
-  background:#111;
-  padding:3px 8px;
-  border-radius:8px;
-  font-size:12px;
-}
-
-/* CLAIMS */
-.claims-grid{
+/* ===== DASHBOARD ===== */
+.dashboard{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
-  gap:22px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.stat{
+  padding:16px;
+  background:#121212;
+  border:1px solid #222;
+  border-radius:16px;
+}
+.stat strong{font-size:22px}
+.stat small{display:block;margin-top:4px;color:#aaa;font-size:12px}
+
+/* ===== ACTION BAR ===== */
+.action-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
 }
 
-.claim-card{
-  padding:18px;
-  border-radius:20px;
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,.045),
-    rgba(255,255,255,.02)
-  );
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.claim-name{
-  font-size:18px;
-  font-weight:600;
-}
-
-.claim-meta{
-  margin-top:6px;
-  font-size:13px;
-  color:#b5b5b5;
-}
-
-.claim-info{
-  margin-top:8px;
+.filter-bar{display:flex;gap:10px}
+select{
   padding:8px 10px;
-  font-size:12px;
+  background:#111;
+  border:1px solid #333;
+  color:#fff;
   border-radius:10px;
+}
+
+.bulk-bar{font-size:12px;color:#aaa}
+
+/* ===== TABLE ===== */
+.table-wrap{
   background:#0f0f0f;
-  border:1px solid rgba(245,196,81,.35);
+  border:1px solid #222;
+  border-radius:18px;
+  overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:12px;border-bottom:1px solid #222;vertical-align:top}
+th{color:#aaa;font-weight:500;text-align:left}
+tr:hover{background:rgba(255,255,255,.02)}
+tr.needs-action{background:rgba(255,179,71,.06)}
+
+/* ===== BADGES ===== */
+.badge{padding:4px 10px;border-radius:999px;font-size:11px;background:#111;border:1px solid #333}
+.badge.green{color:var(--green)}
+.badge.yellow{color:var(--yellow)}
+.badge.blue{color:var(--blue)}
+.badge.orange{color:var(--orange)}
+
+/* ===== ITEM CELL ===== */
+.item-cell{display:flex;align-items:center;gap:12px}
+.item-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:#000;border:1px solid #333;
+  display:flex;align-items:center;justify-content:center;
+}
+.item-icon img{width:26px}
+.item-meta strong{display:block}
+.item-meta small{color:#888;font-size:12px}
+
+/* ===== DETAILS ===== */
+.detail-box{
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:12px;
+  background:#0f0f0f;
+  border:1px dashed rgba(245,196,81,.5);
   color:#f5e6b3;
 }
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 8px}
+.kv span{color:#aaa}
 
-.claim-status{
-  margin-top:10px;
-  font-size:13px;
-}
-.claim-status.reserviert{color:var(--gold)}
-.claim-status.wartet{color:var(--blue)}
-.claim-status.vergeben{color:var(--green)}
-
-.confirm-box{margin-top:12px}
-.confirm-btn{
-  padding:6px 12px;
+/* ===== ACTIONS ===== */
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.action-btn{
+  padding:6px 10px;
   font-size:12px;
   border-radius:10px;
-  border:1px solid rgba(143,209,143,.6);
-  background:#0f1a0f;
-  color:#cfe9cf;
+  background:#111;
+  border:1px solid #333;
+  color:#ddd;
   cursor:pointer;
 }
-.confirm-wait{
-  margin-top:8px;
-  font-size:12px;
-  color:var(--blue);
-}
-.confirm-done{
-  margin-top:8px;
-  font-size:12px;
-  color:var(--green);
-}
+.action-btn.green{border-color:rgba(143,209,143,.6);color:#cfe9cf}
+
 </style>
 </head>
-
 <body>
+
 <div class="wrapper">
 
 <header class="hero">
@@ -160,7 +163,7 @@ body{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="playerIdLabel">–</span>
+      <span id="playerName">–</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
@@ -173,12 +176,41 @@ body{
 
 <div class="container">
 
-  <div class="user-box">
-    Aktiver Nutzer:
-    <code id="userDisplay">–</code>
+  <div class="dashboard">
+    <div class="stat"><strong id="cAll">0</strong><small>Alle Claims</small></div>
+    <div class="stat"><strong id="cRes">0</strong><small>Reserviert</small></div>
+    <div class="stat"><strong id="cWait">0</strong><small>Wartet auf Spender</small></div>
+    <div class="stat"><strong id="cDone">0</strong><small>Abgeschlossen</small></div>
   </div>
 
-  <div id="list"></div>
+  <div class="action-bar">
+    <div class="filter-bar">
+      <select id="filterStatus">
+        <option value="">Status: alle</option>
+        <option value="reserviert">reserviert</option>
+        <option value="wartet">wartet</option>
+        <option value="vergeben">abgeschlossen</option>
+      </select>
+    </div>
+    <div class="bulk-bar">Claims mit Aktion sind hervorgehoben</div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Item</th>
+          <th>Status</th>
+          <th>Spender</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+</div>
 
 </div>
 
@@ -187,107 +219,76 @@ const API = "https://lootliste-production.up.railway.app";
 const accountId = localStorage.getItem("lootliste_account_id");
 const deviceId  = localStorage.getItem("lootliste_user_id");
 
-const label = document.getElementById("playerIdLabel");
-const userDisplay = document.getElementById("userDisplay");
-const list = document.getElementById("list");
-
-/* USER */
 (async()=>{
   if(!accountId) return;
-  const r = await fetch(API+"/me",{headers:{
-    "X-Account-Id":accountId,
-    "X-User-Id":deviceId||""
-  }});
+  const r = await fetch(API+"/me",{headers:{"X-Account-Id":accountId,"X-User-Id":deviceId||""}});
   const d = await r.json();
-  if(d.username){
-    label.textContent=d.username;
-    userDisplay.textContent=d.username;
-  }
+  if(d.username) document.getElementById("playerName").textContent=d.username;
 })();
 
-if(!accountId){
-  list.innerHTML="<p>Du bist nicht eingeloggt.</p>";
-}else{
-  loadClaims();
-}
+if(!accountId){document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>"}
 
-async function loadClaims(){
+async function load(){
   const items = await fetch(API+"/items").then(r=>r.json());
   const mine = items.filter(i=>i.claimedByAccountId===accountId);
 
-  if(!mine.length){
-    list.innerHTML="<p>Keine aktiven Claims.</p>";
-    return;
-  }
+  let cResN=0,cWaitN=0,cDoneN=0;
 
-  const grid=document.createElement("div");
-  grid.className="claims-grid";
+  tableBody.innerHTML="";
 
-  mine.forEach(item=>{
-    const received = localStorage.getItem("received_confirmed_"+item.id)==="yes";
-    const handover = localStorage.getItem("handover_confirmed_"+item.id)==="yes";
+  mine.forEach(i=>{
+    const received = localStorage.getItem("received_confirmed_"+i.id)==="yes";
+    const handover = localStorage.getItem("handover_confirmed_"+i.id)==="yes";
 
-    let status="Reserviert";
-    let cls="reserviert";
+    let phase="reserviert",label="Reserviert",cls="orange",needsAction=true;
 
-    if(received && !handover){
-      status="Wartet auf Bestätigung des Spenders";
-      cls="wartet";
-    }
-    if(received && handover){
-      status="Abgeschlossen";
-      cls="vergeben";
-    }
+    if(received && !handover){phase="wartet";label="Wartet auf Spender";cls="blue";needsAction=false;cWaitN++;}
+    else if(received && handover){phase="vergeben";label="Abgeschlossen";cls="green";needsAction=false;cDoneN++;}
+    else{cResN++;}
 
-    const card=document.createElement("div");
-    card.className="claim-card";
+    const tr=document.createElement("tr");
+    if(needsAction) tr.classList.add("needs-action");
 
-    card.innerHTML=`
-      <div class="claim-name">${item.name}</div>
-      <div class="claim-meta">
-        Reserviert am: ${item.claimedAt ? new Date(item.claimedAt).toLocaleDateString("de-DE") : "–"}
-      </div>
-
-      <div class="claim-info">
-        <strong>Spender:</strong> ${item.donor || "–"}<br>
-        <strong>BattleTag:</strong> ${item.contact || "–"}
-      </div>
-
-      <div class="claim-status ${cls}">
-        Status: ${status}
-      </div>
-
-      ${!received ? `
-        <div class="confirm-box">
-          <button class="confirm-btn">✔ Item erhalten</button>
+    tr.innerHTML=`
+      <td>${i.id}</td>
+      <td>
+        <div class="item-cell">
+          <div class="item-icon"><img src="img/icons/${i.type||"sonstiges"}.png"></div>
+          <div class="item-meta"><strong>${i.name}</strong><small>${i.quality||""} · ${i.type||""}</small></div>
         </div>
-      ` : ""}
-
-      ${received && !handover ? `
-        <div class="confirm-wait">⏳ Warten auf Bestätigung des Spenders</div>
-      ` : ""}
-
-      ${received && handover ? `
-        <div class="confirm-done">✔ Übergabe abgeschlossen</div>
-      ` : ""}
+      </td>
+      <td><span class="badge ${cls}">${label}</span></td>
+      <td>
+        <div class="detail-box">
+          <div class="kv">
+            <span>Spieler</span><div>${i.donor||"–"}</div>
+            <span>BattleTag</span><div>${i.contact||"–"}</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="actions">
+          ${!received?`<button class="action-btn green" onclick="confirmReceive(${i.id})">✔ Item erhalten</button>`:""}
+        </div>
+      </td>
     `;
-
-    const btn=card.querySelector(".confirm-btn");
-    if(btn){
-      btn.onclick=()=>{
-        if(confirm("Hast du das Item ingame erhalten?")){
-          localStorage.setItem("received_confirmed_"+item.id,"yes");
-          location.reload();
-        }
-      };
-    }
-
-    grid.appendChild(card);
+    tableBody.appendChild(tr);
   });
 
-  list.innerHTML="";
-  list.appendChild(grid);
+  cAll.textContent=mine.length;
+  cRes.textContent=cResN;
+  cWait.textContent=cWaitN;
+  cDone.textContent=cDoneN;
 }
+
+function confirmReceive(id){
+  if(confirm("Hast du das Item ingame erhalten?")){
+    localStorage.setItem("received_confirmed_"+id,"yes");
+    location.reload();
+  }
+}
+
+load();
 </script>
 
 </body>
