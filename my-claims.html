@@ -281,11 +281,22 @@ async function load(){
   cDone.textContent=cDoneN;
 }
 
-function confirmReceive(id){
-  if(confirm("Hast du das Item ingame erhalten?")){
-    localStorage.setItem("received_confirmed_"+id,"yes");
-    location.reload();
+async function confirmReceive(id){
+  if(!confirm("Hast du das Item ingame erhalten?")) return;
+
+  try{
+    await fetch(API + "/items/" + id + "/confirm-receiver", {
+      method: "POST",
+      headers: {
+        "X-Account-Id": accountId
+      }
+    });
+  }catch(e){
+    alert("Fehler beim Bestätigen des Erhalts");
+    return;
   }
+
+  location.reload();
 }
 
 load();
