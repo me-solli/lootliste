@@ -266,7 +266,7 @@ th{
       <button id="tabUsers">👥 User</button>
     </div>
 
-    <!-- ITEMS VIEW -->
+    <!-- ITEMS -->
     <div id="view-items">
 
       <div class="dashboard">
@@ -307,7 +307,7 @@ th{
 
     </div>
 
-    <!-- USERS VIEW -->
+    <!-- USERS -->
     <div id="view-users" style="display:none">
       <div class="table-wrap">
         <table>
@@ -339,6 +339,11 @@ const ADMIN = "me_solli";
 const pageLogin = document.getElementById("page-login");
 const pageAdmin = document.getElementById("page-admin");
 const adminName = document.getElementById("adminName");
+
+const tabItems = document.getElementById("tabItems");
+const tabUsers = document.getElementById("tabUsers");
+const viewItems = document.getElementById("view-items");
+const viewUsers = document.getElementById("view-users");
 
 /* ===== INIT ===== */
 async function init(){
@@ -388,15 +393,15 @@ function logout(){
 tabItems.onclick=()=>{
   tabItems.classList.add("active");
   tabUsers.classList.remove("active");
-  view-items.style.display="block";
-  view-users.style.display="none";
+  viewItems.style.display="block";
+  viewUsers.style.display="none";
 };
 
 tabUsers.onclick=()=>{
   tabUsers.classList.add("active");
   tabItems.classList.remove("active");
-  view-items.style.display="none";
-  view-users.style.display="block";
+  viewItems.style.display="none";
+  viewUsers.style.display="block";
   loadUsers();
 };
 
