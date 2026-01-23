@@ -412,9 +412,17 @@ async function loadItems(){
 }
 
 function isDone(i){
-  return i.status==="vergeben" ||
-    i.handover?.donorConfirmed ||
-    i.handover?.receiverConfirmed;
+  if(i.status === "vergeben") return true;
+
+  if(
+    i.handover &&
+    i.handover.donorConfirmed === true &&
+    i.handover.receiverConfirmed === true
+  ){
+    return true;
+  }
+
+  return false;
 }
 
 function render(items){
