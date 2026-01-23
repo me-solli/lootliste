@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Archiv – Community Vergaben</title>
+<title>Archiv – Abgeschlossene Vergaben</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -14,7 +14,6 @@
   --gold-soft:#e6d7a3;
   --green:#6fdc8c;
   --muted:#9a9a9a;
-  --highlight:#8fd18f;
 }
 
 *{box-sizing:border-box}
@@ -80,9 +79,9 @@ body{
 /* STATS */
 .stats{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:14px;
-  margin-bottom:30px;
+  margin-bottom:32px;
 }
 .stat{
   background:var(--panel);
@@ -92,47 +91,6 @@ body{
 }
 .stat strong{font-size:22px}
 .stat small{display:block;margin-top:4px;color:var(--muted)}
-
-/* HIGHLIGHTS */
-.highlights{
-  margin-bottom:40px;
-}
-.highlights h2{
-  margin:0 0 16px;
-  font-size:24px;
-  color:var(--gold);
-}
-.highlight-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:18px;
-}
-.highlight-card{
-  display:flex;
-  gap:14px;
-  padding:16px;
-  border-radius:18px;
-  background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.015));
-  border:1px solid rgba(143,209,143,.45);
-}
-.highlight-icon{
-  width:48px;height:48px;
-  border-radius:12px;
-  background:#000;
-  border:1px solid #333;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.highlight-icon img{width:28px}
-.highlight-name{
-  font-size:16px;
-  font-weight:600;
-}
-.highlight-meta{
-  font-size:13px;
-  color:#cfcfcf;
-}
 
 /* CONTROLS */
 .controls{
@@ -148,6 +106,16 @@ body{
   border-radius:12px;
   padding:10px 12px;
   color:#fff;
+}
+
+/* EMPTY */
+.empty{
+  margin-top:40px;
+  padding:34px;
+  border-radius:20px;
+  border:1px dashed rgba(245,196,81,.35);
+  text-align:center;
+  color:#e6e0c6;
 }
 
 /* MONTH GROUP */
@@ -218,51 +186,56 @@ body{
       <a href="my-items.html" class="auth-link">Meine Items</a>
       <a href="my-claims.html" class="auth-link">Meine Claims</a>
     </div>
-    <h1>Community-Archiv</h1>
+    <h1>Archiv</h1>
     <p>
-      Was hier liegt, wurde weitergegeben.<br>
-      <strong>Ein Blick darauf zeigt, was diese Community bereits möglich gemacht hat.</strong>
+      Dieses Archiv zeigt erfolgreich abgeschlossene Vergaben aus der Community.<br>
+      <strong>Ein stiller Überblick darüber, was bereits weitergegeben wurde.</strong>
     </p>
   </div>
 </header>
 
 <div class="container">
 
-<div class="info-box">
-  Dieses Archiv zeigt ausgewählte und vollständige Vergaben aus der Lootliste.
-  Es ist kein Log – sondern ein Rückblick.
-</div>
+  <div class="info-box">
+    Das Archiv ist kein Log und keine Wertung.<br>
+    Es zeigt abgeschlossene Übergaben – ohne Kontaktdaten, ohne Ranglisten.
+  </div>
 
-<div class="stats">
-  <div class="stat"><strong id="statCount">0</strong><small>Vergebene Items</small></div>
-  <div class="stat"><strong id="statFirst">–</strong><small>Erste Vergabe</small></div>
-  <div class="stat"><strong id="statLast">–</strong><small>Letzte Vergabe</small></div>
-</div>
+  <div class="stats">
+    <div class="stat">
+      <strong id="statCount">0</strong>
+      <small>Abgeschlossene Vergaben</small>
+    </div>
+    <div class="stat">
+      <strong id="statFirst">–</strong>
+      <small>Erste Vergabe</small>
+    </div>
+    <div class="stat">
+      <strong id="statLast">–</strong>
+      <small>Letzte Vergabe</small>
+    </div>
+  </div>
 
-<div class="highlights">
-  <h2>Besondere Vergaben</h2>
-  <div class="highlight-grid" id="highlightGrid"></div>
-</div>
+  <div class="controls">
+    <input id="search" placeholder="Item suchen…">
+    <select id="filterType">
+      <option value="">Alle Typen</option>
+      <option value="waffe">Waffen</option>
+      <option value="ruestung">Rüstungen</option>
+      <option value="schild">Schilde</option>
+      <option value="ring">Ringe</option>
+      <option value="amulett">Amulette</option>
+      <option value="charm">Charms</option>
+      <option value="rune">Runen</option>
+      <option value="sonstiges">Sonstiges</option>
+    </select>
+    <select id="sort">
+      <option value="new">Neueste zuerst</option>
+      <option value="old">Älteste zuerst</option>
+    </select>
+  </div>
 
-<div class="controls">
-  <input id="search" placeholder="Item suchen…">
-  <select id="filterType">
-    <option value="">Alle Typen</option>
-    <option value="waffe">Waffen</option>
-    <option value="ruestung">Rüstungen</option>
-    <option value="schild">Schilde</option>
-    <option value="ring">Ringe</option>
-    <option value="amulett">Amulette</option>
-    <option value="charm">Charms</option>
-    <option value="rune">Runen</option>
-  </select>
-  <select id="sort">
-    <option value="new">Neueste zuerst</option>
-    <option value="old">Älteste zuerst</option>
-  </select>
-</div>
-
-<div id="content"></div>
+  <div id="content"></div>
 
 </div>
 </div>
@@ -270,7 +243,6 @@ body{
 <script>
 const API="https://lootliste-production.up.railway.app";
 const content=document.getElementById("content");
-const highlightGrid=document.getElementById("highlightGrid");
 
 const search=document.getElementById("search");
 const filterType=document.getElementById("filterType");
@@ -287,7 +259,6 @@ let all=[];
   const items=await r.json();
   all=items.filter(i=>i.status==="vergeben");
   renderStats();
-  renderHighlights();
   render();
 })();
 
@@ -295,50 +266,22 @@ function renderStats(){
   if(!all.length)return;
   const dates=all.map(i=>new Date(i.completedAt||i.claimedAt));
   document.getElementById("statCount").textContent=all.length;
-  document.getElementById("statFirst").textContent=new Date(Math.min(...dates)).toLocaleDateString("de-DE");
-  document.getElementById("statLast").textContent=new Date(Math.max(...dates)).toLocaleDateString("de-DE");
-}
-
-function isHighlight(item){
-  const name=item.name.toLowerCase();
-  return (
-    name.includes("windforce") ||
-    name.includes("enigma") ||
-    name.includes("griffon") ||
-    name.includes("rune") ||
-    name.includes("sunder")
-  );
-}
-
-function renderHighlights(){
-  const special=all.filter(isHighlight).slice(0,6);
-  highlightGrid.innerHTML="";
-  special.forEach(i=>{
-    const div=document.createElement("div");
-    div.className="highlight-card";
-    div.innerHTML=`
-      <div class="highlight-icon">
-        <img src="img/icons/${i.type||"sonstiges"}.png">
-      </div>
-      <div>
-        <div class="highlight-name">${i.name}</div>
-        <div class="highlight-meta">
-          ${i.type||"–"} · ${new Date(i.completedAt||i.claimedAt).toLocaleDateString("de-DE")}
-        </div>
-      </div>
-    `;
-    highlightGrid.appendChild(div);
-  });
+  document.getElementById("statFirst").textContent=
+    new Date(Math.min(...dates)).toLocaleDateString("de-DE");
+  document.getElementById("statLast").textContent=
+    new Date(Math.max(...dates)).toLocaleDateString("de-DE");
 }
 
 function render(){
   let list=[...all];
 
   if(search.value){
-    list=list.filter(i=>i.name.toLowerCase().includes(search.value.toLowerCase()));
+    list=list.filter(i =>
+      i.name.toLowerCase().includes(search.value.toLowerCase())
+    );
   }
   if(filterType.value){
-    list=list.filter(i=>i.type===filterType.value);
+    list=list.filter(i => i.type === filterType.value);
   }
 
   list.sort((a,b)=>{
@@ -349,7 +292,8 @@ function render(){
 
   content.innerHTML="";
   if(!list.length){
-    content.innerHTML="<div class='info-box'>Keine passenden Einträge gefunden.</div>";
+    content.innerHTML=
+      "<div class='empty'>Keine passenden Einträge gefunden.</div>";
     return;
   }
 
@@ -365,6 +309,7 @@ function render(){
     const sec=document.createElement("div");
     sec.className="month";
     sec.innerHTML=`<h2>${month}</h2>`;
+
     const grid=document.createElement("div");
     grid.className="grid";
 
@@ -378,7 +323,8 @@ function render(){
         <div class="card-body">
           <div class="card-name">${i.name}</div>
           <div class="card-meta">
-            ${i.type||"–"} · ${new Date(i.completedAt||i.claimedAt).toLocaleDateString("de-DE")}
+            ${i.type||"–"} ·
+            ${new Date(i.completedAt||i.claimedAt).toLocaleDateString("de-DE")}
           </div>
           <div class="card-status">Übergabe abgeschlossen</div>
         </div>
@@ -391,5 +337,6 @@ function render(){
   });
 }
 </script>
+
 </body>
 </html>
