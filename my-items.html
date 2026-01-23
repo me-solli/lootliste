@@ -213,12 +213,12 @@ const accountId = localStorage.getItem("lootliste_account_id");
 
         <div class="badge">Status: ${statusText}</div>
 
-        ${i.note_private ? `
-          <div class="note-box">
-            <strong>📝 Notiz (nur für dich)</strong><br>
-            ${i.note_private}
-          </div>
-        ` : ""}
+${privateNote ? `
+  <div class="note-box">
+    <strong>📝 Notiz (nur für dich)</strong><br>
+    ${privateNote}
+  </div>
+` : ""}
 
         ${i.status==="reserviert" && i.claimedByAccountId ? `
           <div class="claim-info">
