@@ -22,13 +22,20 @@ body{
 }
 .wrapper{max-width:1500px;margin:0 auto}
 
+/* =====================
+   QUALITY COLORS (wie submit)
+===================== */
+.quality-unique{color:#f5c451}
+.quality-set{color:#6fcf97}
+.quality-rare{color:#f2c94c}
+.quality-magic{color:#56ccf2}
+
 /* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
   min-height:200px;
-  position:relative;
 }
 .hero-inner{
   padding:36px 36px 32px;
@@ -63,8 +70,15 @@ body{
   object-fit:cover;
   cursor:zoom-in;
 }
-.item-meta h3{margin:0 0 6px;font-size:18px}
-.sub{font-size:13px;color:#b5b5b5}
+
+.item-meta h3{
+  margin:0 0 6px;
+  font-size:18px;
+}
+.sub{
+  font-size:13px;
+  color:#b5b5b5;
+}
 .badge{
   margin-top:6px;
   display:inline-block;
@@ -74,6 +88,18 @@ body{
   background:#111;
   border:1px solid rgba(255,255,255,.18);
 }
+
+/* PRIVATE NOTE */
+.note-box{
+  margin-top:8px;
+  padding:8px 10px;
+  font-size:12px;
+  border-radius:10px;
+  background:#0f0f0f;
+  border:1px dashed rgba(255,255,255,.25);
+  color:#cfcfcf;
+}
+.note-box strong{color:#fff}
 
 /* CLAIM INFO */
 .claim-info{
@@ -164,14 +190,14 @@ const accountId = localStorage.getItem("lootliste_account_id");
 
   mine.forEach(i=>{
     const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
-    const received =
-      localStorage.getItem("received_confirmed_"+i.id)==="yes";
-    const handover =
-      localStorage.getItem("handover_confirmed_"+i.id)==="yes";
+    const received = localStorage.getItem("received_confirmed_"+i.id)==="yes";
+    const handover = localStorage.getItem("handover_confirmed_"+i.id)==="yes";
 
     let statusText=i.status;
     if(received && !handover) statusText="Wartet auf deine Bestätigung";
     if(received && handover) statusText="Abgeschlossen";
+
+    const qualityClass = i.quality ? "quality-" + i.quality : "";
 
     const c=document.createElement("div");
     c.className="item-card";
@@ -179,9 +205,20 @@ const accountId = localStorage.getItem("lootliste_account_id");
     c.innerHTML=`
       <img src="${i.screenshot||""}">
       <div class="item-meta">
-        <h3>${i.name}</h3>
-        <div class="sub">${i.quality} · ${i.type}</div>
+        <h3 class="${qualityClass}">${i.name}</h3>
+
+        <div class="sub ${qualityClass}">
+          ${i.quality} · ${i.type}
+        </div>
+
         <div class="badge">Status: ${statusText}</div>
+
+        ${i.note_private ? `
+          <div class="note-box">
+            <strong>📝 Notiz (nur für dich)</strong><br>
+            ${i.note_private}
+          </div>
+        ` : ""}
 
         ${i.status==="reserviert" && i.claimedByAccountId ? `
           <div class="claim-info">
@@ -216,10 +253,7 @@ const accountId = localStorage.getItem("lootliste_account_id");
     if(btn){
       btn.onclick=()=>{
         if(confirm("Hast du das Item ingame übergeben?")){
-          localStorage.setItem(
-            "handover_confirmed_"+i.id,
-            "yes"
-          );
+          localStorage.setItem("handover_confirmed_"+i.id,"yes");
           location.reload();
         }
       };
