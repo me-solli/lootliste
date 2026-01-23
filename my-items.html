@@ -9,6 +9,8 @@
 :root{
   --gold:#f5c451;
   --border:#2a2a2a;
+  --blue:#8fd1ff;
+  --green:#8fd18f;
 }
 *{box-sizing:border-box}
 
@@ -84,6 +86,28 @@ body{
   color:#f5e6b3;
 }
 
+/* CONFIRM */
+.confirm-box{margin-top:8px}
+.confirm-btn{
+  padding:6px 12px;
+  font-size:12px;
+  border-radius:10px;
+  border:1px solid rgba(143,209,143,.6);
+  background:#0f1a0f;
+  color:#cfe9cf;
+  cursor:pointer;
+}
+.confirm-wait{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--blue);
+}
+.confirm-done{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--green);
+}
+
 /* OVERLAY */
 .overlay{
   position:fixed;
@@ -131,11 +155,8 @@ const accountId = localStorage.getItem("lootliste_account_id");
     return;
   }
 
-  // Items laden
   const items = await fetch(API+"/items").then(r=>r.json());
   const mine = items.filter(i=>i.donorAccountId===accountId);
-
-  // Accounts laden (für Username-Auflösung)
   const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
   const grid=document.createElement("div");
@@ -143,6 +164,14 @@ const accountId = localStorage.getItem("lootliste_account_id");
 
   mine.forEach(i=>{
     const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
+    const received =
+      localStorage.getItem("received_confirmed_"+i.id)==="yes";
+    const handover =
+      localStorage.getItem("handover_confirmed_"+i.id)==="yes";
+
+    let statusText=i.status;
+    if(received && !handover) statusText="Wartet auf deine Bestätigung";
+    if(received && handover) statusText="Abgeschlossen";
 
     const c=document.createElement("div");
     c.className="item-card";
@@ -152,13 +181,27 @@ const accountId = localStorage.getItem("lootliste_account_id");
       <div class="item-meta">
         <h3>${i.name}</h3>
         <div class="sub">${i.quality} · ${i.type}</div>
-        <div class="badge">Status: ${i.status}</div>
+        <div class="badge">Status: ${statusText}</div>
 
         ${i.status==="reserviert" && i.claimedByAccountId ? `
           <div class="claim-info">
             <strong>Reserviert von:</strong> ${claimer ? claimer.username : "Unbekannt"}<br>
             <strong>BattleTag:</strong> ${i.contact || "–"}
           </div>
+        ` : ""}
+
+        ${received && !handover ? `
+          <div class="confirm-box">
+            <button class="confirm-btn">✔ Übergabe bestätigt</button>
+          </div>
+        ` : ""}
+
+        ${received && handover ? `
+          <div class="confirm-done">✔ Übergabe abgeschlossen</div>
+        ` : ""}
+
+        ${!received && i.status==="reserviert" ? `
+          <div class="confirm-wait">⏳ Warte auf Bestätigung des Empfängers</div>
         ` : ""}
       </div>
     `;
@@ -168,6 +211,19 @@ const accountId = localStorage.getItem("lootliste_account_id");
       document.getElementById("overlayImg").src=img.src;
       document.getElementById("overlay").style.display="flex";
     };
+
+    const btn=c.querySelector(".confirm-btn");
+    if(btn){
+      btn.onclick=()=>{
+        if(confirm("Hast du das Item ingame übergeben?")){
+          localStorage.setItem(
+            "handover_confirmed_"+i.id,
+            "yes"
+          );
+          location.reload();
+        }
+      };
+    }
 
     grid.appendChild(c);
   });
