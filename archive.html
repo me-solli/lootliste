@@ -160,11 +160,9 @@ body{
 
 <div class="container">
 
-  <!-- 🔐 PRIVACY HINWEIS -->
   <div class="info-box">
     Dieses Archiv dient der Transparenz abgeschlossener Item-Vergaben.
-    <strong>Kontakt- und BattleTag-Informationen sind hier bewusst nicht sichtbar</strong>
-    und bleiben ausschließlich zwischen Spender und Empfänger.
+    <strong>Kontakt- und BattleTag-Informationen sind hier bewusst nicht sichtbar</strong>.
   </div>
 
   <div id="list"></div>
@@ -173,113 +171,80 @@ body{
 </div>
 
 <script>
-/* ===============================
-   CONFIG
-================================ */
 const API_BASE  = "https://lootliste-production.up.railway.app";
 const API_ITEMS = API_BASE + "/items";
 
-/* ===============================
-   IDS
-================================ */
 const deviceId  = localStorage.getItem("lootliste_user_id");
 const accountId = localStorage.getItem("lootliste_account_id");
 
-/* ===============================
-   USER LABEL
-================================ */
 const label = document.getElementById("playerIdLabel");
+const list  = document.getElementById("list");
 
-async function setUserLabel(){
-  if (!label) return;
-
-  label.textContent = label.dataset.placeholder || "Spieler lädt…";
-
-  if (!accountId) return;
-
+/* USER LABEL */
+(async()=>{
+  if(!label || !accountId) return;
   try{
-    const res = await fetch(API_BASE + "/me", {
+    const r = await fetch(API_BASE + "/me",{
       headers:{
-        "X-User-Id": deviceId || "",
-        "X-Account-Id": accountId
+        "X-User-Id":deviceId||"",
+        "X-Account-Id":accountId
       }
     });
-    const data = await res.json();
-
-    if (data.username) {
-      label.textContent = data.username;
-    }
+    const d = await r.json();
+    if(d.username) label.textContent=d.username;
   }catch{}
-}
+})();
 
-setUserLabel();
-
-/* ===============================
-   LOAD ARCHIVE (GLOBAL)
-================================ */
-const list = document.getElementById("list");
+/* LOAD ARCHIVE */
 loadArchive();
 
 async function loadArchive(){
-  const res = await fetch(API_ITEMS, {
+  const res = await fetch(API_ITEMS,{
     headers:{
-      "X-User-Id": deviceId || "",
-      "X-Account-Id": accountId || ""
+      "X-User-Id":deviceId||"",
+      "X-Account-Id":accountId||""
     }
   });
-
   const items = await res.json();
 
-  const done = items
-    .filter(i => i.status === "übergeben")
-    .sort((a,b) => {
-      const da =
-        a.handover?.receiverConfirmedAt ||
-        a.handover?.donorConfirmedAt ||
-        "";
-      const db =
-        b.handover?.receiverConfirmedAt ||
-        b.handover?.donorConfirmedAt ||
-        "";
-      return db.localeCompare(da);
-    });
+  const done = items.filter(i =>
+    localStorage.getItem("received_confirmed_"+i.id)==="yes" &&
+    localStorage.getItem("handover_confirmed_"+i.id)==="yes"
+  );
 
-  if (done.length === 0) {
-    list.innerHTML = `
+  if(!done.length){
+    list.innerHTML=`
       <div class="empty-box">
         Noch keine abgeschlossenen Übergaben.
-      </div>
-    `;
+      </div>`;
     return;
   }
 
-  const grid = document.createElement("div");
-  grid.className = "archive-grid";
+  const grid=document.createElement("div");
+  grid.className="archive-grid";
 
-  done.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "archive-card";
+  done.forEach(item=>{
+    const date = item.claimedAt;
 
-    const date =
-      item.handover?.receiverConfirmedAt ||
-      item.handover?.donorConfirmedAt ||
-      item.claimedAt;
+    const card=document.createElement("div");
+    card.className="archive-card";
 
-    card.innerHTML = `
+    card.innerHTML=`
       <div class="archive-name">${item.name}</div>
       <div class="archive-meta">
         Kategorie: ${item.category || item.type || "–"} ·
-        Übergeben am:
+        Abgeschlossen am:
         ${date ? new Date(date).toLocaleDateString("de-DE") : "–"}
       </div>
       <div class="archive-status">
-        Status: übergeben
+        Status: abgeschlossen
       </div>
     `;
 
     grid.appendChild(card);
   });
 
+  list.innerHTML="";
   list.appendChild(grid);
 }
 </script>
