@@ -12,6 +12,7 @@ import bcrypt from "bcrypt";
 // ===============================
 const app = express();
 const PORT = process.env.PORT || 8080;
+const ADMIN_USERNAME = "me_solli";
 
 // ===============================
 // DATA PATH (Railway Volume)
@@ -120,6 +121,10 @@ function findAccountByUsername(username) {
 
 function findAccountById(accountId) {
   return accounts.find(a => a.id === accountId);
+}
+
+function isAdmin(account) {
+  return account && account.username === ADMIN_USERNAME;
 }
 
 // ===============================
@@ -247,7 +252,7 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
-// POST ITEM (ACCOUNT-BASIERT)
+// POST ITEM
 // ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season, note_private } = req.body;
@@ -272,7 +277,6 @@ app.post("/items", (req, res) => {
     donorAccountId: account ? account.id : null,
     donor: account ? account.username : null,
 
-    // ✅ PRIVATE NOTE (neu)
     note_private: note_private || "",
 
     claimedByAccountId: null,
@@ -292,7 +296,7 @@ app.post("/items", (req, res) => {
 });
 
 // ===============================
-// CLAIM ITEM (NICHT OWNER) ✅
+// CLAIM ITEM
 // ===============================
 app.post("/items/:id/claim", (req, res) => {
   const accountId = req.headers["x-account-id"];
@@ -322,69 +326,70 @@ app.post("/items/:id/claim", (req, res) => {
   item.contact = contact || null;
 
   saveJSON(ITEMS_FILE, items);
-
   res.json(item);
 });
 
 // ===============================
-// UPDATE ITEM (NUR OWNER)
+// CONFIRM HANDOVER (NEU & ENTSCHEIDEND)
 // ===============================
-app.put("/items/:id", (req, res) => {
-  const accountId = req.headers["x-account-id"];
-  const itemId = Number(req.params.id);
-
-  const item = items.find(i => i.id === itemId);
-  if (!item) {
-    return res.status(404).json({ error: "Item not found" });
+app.post("/items/:id/confirm-donor", (req, res) => {
+  const acc = findAccountById(req.headers["x-account-id"]);
+  const item = items.find(i => i.id == req.params.id);
+  if (!item || item.donorAccountId !== acc?.id) {
+    return res.status(403).json({ error: "Forbidden" });
   }
 
-  // Donor darf immer updaten
-  if (item.donorAccountId === accountId) {
-    if (req.body.handoverConfirmed === true) {
-      item.handover.donorConfirmed = true;
-    }
-  }
-
-  // Receiver darf seinen Erhalt bestätigen
-  if (item.claimedByAccountId === accountId) {
-    if (req.body.receivedConfirmed === true) {
-      item.handover.receiverConfirmed = true;
-    }
-  }
-
-  // 🟢 FINALER ABSCHLUSS
-  if (
-    item.status === "reserviert" &&
-    item.handover.donorConfirmed === true &&
-    item.handover.receiverConfirmed === true
-  ) {
-    item.status = "vergeben";
-    item.completedAt = new Date().toISOString();
-  }
+  item.handover.donorConfirmed = true;
+  finalizeItem(item);
 
   saveJSON(ITEMS_FILE, items);
   res.json(item);
 });
 
+app.post("/items/:id/confirm-receiver", (req, res) => {
+  const acc = findAccountById(req.headers["x-account-id"]);
+  const item = items.find(i => i.id == req.params.id);
+  if (!item || item.claimedByAccountId !== acc?.id) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  item.handover.receiverConfirmed = true;
+  finalizeItem(item);
+
+  saveJSON(ITEMS_FILE, items);
+  res.json(item);
+});
+
+function finalizeItem(item) {
+  if (
+    item.status === "reserviert" &&
+    item.handover.donorConfirmed &&
+    item.handover.receiverConfirmed
+  ) {
+    item.status = "vergeben";
+    item.completedAt = new Date().toISOString();
+  }
+}
+
 // ===============================
-// DELETE ITEM (NUR OWNER)
+// DELETE ITEM (OWNER ODER ADMIN)
 // ===============================
 app.delete("/items/:id", (req, res) => {
-  const accountId = req.headers["x-account-id"];
-  const itemId = Number(req.params.id);
-
-  const index = items.findIndex(i => i.id === itemId);
+  const acc = findAccountById(req.headers["x-account-id"]);
+  const index = items.findIndex(i => i.id == req.params.id);
   if (index === -1) {
     return res.status(404).json({ error: "Item not found" });
   }
 
-  if (!accountId || items[index].donorAccountId !== accountId) {
+  if (
+    items[index].donorAccountId !== acc?.id &&
+    !isAdmin(acc)
+  ) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
   items.splice(index, 1);
   saveJSON(ITEMS_FILE, items);
-
   res.json({ success: true });
 });
 
