@@ -1,233 +1,257 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Feedback / Bug melden – Lootliste</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Feedback / Bug melden – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- falls du globale Styles nutzt -->
-  <link rel="stylesheet" href="style.css" />
+<style>
+:root{
+  --gold:#f5c451;
+  --border:#2a2a2a;
+}
 
-  <style>
-    :root{
-      --gold:#f5c451;
-      --bg:#0b0b0b;
-      --panel:#121212;
-      --border:#2a2a2a;
-      --soft:#1a1a1a;
-    }
+*{box-sizing:border-box}
 
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
-      color:#eaeaea;
-    }
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#eaeaea;
+}
 
-    .feedback-wrap{
-      max-width:720px;
-      margin:60px auto;
-      padding:0 18px;
-    }
+.wrapper{max-width:1200px;margin:0 auto}
 
-    .feedback-panel{
-      background:linear-gradient(
-        to bottom,
-        rgba(255,255,255,.04),
-        rgba(255,255,255,.015)
-      );
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:22px 22px 24px;
-    }
+/* ===== HERO (wie my-items) ===== */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+}
+.hero-inner{
+  padding:32px 36px 28px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.7));
+}
+.hero h1{margin:0;font-size:30px;font-weight:700}
+.hero p{margin:8px 0 0;opacity:.8}
 
-    h1{
-      margin:0 0 6px;
-      font-size:20px;
-      font-weight:600;
-    }
+/* ===== CONTENT ===== */
+.container{
+  padding:36px 28px 60px;
+  display:flex;
+  justify-content:center;
+}
 
-    .feedback-hint{
-      font-size:13px;
-      color:#b5b5b5;
-      margin-bottom:18px;
-      line-height:1.4;
-    }
+/* ===== PANEL ===== */
+.panel{
+  width:100%;
+  max-width:720px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.045),
+    rgba(255,255,255,.02)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:22px 22px 24px;
+}
 
-    textarea{
-      width:100%;
-      min-height:140px;
-      padding:12px 14px;
-      resize:vertical;
+/* ===== TEXT ===== */
+.hint{
+  font-size:13px;
+  color:#b5b5b5;
+  margin-bottom:16px;
+  line-height:1.4;
+}
 
-      background:#0f0f0f;
-      color:#fff;
-      border:1px solid #333;
-      border-radius:12px;
-      font-size:14px;
-    }
+.hint strong{
+  color:#f0e68c;
+  font-weight:600;
+}
 
-    textarea:focus{
-      outline:none;
-      border-color:var(--gold);
-      box-shadow:0 0 0 1px rgba(245,196,81,.35);
-    }
+/* ===== FORM ===== */
+textarea{
+  width:100%;
+  min-height:150px;
+  padding:12px 14px;
+  resize:vertical;
 
-    .file-row{
-      margin:14px 0 18px;
-      font-size:13px;
-      color:#aaa;
-    }
+  background:#0f0f0f;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:14px;
+  font-size:14px;
+}
 
-    input[type="file"]{
-      margin-top:6px;
-      color:#ccc;
-    }
+textarea:focus{
+  outline:none;
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px rgba(245,196,81,.35);
+}
 
-    .actions{
-      display:flex;
-      gap:12px;
-      align-items:center;
-    }
+.file-row{
+  margin:16px 0 20px;
+  font-size:13px;
+  color:#aaa;
+}
 
-    button{
-      padding:8px 16px;
-      font-size:13px;
-      border-radius:999px;
-      cursor:pointer;
+.file-row small{
+  display:block;
+  margin-top:4px;
+  opacity:.75;
+}
 
-      background:rgba(245,196,81,.08);
-      color:var(--gold);
-      border:1px solid rgba(245,196,81,.35);
+input[type="file"]{
+  margin-top:6px;
+  color:#ccc;
+}
 
-      transition:
-        background .2s ease,
-        border-color .2s ease,
-        box-shadow .2s ease,
-        transform .15s ease;
-    }
+/* ===== ACTIONS ===== */
+.actions{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
 
-    button:hover{
-      background:rgba(245,196,81,.15);
-      border-color:rgba(245,196,81,.65);
-      box-shadow:0 0 10px rgba(245,196,81,.35);
-      transform:translateY(-1px);
-    }
+button{
+  padding:8px 16px;
+  font-size:13px;
+  border-radius:999px;
+  cursor:pointer;
 
-    .success,
-    .error{
-      margin-top:16px;
-      padding:12px 14px;
-      border-radius:12px;
-      font-size:13px;
-      display:none;
-    }
+  background:rgba(245,196,81,.08);
+  color:var(--gold);
+  border:1px solid rgba(245,196,81,.35);
 
-    .success{
-      background:rgba(76,255,76,.12);
-      border:1px solid rgba(76,255,76,.35);
-      color:#b7ffce;
-    }
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .15s ease;
+}
 
-    .error{
-      background:rgba(255,80,80,.12);
-      border:1px solid rgba(255,80,80,.35);
-      color:#ffb7b7;
-    }
+button:hover{
+  background:rgba(245,196,81,.15);
+  border-color:rgba(245,196,81,.65);
+  box-shadow:0 0 10px rgba(245,196,81,.35);
+  transform:translateY(-1px);
+}
 
-    .back-link{
-      display:inline-block;
-      margin-top:14px;
-      font-size:12px;
-      color:#aaa;
-      text-decoration:none;
-      opacity:.8;
-    }
+/* ===== FEEDBACK ===== */
+.success,
+.error{
+  margin-top:16px;
+  padding:12px 14px;
+  border-radius:14px;
+  font-size:13px;
+  display:none;
+}
 
-    .back-link:hover{
-      text-decoration:underline;
-      opacity:1;
-    }
-  </style>
+.success{
+  background:rgba(76,255,76,.12);
+  border:1px solid rgba(76,255,76,.35);
+  color:#b7ffce;
+}
+
+.error{
+  background:rgba(255,80,80,.12);
+  border:1px solid rgba(255,80,80,.35);
+  color:#ffb7b7;
+}
+
+.back-link{
+  display:inline-block;
+  margin-top:16px;
+  font-size:12px;
+  color:#aaa;
+  text-decoration:none;
+  opacity:.8;
+}
+.back-link:hover{opacity:1;text-decoration:underline}
+</style>
 </head>
 
 <body>
 
-  <main class="feedback-wrap">
-    <div class="feedback-panel">
+<div class="wrapper">
 
-      <h1>Feedback / Bug melden</h1>
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Feedback / Bug melden</h1>
+    <p>Hilf mit, die Lootliste stabil & fair zu halten</p>
+  </div>
+</header>
 
-      <div class="feedback-hint">
-        Kurze Beschreibung reicht völlig.<br>
-        Screenshot optional – hilft beim Debuggen.
-      </div>
+<div class="container">
 
-      <form id="feedbackForm">
-        <textarea
-          name="description"
-          placeholder="Was ist passiert? Auf welcher Seite?"
-          required
-          minlength="10"
-        ></textarea>
+  <div class="panel">
 
-        <div class="file-row">
-          Screenshot (optional):
-          <input type="file" name="screenshot" accept="image/*">
-        </div>
-
-        <input type="hidden" name="page" id="pageField" />
-
-        <div class="actions">
-          <button type="submit">Senden</button>
-        </div>
-      </form>
-
-      <div class="success" id="successBox">
-        ✅ Danke! Dein Feedback wurde gespeichert.
-      </div>
-
-      <div class="error" id="errorBox">
-        ❌ Fehler beim Senden. Bitte später erneut versuchen.
-      </div>
-
-      <a href="index.html" class="back-link">
-        ← zurück zur Lootliste
-      </a>
-
+    <div class="hint">
+      Beschreibe kurz, was passiert ist und auf welcher Seite.<br>
+      <strong>Screenshot bei Bugs dringend empfohlen</strong> – das spart viel Rückfragen.
     </div>
-  </main>
 
-  <script>
-    const form = document.getElementById("feedbackForm");
-    const successBox = document.getElementById("successBox");
-    const errorBox = document.getElementById("errorBox");
+    <form id="feedbackForm">
+      <textarea
+        name="description"
+        placeholder="Was ist passiert? Auf welcher Seite?"
+        required
+        minlength="10"
+      ></textarea>
 
-    document.getElementById("pageField").value = window.location.pathname;
+      <div class="file-row">
+        Screenshot (optional):
+        <input type="file" name="screenshot" accept="image/*">
+        <small>Bei Darstellungs- oder Logikfehlern sehr hilfreich</small>
+      </div>
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+      <input type="hidden" name="page" id="pageField" />
 
-      successBox.style.display = "none";
-      errorBox.style.display = "none";
+      <div class="actions">
+        <button type="submit">Senden</button>
+      </div>
+    </form>
 
-      const formData = new FormData(form);
+    <div class="success" id="successBox">
+      ✅ Danke! Dein Feedback wurde gespeichert.
+    </div>
 
-      try {
-        const res = await fetch("/feedback", {
-          method: "POST",
-          body: formData
-        });
+    <div class="error" id="errorBox">
+      ❌ Fehler beim Senden. Bitte später erneut versuchen.
+    </div>
 
-        if (!res.ok) throw new Error("Request failed");
+    <a href="index.html" class="back-link">← zurück zur Lootliste</a>
 
-        form.reset();
-        successBox.style.display = "block";
-      } catch {
-        errorBox.style.display = "block";
-      }
-    });
-  </script>
+  </div>
+
+</div>
+</div>
+
+<script>
+const form = document.getElementById("feedbackForm");
+const successBox = document.getElementById("successBox");
+const errorBox = document.getElementById("errorBox");
+
+document.getElementById("pageField").value = window.location.pathname;
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  successBox.style.display = "none";
+  errorBox.style.display = "none";
+
+  const formData = new FormData(form);
+
+  try{
+    const res = await fetch("/feedback", { method:"POST", body:formData });
+    if(!res.ok) throw new Error();
+    form.reset();
+    successBox.style.display="block";
+  }catch{
+    errorBox.style.display="block";
+  }
+});
+</script>
 
 </body>
 </html>
