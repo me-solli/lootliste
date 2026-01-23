@@ -22,9 +22,7 @@ body{
 }
 .wrapper{max-width:1500px;margin:0 auto}
 
-/* =====================
-   QUALITY COLORS (wie submit)
-===================== */
+/* QUALITY COLORS (wie submit.html) */
 .quality-unique{color:#f5c451}
 .quality-set{color:#6fcf97}
 .quality-rare{color:#f2c94c}
@@ -70,7 +68,6 @@ body{
   object-fit:cover;
   cursor:zoom-in;
 }
-
 .item-meta h3{
   margin:0 0 6px;
   font-size:18px;
@@ -190,14 +187,20 @@ const accountId = localStorage.getItem("lootliste_account_id");
 
   mine.forEach(i=>{
     const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
-    const received = localStorage.getItem("received_confirmed_"+i.id)==="yes";
-    const handover = localStorage.getItem("handover_confirmed_"+i.id)==="yes";
+
+    const received =
+      localStorage.getItem("received_confirmed_"+i.id)==="yes";
+    const handover =
+      localStorage.getItem("handover_confirmed_"+i.id)==="yes";
 
     let statusText=i.status;
     if(received && !handover) statusText="Wartet auf deine Bestätigung";
     if(received && handover) statusText="Abgeschlossen";
 
-    const qualityClass = i.quality ? "quality-" + i.quality : "";
+    const qualityClass = i.quality ? "quality-" + i.quality.toLowerCase() : "";
+
+    const privateNote =
+      i.note_private || i.note || i.internalNote || "";
 
     const c=document.createElement("div");
     c.className="item-card";
@@ -213,12 +216,12 @@ const accountId = localStorage.getItem("lootliste_account_id");
 
         <div class="badge">Status: ${statusText}</div>
 
-${privateNote ? `
-  <div class="note-box">
-    <strong>📝 Notiz (nur für dich)</strong><br>
-    ${privateNote}
-  </div>
-` : ""}
+        ${privateNote ? `
+          <div class="note-box">
+            <strong>📝 Notiz (nur für dich)</strong><br>
+            ${privateNote}
+          </div>
+        ` : ""}
 
         ${i.status==="reserviert" && i.claimedByAccountId ? `
           <div class="claim-info">
@@ -238,7 +241,9 @@ ${privateNote ? `
         ` : ""}
 
         ${!received && i.status==="reserviert" ? `
-          <div class="confirm-wait">⏳ Warte auf Bestätigung des Empfängers</div>
+          <div class="confirm-wait">
+            ⏳ Warte auf Bestätigung des Empfängers
+          </div>
         ` : ""}
       </div>
     `;
