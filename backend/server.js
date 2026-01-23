@@ -289,6 +289,41 @@ app.post("/items", (req, res) => {
 });
 
 // ===============================
+// CLAIM ITEM (NICHT OWNER) ✅
+// ===============================
+app.post("/items/:id/claim", (req, res) => {
+  const accountId = req.headers["x-account-id"];
+  const itemId = Number(req.params.id);
+  const { contact } = req.body;
+
+  if (!accountId) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const item = items.find(i => i.id === itemId);
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (item.donorAccountId === accountId) {
+    return res.status(400).json({ error: "Cannot claim own item" });
+  }
+
+  if (item.status !== "verfügbar") {
+    return res.status(400).json({ error: "Item not available" });
+  }
+
+  item.status = "reserviert";
+  item.claimedByAccountId = accountId;
+  item.claimedAt = new Date().toISOString();
+  item.contact = contact || null;
+
+  saveJSON(ITEMS_FILE, items);
+
+  res.json(item);
+});
+
+// ===============================
 // UPDATE ITEM (NUR OWNER)
 // ===============================
 app.put("/items/:id", (req, res) => {
