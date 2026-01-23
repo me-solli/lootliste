@@ -24,27 +24,22 @@ export function renderCards(items, container) {
     card.className = "card";
     card.dataset.open = "false";
 
-    // Typ strikt & sicher
     const type = VALID_TYPES.includes(item.type) ? item.type : "sonstiges";
     card.dataset.type = type;
 
-    // Qualitätsklasse
     const qualityClass = item.quality
       ? `quality-${item.quality}`
       : "quality-normal";
 
-    // Kategorie-Label (Header)
     const categoryLabel = item.sub
       ? `${type} • ${item.sub}`
       : type;
 
-    // Spender / Quelle
     const sourceLabel = item.donor
       ? `Spender: ${item.donor}`
       : "Quelle: Community-Drop";
 
     card.innerHTML = `
-      <!-- HEADER (immer sichtbar) -->
       <button class="card-header" type="button">
         <span class="card-chevron">▶</span>
 
@@ -65,7 +60,6 @@ export function renderCards(items, container) {
         </div>
       </button>
 
-      <!-- DETAILS (ausklappbar) -->
       <div class="card-details">
 
         ${item.screenshot ? `
@@ -91,9 +85,7 @@ export function renderCards(items, container) {
           </div>
 
           <div class="claim-row">
-            <button class="claim-btn">
-              🖐️ Nehmen
-            </button>
+            <button class="claim-btn">🖐️ Nehmen</button>
           </div>
 
         </div>
@@ -101,27 +93,22 @@ export function renderCards(items, container) {
     `;
 
     /* =========================
-       TOGGLE (NUR EINE CARD OFFEN)
+       TOGGLE
     ========================== */
     const header = card.querySelector(".card-header");
     header.addEventListener("click", () => {
       const isOpen = card.dataset.open === "true";
-
-      // alle anderen Cards schließen
       document.querySelectorAll(".card[data-open='true']").forEach(c => {
         c.dataset.open = "false";
       });
-
-      // aktuelle togglen
       card.dataset.open = isOpen ? "false" : "true";
     });
 
     /* =========================
-       CLAIM LOGIK (BattleTag)
+       CLAIM LOGIK (ACCOUNT)
     ========================== */
     const btn = card.querySelector(".claim-btn");
 
-    // 🔒 Eigenes Item
     if (item.isOwner) {
       btn.disabled = true;
       btn.textContent = "🔒 Dein Item";
@@ -129,22 +116,20 @@ export function renderCards(items, container) {
     }
 
     btn.addEventListener("click", async (e) => {
-      e.stopPropagation(); // verhindert Zuklappen
+      e.stopPropagation();
       if (btn.disabled) return;
 
-      const playerId = localStorage.getItem("lootliste_user_id");
-      if (!playerId) {
-        alert("Zum Beanspruchen von Items bitte oben rechts auf der Startseite einloggen oder registrieren.");
+      const accountId = localStorage.getItem("lootliste_account_id");
+      if (!accountId) {
+        alert("Zum Beanspruchen von Items bitte oben rechts einloggen oder registrieren.");
         return;
       }
 
       const battleTag = prompt(
         "BattleTag für Übergabe (z. B. me_solli#1234):"
       );
-
       if (!battleTag) return;
 
-      // Mini-Validierung: genau ein #, links & rechts nicht leer
       const parts = battleTag.split("#");
       if (
         parts.length !== 2 ||
@@ -159,12 +144,16 @@ export function renderCards(items, container) {
       btn.textContent = "…";
 
       try {
-        const res = await fetch(`${API}/items/${item.id}/claim`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch(`${API}/items/${item.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Account-Id": accountId
+          },
           body: JSON.stringify({
-            playerId,
-            battleTag: battleTag.trim()
+            status: "reserviert",
+            contact: battleTag.trim(),
+            claimedAt: new Date().toISOString()
           })
         });
 
@@ -180,7 +169,6 @@ export function renderCards(items, container) {
           showToast("Item reserviert – BattleTag gespeichert");
         }
 
-        // Card sauber entfernen (Demo-/Listen-UX)
         card.style.opacity = "0";
         card.style.transform = "scale(0.96)";
         setTimeout(() => card.remove(), 200);
@@ -196,8 +184,4 @@ export function renderCards(items, container) {
   });
 }
 
-/* =========================
-   DEMO / DEBUG HOOK
-   (nur für Konsole & Demos)
-========================== */
 window.renderCards = renderCards;
