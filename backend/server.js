@@ -330,13 +330,22 @@ app.post("/items/:id/claim", (req, res) => {
 });
 
 // ===============================
-// CONFIRM HANDOVER (NEU & ENTSCHEIDEND)
+// CONFIRM HANDOVER (FINAL & ROBUST)
 // ===============================
 app.post("/items/:id/confirm-donor", (req, res) => {
   const acc = findAccountById(req.headers["x-account-id"]);
   const item = items.find(i => i.id == req.params.id);
+
   if (!item || item.donorAccountId !== acc?.id) {
     return res.status(403).json({ error: "Forbidden" });
+  }
+
+  // 🔧 HANDOVER SICHERSTELLEN (für alte Items!)
+  if (!item.handover) {
+    item.handover = {
+      donorConfirmed: false,
+      receiverConfirmed: false
+    };
   }
 
   item.handover.donorConfirmed = true;
@@ -349,8 +358,17 @@ app.post("/items/:id/confirm-donor", (req, res) => {
 app.post("/items/:id/confirm-receiver", (req, res) => {
   const acc = findAccountById(req.headers["x-account-id"]);
   const item = items.find(i => i.id == req.params.id);
+
   if (!item || item.claimedByAccountId !== acc?.id) {
     return res.status(403).json({ error: "Forbidden" });
+  }
+
+  // 🔧 HANDOVER SICHERSTELLEN (für alte Items!)
+  if (!item.handover) {
+    item.handover = {
+      donorConfirmed: false,
+      receiverConfirmed: false
+    };
   }
 
   item.handover.receiverConfirmed = true;
@@ -361,10 +379,13 @@ app.post("/items/:id/confirm-receiver", (req, res) => {
 });
 
 function finalizeItem(item) {
+  // 🔒 doppelt sicher
+  if (!item.handover) return;
+
   if (
     item.status === "reserviert" &&
-    item.handover.donorConfirmed &&
-    item.handover.receiverConfirmed
+    item.handover.donorConfirmed === true &&
+    item.handover.receiverConfirmed === true
   ) {
     item.status = "vergeben";
     item.completedAt = new Date().toISOString();
