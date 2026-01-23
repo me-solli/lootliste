@@ -72,9 +72,7 @@ body{
 }
 
 /* ================== ADMIN PAGE ================== */
-#page-admin{
-  display:none;
-}
+#page-admin{display:none}
 
 .wrapper{
   max-width:1500px;
@@ -114,13 +112,19 @@ body{
   margin-bottom:18px;
 }
 
-.admin-nav a{
+.admin-nav button{
   padding:6px 12px;
   border-radius:999px;
   font-size:12px;
-  text-decoration:none;
+  background:#111;
   color:var(--gold);
   border:1px solid var(--gold);
+  cursor:pointer;
+}
+
+.admin-nav button.active{
+  background:var(--gold);
+  color:#000;
 }
 
 /* ===== DASHBOARD ===== */
@@ -234,7 +238,7 @@ th{
 
 <body>
 
-<!-- ================= LOGIN PAGE ================= -->
+<!-- LOGIN -->
 <div id="page-login">
   <div class="login-box">
     <h1>Admin Login</h1>
@@ -245,7 +249,7 @@ th{
   </div>
 </div>
 
-<!-- ================= ADMIN PAGE ================= -->
+<!-- ADMIN -->
 <div id="page-admin">
   <div class="wrapper">
 
@@ -258,44 +262,67 @@ th{
     </div>
 
     <div class="admin-nav">
-      <a href="admin.html">📦 Items</a>
-      <a href="pages/admin-users.html">👥 User</a>
+      <button id="tabItems" class="active">📦 Items</button>
+      <button id="tabUsers">👥 User</button>
     </div>
 
-    <div class="dashboard">
-      <div class="stat"><strong id="cAll">0</strong><br>Items</div>
-      <div class="stat"><strong id="cFree">0</strong><br>verfügbar</div>
-      <div class="stat"><strong id="cRes">0</strong><br>reserviert</div>
-      <div class="stat"><strong id="cDone">0</strong><br>vergeben</div>
+    <!-- ITEMS VIEW -->
+    <div id="view-items">
+
+      <div class="dashboard">
+        <div class="stat"><strong id="cAll">0</strong><br>Items</div>
+        <div class="stat"><strong id="cFree">0</strong><br>verfügbar</div>
+        <div class="stat"><strong id="cRes">0</strong><br>reserviert</div>
+        <div class="stat"><strong id="cDone">0</strong><br>vergeben</div>
+      </div>
+
+      <div class="filter-bar">
+        <select id="filterStatus">
+          <option value="">Status: alle</option>
+          <option value="verfügbar">verfügbar</option>
+          <option value="reserviert">reserviert</option>
+          <option value="vergeben">vergeben</option>
+        </select>
+        <select id="filterSeason">
+          <option value="">Season: alle</option>
+          <option value="non-ladder">non-ladder</option>
+          <option value="ladder">ladder</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Item</th>
+              <th>Status</th>
+              <th>Spender</th>
+              <th>Season</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
     </div>
 
-    <div class="filter-bar">
-      <select id="filterStatus">
-        <option value="">Status: alle</option>
-        <option value="verfügbar">verfügbar</option>
-        <option value="reserviert">reserviert</option>
-        <option value="vergeben">vergeben</option>
-      </select>
-      <select id="filterSeason">
-        <option value="">Season: alle</option>
-        <option value="non-ladder">non-ladder</option>
-        <option value="ladder">ladder</option>
-      </select>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Item</th>
-            <th>Status</th>
-            <th>Spender</th>
-            <th>Season</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
+    <!-- USERS VIEW -->
+    <div id="view-users" style="display:none">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Registriert</th>
+              <th>Letzter Login</th>
+              <th>Gespendet</th>
+              <th>Erhalten</th>
+            </tr>
+          </thead>
+          <tbody id="userTable"></tbody>
+        </table>
+      </div>
     </div>
 
   </div>
@@ -317,7 +344,6 @@ const adminName = document.getElementById("adminName");
 async function init(){
   const acc = localStorage.getItem("lootliste_account_id");
   if(!acc) return;
-
   try{
     const me = await fetch(API+"/me",{ headers:{ "X-Account-Id":acc }}).then(r=>r.json());
     if(me.username === ADMIN){
@@ -330,34 +356,20 @@ async function init(){
 /* ===== LOGIN ===== */
 loginBtn.onclick = async ()=>{
   loginError.textContent="";
-  try{
-    const res = await fetch(API+"/auth/login",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        username:loginUser.value.trim(),
-        password:loginPass.value
-      })
-    });
-
-    if(!res.ok){
-      loginError.textContent="Login fehlgeschlagen";
-      return;
-    }
-
-    const data = await res.json();
-    localStorage.setItem("lootliste_account_id", data.accountId);
-
-    if(data.username !== ADMIN){
-      loginError.textContent="Kein Admin-Zugriff";
-      return;
-    }
-
-    showAdmin(data.username);
-    loadItems();
-  }catch{
-    loginError.textContent="Netzwerkfehler";
-  }
+  const res = await fetch(API+"/auth/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      username:loginUser.value.trim(),
+      password:loginPass.value
+    })
+  });
+  if(!res.ok) return loginError.textContent="Login fehlgeschlagen";
+  const data = await res.json();
+  localStorage.setItem("lootliste_account_id", data.accountId);
+  if(data.username !== ADMIN) return loginError.textContent="Kein Admin-Zugriff";
+  showAdmin(data.username);
+  loadItems();
 };
 
 function showAdmin(username){
@@ -369,12 +381,26 @@ function showAdmin(username){
 /* ===== LOGOUT ===== */
 function logout(){
   localStorage.removeItem("lootliste_account_id");
-  pageAdmin.style.display="none";
-  pageLogin.style.display="flex";
-  loginPass.value="";
+  location.reload();
 }
 
-/* ===== DATA ===== */
+/* ===== TABS ===== */
+tabItems.onclick=()=>{
+  tabItems.classList.add("active");
+  tabUsers.classList.remove("active");
+  view-items.style.display="block";
+  view-users.style.display="none";
+};
+
+tabUsers.onclick=()=>{
+  tabUsers.classList.add("active");
+  tabItems.classList.remove("active");
+  view-items.style.display="none";
+  view-users.style.display="block";
+  loadUsers();
+};
+
+/* ===== ITEMS ===== */
 async function loadItems(){
   const items = await fetch(API+"/items").then(r=>r.json());
   render(items);
@@ -431,6 +457,26 @@ function showShot(src){
 
 filterStatus.onchange=loadItems;
 filterSeason.onchange=loadItems;
+
+/* ===== USERS ===== */
+async function loadUsers(){
+  const users = await fetch(API+"/admin/accounts").then(r=>r.json());
+  const stats = await fetch(API+"/admin/stats").then(r=>r.json());
+
+  userTable.innerHTML="";
+  users.forEach(u=>{
+    const s = stats.find(x=>x.accountId===u.id)||{};
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td><strong>${u.username}</strong></td>
+      <td>${new Date(u.createdAt).toLocaleString()}</td>
+      <td>${new Date(u.lastLoginAt).toLocaleString()}</td>
+      <td>${s.itemsDonated||0}</td>
+      <td>${s.itemsReceived||0}</td>
+    `;
+    userTable.appendChild(tr);
+  });
+}
 
 init();
 </script>
