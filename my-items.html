@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Meine Items – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -9,8 +9,9 @@
 :root{
   --gold:#f5c451;
   --border:#2a2a2a;
-  --blue:#8fd1ff;
-  --green:#8fd18f;
+  --green:#4cff4c;
+  --yellow:#f0e68c;
+  --blue:#6fa8ff;
 }
 *{box-sizing:border-box}
 
@@ -20,99 +21,103 @@ body{
   background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
-.wrapper{max-width:1500px;margin:0 auto}
 
-/* QUALITY COLORS (wie submit.html) */
-.quality-unique{color:#f5c451}
-.quality-set{color:#6fcf97}
-.quality-rare{color:#f2c94c}
-.quality-magic{color:#56ccf2}
+.wrapper{max-width:1500px;margin:0 auto;padding:28px}
 
-/* HERO */
-.hero{
-  background:url("img/banner_diablo.png") center top / cover no-repeat;
-  border-radius:0 0 26px 26px;
-  overflow:hidden;
-  min-height:200px;
-}
-.hero-inner{
-  padding:36px 36px 32px;
-  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.75));
-}
-.hero h1{margin:0;font-size:34px;font-weight:700}
-.hero p{margin:8px 0 0;opacity:.85}
-
-/* CONTENT */
-.container{padding:34px 28px 60px}
-.items-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
-  gap:22px;
-}
-.item-card{
+/* ===== HEADER ===== */
+.page-header{
   display:flex;
-  gap:16px;
-  padding:16px;
-  border-radius:20px;
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,.045),
-    rgba(255,255,255,.02)
-  );
-  border:1px solid rgba(255,255,255,.08);
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
 }
-.item-card img{
-  width:96px;
-  height:96px;
+.page-header h1{margin:0}
+
+/* ===== DASHBOARD ===== */
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+  margin-bottom:16px;
+}
+.stat{
+  padding:14px;
+  background:#121212;
+  border:1px solid #222;
   border-radius:14px;
-  object-fit:cover;
-  cursor:zoom-in;
 }
-.item-meta h3{
-  margin:0 0 6px;
-  font-size:18px;
+.stat strong{font-size:20px}
+
+/* ===== FILTER ===== */
+.filter-bar{
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
 }
-.sub{
-  font-size:13px;
-  color:#b5b5b5;
-}
-.badge{
-  margin-top:6px;
-  display:inline-block;
-  padding:3px 8px;
-  font-size:11px;
-  border-radius:8px;
+select{
+  padding:8px 10px;
   background:#111;
-  border:1px solid rgba(255,255,255,.18);
-}
-
-/* PRIVATE NOTE */
-.note-box{
-  margin-top:8px;
-  padding:8px 10px;
-  font-size:12px;
+  border:1px solid #333;
+  color:#fff;
   border-radius:10px;
-  background:#0f0f0f;
-  border:1px dashed rgba(255,255,255,.25);
-  color:#cfcfcf;
 }
-.note-box strong{color:#fff}
 
-/* CLAIM INFO */
-.claim-info{
-  margin-top:8px;
+/* ===== TABLE ===== */
+.table-wrap{
+  background:#0f0f0f;
+  border:1px solid #222;
+  border-radius:18px;
+  overflow:hidden;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid #222;
+  vertical-align:top;
+}
+th{color:#aaa;font-weight:500}
+
+/* ===== BADGES ===== */
+.badge{
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:11px;
+  background:#111;
+  border:1px solid #333;
+}
+.badge.green{color:var(--green)}
+.badge.yellow{color:var(--yellow)}
+.badge.blue{color:var(--blue)}
+
+/* ===== ITEM CELL ===== */
+.item-cell{display:flex;align-items:center;gap:12px}
+.item-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:#000;border:1px solid #333;
+  display:flex;align-items:center;justify-content:center;
+  cursor:zoom-in
+}
+.item-icon img{width:26px}
+
+/* ===== DETAILS ===== */
+.detail-box{
+  margin-top:6px;
   padding:8px 10px;
-  font-size:12px;
   border-radius:10px;
+  font-size:12px;
   background:#0f0f0f;
-  border:1px solid rgba(245,196,81,.35);
-  color:#f5e6b3;
+  border:1px dashed #333;
 }
+.detail-box.gold{border-color:rgba(245,196,81,.5);color:#f5e6b3}
+.detail-box.blue{border-color:rgba(111,168,255,.5);color:#8fd1ff}
 
-/* CONFIRM */
-.confirm-box{margin-top:8px}
 .confirm-btn{
-  padding:6px 12px;
+  margin-top:6px;
+  padding:6px 10px;
   font-size:12px;
   border-radius:10px;
   border:1px solid rgba(143,209,143,.6);
@@ -120,159 +125,145 @@ body{
   color:#cfe9cf;
   cursor:pointer;
 }
-.confirm-wait{
-  margin-top:8px;
-  font-size:12px;
-  color:var(--blue);
-}
-.confirm-done{
-  margin-top:8px;
-  font-size:12px;
-  color:var(--green);
-}
 
-/* OVERLAY */
-.overlay{
-  position:fixed;
-  inset:0;
+/* ===== OVERLAY ===== */
+#overlay{
+  position:fixed;inset:0;
   background:rgba(0,0,0,.85);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
+  display:none;align-items:center;justify-content:center;
+  z-index:9999
 }
-.overlay img{
-  max-width:90vw;
-  max-height:90vh;
-  border-radius:14px;
-}
+#overlay img{max-width:90%;max-height:90%;border-radius:14px}
 </style>
 </head>
-
 <body>
+
 <div class="wrapper">
 
-<header class="hero">
-  <div class="hero-inner">
-    <h1>Meine Items</h1>
-    <p>Alle Items, die du selbst eingereicht hast</p>
+  <div class="page-header">
+    <h1>📦 Meine Items</h1>
   </div>
-</header>
 
-<div class="container">
-  <div id="output"></div>
+  <div class="dashboard">
+    <div class="stat"><strong id="cAll">0</strong><br>Items</div>
+    <div class="stat"><strong id="cFree">0</strong><br>verfügbar</div>
+    <div class="stat"><strong id="cRes">0</strong><br>reserviert</div>
+    <div class="stat"><strong id="cDone">0</strong><br>abgeschlossen</div>
+  </div>
+
+  <div class="filter-bar">
+    <select id="filterStatus">
+      <option value="">Status: alle</option>
+      <option value="verfügbar">verfügbar</option>
+      <option value="reserviert">reserviert</option>
+      <option value="vergeben">abgeschlossen</option>
+    </select>
+    <select id="filterSeason">
+      <option value="">Season: alle</option>
+      <option value="non-ladder">non-ladder</option>
+      <option value="ladder">ladder</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Item</th>
+          <th>Status</th>
+          <th>Details</th>
+          <th>Season</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
 </div>
 
-<div class="overlay" id="overlay">
-  <img id="overlayImg">
-</div>
+<div id="overlay" onclick="this.style.display='none'"><img id="overlayImg"></div>
 
 <script>
 const API = "https://lootliste-production.up.railway.app";
 const accountId = localStorage.getItem("lootliste_account_id");
 
-(async()=>{
-  const out=document.getElementById("output");
-  if(!accountId){
-    out.innerHTML="<p>Du bist nicht eingeloggt.</p>";
-    return;
-  }
+if(!accountId){
+  document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
+}
 
+function isDone(i){
+  return i.status === "vergeben" ||
+    i.handover?.donorConfirmed ||
+    localStorage.getItem("handover_confirmed_"+i.id)==="yes";
+}
+
+async function load(){
   const items = await fetch(API+"/items").then(r=>r.json());
-  const mine = items.filter(i=>i.donorAccountId===accountId);
   const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
-  const grid=document.createElement("div");
-  grid.className="items-grid";
+  const mine = items.filter(i=>i.donorAccountId===accountId);
 
-  mine.forEach(i=>{
+  const list = mine.map(i=>({ ...i, phase: isDone(i)?"vergeben":i.status }));
+
+  cAll.textContent=list.length;
+  cFree.textContent=list.filter(i=>i.phase==="verfügbar").length;
+  cRes.textContent=list.filter(i=>i.phase==="reserviert").length;
+  cDone.textContent=list.filter(i=>i.phase==="vergeben").length;
+
+  render(list, accounts);
+}
+
+function render(list, accounts){
+  tableBody.innerHTML="";
+  const fs=filterStatus.value;
+  const fse=filterSeason.value;
+
+  list.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
+  .forEach(i=>{
     const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
+    const tr=document.createElement("tr");
 
-    const received =
-      localStorage.getItem("received_confirmed_"+i.id)==="yes";
-    const handover =
-      localStorage.getItem("handover_confirmed_"+i.id)==="yes";
-
-    let statusText=i.status;
-    if(received && !handover) statusText="Wartet auf deine Bestätigung";
-    if(received && handover) statusText="Abgeschlossen";
-
-    const qualityClass = i.quality ? "quality-" + i.quality.toLowerCase() : "";
-
-    const privateNote =
-      i.note_private || i.note || i.internalNote || "";
-
-    const c=document.createElement("div");
-    c.className="item-card";
-
-    c.innerHTML=`
-      <img src="${i.screenshot||""}">
-      <div class="item-meta">
-        <h3 class="${qualityClass}">${i.name}</h3>
-
-        <div class="sub ${qualityClass}">
-          ${i.quality} · ${i.type}
+    tr.innerHTML=`
+      <td>${i.id}</td>
+      <td>
+        <div class="item-cell">
+          <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
+            <img src="img/icons/${i.type||"sonstiges"}.png">
+          </div>
+          <strong>${i.name}</strong>
         </div>
-
-        <div class="badge">Status: ${statusText}</div>
-
-        ${privateNote ? `
-          <div class="note-box">
-            <strong>📝 Notiz (nur für dich)</strong><br>
-            ${privateNote}
-          </div>
-        ` : ""}
-
-        ${i.status==="reserviert" && i.claimedByAccountId ? `
-          <div class="claim-info">
-            <strong>Reserviert von:</strong> ${claimer ? claimer.username : "Unbekannt"}<br>
-            <strong>BattleTag:</strong> ${i.contact || "–"}
-          </div>
-        ` : ""}
-
-        ${received && !handover ? `
-          <div class="confirm-box">
-            <button class="confirm-btn">✔ Übergabe bestätigt</button>
-          </div>
-        ` : ""}
-
-        ${received && handover ? `
-          <div class="confirm-done">✔ Übergabe abgeschlossen</div>
-        ` : ""}
-
-        ${!received && i.status==="reserviert" ? `
-          <div class="confirm-wait">
-            ⏳ Warte auf Bestätigung des Empfängers
-          </div>
-        ` : ""}
-      </div>
+      </td>
+      <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
+      <td>
+        ${i.note_private?`<div class="detail-box"><strong>📝 Notiz</strong><br>${i.note_private}</div>`:""}
+        ${i.phase==="reserviert"&&claimer?`<div class="detail-box gold"><strong>Reserviert von:</strong> ${claimer.username}<br>${i.contact||""}</div>`:""}
+        ${i.phase==="reserviert"&&!isDone(i)?`<div class="detail-box blue">⏳ Warte auf Bestätigung des Empfängers</div>`:""}
+        ${isDone(i)&&!i.handover?.donorConfirmed?`<button class="confirm-btn" onclick="confirmDone(${i.id})">✔ Übergabe bestätigt</button>`:""}
+      </td>
+      <td>${i.season||"–"}</td>
     `;
-
-    const img=c.querySelector("img");
-    img.onclick=()=>{
-      document.getElementById("overlayImg").src=img.src;
-      document.getElementById("overlay").style.display="flex";
-    };
-
-    const btn=c.querySelector(".confirm-btn");
-    if(btn){
-      btn.onclick=()=>{
-        if(confirm("Hast du das Item ingame übergeben?")){
-          localStorage.setItem("handover_confirmed_"+i.id,"yes");
-          location.reload();
-        }
-      };
-    }
-
-    grid.appendChild(c);
+    tableBody.appendChild(tr);
   });
+}
 
-  out.appendChild(grid);
-})();
+function confirmDone(id){
+  if(confirm("Hast du das Item ingame übergeben?")){
+    localStorage.setItem("handover_confirmed_"+id,"yes");
+    location.reload();
+  }
+}
 
-document.getElementById("overlay").onclick=()=>{
-  document.getElementById("overlay").style.display="none";
-};
+function showShot(src){
+  if(!src) return;
+  overlayImg.src=src;
+  overlay.style.display="flex";
+}
+
+filterStatus.onchange=load;
+filterSeason.onchange=load;
+
+load();
 </script>
 
 </body>
