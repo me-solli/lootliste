@@ -314,12 +314,45 @@ function render(list, accounts){
     });
 }
 
-function confirmDone(id){if(confirm("Hast du das Item ingame übergeben?")){localStorage.setItem("handover_confirmed_"+id,"yes");location.reload();}}
-async function removeItem(id){if(!confirm("Item wirklich löschen?"))return;await fetch(API+"/items/"+id,{method:"DELETE",headers:{"X-Account-Id":accountId}});load();}
-function showShot(src){if(!src)return;overlayImg.src=src;overlay.style.display="flex"}
+async function confirmDone(id){
+  if(!confirm("Hast du das Item ingame übergeben?")) return;
 
-filterStatus.onchange=load;
-filterSeason.onchange=load;
+  try{
+    await fetch(API + "/items/" + id + "/confirm-donor", {
+      method: "POST",
+      headers: {
+        "X-Account-Id": accountId
+      }
+    });
+  }catch(e){
+    alert("Fehler beim Bestätigen der Übergabe");
+    return;
+  }
+
+  location.reload();
+}
+
+async function removeItem(id){
+  if(!confirm("Item wirklich löschen?")) return;
+
+  await fetch(API + "/items/" + id, {
+    method: "DELETE",
+    headers: {
+      "X-Account-Id": accountId
+    }
+  });
+
+  load();
+}
+
+function showShot(src){
+  if(!src) return;
+  overlayImg.src = src;
+  overlay.style.display = "flex";
+}
+
+filterStatus.onchange = load;
+filterSeason.onchange = load;
 
 load();
 </script>
