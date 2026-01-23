@@ -20,12 +20,6 @@ body{
 }
 .wrapper{max-width:1500px;margin:0 auto}
 
-/* QUALITY */
-.quality-unique{ color:#f5c451; }
-.quality-set{ color:#6fcf97; }
-.quality-rare{ color:#f2c94c; }
-.quality-magic{ color:#56ccf2; }
-
 /* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
@@ -40,21 +34,6 @@ body{
 }
 .hero h1{margin:0;font-size:34px;font-weight:700}
 .hero p{margin:8px 0 0;opacity:.85}
-
-/* AUTH */
-.auth-box{
-  position:absolute;
-  top:22px;
-  right:24px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:10px 14px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:rgba(0,0,0,.55);
-  font-size:13px;
-}
 
 /* CONTENT */
 .container{padding:34px 28px 60px}
@@ -94,34 +73,15 @@ body{
   border:1px solid rgba(255,255,255,.18);
 }
 
-/* BATTLETAG */
-.battletag-box{
+/* CLAIM INFO */
+.claim-info{
   margin-top:8px;
-  padding:6px 10px;
+  padding:8px 10px;
   font-size:12px;
   border-radius:10px;
   background:#0f0f0f;
   border:1px solid rgba(245,196,81,.35);
   color:#f5e6b3;
-}
-
-/* HANDOVER */
-.handover-box{
-  margin-top:10px;
-}
-.handover-btn{
-  padding:6px 12px;
-  font-size:12px;
-  border-radius:10px;
-  border:1px solid rgba(245,196,81,.5);
-  background:#111;
-  color:#f5e6b3;
-  cursor:pointer;
-}
-.handover-done{
-  font-size:12px;
-  color:#9fcf9f;
-  margin-top:6px;
 }
 
 /* OVERLAY */
@@ -161,7 +121,7 @@ body{
 </div>
 
 <script>
-const API_BASE = "https://lootliste-production.up.railway.app";
+const API = "https://lootliste-production.up.railway.app";
 const accountId = localStorage.getItem("lootliste_account_id");
 
 (async()=>{
@@ -171,57 +131,37 @@ const accountId = localStorage.getItem("lootliste_account_id");
     return;
   }
 
-  const res=await fetch(API_BASE+"/items");
-  const items=await res.json();
+  // Items laden
+  const items = await fetch(API+"/items").then(r=>r.json());
+  const mine = items.filter(i=>i.donorAccountId===accountId);
 
-  const mine=items.filter(i=>i.donorAccountId===accountId);
+  // Accounts laden (für Username-Auflösung)
+  const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
   const grid=document.createElement("div");
   grid.className="items-grid";
 
   mine.forEach(i=>{
+    const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
+
     const c=document.createElement("div");
     c.className="item-card";
-
-    const handoverKey = "handover_confirmed_" + i.id;
-    const handoverDone = localStorage.getItem(handoverKey)==="yes";
 
     c.innerHTML=`
       <img src="${i.screenshot||""}">
       <div class="item-meta">
         <h3>${i.name}</h3>
         <div class="sub">${i.quality} · ${i.type}</div>
-        <div class="badge">Status: ${handoverDone?"Übergabe bestätigt":"Reserviert"}</div>
+        <div class="badge">Status: ${i.status}</div>
 
-        ${i.battleTag?`
-          <div class="battletag-box">
-            Reserviert von:<br><strong>${i.battleTag}</strong>
+        ${i.status==="reserviert" && i.claimedByAccountId ? `
+          <div class="claim-info">
+            <strong>Reserviert von:</strong> ${claimer ? claimer.username : "Unbekannt"}<br>
+            <strong>BattleTag:</strong> ${i.contact || "–"}
           </div>
-        `:""}
-
-        ${i.battleTag && !handoverDone ? `
-          <div class="handover-box">
-            <button class="handover-btn">✔ Übergabe erfolgt</button>
-          </div>
-        `:""}
-
-        ${handoverDone ? `
-          <div class="handover-done">
-            ✔ Übergabe bestätigt – wartet auf Empfänger
-          </div>
-        `:""}
+        ` : ""}
       </div>
     `;
-
-    const btn=c.querySelector(".handover-btn");
-    if(btn){
-      btn.onclick=()=>{
-        if(confirm("Item wurde ingame übergeben?")){
-          localStorage.setItem(handoverKey,"yes");
-          location.reload();
-        }
-      };
-    }
 
     const img=c.querySelector("img");
     img.onclick=()=>{
