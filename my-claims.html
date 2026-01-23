@@ -8,11 +8,9 @@
 <style>
 :root{
   --gold:#f5c451;
-  --bg:#0b0b0b;
-  --panel:#121212;
-  --border:#2a2a2a;
   --blue:#8fd1ff;
   --green:#8fd18f;
+  --border:#2a2a2a;
 }
 
 *{box-sizing:border-box}
@@ -84,17 +82,6 @@ body{
   font-size:12px;
 }
 
-/* EMPTY */
-.empty-box{
-  margin-top:30px;
-  padding:26px 24px;
-  border:1px dashed rgba(255,255,255,.18);
-  border-radius:16px;
-  text-align:center;
-  font-size:14px;
-  color:#cfcfcf;
-}
-
 /* CLAIMS */
 .claims-grid{
   display:grid;
@@ -124,15 +111,6 @@ body{
   color:#b5b5b5;
 }
 
-.claim-status{
-  margin-top:10px;
-  font-size:13px;
-}
-.claim-status.reserviert{color:var(--gold)}
-.claim-status.wartet{color:var(--blue)}
-.claim-status.vergeben{color:var(--green)}
-
-/* CLAIM INFO (NEU) */
 .claim-info{
   margin-top:8px;
   padding:8px 10px;
@@ -143,10 +121,15 @@ body{
   color:#f5e6b3;
 }
 
-/* CONFIRM */
-.confirm-box{
-  margin-top:12px;
+.claim-status{
+  margin-top:10px;
+  font-size:13px;
 }
+.claim-status.reserviert{color:var(--gold)}
+.claim-status.wartet{color:var(--blue)}
+.claim-status.vergeben{color:var(--green)}
+
+.confirm-box{margin-top:12px}
 .confirm-btn{
   padding:6px 12px;
   font-size:12px;
@@ -156,10 +139,15 @@ body{
   color:#cfe9cf;
   cursor:pointer;
 }
-.confirm-done{
-  margin-top:6px;
+.confirm-wait{
+  margin-top:8px;
   font-size:12px;
-  color:#8fd18f;
+  color:var(--blue);
+}
+.confirm-done{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--green);
 }
 </style>
 </head>
@@ -172,7 +160,7 @@ body{
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="playerIdLabel" data-placeholder="Spieler lädt…"></span>
+      <span id="playerIdLabel">–</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
@@ -193,61 +181,42 @@ body{
   <div id="list"></div>
 
 </div>
-</div>
 
 <script>
-/* CONFIG */
-const API_BASE = "https://lootliste-production.up.railway.app";
-const API_ITEMS = API_BASE + "/items";
-
-/* IDS */
-const deviceId  = localStorage.getItem("lootliste_user_id");
+const API = "https://lootliste-production.up.railway.app";
 const accountId = localStorage.getItem("lootliste_account_id");
+const deviceId  = localStorage.getItem("lootliste_user_id");
 
-/* USER LABEL */
 const label = document.getElementById("playerIdLabel");
 const userDisplay = document.getElementById("userDisplay");
+const list = document.getElementById("list");
 
+/* USER */
 (async()=>{
   if(!accountId) return;
-  const res = await fetch(API_BASE + "/me",{
-    headers:{
-      "X-User-Id":deviceId||"",
-      "X-Account-Id":accountId
-    }
-  });
-  const data = await res.json();
-  if(data.username){
-    label.textContent=data.username;
-    userDisplay.textContent=data.username;
+  const r = await fetch(API+"/me",{headers:{
+    "X-Account-Id":accountId,
+    "X-User-Id":deviceId||""
+  }});
+  const d = await r.json();
+  if(d.username){
+    label.textContent=d.username;
+    userDisplay.textContent=d.username;
   }
 })();
 
-/* LOAD CLAIMS */
-const list = document.getElementById("list");
-
 if(!accountId){
-  list.innerHTML=`<div class="empty-box">Du bist nicht eingeloggt.</div>`;
+  list.innerHTML="<p>Du bist nicht eingeloggt.</p>";
 }else{
-  loadMyClaims();
+  loadClaims();
 }
 
-async function loadMyClaims(){
-  const res = await fetch(API_ITEMS,{
-    headers:{
-      "X-User-Id":deviceId||"",
-      "X-Account-Id":accountId
-    }
-  });
-  const items = await res.json();
-
-  const mine = items.filter(i => i.claimedByAccountId === accountId);
+async function loadClaims(){
+  const items = await fetch(API+"/items").then(r=>r.json());
+  const mine = items.filter(i=>i.claimedByAccountId===accountId);
 
   if(!mine.length){
-    list.innerHTML=`
-      <div class="empty-box">
-        Du hast aktuell keine reservierten oder erhaltenen Items.
-      </div>`;
+    list.innerHTML="<p>Keine aktiven Claims.</p>";
     return;
   }
 
@@ -255,67 +224,59 @@ async function loadMyClaims(){
   grid.className="claims-grid";
 
   mine.forEach(item=>{
+    const received = localStorage.getItem("received_confirmed_"+item.id)==="yes";
+    const handover = localStorage.getItem("handover_confirmed_"+item.id)==="yes";
+
+    let status="Reserviert";
+    let cls="reserviert";
+
+    if(received && !handover){
+      status="Wartet auf Bestätigung des Spenders";
+      cls="wartet";
+    }
+    if(received && handover){
+      status="Abgeschlossen";
+      cls="vergeben";
+    }
+
     const card=document.createElement("div");
     card.className="claim-card";
 
-    const handoverDone =
-      localStorage.getItem("handover_confirmed_"+item.id)==="yes";
-    const receivedDone =
-      localStorage.getItem("received_confirmed_"+item.id)==="yes";
-
-    let statusText="Reserviert";
-    let statusClass="reserviert";
-
-    if(handoverDone && !receivedDone){
-      statusText="Übergabe bestätigt (warte auf dich)";
-      statusClass="wartet";
-    }
-    if(receivedDone){
-      statusText="Vergeben (bestätigt)";
-      statusClass="vergeben";
-    }
-
     card.innerHTML=`
       <div class="claim-name">${item.name}</div>
-
       <div class="claim-meta">
-        Reserviert am:
-        ${item.claimedAt
-          ? new Date(item.claimedAt).toLocaleDateString("de-DE")
-          : "–"}
+        Reserviert am: ${item.claimedAt ? new Date(item.claimedAt).toLocaleDateString("de-DE") : "–"}
       </div>
 
-      <!-- NEU: CLAIM INFOS -->
       <div class="claim-info">
         <strong>Spender:</strong> ${item.donor || "–"}<br>
         <strong>BattleTag:</strong> ${item.contact || "–"}
       </div>
 
-      <div class="claim-status ${statusClass}">
-        Status: ${statusText}
+      <div class="claim-status ${cls}">
+        Status: ${status}
       </div>
 
-      ${handoverDone && !receivedDone ? `
+      ${!received ? `
         <div class="confirm-box">
           <button class="confirm-btn">✔ Item erhalten</button>
         </div>
-      `:""}
+      ` : ""}
 
-      ${receivedDone ? `
-        <div class="confirm-done">
-          ✔ Erhalt bestätigt
-        </div>
-      `:""}
+      ${received && !handover ? `
+        <div class="confirm-wait">⏳ Warten auf Bestätigung des Spenders</div>
+      ` : ""}
+
+      ${received && handover ? `
+        <div class="confirm-done">✔ Übergabe abgeschlossen</div>
+      ` : ""}
     `;
 
     const btn=card.querySelector(".confirm-btn");
     if(btn){
       btn.onclick=()=>{
         if(confirm("Hast du das Item ingame erhalten?")){
-          localStorage.setItem(
-            "received_confirmed_"+item.id,
-            "yes"
-          );
+          localStorage.setItem("received_confirmed_"+item.id,"yes");
           location.reload();
         }
       };
