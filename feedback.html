@@ -228,6 +228,8 @@ button:hover{
 </div>
 
 <script>
+const API = "https://lootliste-production.up.railway.app";
+
 const form = document.getElementById("feedbackForm");
 const successBox = document.getElementById("successBox");
 const errorBox = document.getElementById("errorBox");
@@ -243,8 +245,13 @@ form.addEventListener("submit", async (e) => {
   const formData = new FormData(form);
 
   try{
-    const res = await fetch("/feedback", { method:"POST", body:formData });
+    const res = await fetch(API + "/feedback", {
+      method:"POST",
+      body:formData
+    });
+
     if(!res.ok) throw new Error();
+
     form.reset();
     successBox.style.display="block";
   }catch{
