@@ -144,16 +144,14 @@ export function renderCards(items, container) {
       btn.textContent = "…";
 
       try {
-        const res = await fetch(`${API}/items/${item.id}`, {
-          method: "PUT",
+        const res = await fetch(`${API}/items/${item.id}/claim`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             "X-Account-Id": accountId
           },
           body: JSON.stringify({
-            status: "reserviert",
-            contact: battleTag.trim(),
-            claimedAt: new Date().toISOString()
+            contact: battleTag.trim()
           })
         });
 
