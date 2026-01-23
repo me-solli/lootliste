@@ -729,6 +729,39 @@ body{
 }
 
   /* ================================
+   PROJECT STATUS – ACTION
+================================ */
+
+.status-actions{
+  margin-top:10px;
+}
+
+.status-btn{
+  display:inline-block;
+  padding:6px 12px;
+  font-size:12px;
+  border-radius:999px;
+  text-decoration:none;
+
+  color:var(--gold);
+  border:1px solid rgba(245,196,81,.35);
+  background:rgba(245,196,81,.06);
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .15s ease;
+}
+
+.status-btn:hover{
+  background:rgba(245,196,81,.12);
+  border-color:rgba(245,196,81,.65);
+  box-shadow:0 0 10px rgba(245,196,81,.35);
+  transform:translateY(-1px);
+}
+
+  /* ================================
    FILTER + SLOGAN FLOW
 ================================ */
 .filter-slogan-wrap{
