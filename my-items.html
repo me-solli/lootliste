@@ -12,6 +12,7 @@
   --green:#4cff4c;
   --yellow:#f0e68c;
   --blue:#6fa8ff;
+  --red:#ff6b6b;
 }
 *{box-sizing:border-box}
 
@@ -22,44 +23,49 @@ body{
   color:#eaeaea;
 }
 
-.wrapper{max-width:1500px;margin:0 auto;padding:28px}
+.wrapper{max-width:1600px;margin:0 auto;padding:28px}
 
 /* ===== HEADER ===== */
-.page-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
-}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .page-header h1{margin:0}
 
 /* ===== DASHBOARD ===== */
 .dashboard{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:14px;
-  margin-bottom:16px;
+  margin-bottom:18px;
 }
 .stat{
-  padding:14px;
+  padding:16px;
   background:#121212;
   border:1px solid #222;
-  border-radius:14px;
+  border-radius:16px;
 }
-.stat strong{font-size:20px}
+.stat strong{font-size:22px}
+.stat small{display:block;margin-top:4px;color:#aaa;font-size:12px}
 
-/* ===== FILTER ===== */
-.filter-bar{
+/* ===== ACTION BAR ===== */
+.action-bar{
   display:flex;
-  gap:10px;
-  margin-bottom:12px;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
 }
+
+.filter-bar{display:flex;gap:10px}
 select{
   padding:8px 10px;
   background:#111;
   border:1px solid #333;
   color:#fff;
   border-radius:10px;
+}
+
+.bulk-bar{
+  font-size:12px;
+  color:#aaa;
 }
 
 /* ===== TABLE ===== */
@@ -69,26 +75,14 @@ select{
   border-radius:18px;
   overflow:hidden;
 }
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}
-th,td{
-  padding:10px;
-  border-bottom:1px solid #222;
-  vertical-align:top;
-}
-th{color:#aaa;font-weight:500}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:12px;border-bottom:1px solid #222;vertical-align:top}
+th{color:#aaa;font-weight:500;text-align:left}
+
+tr:hover{background:rgba(255,255,255,.02)}
 
 /* ===== BADGES ===== */
-.badge{
-  padding:3px 8px;
-  border-radius:999px;
-  font-size:11px;
-  background:#111;
-  border:1px solid #333;
-}
+.badge{padding:4px 10px;border-radius:999px;font-size:11px;background:#111;border:1px solid #333}
 .badge.green{color:var(--green)}
 .badge.yellow{color:var(--yellow)}
 .badge.blue{color:var(--blue)}
@@ -96,16 +90,19 @@ th{color:#aaa;font-weight:500}
 /* ===== ITEM CELL ===== */
 .item-cell{display:flex;align-items:center;gap:12px}
 .item-icon{
-  width:40px;height:40px;border-radius:10px;
+  width:42px;height:42px;border-radius:12px;
   background:#000;border:1px solid #333;
   display:flex;align-items:center;justify-content:center;
   cursor:zoom-in
 }
 .item-icon img{width:26px}
 
+.item-meta strong{display:block}
+.item-meta small{color:#888;font-size:12px}
+
 /* ===== DETAILS ===== */
+.detail-stack{display:flex;flex-direction:column;gap:6px}
 .detail-box{
-  margin-top:6px;
   padding:8px 10px;
   border-radius:10px;
   font-size:12px;
@@ -115,24 +112,22 @@ th{color:#aaa;font-weight:500}
 .detail-box.gold{border-color:rgba(245,196,81,.5);color:#f5e6b3}
 .detail-box.blue{border-color:rgba(111,168,255,.5);color:#8fd1ff}
 
-.confirm-btn{
-  margin-top:6px;
+/* ===== ACTIONS ===== */
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.action-btn{
   padding:6px 10px;
   font-size:12px;
   border-radius:10px;
-  border:1px solid rgba(143,209,143,.6);
-  background:#0f1a0f;
-  color:#cfe9cf;
+  background:#111;
+  border:1px solid #333;
+  color:#ddd;
   cursor:pointer;
 }
+.action-btn.green{border-color:rgba(143,209,143,.6);color:#cfe9cf}
+.action-btn.red{border-color:rgba(255,107,107,.6);color:#ffb3b3}
 
 /* ===== OVERLAY ===== */
-#overlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.85);
-  display:none;align-items:center;justify-content:center;
-  z-index:9999
-}
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9999}
 #overlay img{max-width:90%;max-height:90%;border-radius:14px}
 </style>
 </head>
@@ -145,24 +140,27 @@ th{color:#aaa;font-weight:500}
   </div>
 
   <div class="dashboard">
-    <div class="stat"><strong id="cAll">0</strong><br>Items</div>
-    <div class="stat"><strong id="cFree">0</strong><br>verfügbar</div>
-    <div class="stat"><strong id="cRes">0</strong><br>reserviert</div>
-    <div class="stat"><strong id="cDone">0</strong><br>abgeschlossen</div>
+    <div class="stat"><strong id="cAll">0</strong><small>Alle Items</small></div>
+    <div class="stat"><strong id="cFree">0</strong><small>Verfügbar</small></div>
+    <div class="stat"><strong id="cRes">0</strong><small>Reserviert</small></div>
+    <div class="stat"><strong id="cDone">0</strong><small>Abgeschlossen</small></div>
   </div>
 
-  <div class="filter-bar">
-    <select id="filterStatus">
-      <option value="">Status: alle</option>
-      <option value="verfügbar">verfügbar</option>
-      <option value="reserviert">reserviert</option>
-      <option value="vergeben">abgeschlossen</option>
-    </select>
-    <select id="filterSeason">
-      <option value="">Season: alle</option>
-      <option value="non-ladder">non-ladder</option>
-      <option value="ladder">ladder</option>
-    </select>
+  <div class="action-bar">
+    <div class="filter-bar">
+      <select id="filterStatus">
+        <option value="">Status: alle</option>
+        <option value="verfügbar">verfügbar</option>
+        <option value="reserviert">reserviert</option>
+        <option value="vergeben">abgeschlossen</option>
+      </select>
+      <select id="filterSeason">
+        <option value="">Season: alle</option>
+        <option value="non-ladder">non-ladder</option>
+        <option value="ladder">ladder</option>
+      </select>
+    </div>
+    <div class="bulk-bar">Eigene Items · keine Adminrechte</div>
   </div>
 
   <div class="table-wrap">
@@ -172,7 +170,8 @@ th{color:#aaa;font-weight:500}
           <th>ID</th>
           <th>Item</th>
           <th>Status</th>
-          <th>Details</th>
+          <th>Infos</th>
+          <th>Aktionen</th>
           <th>Season</th>
         </tr>
       </thead>
@@ -188,14 +187,10 @@ th{color:#aaa;font-weight:500}
 const API = "https://lootliste-production.up.railway.app";
 const accountId = localStorage.getItem("lootliste_account_id");
 
-if(!accountId){
-  document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
-}
+if(!accountId){document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>"}
 
 function isDone(i){
-  return i.status === "vergeben" ||
-    i.handover?.donorConfirmed ||
-    localStorage.getItem("handover_confirmed_"+i.id)==="yes";
+  return i.status==="vergeben" || localStorage.getItem("handover_confirmed_"+i.id)==="yes";
 }
 
 async function load(){
@@ -203,8 +198,7 @@ async function load(){
   const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
   const mine = items.filter(i=>i.donorAccountId===accountId);
-
-  const list = mine.map(i=>({ ...i, phase: isDone(i)?"vergeben":i.status }));
+  const list = mine.map(i=>({ ...i, phase:isDone(i)?"vergeben":i.status }));
 
   cAll.textContent=list.length;
   cFree.textContent=list.filter(i=>i.phase==="verfügbar").length;
@@ -219,8 +213,7 @@ function render(list, accounts){
   const fs=filterStatus.value;
   const fse=filterSeason.value;
 
-  list.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
-  .forEach(i=>{
+  list.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse)).forEach(i=>{
     const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
     const tr=document.createElement("tr");
 
@@ -231,15 +224,24 @@ function render(list, accounts){
           <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
             <img src="img/icons/${i.type||"sonstiges"}.png">
           </div>
-          <strong>${i.name}</strong>
+          <div class="item-meta">
+            <strong>${i.name}</strong>
+            <small>${i.quality||""} · ${i.type||""}</small>
+          </div>
         </div>
       </td>
       <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
       <td>
-        ${i.note_private?`<div class="detail-box"><strong>📝 Notiz</strong><br>${i.note_private}</div>`:""}
-        ${i.phase==="reserviert"&&claimer?`<div class="detail-box gold"><strong>Reserviert von:</strong> ${claimer.username}<br>${i.contact||""}</div>`:""}
-        ${i.phase==="reserviert"&&!isDone(i)?`<div class="detail-box blue">⏳ Warte auf Bestätigung des Empfängers</div>`:""}
-        ${isDone(i)&&!i.handover?.donorConfirmed?`<button class="confirm-btn" onclick="confirmDone(${i.id})">✔ Übergabe bestätigt</button>`:""}
+        <div class="detail-stack">
+          ${i.note_private?`<div class="detail-box"><strong>📝 Notiz</strong><br>${i.note_private}</div>`:""}
+          ${i.phase==="reserviert"&&claimer?`<div class="detail-box gold"><strong>Reserviert von:</strong> ${claimer.username}<br>${i.contact||""}</div>`:""}
+        </div>
+      </td>
+      <td>
+        <div class="actions">
+          ${i.phase==="reserviert"&&!isDone(i)?`<button class="action-btn green" onclick="confirmDone(${i.id})">✔ Übergabe</button>`:""}
+          ${i.phase==="verfügbar"?`<button class="action-btn red" onclick="removeItem(${i.id})">🗑 Entfernen</button>`:""}
+        </div>
       </td>
       <td>${i.season||"–"}</td>
     `;
@@ -254,11 +256,13 @@ function confirmDone(id){
   }
 }
 
-function showShot(src){
-  if(!src) return;
-  overlayImg.src=src;
-  overlay.style.display="flex";
+async function removeItem(id){
+  if(!confirm("Item wirklich löschen?")) return;
+  await fetch(API+"/items/"+id,{method:"DELETE",headers:{"X-Account-Id":accountId}});
+  load();
 }
+
+function showShot(src){if(!src)return;overlayImg.src=src;overlay.style.display="flex"}
 
 filterStatus.onchange=load;
 filterSeason.onchange=load;
