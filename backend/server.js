@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // ===============================
-// DATA PATH
+// DATA PATH (Railway Volume)
 // ===============================
 const DATA_DIR = "/data";
 const ITEMS_FILE = path.join(DATA_DIR, "items.json");
@@ -35,7 +35,9 @@ app.use((req, res, next) => {
     "GET, POST, PUT, DELETE, OPTIONS"
   );
 
-  if (req.method === "OPTIONS") return res.sendStatus(200);
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
   next();
 });
 
@@ -45,7 +47,9 @@ app.use(express.json());
 // HELPERS
 // ===============================
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
 }
 
 function loadJSON(file, fallback) {
@@ -73,8 +77,9 @@ let accounts = loadJSON(ACCOUNTS_FILE, []);
 // DEVICE (GAST) SYSTEM
 // ===============================
 function createDevice() {
+  const id = "usr_" + crypto.randomBytes(6).toString("hex");
   const device = {
-    id: "usr_" + crypto.randomBytes(6).toString("hex"),
+    id,
     createdAt: new Date().toISOString()
   };
   users.push(device);
@@ -82,11 +87,20 @@ function createDevice() {
   return device;
 }
 
+// ===============================
+// DEVICE MIDDLEWARE
+// ===============================
 app.use((req, res, next) => {
   const headerId = req.headers["x-user-id"];
-  let device = users.find(u => u.id === headerId);
+  let device = null;
 
-  if (!device) device = createDevice();
+  if (headerId) {
+    device = users.find(u => u.id === headerId);
+  }
+
+  if (!device) {
+    device = createDevice();
+  }
 
   req.device = device;
   res.setHeader("X-User-Id", device.id);
@@ -96,9 +110,17 @@ app.use((req, res, next) => {
 // ===============================
 // ACCOUNT HELPERS
 // ===============================
-const saveAccounts = () => saveJSON(ACCOUNTS_FILE, accounts);
-const findAccountByUsername = u => accounts.find(a => a.username === u);
-const findAccountById = id => accounts.find(a => a.id === id);
+function saveAccounts() {
+  saveJSON(ACCOUNTS_FILE, accounts);
+}
+
+function findAccountByUsername(username) {
+  return accounts.find(a => a.username === username);
+}
+
+function findAccountById(accountId) {
+  return accounts.find(a => a.id === accountId);
+}
 
 // ===============================
 // AUTH – REGISTER
@@ -106,16 +128,20 @@ const findAccountById = id => accounts.find(a => a.id === id);
 app.post("/auth/register", async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password)
+  if (!username || !password) {
     return res.status(400).json({ error: "Missing fields" });
+  }
 
-  if (findAccountByUsername(username))
+  if (findAccountByUsername(username)) {
     return res.status(409).json({ error: "Username already exists" });
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
 
   const account = {
     id: "acc_" + crypto.randomBytes(6).toString("hex"),
     username,
-    passwordHash: await bcrypt.hash(password, 10),
+    passwordHash,
     createdAt: new Date().toISOString(),
     lastLoginAt: new Date().toISOString()
   };
@@ -123,7 +149,10 @@ app.post("/auth/register", async (req, res) => {
   accounts.push(account);
   saveAccounts();
 
-  res.json({ accountId: account.id, username: account.username });
+  res.json({
+    accountId: account.id,
+    username: account.username
+  });
 });
 
 // ===============================
@@ -131,43 +160,68 @@ app.post("/auth/register", async (req, res) => {
 // ===============================
 app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body;
-  const account = findAccountByUsername(username);
 
-  if (!account || !(await bcrypt.compare(password, account.passwordHash)))
+  const account = findAccountByUsername(username);
+  if (!account) {
     return res.status(401).json({ error: "Invalid credentials" });
+  }
+
+  const ok = await bcrypt.compare(password, account.passwordHash);
+  if (!ok) {
+    return res.status(401).json({ error: "Invalid credentials" });
+  }
 
   account.lastLoginAt = new Date().toISOString();
   saveAccounts();
 
-  res.json({ accountId: account.id, username: account.username });
+  res.json({
+    accountId: account.id,
+    username: account.username
+  });
 });
 
 // ===============================
 // ME
 // ===============================
 app.get("/me", (req, res) => {
-  const account = findAccountById(req.headers["x-account-id"]);
-  if (!account) return res.json({ deviceId: req.device.id });
+  const accountId = req.headers["x-account-id"];
+  const account = accountId ? findAccountById(accountId) : null;
 
-  res.json({ accountId: account.id, username: account.username });
+  if (!account) {
+    return res.json({
+      deviceId: req.device.id
+    });
+  }
+
+  res.json({
+    accountId: account.id,
+    username: account.username
+  });
 });
 
 // ===============================
-// ADMIN – GET ALL ACCOUNTS ✅
+// HEALTHCHECK
+// ===============================
+app.get("/", (req, res) => {
+  res.send("Lootliste Backend OK");
+});
+
+// ===============================
+// ADMIN – GET ALL ACCOUNTS
 // ===============================
 app.get("/admin/accounts", (req, res) => {
   res.json(
-    accounts.map(acc => ({
-      id: acc.id,
-      username: acc.username,
-      createdAt: acc.createdAt,
-      lastLoginAt: acc.lastLoginAt
+    accounts.map(a => ({
+      id: a.id,
+      username: a.username,
+      createdAt: a.createdAt,
+      lastLoginAt: a.lastLoginAt
     }))
   );
 });
 
 // ===============================
-// ADMIN – USER STATS (OPTIONAL)
+// ADMIN – USER STATS
 // ===============================
 app.get("/admin/stats", (req, res) => {
   const stats = accounts.map(acc => {
@@ -186,18 +240,26 @@ app.get("/admin/stats", (req, res) => {
 });
 
 // ===============================
-// ITEMS
+// GET ITEMS
 // ===============================
-app.get("/items", (req, res) => res.json(items));
+app.get("/items", (req, res) => {
+  res.json(items);
+});
 
+// ===============================
+// POST ITEM (ACCOUNT-BASIERT)
+// ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season } = req.body;
-  const account = findAccountById(req.headers["x-account-id"]);
+  const accountId = req.headers["x-account-id"];
 
-  if (!name || !quality || !type || !screenshot || !season)
+  if (!name || !quality || !type || !screenshot || !season) {
     return res.status(400).json({ error: "Missing fields" });
+  }
 
-  const item = {
+  const account = accountId ? findAccountById(accountId) : null;
+
+  const newItem = {
     id: Date.now(),
     name,
     quality,
@@ -206,22 +268,73 @@ app.post("/items", (req, res) => {
     season,
     status: "verfügbar",
     createdAt: new Date().toISOString(),
-    donorAccountId: account?.id || null,
-    donor: account?.username || null,
+
+    donorAccountId: account ? account.id : null,
+    donor: account ? account.username : null,
+
     claimedByAccountId: null,
     contact: null,
     claimedAt: null,
-    handover: { donorConfirmed: false, receiverConfirmed: false }
+
+    handover: {
+      donorConfirmed: false,
+      receiverConfirmed: false
+    }
   };
 
-  items.push(item);
+  items.push(newItem);
   saveJSON(ITEMS_FILE, items);
-  res.status(201).json(item);
+
+  res.status(201).json(newItem);
+});
+
+// ===============================
+// UPDATE ITEM (NUR OWNER)
+// ===============================
+app.put("/items/:id", (req, res) => {
+  const accountId = req.headers["x-account-id"];
+  const itemId = Number(req.params.id);
+
+  const item = items.find(i => i.id === itemId);
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (!accountId || item.donorAccountId !== accountId) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  Object.assign(item, req.body);
+  saveJSON(ITEMS_FILE, items);
+
+  res.json(item);
+});
+
+// ===============================
+// DELETE ITEM (NUR OWNER)
+// ===============================
+app.delete("/items/:id", (req, res) => {
+  const accountId = req.headers["x-account-id"];
+  const itemId = Number(req.params.id);
+
+  const index = items.findIndex(i => i.id === itemId);
+  if (index === -1) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (!accountId || items[index].donorAccountId !== accountId) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  items.splice(index, 1);
+  saveJSON(ITEMS_FILE, items);
+
+  res.json({ success: true });
 });
 
 // ===============================
 // START SERVER
 // ===============================
-app.listen(PORT, () =>
-  console.log("Backend läuft auf Port", PORT)
-);
+app.listen(PORT, () => {
+  console.log("Backend läuft auf Port", PORT);
+});
