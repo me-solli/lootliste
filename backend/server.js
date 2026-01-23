@@ -128,6 +128,21 @@ function isAdmin(account) {
 }
 
 // ===============================
+// MINIMAL COOLDOWN (60s)
+// ===============================
+function checkCooldown(account, seconds = 60) {
+  const now = Date.now();
+
+  if (account.lastActionAt && now - account.lastActionAt < seconds * 1000) {
+    return false;
+  }
+
+  account.lastActionAt = now;
+  saveAccounts();
+  return true;
+}
+
+// ===============================
 // AUTH – REGISTER
 // ===============================
 app.post("/auth/register", async (req, res) => {
@@ -148,7 +163,8 @@ app.post("/auth/register", async (req, res) => {
     username,
     passwordHash,
     createdAt: new Date().toISOString(),
-    lastLoginAt: new Date().toISOString()
+    lastLoginAt: new Date().toISOString(),
+    lastActionAt: 0
   };
 
   accounts.push(account);
@@ -226,25 +242,6 @@ app.get("/admin/accounts", (req, res) => {
 });
 
 // ===============================
-// ADMIN – USER STATS
-// ===============================
-app.get("/admin/stats", (req, res) => {
-  const stats = accounts.map(acc => {
-    const donated = items.filter(i => i.donorAccountId === acc.id).length;
-    const received = items.filter(i => i.claimedByAccountId === acc.id).length;
-
-    return {
-      accountId: acc.id,
-      username: acc.username,
-      itemsDonated: donated,
-      itemsReceived: received
-    };
-  });
-
-  res.json(stats);
-});
-
-// ===============================
 // GET ITEMS
 // ===============================
 app.get("/items", (req, res) => {
@@ -252,7 +249,7 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
-// POST ITEM
+// POST ITEM (MIT 60s COOLDOWN)
 // ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season, note_private } = req.body;
@@ -263,6 +260,13 @@ app.post("/items", (req, res) => {
   }
 
   const account = accountId ? findAccountById(accountId) : null;
+
+  // 🧱 MINIMALER TROLL-BLOCKER
+  if (account && !checkCooldown(account, 60)) {
+    return res.status(429).json({
+      error: "Bitte warte kurz, bevor du ein weiteres Item einreichst."
+    });
+  }
 
   const newItem = {
     id: Date.now(),
@@ -340,12 +344,8 @@ app.post("/items/:id/confirm-donor", (req, res) => {
     return res.status(403).json({ error: "Forbidden" });
   }
 
-  // 🔧 HANDOVER SICHERSTELLEN (für alte Items!)
   if (!item.handover) {
-    item.handover = {
-      donorConfirmed: false,
-      receiverConfirmed: false
-    };
+    item.handover = { donorConfirmed: false, receiverConfirmed: false };
   }
 
   item.handover.donorConfirmed = true;
@@ -363,12 +363,8 @@ app.post("/items/:id/confirm-receiver", (req, res) => {
     return res.status(403).json({ error: "Forbidden" });
   }
 
-  // 🔧 HANDOVER SICHERSTELLEN (für alte Items!)
   if (!item.handover) {
-    item.handover = {
-      donorConfirmed: false,
-      receiverConfirmed: false
-    };
+    item.handover = { donorConfirmed: false, receiverConfirmed: false };
   }
 
   item.handover.receiverConfirmed = true;
@@ -379,7 +375,6 @@ app.post("/items/:id/confirm-receiver", (req, res) => {
 });
 
 function finalizeItem(item) {
-  // 🔒 doppelt sicher
   if (!item.handover) return;
 
   if (
@@ -402,10 +397,7 @@ app.delete("/items/:id", (req, res) => {
     return res.status(404).json({ error: "Item not found" });
   }
 
-  if (
-    items[index].donorAccountId !== acc?.id &&
-    !isAdmin(acc)
-  ) {
+  if (items[index].donorAccountId !== acc?.id && !isAdmin(acc)) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
