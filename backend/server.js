@@ -30,7 +30,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, X-User-Id, X-Account-Id"
+    "Content-Type, X-User-Id, X-Account-Id, X-Admin-Token"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
