@@ -21,7 +21,6 @@ body{
   color:#eaeaea;
 }
 .wrapper{max-width:1400px;margin:0 auto;padding:40px}
-h2{margin:0 0 12px;font-size:18px}
 
 .card{
   background:#121212;
@@ -40,21 +39,34 @@ h2{margin:0 0 12px;font-size:18px}
   .profile-grid{grid-template-columns:1fr}
 }
 
-/* LEFT */
+/* AVATAR */
 .avatar{
-  width:88px;height:88px;
-  border-radius:18px;
+  width:96px;height:96px;
+  border-radius:20px;
   background:#000;
   border:1px solid #333;
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;font-weight:700;color:var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   margin-bottom:12px;
+  overflow:hidden;
 }
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.avatar span{
+  font-size:28px;
+  font-weight:700;
+  color:var(--gold);
+}
+
 .name{font-size:22px;font-weight:700}
 .sub{font-size:13px;color:#aaa;margin-top:4px}
 .online{font-size:12px;color:var(--green);margin-top:8px}
 
-/* EDITABLE */
+/* FORM */
 textarea,input{
   width:100%;
   background:#0f0f0f;
@@ -64,7 +76,7 @@ textarea,input{
   color:#fff;
   font-family:inherit;
 }
-textarea{resize:vertical;min-height:80px}
+textarea{resize:vertical;min-height:90px}
 
 .btn{
   margin-top:10px;
@@ -91,15 +103,15 @@ textarea{resize:vertical;min-height:80px}
   padding:14px 10px;
   text-align:center;
   cursor:pointer;
-  opacity:.8;
+  opacity:.75;
 }
+.class img{width:36px;height:36px;margin-bottom:6px}
 .class.active{
   border-color:var(--gold);
-  background:linear-gradient(to bottom, rgba(245,196,81,.2), rgba(245,196,81,.05));
+  background:linear-gradient(to bottom, rgba(245,196,81,.22), rgba(245,196,81,.05));
   color:var(--gold);
   opacity:1;
 }
-.class img{width:32px;height:32px;margin-bottom:6px}
 
 /* TAGS */
 .tags{display:flex;flex-wrap:wrap;gap:8px}
@@ -137,14 +149,16 @@ textarea{resize:vertical;min-height:80px}
 <!-- LEFT -->
 <aside>
   <div class="card">
-    <div class="avatar">TS</div>
-    <div class="name" id="username">Testuser_001</div>
+    <div class="avatar" id="avatarBox">
+      <span>TS</span>
+    </div>
+    <div class="name">Testuser_001</div>
     <div class="sub">Community-Mitglied · seit Jan 2026</div>
     <div class="online">● zuletzt online vor 2 Tagen</div>
   </div>
 
   <div class="card">
-    <h2>Kontakt</h2>
+    <h3>Kontakt</h3>
     <div class="toggle">
       <input type="checkbox" id="btVisible">
       <label for="btVisible">BattleTag sichtbar</label>
@@ -157,14 +171,14 @@ textarea{resize:vertical;min-height:80px}
 <section>
 
   <div class="card">
-    <h2>Über mich</h2>
+    <h3>Über mich</h3>
     <textarea id="about"></textarea>
     <button class="btn" onclick="saveProfile()">Speichern</button>
   </div>
 
   <div class="card">
-    <h2>Lieblingsklasse</h2>
-    <div class="classes" id="classGrid">
+    <h3>Lieblingsklasse</h3>
+    <div class="classes">
       <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
       <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
       <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
@@ -176,8 +190,8 @@ textarea{resize:vertical;min-height:80px}
   </div>
 
   <div class="card">
-    <h2>Spielstil & Haltung</h2>
-    <div class="tags" id="tagGrid">
+    <h3>Spielstil & Haltung</h3>
+    <div class="tags">
       <div class="tag">Fair Player</div>
       <div class="tag">Ruhiger Trader</div>
       <div class="tag">Community-orientiert</div>
@@ -199,6 +213,7 @@ const state = JSON.parse(localStorage.getItem("profile")) || {
   btVisible:false
 };
 
+const avatarBox = document.getElementById("avatarBox");
 const about = document.getElementById("about");
 const battleTag = document.getElementById("battleTag");
 const btVisible = document.getElementById("btVisible");
@@ -207,13 +222,28 @@ about.value = state.about;
 battleTag.value = state.battleTag;
 btVisible.checked = state.btVisible;
 
+function updateAvatar(){
+  avatarBox.innerHTML = "";
+  if(state.favClass){
+    const img = document.createElement("img");
+    img.src = `img/classes/${state.favClass.toLowerCase()}.png`;
+    avatarBox.appendChild(img);
+  } else {
+    const span = document.createElement("span");
+    span.textContent = "TS";
+    avatarBox.appendChild(span);
+  }
+}
+updateAvatar();
+
 // Klassen
 document.querySelectorAll(".class").forEach(c=>{
-  if(c.dataset.class===state.favClass) c.classList.add("active");
-  c.onclick=()=>{
+  if(c.dataset.class === state.favClass) c.classList.add("active");
+  c.onclick = ()=>{
     document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
     c.classList.add("active");
-    state.favClass=c.dataset.class;
+    state.favClass = c.dataset.class;
+    updateAvatar();
     saveProfile();
   };
 });
@@ -221,18 +251,18 @@ document.querySelectorAll(".class").forEach(c=>{
 // Tags
 document.querySelectorAll(".tag").forEach(t=>{
   if(state.tags.includes(t.textContent)) t.classList.add("active");
-  t.onclick=()=>{
+  t.onclick = ()=>{
     t.classList.toggle("active");
-    state.tags=[...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
+    state.tags = [...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
     saveProfile();
   };
 });
 
 function saveProfile(){
-  state.about=about.value;
-  state.battleTag=battleTag.value;
-  state.btVisible=btVisible.checked;
-  localStorage.setItem("profile",JSON.stringify(state));
+  state.about = about.value;
+  state.battleTag = battleTag.value;
+  state.btVisible = btVisible.checked;
+  localStorage.setItem("profile", JSON.stringify(state));
 }
 </script>
 
