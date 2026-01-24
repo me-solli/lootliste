@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Mein Profil – Lootliste</title>
+<title>Profil – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -10,7 +10,6 @@
 <style>
 :root{
   --gold:#f5c451;
-  --border:#2a2a2a;
   --green:#4cff4c;
 }
 *{box-sizing:border-box}
@@ -25,15 +24,6 @@ body{
   margin:0 auto;
   padding:40px;
 }
-
-.card{
-  background:#121212;
-  border:1px solid #222;
-  border-radius:22px;
-  padding:26px;
-  margin-bottom:18px;
-}
-
 .profile-grid{
   display:grid;
   grid-template-columns:340px 1fr;
@@ -42,18 +32,22 @@ body{
 @media(max-width:900px){
   .profile-grid{grid-template-columns:1fr}
 }
+.card{
+  background:#121212;
+  border:1px solid #222;
+  border-radius:22px;
+  padding:26px;
+  margin-bottom:18px;
+}
 
-/* === PROFILE HEADER CARD === */
+/* HEADER */
 .profile-head{
   display:flex;
   flex-direction:column;
   align-items:center;
   text-align:center;
-  padding-top:36px;
-  padding-bottom:34px;
+  padding:36px 20px;
 }
-
-/* === AVATAR === */
 .avatar{
   width:180px;
   height:220px;
@@ -80,35 +74,19 @@ body{
   font-weight:700;
   color:var(--gold);
 }
-
-/* TEXT */
 .name{font-size:26px;font-weight:700}
 .sub{font-size:14px;color:#aaa;margin-top:8px}
 .online{font-size:14px;color:var(--green);margin-top:12px}
 
-/* FORM */
-textarea,input{
-  width:100%;
+/* TEXT BLOCKS */
+.textbox{
   background:#0f0f0f;
-  border:1px solid #333;
-  border-radius:12px;
-  padding:10px 12px;
-  color:#fff;
-  font-family:inherit;
+  border:1px solid #222;
+  border-radius:14px;
+  padding:14px;
+  line-height:1.6;
+  color:#ddd;
 }
-textarea{resize:vertical;min-height:90px}
-
-.btn{
-  margin-top:10px;
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid var(--gold);
-  background:rgba(245,196,81,.08);
-  color:var(--gold);
-  cursor:pointer;
-  font-size:12px;
-}
-.btn:hover{background:rgba(245,196,81,.18)}
 
 /* CLASSES */
 .classes{
@@ -122,15 +100,18 @@ textarea{resize:vertical;min-height:90px}
   border-radius:14px;
   padding:14px 10px;
   text-align:center;
-  cursor:pointer;
-  opacity:.7;
+  opacity:.6;
 }
-.class img{width:38px;height:38px;margin-bottom:8px}
 .class.active{
   border-color:var(--gold);
   background:linear-gradient(to bottom, rgba(245,196,81,.25), rgba(245,196,81,.05));
   color:var(--gold);
   opacity:1;
+}
+.class img{
+  width:38px;
+  height:38px;
+  margin-bottom:8px;
 }
 
 /* TAGS */
@@ -145,7 +126,6 @@ textarea{resize:vertical;min-height:90px}
   border:1px solid #333;
   background:#0f0f0f;
   font-size:12px;
-  cursor:pointer;
   opacity:.6;
 }
 .tag.active{
@@ -153,16 +133,6 @@ textarea{resize:vertical;min-height:90px}
   color:var(--green);
   opacity:1;
 }
-
-/* READ ONLY (HARD) */
-.readonly{
-  pointer-events:none;
-}
-.readonly textarea,
-.readonly input{
-  opacity:.85;
-}
-.readonly .btn{display:none}
 </style>
 </head>
 
@@ -174,49 +144,49 @@ textarea{resize:vertical;min-height:90px}
 <aside>
   <div class="card profile-head">
     <div class="avatar" id="avatarBox"><span>TS</span></div>
-    <div class="name" id="profileName"></div>
+    <div class="name" id="profileName">me_solli</div>
     <div class="sub">Community-Mitglied · seit Jan 2026</div>
     <div class="online">● Profil öffentlich</div>
   </div>
 
-  <div class="card" id="contactCard">
+  <div class="card">
     <h3>Kontakt</h3>
-    <div class="toggle">
-      <input type="checkbox" id="btVisible">
-      <label for="btVisible">BattleTag sichtbar</label>
+    <div class="textbox" id="contactBox">
+      BattleTag wird nur bei aktiver Übergabe geteilt.
     </div>
-    <input id="battleTag" placeholder="BattleTag z. B. me_solli#1234">
   </div>
 </aside>
 
 <!-- RIGHT -->
-<section id="profileContent">
+<section>
 
   <div class="card">
     <h3>Über mich</h3>
-    <textarea id="about"></textarea>
-    <button class="btn" id="saveBtn">Speichern</button>
+    <div class="textbox" id="aboutText">
+      Spielt Diablo seit Classic mit Fokus auf faire Übergaben und ruhige Community-Strukturen.
+      Kein Drama, kein Stress – Loot soll verbinden.
+    </div>
   </div>
 
   <div class="card">
     <h3>Lieblingsklasse</h3>
-    <div class="classes">
-      <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
-      <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
-      <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
-      <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
-      <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
-      <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-      <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
+    <div class="classes" id="classGrid">
+      <div class="class"><img src="img/classes/paladin.png"><div>Paladin</div></div>
+      <div class="class"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
+      <div class="class active"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
+      <div class="class"><img src="img/classes/assassin.png"><div>Assassin</div></div>
+      <div class="class"><img src="img/classes/druid.png"><div>Druid</div></div>
+      <div class="class"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
+      <div class="class"><img src="img/classes/amazon.png"><div>Amazon</div></div>
     </div>
   </div>
 
   <div class="card">
     <h3>Spielstil & Haltung</h3>
     <div class="tags">
-      <div class="tag">Fair Player</div>
-      <div class="tag">Ruhiger Trader</div>
-      <div class="tag">Community-orientiert</div>
+      <div class="tag active">Fair Player</div>
+      <div class="tag active">Ruhiger Trader</div>
+      <div class="tag active">Community-orientiert</div>
       <div class="tag">Low Drama</div>
       <div class="tag">Spenderfreundlich</div>
     </div>
@@ -225,98 +195,5 @@ textarea{resize:vertical;min-height:90px}
 </section>
 </div>
 </div>
-
-<script>
-/* ===============================
-   EXPLIZITER MODUS (FINAL)
-=============================== */
-const params = new URLSearchParams(location.search);
-const viewedUser = params.get("user") || "unknown";
-const editMode = params.get("edit") === "1"; // 🔒 NUR EXPLIZIT
-
-/* ===============================
-   STATE
-=============================== */
-const storageKey = "profile_" + viewedUser;
-const state = JSON.parse(localStorage.getItem(storageKey)) || {
-  about:"",
-  favClass:"",
-  tags:[],
-  battleTag:"",
-  btVisible:false
-};
-
-/* ===============================
-   INIT
-=============================== */
-document.getElementById("profileName").textContent = viewedUser;
-document.getElementById("about").value = state.about;
-document.getElementById("battleTag").value = state.battleTag;
-document.getElementById("btVisible").checked = state.btVisible;
-
-/* ===============================
-   AVATAR
-=============================== */
-const avatarBox = document.getElementById("avatarBox");
-function updateAvatar(){
-  avatarBox.innerHTML="";
-  if(state.favClass){
-    const img=document.createElement("img");
-    img.src=`img/classes/${state.favClass.toLowerCase()}.png`;
-    avatarBox.appendChild(img);
-  }else{
-    avatarBox.innerHTML="<span>TS</span>";
-  }
-}
-updateAvatar();
-
-/* ===============================
-   CLASSES
-=============================== */
-document.querySelectorAll(".class").forEach(c=>{
-  if(c.dataset.class===state.favClass) c.classList.add("active");
-  c.onclick=()=>{
-    if(!editMode) return;
-    document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
-    c.classList.add("active");
-    state.favClass=c.dataset.class;
-    updateAvatar();
-    saveProfile();
-  };
-});
-
-/* ===============================
-   TAGS
-=============================== */
-document.querySelectorAll(".tag").forEach(t=>{
-  if(state.tags.includes(t.textContent)) t.classList.add("active");
-  t.onclick=()=>{
-    if(!editMode) return;
-    t.classList.toggle("active");
-    state.tags=[...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
-    saveProfile();
-  };
-});
-
-/* ===============================
-   SAVE
-=============================== */
-document.getElementById("saveBtn").onclick=()=>{
-  if(!editMode) return;
-  state.about=document.getElementById("about").value;
-  state.battleTag=document.getElementById("battleTag").value;
-  state.btVisible=document.getElementById("btVisible").checked;
-  localStorage.setItem(storageKey,JSON.stringify(state));
-};
-
-/* ===============================
-   HARD READONLY ENFORCE
-=============================== */
-if(!editMode){
-  document.getElementById("profileContent").classList.add("readonly");
-  document.getElementById("contactCard").classList.add("readonly");
-}
-</script>
-
 </body>
 </html>
