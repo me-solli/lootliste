@@ -2,15 +2,12 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Profil – Lootliste</title>
+<title>Mein Profil – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ==============================
-   GLOBAL
-============================== */
 :root{
   --gold:#f5c451;
   --border:#2a2a2a;
@@ -29,9 +26,14 @@ body{
   padding:40px;
 }
 
-/* ==============================
-   LAYOUT
-============================== */
+.card{
+  background:#121212;
+  border:1px solid #222;
+  border-radius:22px;
+  padding:26px;
+  margin-bottom:18px;
+}
+
 .profile-grid{
   display:grid;
   grid-template-columns:340px 1fr;
@@ -41,25 +43,17 @@ body{
   .profile-grid{grid-template-columns:1fr}
 }
 
-.card{
-  background:#121212;
-  border:1px solid #222;
-  border-radius:22px;
-  padding:26px;
-  margin-bottom:18px;
-}
-
-/* ==============================
-   PROFILE HEAD
-============================== */
+/* === PROFILE HEADER CARD === */
 .profile-head{
   display:flex;
   flex-direction:column;
   align-items:center;
   text-align:center;
-  padding:36px 20px;
+  padding-top:36px;
+  padding-bottom:34px;
 }
 
+/* === AVATAR === */
 .avatar{
   width:180px;
   height:220px;
@@ -87,13 +81,23 @@ body{
   color:var(--gold);
 }
 
-.name{font-size:26px;font-weight:700}
-.sub{font-size:14px;color:#aaa;margin-top:8px}
-.online{font-size:14px;color:var(--green);margin-top:12px}
+/* TEXT */
+.name{
+  font-size:26px;
+  font-weight:700;
+}
+.sub{
+  font-size:14px;
+  color:#aaa;
+  margin-top:8px;
+}
+.online{
+  font-size:14px;
+  color:var(--green);
+  margin-top:12px;
+}
 
-/* ==============================
-   FORM ELEMENTS
-============================== */
+/* FORM */
 textarea,input{
   width:100%;
   background:#0f0f0f;
@@ -117,9 +121,7 @@ textarea{resize:vertical;min-height:90px}
 }
 .btn:hover{background:rgba(245,196,81,.18)}
 
-/* ==============================
-   CLASSES
-============================== */
+/* CLASSES */
 .classes{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
@@ -146,9 +148,7 @@ textarea{resize:vertical;min-height:90px}
   opacity:1;
 }
 
-/* ==============================
-   TAGS
-============================== */
+/* TAGS */
 .tags{
   display:flex;
   flex-wrap:wrap;
@@ -169,15 +169,15 @@ textarea{resize:vertical;min-height:90px}
   opacity:1;
 }
 
-/* ==============================
-   READ ONLY LOCK (HARD)
-============================== */
-.readonly{
+/* READ ONLY */
+.readonly input,
+.readonly textarea{
   pointer-events:none;
-}
-.readonly textarea,
-.readonly input{
   opacity:.85;
+}
+.readonly .class,
+.readonly .tag{
+  pointer-events:none;
 }
 .readonly .btn{
   display:none;
@@ -187,17 +187,29 @@ textarea{resize:vertical;min-height:90px}
 
 <body>
 <div class="wrapper">
-
 <div class="profile-grid">
 
 <!-- LEFT -->
 <aside>
+
   <div class="card profile-head">
-    <div class="avatar" id="avatarBox"><span>TS</span></div>
-    <div class="name" id="profileName">User</div>
-    <div class="sub">Community-Mitglied</div>
-    <div class="online">● Profil öffentlich</div>
+    <div class="avatar" id="avatarBox">
+      <span>TS</span>
+    </div>
+    <div class="name" id="profileName">Testuser_001</div>
+    <div class="sub">Community-Mitglied · seit Jan 2026</div>
+    <div class="online">● zuletzt online vor 2 Tagen</div>
   </div>
+
+  <div class="card" id="contactCard">
+    <h3>Kontakt</h3>
+    <div class="toggle">
+      <input type="checkbox" id="btVisible">
+      <label for="btVisible">BattleTag sichtbar</label>
+    </div>
+    <input id="battleTag" placeholder="BattleTag z. B. me_solli#1234">
+  </div>
+
 </aside>
 
 <!-- RIGHT -->
@@ -206,12 +218,12 @@ textarea{resize:vertical;min-height:90px}
   <div class="card">
     <h3>Über mich</h3>
     <textarea id="about"></textarea>
-    <button class="btn" id="saveBtn">Speichern</button>
+    <button class="btn" onclick="saveProfile()">Speichern</button>
   </div>
 
   <div class="card">
     <h3>Lieblingsklasse</h3>
-    <div class="classes" id="classGrid">
+    <div class="classes">
       <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
       <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
       <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
@@ -224,7 +236,7 @@ textarea{resize:vertical;min-height:90px}
 
   <div class="card">
     <h3>Spielstil & Haltung</h3>
-    <div class="tags" id="tagGrid">
+    <div class="tags">
       <div class="tag">Fair Player</div>
       <div class="tag">Ruhiger Trader</div>
       <div class="tag">Community-orientiert</div>
@@ -238,89 +250,86 @@ textarea{resize:vertical;min-height:90px}
 </div>
 
 <script>
-/* ==============================
-   MODE RESOLUTION (FINAL)
-============================== */
+/* === USER CONTEXT === */
 const params = new URLSearchParams(location.search);
-const viewedUser = params.get("user") || "unknown";
-const editMode = params.get("mode") === "edit"; // 🔒 EXPLIZIT
+const viewedUser = params.get("user") || "me_solli";
+const currentUser = localStorage.getItem("currentUser") || "me_solli";
+const isOwnProfile = viewedUser === currentUser;
 
-/* ==============================
-   STATE
-============================== */
+/* === STATE === */
 const storageKey = "profile_" + viewedUser;
 const state = JSON.parse(localStorage.getItem(storageKey)) || {
   about:"",
   favClass:"",
-  tags:[]
+  tags:[],
+  battleTag:"",
+  btVisible:false
 };
 
-/* ==============================
-   INIT
-============================== */
-document.getElementById("profileName").textContent = viewedUser;
-document.getElementById("about").value = state.about;
-
-/* ==============================
-   AVATAR
-============================== */
+/* === ELEMENTS === */
 const avatarBox = document.getElementById("avatarBox");
-function renderAvatar(){
-  avatarBox.innerHTML="";
+const about = document.getElementById("about");
+const battleTag = document.getElementById("battleTag");
+const btVisible = document.getElementById("btVisible");
+document.getElementById("profileName").textContent = viewedUser;
+
+/* === INIT === */
+about.value = state.about;
+battleTag.value = state.battleTag;
+btVisible.checked = state.btVisible;
+
+/* === AVATAR === */
+function updateAvatar(){
+  avatarBox.innerHTML = "";
   if(state.favClass){
-    const img=document.createElement("img");
-    img.src=`img/classes/${state.favClass.toLowerCase()}.png`;
+    const img = document.createElement("img");
+    img.src = `img/classes/${state.favClass.toLowerCase()}.png`;
     avatarBox.appendChild(img);
-  }else{
-    const span=document.createElement("span");
-    span.textContent="TS";
+  } else {
+    const span = document.createElement("span");
+    span.textContent = "TS";
     avatarBox.appendChild(span);
   }
 }
-renderAvatar();
+updateAvatar();
 
-/* ==============================
-   CLASSES
-============================== */
+/* === CLASSES === */
 document.querySelectorAll(".class").forEach(c=>{
-  if(c.dataset.class===state.favClass) c.classList.add("active");
-  c.addEventListener("click",()=>{
-    if(!editMode) return;
+  if(c.dataset.class === state.favClass) c.classList.add("active");
+  c.onclick = ()=>{
+    if(!isOwnProfile) return;
     document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
     c.classList.add("active");
-    state.favClass=c.dataset.class;
-    renderAvatar();
+    state.favClass = c.dataset.class;
+    updateAvatar();
     saveProfile();
-  });
+  };
 });
 
-/* ==============================
-   TAGS
-============================== */
+/* === TAGS === */
 document.querySelectorAll(".tag").forEach(t=>{
   if(state.tags.includes(t.textContent)) t.classList.add("active");
-  t.addEventListener("click",()=>{
-    if(!editMode) return;
+  t.onclick = ()=>{
+    if(!isOwnProfile) return;
     t.classList.toggle("active");
-    state.tags=[...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
+    state.tags = [...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
     saveProfile();
-  });
+  };
 });
 
-/* ==============================
-   SAVE
-============================== */
-document.getElementById("saveBtn").addEventListener("click",()=>{
-  if(!editMode) return;
-  state.about=document.getElementById("about").value;
-  localStorage.setItem(storageKey,JSON.stringify(state));
-});
+/* === SAVE === */
+function saveProfile(){
+  if(!isOwnProfile) return;
+  state.about = about.value;
+  state.battleTag = battleTag.value;
+  state.btVisible = btVisible.checked;
+  localStorage.setItem(storageKey, JSON.stringify(state));
+}
 
-/* ==============================
-   HARD READONLY ENFORCE
-============================== */
-if(!editMode){
+/* === READ ONLY MODE === */
+if(!isOwnProfile){
   document.getElementById("profileContent").classList.add("readonly");
+  document.getElementById("contactCard").classList.add("readonly");
 }
 </script>
 
