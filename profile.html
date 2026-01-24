@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mein Profil – Lootliste</title>
+
+  <!-- Fonts / Base Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0e0f13;
+      --panel: #141622;
+      --panel-soft: #1b1e2e;
+      --text: #e6e7eb;
+      --muted: #9aa0b3;
+      --accent: #c89b3c; /* Diablo-Gold */
+      --ok: #3fb950;
+      --warn: #d29922;
+      --bad: #f85149;
+      --border: #2a2e44;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(1200px 600px at 50% -200px, #1a1d2e 0%, var(--bg) 55%);
+      color: var(--text);
+    }
+
+    /* =====================
+       HEADER / HERO
+       ===================== */
+    header {
+      background: linear-gradient(180deg, rgba(200,155,60,0.12), rgba(200,155,60,0.02));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 28px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #2a2e44, #11131d);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--accent);
+      user-select: none;
+    }
+
+    .hero-main {
+      flex: 1;
+    }
+
+    .username {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .meta {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 9px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #d6ad4f, #b88b2e);
+      color: #1b1606;
+      border-color: #a57c27;
+      font-weight: 600;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* =====================
+       LAYOUT
+       ===================== */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* =====================
+       SIDEBAR
+       ===================== */
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-soft));
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .card + .card { margin-top: 14px; }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 6px 0;
+      color: var(--muted);
+    }
+
+    .stat strong { color: var(--text); font-weight: 600; }
+
+    /* =====================
+       CONTENT
+       ===================== */
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .empty {
+      padding: 18px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =====================
+       ITEM LIST (READ-ONLY PHASE 1)
+       ===================== */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #10121b;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .item .name {
+      font-weight: 600;
+    }
+
+    .item .state {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* =====================
+       FOOTER NOTE
+       ===================== */
+    .note {
+      margin-top: 30px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =====================
+       HEADER / HERO
+       ===================== -->
+  <header>
+    <div class="hero">
+      <div class="avatar" id="avatar">?</div>
+
+      <div class="hero-main">
+        <div class="username" id="username">Lade Profil…</div>
+        <div class="meta" id="meta">–</div>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn" disabled>Profil bearbeiten</button>
+        <button class="btn primary" onclick="location.href='submit.html'">Item einreichen</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================
+       MAIN
+       ===================== -->
+  <main>
+    <div class="grid">
+
+      <!-- SIDEBAR -->
+      <aside>
+        <div class="card">
+          <h3>Account-Übersicht</h3>
+          <div class="stat"><span>Account-ID</span><strong id="accountId">–</strong></div>
+          <div class="stat"><span>Registriert seit</span><strong id="since">–</strong></div>
+          <div class="stat"><span>Status</span><strong style="color:var(--ok)">Aktiv</strong></div>
+        </div>
+
+        <div class="card">
+          <h3>Loot-Statistik</h3>
+          <div class="stat"><span>Eingereichte Items</span><strong id="statItems">0</strong></div>
+          <div class="stat"><span>Vergebene Items</span><strong id="statGiven">0</strong></div>
+          <div class="stat"><span>Aktive Claims</span><strong id="statClaims">0</strong></div>
+        </div>
+      </aside>
+
+      <!-- CONTENT -->
+      <section>
+        <div class="section">
+          <div class="section-header">
+            <h2>Meine Items</h2>
+            <div class="hint">Phase 1: Nur Übersicht</div>
+          </div>
+
+          <div class="item-list" id="myItems">
+            <div class="empty">Noch keine Items eingereicht.</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h2>Meine Claims</h2>
+            <div class="hint">Phase 1: Read-only</div>
+          </div>
+
+          <div class="item-list" id="myClaims">
+            <div class="empty">Keine aktiven Claims.</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="note">
+      Profilseite – Phase 1. Bearbeitung, Avatare und Detailaktionen folgen in späteren Phasen.
+    </div>
+  </main>
+
+  <!-- =====================
+       SCRIPT (Phase 1 minimal)
+       ===================== -->
+  <script>
+    // Phase 1: Platzhalter – reale Daten kommen später aus Backend / Session
+
+    const mockProfile = {
+      username: "Testuser_001",
+      accountId: "acc-001",
+      since: "01.2026",
+      stats: {
+        items: 0,
+        given: 0,
+        claims: 0
+      }
+    };
+
+    function initProfile() {
+      document.getElementById('username').textContent = mockProfile.username;
+      document.getElementById('meta').textContent = 'Lootliste Profil';
+      document.getElementById('accountId').textContent = mockProfile.accountId;
+      document.getElementById('since').textContent = mockProfile.since;
+      document.getElementById('statItems').textContent = mockProfile.stats.items;
+      document.getElementById('statGiven').textContent = mockProfile.stats.given;
+      document.getElementById('statClaims').textContent = mockProfile.stats.claims;
+
+      const initials = mockProfile.username.slice(0, 2).toUpperCase();
+      document.getElementById('avatar').textContent = initials;
+    }
+
+    initProfile();
+  </script>
+</body>
+</html>
