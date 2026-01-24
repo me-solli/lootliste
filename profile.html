@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <title>Profil – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --gold:#f5c451;
   --green:#4cff4c;
-  --bg:#0f0f0f;
-  --card:#121212;
 }
 *{box-sizing:border-box}
 body{
@@ -25,7 +23,7 @@ body{
 @media(max-width:900px){.profile-grid{grid-template-columns:1fr}}
 
 .card{
-  background:var(--card);
+  background:#121212;
   border:1px solid #222;
   border-radius:22px;
   padding:26px;
@@ -48,21 +46,18 @@ body{
   box-shadow:0 0 60px rgba(245,196,81,.25);
 }
 .avatar img{width:100%;height:100%;object-fit:contain}
-.avatar span{font-size:38px;font-weight:700;color:var(--gold)}
 .name{font-size:26px;font-weight:700}
 .sub{font-size:14px;color:#aaa;margin-top:8px}
 .online{font-size:14px;color:var(--green);margin-top:12px}
 
-/* INPUTS */
-textarea{
-  width:100%;
-  background:var(--bg);
-  border:1px solid #333;
+/* CONTENT */
+.textbox{
+  background:#0f0f0f;
+  border:1px solid #222;
   border-radius:14px;
   padding:14px;
-  color:#fff;
-  min-height:120px;
-  resize:vertical;
+  line-height:1.6;
+  color:#ddd;
 }
 
 /* CLASSES */
@@ -72,21 +67,20 @@ textarea{
   gap:14px;
 }
 .class{
-  background:var(--bg);
+  background:#0f0f0f;
   border:1px solid #222;
   border-radius:14px;
   padding:14px 10px;
   text-align:center;
-  cursor:pointer;
   opacity:.6;
 }
-.class img{width:38px;height:38px;margin-bottom:8px}
 .class.active{
   border-color:var(--gold);
   background:linear-gradient(to bottom, rgba(245,196,81,.25), rgba(245,196,81,.05));
   color:var(--gold);
   opacity:1;
 }
+.class img{width:38px;height:38px;margin-bottom:8px}
 
 /* TAGS */
 .tags{display:flex;flex-wrap:wrap;gap:8px}
@@ -94,26 +88,14 @@ textarea{
   padding:6px 12px;
   border-radius:999px;
   border:1px solid #333;
-  background:var(--bg);
+  background:#0f0f0f;
   font-size:12px;
-  cursor:pointer;
   opacity:.6;
 }
 .tag.active{
   border-color:var(--green);
   color:var(--green);
   opacity:1;
-}
-
-/* BUTTON */
-.btn{
-  margin-top:12px;
-  padding:8px 16px;
-  border-radius:999px;
-  border:1px solid var(--gold);
-  background:rgba(245,196,81,.08);
-  color:var(--gold);
-  cursor:pointer;
 }
 </style>
 </head>
@@ -125,10 +107,19 @@ textarea{
 <!-- LEFT -->
 <aside>
   <div class="card profile-head">
-    <div class="avatar" id="avatarBox"><span>TS</span></div>
+    <div class="avatar">
+      <img src="img/classes/barbarian.png" alt="">
+    </div>
     <div class="name">me_solli</div>
     <div class="sub">Community-Mitglied · seit Jan 2026</div>
-    <div class="online">● Profil bearbeitbar</div>
+    <div class="online">● Profil öffentlich</div>
+  </div>
+
+  <div class="card">
+    <h3>Kontakt</h3>
+    <div class="textbox">
+      BattleTag wird nur bei aktiver Übergabe geteilt.
+    </div>
   </div>
 </aside>
 
@@ -137,29 +128,30 @@ textarea{
 
   <div class="card">
     <h3>Über mich</h3>
-    <textarea id="about"></textarea>
-    <button class="btn" onclick="save()">Speichern</button>
+    <div class="textbox">
+      D2 since 1997
+    </div>
   </div>
 
   <div class="card">
     <h3>Lieblingsklasse</h3>
-    <div class="classes" id="classGrid">
-      <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
-      <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
-      <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
-      <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
-      <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
-      <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-      <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
+    <div class="classes">
+      <div class="class active"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
+      <div class="class"><img src="img/classes/paladin.png"><div>Paladin</div></div>
+      <div class="class"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
+      <div class="class"><img src="img/classes/assassin.png"><div>Assassin</div></div>
+      <div class="class"><img src="img/classes/druid.png"><div>Druid</div></div>
+      <div class="class"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
+      <div class="class"><img src="img/classes/amazon.png"><div>Amazon</div></div>
     </div>
   </div>
 
   <div class="card">
     <h3>Spielstil & Haltung</h3>
     <div class="tags">
-      <div class="tag">Fair Player</div>
-      <div class="tag">Ruhiger Trader</div>
-      <div class="tag">Community-orientiert</div>
+      <div class="tag active">Fair Player</div>
+      <div class="tag active">Ruhiger Trader</div>
+      <div class="tag active">Community-orientiert</div>
       <div class="tag">Low Drama</div>
       <div class="tag">Spenderfreundlich</div>
     </div>
@@ -168,56 +160,5 @@ textarea{
 </section>
 </div>
 </div>
-
-<script>
-const state = JSON.parse(localStorage.getItem("profile")) || {
-  about:"",
-  favClass:"",
-  tags:[]
-};
-
-const about = document.getElementById("about");
-about.value = state.about;
-
-const avatarBox = document.getElementById("avatarBox");
-
-function renderAvatar(){
-  avatarBox.innerHTML="";
-  if(state.favClass){
-    const img=document.createElement("img");
-    img.src=`img/classes/${state.favClass.toLowerCase()}.png`;
-    avatarBox.appendChild(img);
-  }else{
-    avatarBox.innerHTML="<span>TS</span>";
-  }
-}
-renderAvatar();
-
-document.querySelectorAll(".class").forEach(c=>{
-  if(c.dataset.class===state.favClass) c.classList.add("active");
-  c.onclick=()=>{
-    document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
-    c.classList.add("active");
-    state.favClass=c.dataset.class;
-    renderAvatar();
-    save();
-  };
-});
-
-document.querySelectorAll(".tag").forEach(t=>{
-  if(state.tags.includes(t.textContent)) t.classList.add("active");
-  t.onclick=()=>{
-    t.classList.toggle("active");
-    state.tags=[...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
-    save();
-  };
-});
-
-function save(){
-  state.about=about.value;
-  localStorage.setItem("profile",JSON.stringify(state));
-}
-</script>
-
 </body>
 </html>
