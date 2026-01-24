@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Meine Items – Lootliste</title>
+<title>Mein Profil – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
@@ -10,10 +10,7 @@
   --gold:#f5c451;
   --border:#2a2a2a;
   --green:#4cff4c;
-  --yellow:#f0e68c;
   --blue:#6fa8ff;
-  --red:#ff6b6b;
-  --orange:#ffb347;
 }
 *{box-sizing:border-box}
 
@@ -26,12 +23,13 @@ body{
 
 .wrapper{max-width:1600px;margin:0 auto}
 
-/* ===== HERO ===== */
+/* ===== HERO (1:1 von my-items) ===== */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
   min-height:180px;
+  position:relative;
 }
 .hero-inner{
   padding:32px 36px 28px;
@@ -61,111 +59,113 @@ body{
 /* ===== CONTENT ===== */
 .container{padding:34px 28px 60px}
 
-/* ===== DASHBOARD ===== */
-.dashboard{
+.profile-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
-  margin-bottom:18px;
+  grid-template-columns:320px 1fr;
+  gap:22px;
 }
-.stat{
-  padding:16px;
+@media(max-width:900px){
+  .profile-grid{grid-template-columns:1fr}
+}
+
+.card{
   background:#121212;
   border:1px solid #222;
-  border-radius:16px;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
 }
-.stat strong{font-size:22px}
-.stat small{display:block;margin-top:4px;color:#aaa;font-size:12px}
-
-/* ===== ACTION BAR ===== */
-.action-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:14px;
+.card h3{
+  margin:0 0 12px;
+  font-size:16px;
+  font-weight:600;
 }
 
-.filter-bar{display:flex;gap:10px}
-select{
-  padding:8px 10px;
-  background:#111;
+/* LEFT */
+.avatar{
+  width:88px;height:88px;
+  border-radius:18px;
+  background:#000;
   border:1px solid #333;
-  color:#fff;
-  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:700;color:var(--gold);
+  margin-bottom:12px;
 }
+.name{font-size:22px;font-weight:700}
+.sub{font-size:13px;color:#aaa;margin-top:4px}
+.online{font-size:12px;color:var(--green);margin-top:8px}
 
-.bulk-bar{font-size:12px;color:#aaa}
+/* FORM */
+textarea,input{
+  width:100%;
+  background:#0f0f0f;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:10px 12px;
+  color:#fff;
+  font-family:inherit;
+}
+textarea{resize:vertical;min-height:90px}
 
-/* ===== TABLE ===== */
-.table-wrap{
+.btn{
+  margin-top:10px;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--gold);
+  background:rgba(245,196,81,.08);
+  color:var(--gold);
+  cursor:pointer;
+  font-size:12px;
+}
+.btn:hover{background:rgba(245,196,81,.18)}
+
+/* CLASSES */
+.classes{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:14px;
+}
+.class{
   background:#0f0f0f;
   border:1px solid #222;
-  border-radius:18px;
-  overflow:hidden;
-}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:12px;border-bottom:1px solid #222;vertical-align:top}
-th{color:#aaa;font-weight:500;text-align:left}
-tr:hover{background:rgba(255,255,255,.02)}
-tr.needs-action{background:rgba(255,179,71,.06)}
-
-/* ===== BADGES ===== */
-.badge{padding:4px 10px;border-radius:999px;font-size:11px;background:#111;border:1px solid #333}
-.badge.green{color:var(--green)}
-.badge.blue{color:var(--blue)}
-.badge.orange{color:var(--orange)}
-
-/* ===== ITEM CELL ===== */
-.item-cell{display:flex;align-items:center;gap:12px}
-.item-icon{
-  width:42px;height:42px;border-radius:12px;
-  background:#000;border:1px solid #333;
-  display:flex;align-items:center;justify-content:center;
-  cursor:zoom-in
-}
-.item-icon img{width:26px}
-.item-meta strong{display:block}
-.item-meta small{color:#888;font-size:12px}
-
-/* ===== DETAILS ===== */
-.detail-box{
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:12px;
-  background:#0f0f0f;
-  border:1px dashed rgba(245,196,81,.5);
-  color:#f5e6b3;
-}
-.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 8px}
-.kv span{color:#aaa}
-
-/* ===== ACTIONS ===== */
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.action-btn{
-  padding:6px 10px;
-  font-size:12px;
-  border-radius:10px;
-  background:#111;
-  border:1px solid #333;
-  color:#ddd;
+  border-radius:14px;
+  padding:14px 10px;
+  text-align:center;
   cursor:pointer;
+  opacity:.7;
 }
-.action-btn.green{border-color:rgba(143,209,143,.6);color:#cfe9cf}
-.action-btn.red{border-color:rgba(255,107,107,.6);color:#ffb3b3}
-.action-btn.waiting{
-  opacity:.6;
-  cursor:not-allowed;
-  border-color:#666;
+.class img{width:32px;height:32px;margin-bottom:6px}
+.class.active{
+  border-color:var(--gold);
+  background:linear-gradient(to bottom, rgba(245,196,81,.2), rgba(245,196,81,.05));
+  color:var(--gold);
+  opacity:1;
 }
 
-/* ===== OVERLAY ===== */
-#overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9999}
-#overlay img{max-width:90%;max-height:90%;border-radius:14px}
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid #333;
+  background:#0f0f0f;
+  font-size:12px;
+  cursor:pointer;
+  opacity:.6;
+}
+.tag.active{
+  border-color:var(--green);
+  color:var(--green);
+  opacity:1;
+}
+
+/* TOGGLE */
+.toggle{display:flex;align-items:center;gap:8px;font-size:13px}
+.toggle input{width:auto}
 </style>
 </head>
-<body>
 
+<body>
 <div class="wrapper">
 
 <header class="hero">
@@ -173,188 +173,121 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 
     <div class="auth-box">
       <img src="img/avatars/default.png" alt="Avatar">
-      <span id="playerName">–</span>
+      <span id="playerName">Testuser_001</span>
       <a href="index.html" class="auth-link">Lootliste</a>
-      <a href="my-claims.html" class="auth-link">Meine Claims</a>
+      <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
 
-    <h1>Meine Items</h1>
-    <p>Items, die du selbst in die Lootliste eingebracht hast</p>
+    <h1>Mein Profil</h1>
+    <p>Charakter, Haltung und Identität innerhalb der Lootliste</p>
 
   </div>
 </header>
 
 <div class="container">
 
-  <div class="dashboard">
-    <div class="stat"><strong id="cAll">0</strong><small>Alle Items</small></div>
-    <div class="stat"><strong id="cFree">0</strong><small>Verfügbar</small></div>
-    <div class="stat"><strong id="cRes">0</strong><small>Reserviert</small></div>
-    <div class="stat"><strong id="cDone">0</strong><small>Abgeschlossen</small></div>
+<div class="profile-grid">
+
+<!-- LEFT -->
+<aside>
+  <div class="card">
+    <div class="avatar">TS</div>
+    <div class="name">Testuser_001</div>
+    <div class="sub">Community-Mitglied · seit Jan 2026</div>
+    <div class="online">● zuletzt online vor 2 Tagen</div>
   </div>
 
-  <div class="action-bar">
-    <div class="filter-bar">
-      <select id="filterStatus">
-        <option value="">Status: alle</option>
-        <option value="verfügbar">verfügbar</option>
-        <option value="reserviert">reserviert</option>
-        <option value="vergeben">abgeschlossen</option>
-      </select>
-      <select id="filterSeason">
-        <option value="">Season: alle</option>
-        <option value="non-ladder">non-ladder</option>
-        <option value="ladder">ladder</option>
-      </select>
+  <div class="card">
+    <h3>Kontakt</h3>
+    <div class="toggle">
+      <input type="checkbox" id="btVisible">
+      <label for="btVisible">BattleTag sichtbar</label>
     </div>
-    <div class="bulk-bar">Reservierte Items sind hervorgehoben</div>
+    <input id="battleTag" placeholder="BattleTag z. B. me_solli#1234">
+  </div>
+</aside>
+
+<!-- RIGHT -->
+<section>
+
+  <div class="card">
+    <h3>Über mich</h3>
+    <textarea id="about"></textarea>
+    <button class="btn" onclick="saveProfile()">Speichern</button>
   </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Item</th>
-          <th>Status</th>
-          <th>Reservierung</th>
-          <th>Aktionen</th>
-          <th>Season</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+  <div class="card">
+    <h3>Lieblingsklasse</h3>
+    <div class="classes" id="classGrid">
+      <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
+      <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
+      <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
+      <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
+      <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
+      <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
+      <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
+    </div>
   </div>
 
-</div>
-</div>
+  <div class="card">
+    <h3>Spielstil & Haltung</h3>
+    <div class="tags" id="tagGrid">
+      <div class="tag">Fair Player</div>
+      <div class="tag">Ruhiger Trader</div>
+      <div class="tag">Community-orientiert</div>
+      <div class="tag">Low Drama</div>
+      <div class="tag">Spenderfreundlich</div>
+    </div>
+  </div>
 
-<div id="overlay" onclick="this.style.display='none'"><img id="overlayImg"></div>
+</section>
+</div>
+</div>
 
 <script>
-const API = "https://lootliste-production.up.railway.app";
-const accountId = localStorage.getItem("lootliste_account_id");
-const deviceId  = localStorage.getItem("lootliste_user_id");
+const state = JSON.parse(localStorage.getItem("profile")) || {
+  about:"",
+  favClass:"",
+  tags:[],
+  battleTag:"",
+  btVisible:false
+};
 
-(async()=>{
-  if(!accountId) return;
-  const r = await fetch(API+"/me",{headers:{"X-Account-Id":accountId,"X-User-Id":deviceId||""}});
-  const d = await r.json();
-  if(d.username) document.getElementById("playerName").textContent=d.username;
-})();
+const about = document.getElementById("about");
+const battleTag = document.getElementById("battleTag");
+const btVisible = document.getElementById("btVisible");
 
-if(!accountId){
-  document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
+about.value = state.about;
+battleTag.value = state.battleTag;
+btVisible.checked = state.btVisible;
+
+// Klassen
+document.querySelectorAll(".class").forEach(c=>{
+  if(c.dataset.class===state.favClass) c.classList.add("active");
+  c.onclick=()=>{
+    document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
+    c.classList.add("active");
+    state.favClass=c.dataset.class;
+    saveProfile();
+  };
+});
+
+// Tags
+document.querySelectorAll(".tag").forEach(t=>{
+  if(state.tags.includes(t.textContent)) t.classList.add("active");
+  t.onclick=()=>{
+    t.classList.toggle("active");
+    state.tags=[...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
+    saveProfile();
+  };
+});
+
+function saveProfile(){
+  state.about=about.value;
+  state.battleTag=battleTag.value;
+  state.btVisible=btVisible.checked;
+  localStorage.setItem("profile",JSON.stringify(state));
 }
-
-async function load(){
-  const items = await fetch(API+"/items").then(r=>r.json());
-  const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
-
-  const mine = items.filter(i=>i.donorAccountId===accountId);
-
-  let cFreeN=0,cResN=0,cDoneN=0;
-  tableBody.innerHTML="";
-
-  mine.forEach(i=>{
-    const donorConfirmedUI =
-      localStorage.getItem("donor_confirmed_ui_"+i.id)==="yes";
-
-    let label="Verfügbar", cls="green", needsAction=false, actionHtml="";
-
-    if(i.status==="vergeben"){
-      label="Abgeschlossen"; cls="blue"; cDoneN++;
-    }
-    else if(i.status==="reserviert"){
-      if(donorConfirmedUI){
-        label="Wartet auf Empfänger"; cls="blue"; cResN++;
-        actionHtml=`<button class="action-btn waiting" disabled>⏳ Wartet auf Empfänger</button>`;
-      }else{
-        label="Reserviert"; cls="orange"; needsAction=true; cResN++;
-        actionHtml=`<button class="action-btn green" onclick="confirmDone(${i.id})">✔ Übergabe</button>`;
-      }
-    }
-    else{
-      cFreeN++;
-      actionHtml=`<button class="action-btn red" onclick="removeItem(${i.id})">🗑 Entfernen</button>`;
-    }
-
-    const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
-
-    const tr=document.createElement("tr");
-    if(needsAction) tr.classList.add("needs-action");
-
-    tr.innerHTML=`
-      <td>${i.id}</td>
-      <td>
-        <div class="item-cell">
-          <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
-            <img src="img/icons/${i.type||"sonstiges"}.png">
-          </div>
-          <div class="item-meta">
-            <strong>${i.name}</strong>
-            <small>${i.quality||""} · ${i.type||""}</small>
-          </div>
-        </div>
-      </td>
-      <td><span class="badge ${cls}">${label}</span></td>
-      <td>
-        ${claimer?`
-          <div class="detail-box">
-            <div class="kv">
-              <span>Spieler</span><div>${claimer.username}</div>
-              <span>BattleTag</span><div>${i.contact||"–"}</div>
-            </div>
-          </div>
-        `:"–"}
-      </td>
-      <td><div class="actions">${actionHtml}</div></td>
-      <td>${i.season||"–"}</td>
-    `;
-    tableBody.appendChild(tr);
-  });
-
-  cAll.textContent=mine.length;
-  cFree.textContent=cFreeN;
-  cRes.textContent=cResN;
-  cDone.textContent=cDoneN;
-}
-
-async function confirmDone(id){
-  if(!confirm("Hast du das Item ingame übergeben?")) return;
-
-  await fetch(API + "/items/" + id + "/confirm-donor", {
-    method: "POST",
-    headers: { "X-Account-Id": accountId }
-  });
-
-  // ✅ UI-Zwischenstatus (nur Anzeige)
-  localStorage.setItem("donor_confirmed_ui_"+id,"yes");
-
-  load();
-}
-
-async function removeItem(id){
-  if(!confirm("Item wirklich löschen?")) return;
-
-  await fetch(API + "/items/" + id, {
-    method: "DELETE",
-    headers: { "X-Account-Id": accountId }
-  });
-
-  load();
-}
-
-function showShot(src){
-  if(!src) return;
-  overlayImg.src = src;
-  overlay.style.display = "flex";
-}
-
-filterStatus.onchange = load;
-filterSeason.onchange = load;
-
-load();
 </script>
 
 </body>
