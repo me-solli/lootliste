@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mein Profil – Lootliste</title>
 
-  <!-- Fonts / Base Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,135 +16,91 @@
       --panel-soft: #1b1e2e;
       --text: #e6e7eb;
       --muted: #9aa0b3;
-      --accent: #c89b3c; /* Diablo-Gold */
-      --ok: #3fb950;
-      --warn: #d29922;
-      --bad: #f85149;
+      --accent: #c89b3c;
       --border: #2a2e44;
+      --ok: #3fb950;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: Inter, system-ui, sans-serif;
       background: radial-gradient(1200px 600px at 50% -200px, #1a1d2e 0%, var(--bg) 55%);
       color: var(--text);
     }
 
-    /* =====================
-       HEADER / HERO
-       ===================== */
     header {
-      background: linear-gradient(180deg, rgba(200,155,60,0.12), rgba(200,155,60,0.02));
       border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(200,155,60,0.15), rgba(200,155,60,0.03));
     }
 
     .hero {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 32px 20px 28px;
+      padding: 36px 20px 30px;
       display: flex;
-      gap: 24px;
+      gap: 26px;
       align-items: center;
     }
 
     .avatar {
-      width: 88px;
-      height: 88px;
-      border-radius: 10px;
+      width: 96px;
+      height: 96px;
+      border-radius: 12px;
       background: linear-gradient(145deg, #2a2e44, #11131d);
       border: 1px solid var(--border);
       display: grid;
       place-items: center;
       font-weight: 700;
-      font-size: 28px;
+      font-size: 30px;
       color: var(--accent);
-      user-select: none;
     }
 
-    .hero-main {
-      flex: 1;
-    }
+    .hero-main { flex: 1; }
 
     .username {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
-      letter-spacing: 0.2px;
     }
 
-    .meta {
+    .subtitle {
       margin-top: 6px;
+      font-size: 13px;
       color: var(--muted);
-      font-size: 13px;
     }
 
-    .hero-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn {
-      padding: 9px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text);
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .btn.primary {
-      background: linear-gradient(180deg, #d6ad4f, #b88b2e);
-      color: #1b1606;
-      border-color: #a57c27;
-      font-weight: 600;
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* =====================
-       LAYOUT
-       ===================== */
     main {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 24px 20px 60px;
+      padding: 30px 20px 60px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 20px;
+      grid-template-columns: 320px 1fr;
+      gap: 22px;
     }
 
     @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+      .grid { grid-template-columns: 1fr; }
     }
 
-    /* =====================
-       SIDEBAR
-       ===================== */
     .card {
       background: linear-gradient(180deg, var(--panel), var(--panel-soft));
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 16px;
     }
-
-    .card + .card { margin-top: 14px; }
 
     .card h3 {
-      margin: 0 0 10px;
+      margin: 0 0 12px;
       font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.2px;
+      letter-spacing: .2px;
     }
+
+    .card + .card { margin-top: 16px; }
 
     .stat {
       display: flex;
@@ -157,74 +112,54 @@
 
     .stat strong { color: var(--text); font-weight: 600; }
 
-    /* =====================
-       CONTENT
-       ===================== */
-    .section {
-      margin-bottom: 20px;
+    .bio {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text);
     }
 
-    .section-header {
+    .badges {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .section-header h2 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .hint {
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
       font-size: 12px;
-      color: var(--muted);
-    }
-
-    .empty {
-      padding: 18px;
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* =====================
-       ITEM LIST (READ-ONLY PHASE 1)
-       ===================== */
-    .item-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .item {
       border: 1px solid var(--border);
-      border-radius: 8px;
       background: #10121b;
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-    }
-
-    .item .name {
-      font-weight: 600;
-    }
-
-    .item .state {
-      font-size: 12px;
       color: var(--muted);
     }
 
-    /* =====================
-       FOOTER NOTE
-       ===================== */
+    .badge.ok { color: var(--ok); border-color: rgba(63,185,80,.4); }
+
+    .hero-select {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px,1fr));
+      gap: 12px;
+    }
+
+    .hero-card {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #10121b;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hero-card.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: linear-gradient(180deg, rgba(200,155,60,.15), rgba(200,155,60,.03));
+      font-weight: 600;
+    }
+
     .note {
-      margin-top: 30px;
+      margin-top: 34px;
       font-size: 12px;
       color: var(--muted);
       text-align: center;
@@ -233,111 +168,71 @@
 </head>
 <body>
 
-  <!-- =====================
-       HEADER / HERO
-       ===================== -->
-  <header>
-    <div class="hero">
-      <div class="avatar" id="avatar">?</div>
+<header>
+  <div class="hero">
+    <div class="avatar" id="avatar">TS</div>
+    <div class="hero-main">
+      <div class="username" id="username">Testuser_001</div>
+      <div class="subtitle" id="subtitle">Ein Mitglied der Lootliste</div>
+    </div>
+  </div>
+</header>
 
-      <div class="hero-main">
-        <div class="username" id="username">Lade Profil…</div>
-        <div class="meta" id="meta">–</div>
+<main>
+  <div class="grid">
+
+    <aside>
+      <div class="card">
+        <h3>Identität</h3>
+        <div class="stat"><span>Account-ID</span><strong>acc-001</strong></div>
+        <div class="stat"><span>Dabei seit</span><strong>Jan 2026</strong></div>
+        <div class="stat"><span>Status</span><strong style="color:var(--ok)">Aktiv</strong></div>
       </div>
 
-      <div class="hero-actions">
-        <button class="btn" disabled>Profil bearbeiten</button>
-        <button class="btn primary" onclick="location.href='submit.html'">Item einreichen</button>
+      <div class="card">
+        <h3>Vertrauen</h3>
+        <div class="stat"><span>Bestätigte Übergaben</span><strong>12</strong></div>
+        <div class="stat"><span>Offene Konflikte</span><strong>0</strong></div>
+        <div class="stat"><span>Letzte Aktivität</span><strong>vor 2 Tagen</strong></div>
       </div>
-    </div>
-  </header>
+    </aside>
 
-  <!-- =====================
-       MAIN
-       ===================== -->
-  <main>
-    <div class="grid">
-
-      <!-- SIDEBAR -->
-      <aside>
-        <div class="card">
-          <h3>Account-Übersicht</h3>
-          <div class="stat"><span>Account-ID</span><strong id="accountId">–</strong></div>
-          <div class="stat"><span>Registriert seit</span><strong id="since">–</strong></div>
-          <div class="stat"><span>Status</span><strong style="color:var(--ok)">Aktiv</strong></div>
+    <section>
+      <div class="card">
+        <h3>Über mich</h3>
+        <div class="bio">
+          Spielt Diablo seit Classic. Fokus auf fairen Loot, saubere Übergaben
+          und langfristige Community-Strukturen. Lieber ruhig als laut.
         </div>
+      </div>
 
-        <div class="card">
-          <h3>Loot-Statistik</h3>
-          <div class="stat"><span>Eingereichte Items</span><strong id="statItems">0</strong></div>
-          <div class="stat"><span>Vergebene Items</span><strong id="statGiven">0</strong></div>
-          <div class="stat"><span>Aktive Claims</span><strong id="statClaims">0</strong></div>
+      <div class="card">
+        <h3>Lieblingsheld</h3>
+        <div class="hero-select">
+          <div class="hero-card active">Paladin</div>
+          <div class="hero-card">Sorceress</div>
+          <div class="hero-card">Barbarian</div>
+          <div class="hero-card">Assassin</div>
         </div>
-      </aside>
+      </div>
 
-      <!-- CONTENT -->
-      <section>
-        <div class="section">
-          <div class="section-header">
-            <h2>Meine Items</h2>
-            <div class="hint">Phase 1: Nur Übersicht</div>
-          </div>
-
-          <div class="item-list" id="myItems">
-            <div class="empty">Noch keine Items eingereicht.</div>
-          </div>
+      <div class="card">
+        <h3>Spielstil</h3>
+        <div class="badges">
+          <div class="badge ok">Fair Player</div>
+          <div class="badge">Community-orientiert</div>
+          <div class="badge">Low Drama</div>
+          <div class="badge">Spender-freundlich</div>
         </div>
+      </div>
+    </section>
 
-        <div class="section">
-          <div class="section-header">
-            <h2>Meine Claims</h2>
-            <div class="hint">Phase 1: Read-only</div>
-          </div>
+  </div>
 
-          <div class="item-list" id="myClaims">
-            <div class="empty">Keine aktiven Claims.</div>
-          </div>
-        </div>
-      </section>
+  <div class="note">
+    Profilseite – Persönliche Darstellung. Items, Claims und Verwaltung sind bewusst ausgelagert.
+  </div>
+</main>
 
-    </div>
-
-    <div class="note">
-      Profilseite – Phase 1. Bearbeitung, Avatare und Detailaktionen folgen in späteren Phasen.
-    </div>
-  </main>
-
-  <!-- =====================
-       SCRIPT (Phase 1 minimal)
-       ===================== -->
-  <script>
-    // Phase 1: Platzhalter – reale Daten kommen später aus Backend / Session
-
-    const mockProfile = {
-      username: "Testuser_001",
-      accountId: "acc-001",
-      since: "01.2026",
-      stats: {
-        items: 0,
-        given: 0,
-        claims: 0
-      }
-    };
-
-    function initProfile() {
-      document.getElementById('username').textContent = mockProfile.username;
-      document.getElementById('meta').textContent = 'Lootliste Profil';
-      document.getElementById('accountId').textContent = mockProfile.accountId;
-      document.getElementById('since').textContent = mockProfile.since;
-      document.getElementById('statItems').textContent = mockProfile.stats.items;
-      document.getElementById('statGiven').textContent = mockProfile.stats.given;
-      document.getElementById('statClaims').textContent = mockProfile.stats.claims;
-
-      const initials = mockProfile.username.slice(0, 2).toUpperCase();
-      document.getElementById('avatar').textContent = initials;
-    }
-
-    initProfile();
-  </script>
 </body>
 </html>
