@@ -5,8 +5,6 @@
 <title>Mein Profil – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -14,118 +12,71 @@
   --gold:#f5c451;
   --border:#2a2a2a;
   --green:#4cff4c;
-  --yellow:#f0e68c;
-  --blue:#6fa8ff;
-  --red:#ff6b6b;
-  --orange:#ffb347;
 }
 *{box-sizing:border-box}
-
 body{
   margin:0;
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-family:Inter,system-ui,sans-serif;
   background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
-
-.wrapper{max-width:1600px;margin:0 auto}
-
-/* ===== HERO ===== */
-.hero{
-  background:url("img/banner_diablo.png") center top / cover no-repeat;
-  border-radius:0 0 26px 26px;
-  overflow:hidden;
-  min-height:200px;
-}
-.hero-inner{
-  padding:34px 36px 30px;
-  background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.75));
-}
-.hero h1{margin:0;font-size:34px;font-weight:700}
-.hero p{margin:10px 0 0;opacity:.85}
-
-/* AUTH BOX */
-.auth-box{
-  position:absolute;
-  top:22px;
-  right:24px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:10px 14px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:rgba(0,0,0,.55);
-  font-size:13px;
-}
-.auth-box img{width:26px;height:26px;border-radius:50%}
-.auth-link{font-size:12px;color:var(--gold);text-decoration:none;opacity:.85}
-.auth-link:hover{text-decoration:underline;opacity:1}
-
-/* ===== CONTENT ===== */
-.container{padding:38px 32px 70px}
-
-.profile-grid{
-  display:grid;
-  grid-template-columns:360px 1fr;
-  gap:22px;
-}
-@media(max-width:1100px){
-  .profile-grid{grid-template-columns:1fr}
-}
+.wrapper{max-width:1400px;margin:0 auto;padding:40px}
+h2{margin:0 0 12px;font-size:18px}
 
 .card{
   background:#121212;
   border:1px solid #222;
   border-radius:18px;
-  padding:18px 18px 20px;
+  padding:18px;
+  margin-bottom:18px;
 }
-.card + .card{margin-top:18px}
-.card h3{
-  margin:0 0 12px;
-  font-size:15px;
-  font-weight:600;
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:320px 1fr;
+  gap:22px;
+}
+@media(max-width:900px){
+  .profile-grid{grid-template-columns:1fr}
 }
 
 /* LEFT */
-.avatar-big{
-  width:96px;height:96px;border-radius:18px;
-  background:#000;border:1px solid #333;
+.avatar{
+  width:88px;height:88px;
+  border-radius:18px;
+  background:#000;
+  border:1px solid #333;
   display:flex;align-items:center;justify-content:center;
-  font-size:30px;font-weight:700;color:var(--gold);
-  margin-bottom:14px;
+  font-size:28px;font-weight:700;color:var(--gold);
+  margin-bottom:12px;
 }
-.profile-name{font-size:22px;font-weight:700}
-.profile-sub{font-size:13px;color:#aaa;margin-top:6px}
+.name{font-size:22px;font-weight:700}
+.sub{font-size:13px;color:#aaa;margin-top:4px}
+.online{font-size:12px;color:var(--green);margin-top:8px}
 
-.kv{
-  display:grid;
-  grid-template-columns:140px 1fr;
-  gap:6px 10px;
-  font-size:13px
+/* EDITABLE */
+textarea,input{
+  width:100%;
+  background:#0f0f0f;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:10px 12px;
+  color:#fff;
+  font-family:inherit;
 }
-.kv span{color:#aaa}
+textarea{resize:vertical;min-height:80px}
 
-.online{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
+.btn{
+  margin-top:10px;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--gold);
+  background:rgba(245,196,81,.08);
+  color:var(--gold);
+  cursor:pointer;
   font-size:12px;
-  color:var(--green)
 }
-.online::before{
-  content:"";
-  width:8px;height:8px;
-  border-radius:50%;
-  background:var(--green)
-}
-
-/* BIO */
-.bio{
-  font-size:14px;
-  line-height:1.55;
-  color:#ddd
-}
+.btn:hover{background:rgba(245,196,81,.18)}
 
 /* CLASSES */
 .classes{
@@ -139,181 +90,151 @@ body{
   border-radius:14px;
   padding:14px 10px;
   text-align:center;
-  font-size:13px;
-  color:#aaa;
+  cursor:pointer;
+  opacity:.8;
 }
 .class.active{
   border-color:var(--gold);
+  background:linear-gradient(to bottom, rgba(245,196,81,.2), rgba(245,196,81,.05));
   color:var(--gold);
-  background:linear-gradient(to bottom, rgba(245,196,81,.18), rgba(245,196,81,.05));
-  font-weight:600;
+  opacity:1;
 }
-.class img{
-  width:32px;
-  height:32px;
-  opacity:.9;
-  margin-bottom:8px
-}
+.class img{width:32px;height:32px;margin-bottom:6px}
 
 /* TAGS */
 .tags{display:flex;flex-wrap:wrap;gap:8px}
 .tag{
   padding:6px 12px;
   border-radius:999px;
-  font-size:12px;
-  background:#0f0f0f;
   border:1px solid #333;
-  color:#aaa
-}
-.tag.good{color:var(--green);border-color:rgba(76,255,76,.4)}
-
-/* TRUST */
-.trust{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:14px
-}
-.trust-box{
   background:#0f0f0f;
-  border:1px solid #222;
-  border-radius:14px;
-  padding:14px
-}
-.trust-box strong{font-size:22px}
-.trust-box small{
-  display:block;
-  margin-top:4px;
   font-size:12px;
-  color:#aaa
+  cursor:pointer;
+  opacity:.6;
+}
+.tag.active{
+  border-color:var(--green);
+  color:var(--green);
+  opacity:1;
 }
 
-/* CONTACT */
-.contact{
+/* TOGGLE */
+.toggle{
   display:flex;
-  flex-direction:column;
-  gap:8px;
-  font-size:13px
+  align-items:center;
+  gap:10px;
+  font-size:13px;
 }
-.contact .hidden{
-  color:#777;
-  font-style:italic
-}
-
-.footer-note{
-  margin-top:40px;
-  text-align:center;
-  font-size:12px;
-  color:#777
-}
+.toggle input{width:auto}
 </style>
 </head>
-<body>
 
+<body>
 <div class="wrapper">
 
-<header class="hero">
-  <div class="hero-inner">
+<div class="profile-grid">
 
-    <div class="auth-box">
-      <img src="img/avatars/default.png" alt="Avatar">
-      <span id="playerName">Testuser_001</span>
-      <a href="index.html" class="auth-link">Lootliste</a>
-      <a href="my-items.html" class="auth-link">Meine Items</a>
+<!-- LEFT -->
+<aside>
+  <div class="card">
+    <div class="avatar">TS</div>
+    <div class="name" id="username">Testuser_001</div>
+    <div class="sub">Community-Mitglied · seit Jan 2026</div>
+    <div class="online">● zuletzt online vor 2 Tagen</div>
+  </div>
+
+  <div class="card">
+    <h2>Kontakt</h2>
+    <div class="toggle">
+      <input type="checkbox" id="btVisible">
+      <label for="btVisible">BattleTag sichtbar</label>
     </div>
-
-    <h1>Mein Profil</h1>
-    <p>Charakter, Haltung und Identität innerhalb der Lootliste</p>
-
+    <input id="battleTag" placeholder="BattleTag z. B. me_solli#1234">
   </div>
-</header>
+</aside>
 
-<div class="container">
+<!-- RIGHT -->
+<section>
 
-  <div class="profile-grid">
-
-    <!-- LEFT -->
-    <aside>
-      <div class="card">
-        <div class="avatar-big">TS</div>
-        <div class="profile-name">Testuser_001</div>
-        <div class="profile-sub">Community-Mitglied · seit Jan 2026</div>
-        <div style="margin-top:12px" class="online">zuletzt online vor 2 Tagen</div>
-      </div>
-
-      <div class="card">
-        <h3>Identität</h3>
-        <div class="kv">
-          <span>Account-ID</span><div>acc-001</div>
-          <span>Region</span><div>EU</div>
-          <span>Spielmodus</span><div>Non-Ladder</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Kontakt</h3>
-        <div class="contact">
-          <div>BattleTag: <strong>Hidden</strong></div>
-          <div class="hidden">Kontakt wird nur bei aktiver Übergabe geteilt</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- RIGHT -->
-    <section>
-
-      <div class="card">
-        <h3>Über mich</h3>
-        <div class="bio">
-          Spielt Diablo seit Classic mit Fokus auf faire Übergaben und ruhige
-          Community-Strukturen. Kein Drama, kein Stress – Loot soll verbinden
-          und nicht spalten.
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Lieblingsklassen</h3>
-        <div class="classes">
-          <div class="class active"><img src="img/classes/paladin.png"><div>Paladin</div></div>
-          <div class="class"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
-          <div class="class"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
-          <div class="class"><img src="img/classes/assassin.png"><div>Assassin</div></div>
-          <div class="class"><img src="img/classes/druid.png"><div>Druid</div></div>
-          <div class="class"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-          <div class="class"><img src="img/classes/amazon.png"><div>Amazon</div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Spielstil & Haltung</h3>
-        <div class="tags">
-          <div class="tag good">Fair Player</div>
-          <div class="tag">Ruhiger Trader</div>
-          <div class="tag">Community-orientiert</div>
-          <div class="tag">Low Drama</div>
-          <div class="tag">Spenderfreundlich</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Vertrauen & Aktivität</h3>
-        <div class="trust">
-          <div class="trust-box"><strong>12</strong><small>Bestätigte Übergaben</small></div>
-          <div class="trust-box"><strong>0</strong><small>Offene Konflikte</small></div>
-          <div class="trust-box"><strong>98%</strong><small>Positive Interaktionen</small></div>
-          <div class="trust-box"><strong>Jan 2026</strong><small>Mitglied seit</small></div>
-        </div>
-      </div>
-
-    </section>
-
+  <div class="card">
+    <h2>Über mich</h2>
+    <textarea id="about"></textarea>
+    <button class="btn" onclick="saveProfile()">Speichern</button>
   </div>
 
-  <div class="footer-note">
-    Profilseite – dient der persönlichen Darstellung. Items, Claims und Aktionen sind bewusst ausgelagert.
+  <div class="card">
+    <h2>Lieblingsklasse</h2>
+    <div class="classes" id="classGrid">
+      <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
+      <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
+      <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
+      <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
+      <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
+      <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
+      <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
+    </div>
   </div>
 
+  <div class="card">
+    <h2>Spielstil & Haltung</h2>
+    <div class="tags" id="tagGrid">
+      <div class="tag">Fair Player</div>
+      <div class="tag">Ruhiger Trader</div>
+      <div class="tag">Community-orientiert</div>
+      <div class="tag">Low Drama</div>
+      <div class="tag">Spenderfreundlich</div>
+    </div>
+  </div>
+
+</section>
 </div>
 </div>
+
+<script>
+const state = JSON.parse(localStorage.getItem("profile")) || {
+  about:"",
+  favClass:"",
+  tags:[],
+  battleTag:"",
+  btVisible:false
+};
+
+const about = document.getElementById("about");
+const battleTag = document.getElementById("battleTag");
+const btVisible = document.getElementById("btVisible");
+
+about.value = state.about;
+battleTag.value = state.battleTag;
+btVisible.checked = state.btVisible;
+
+// Klassen
+document.querySelectorAll(".class").forEach(c=>{
+  if(c.dataset.class===state.favClass) c.classList.add("active");
+  c.onclick=()=>{
+    document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
+    c.classList.add("active");
+    state.favClass=c.dataset.class;
+    saveProfile();
+  };
+});
+
+// Tags
+document.querySelectorAll(".tag").forEach(t=>{
+  if(state.tags.includes(t.textContent)) t.classList.add("active");
+  t.onclick=()=>{
+    t.classList.toggle("active");
+    state.tags=[...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
+    saveProfile();
+  };
+});
+
+function saveProfile(){
+  state.about=about.value;
+  state.battleTag=battleTag.value;
+  state.btVisible=btVisible.checked;
+  localStorage.setItem("profile",JSON.stringify(state));
+}
+</script>
 
 </body>
 </html>
