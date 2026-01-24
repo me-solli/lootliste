@@ -42,19 +42,36 @@ body{
   padding:36px 20px;
 }
 .avatar{
-  width:180px;height:220px;border-radius:28px;
-  background:#000;border:1px solid rgba(245,196,81,.45);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:22px;overflow:hidden;
-  box-shadow:0 0 60px rgba(245,196,81,.25);
+  width:180px;
+  height:220px;
+  border-radius:28px;
+  background:#000;
+  border:1px solid rgba(245,196,81,.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:22px;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 4px rgba(245,196,81,.08),
+    0 18px 40px rgba(0,0,0,.8),
+    0 0 60px rgba(245,196,81,.25);
 }
-.avatar img{width:100%;height:100%;object-fit:contain}
-.avatar span{font-size:38px;font-weight:700;color:var(--gold)}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.avatar span{
+  font-size:38px;
+  font-weight:700;
+  color:var(--gold);
+}
 .name{font-size:26px;font-weight:700}
 .sub{font-size:14px;color:#aaa;margin-top:8px}
 .online{font-size:14px;color:var(--green);margin-top:12px}
 
-/* INPUTS */
+/* INPUT */
 textarea{
   width:100%;
   background:var(--bg);
@@ -81,16 +98,28 @@ textarea{
   cursor:pointer;
   opacity:.6;
 }
-.class img{width:38px;height:38px;margin-bottom:8px}
+.class img{
+  width:38px;
+  height:38px;
+  margin-bottom:8px;
+}
 .class.active{
   border-color:var(--gold);
-  background:linear-gradient(to bottom, rgba(245,196,81,.25), rgba(245,196,81,.05));
+  background:linear-gradient(
+    to bottom,
+    rgba(245,196,81,.25),
+    rgba(245,196,81,.05)
+  );
   color:var(--gold);
   opacity:1;
 }
 
 /* TAGS */
-.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
 .tag{
   padding:6px 12px;
   border-radius:999px;
@@ -116,7 +145,9 @@ textarea{
   color:var(--gold);
   cursor:pointer;
 }
-.btn:hover{background:rgba(245,196,81,.18)}
+.btn:hover{
+  background:rgba(245,196,81,.18);
+}
 </style>
 </head>
 
@@ -127,7 +158,9 @@ textarea{
 <!-- LEFT -->
 <aside>
   <div class="card profile-head">
-    <div class="avatar" id="avatarBox"><span>TS</span></div>
+    <div class="avatar" id="avatarBox">
+      <span>TS</span>
+    </div>
     <div class="name">me_solli</div>
     <div class="sub">Community-Mitglied · seit Jan 2026</div>
     <div class="online">● Mein Profil (intern)</div>
@@ -139,94 +172,17 @@ textarea{
 
   <div class="card">
     <h3>Über mich</h3>
-    <textarea id="about"></textarea>
-    <button class="btn" onclick="save()">Speichern</button>
+    <textarea id="about" placeholder="Beschreibe dich, deinen Spielstil oder deine Motivation…"></textarea>
+    <button class="btn" onclick="saveProfile()">Speichern</button>
   </div>
 
   <div class="card">
     <h3>Lieblingsklasse</h3>
-    <div class="classes">
+    <div class="classes" id="classGrid">
       <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
       <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
       <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
       <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
       <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
       <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-      <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Spielstil & Haltung</h3>
-    <div class="tags">
-      <div class="tag">Fair Player</div>
-      <div class="tag">Ruhiger Trader</div>
-      <div class="tag">Community-orientiert</div>
-      <div class="tag">Low Drama</div>
-      <div class="tag">Spenderfreundlich</div>
-    </div>
-  </div>
-
-</section>
-</div>
-</div>
-
-<script>
-/* ===============================
-   STATE (LOCAL & EHRLICH)
-=============================== */
-const state = JSON.parse(localStorage.getItem("my_profile")) || {
-  about:"",
-  favClass:"",
-  tags:[]
-};
-
-const about = document.getElementById("about");
-about.value = state.about;
-
-const avatarBox = document.getElementById("avatarBox");
-
-/* AVATAR */
-function renderAvatar(){
-  avatarBox.innerHTML="";
-  if(state.favClass){
-    const img=document.createElement("img");
-    img.src=`img/classes/${state.favClass.toLowerCase()}.png`;
-    avatarBox.appendChild(img);
-  }else{
-    avatarBox.innerHTML="<span>TS</span>";
-  }
-}
-renderAvatar();
-
-/* CLASSES */
-document.querySelectorAll(".class").forEach(c=>{
-  if(c.dataset.class===state.favClass) c.classList.add("active");
-  c.onclick=()=>{
-    document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
-    c.classList.add("active");
-    state.favClass=c.dataset.class;
-    renderAvatar();
-    save();
-  };
-});
-
-/* TAGS */
-document.querySelectorAll(".tag").forEach(t=>{
-  if(state.tags.includes(t.textContent)) t.classList.add("active");
-  t.onclick=()=>{
-    t.classList.toggle("active");
-    state.tags=[...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
-    save();
-  };
-});
-
-/* SAVE */
-function save(){
-  state.about=about.value;
-  localStorage.setItem("my_profile",JSON.stringify(state));
-}
-</script>
-
-</body>
-</html>
+      <div class="class" data-class="Amazon"><img src="img/classes/amazo
