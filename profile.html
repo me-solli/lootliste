@@ -29,15 +29,15 @@ body{
 .card{
   background:#121212;
   border:1px solid #222;
-  border-radius:18px;
-  padding:22px;
+  border-radius:22px;
+  padding:26px;
   margin-bottom:18px;
 }
 
 .profile-grid{
   display:grid;
-  grid-template-columns:320px 1fr;
-  gap:22px;
+  grid-template-columns:340px 1fr;
+  gap:26px;
 }
 @media(max-width:900px){
   .profile-grid{grid-template-columns:1fr}
@@ -48,51 +48,53 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
   text-align:center;
-  padding-top:26px;
-  padding-bottom:28px;
+  padding-top:36px;
+  padding-bottom:34px;
 }
 
-/* === AVATAR (FIXED: KEIN CROPPING) === */
+/* === AVATAR (DOMINANT) === */
 .avatar{
-  width:132px;
-  height:132px;
-  border-radius:26px;
-  background:#0b0b0b;
-  border:1px solid #333;
+  width:180px;
+  height:220px;
+  border-radius:28px;
+  background:#000;
+  border:1px solid rgba(245,196,81,.45);
   display:flex;
   align-items:center;
   justify-content:center;
-  margin:0 auto 18px auto;
+  margin-bottom:22px;
   overflow:hidden;
-  padding:10px;              /* <<< WICHTIG */
+  box-shadow:
+    0 0 0 4px rgba(245,196,81,.08),
+    0 18px 40px rgba(0,0,0,.8),
+    0 0 60px rgba(245,196,81,.25);
 }
 .avatar img{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;        /* <<< WICHTIG */
+  width:100%;
+  height:100%;
+  object-fit:contain;
 }
 .avatar span{
-  font-size:34px;
+  font-size:38px;
   font-weight:700;
   color:var(--gold);
 }
 
+/* TEXT */
 .name{
-  font-size:24px;
+  font-size:26px;
   font-weight:700;
-  margin-top:2px;
 }
 .sub{
-  font-size:13px;
+  font-size:14px;
   color:#aaa;
-  margin-top:6px;
+  margin-top:8px;
 }
 .online{
-  font-size:13px;
+  font-size:14px;
   color:var(--green);
-  margin-top:10px;
+  margin-top:12px;
 }
 
 /* FORM */
@@ -132,7 +134,7 @@ textarea{resize:vertical;min-height:90px}
   padding:14px 10px;
   text-align:center;
   cursor:pointer;
-  opacity:.75;
+  opacity:.7;
 }
 .class img{
   width:38px;
@@ -275,7 +277,6 @@ function updateAvatar(){
 }
 updateAvatar();
 
-// Klassen
 document.querySelectorAll(".class").forEach(c=>{
   if(c.dataset.class === state.favClass) c.classList.add("active");
   c.onclick = ()=>{
@@ -287,7 +288,6 @@ document.querySelectorAll(".class").forEach(c=>{
   };
 });
 
-// Tags
 document.querySelectorAll(".tag").forEach(t=>{
   if(state.tags.includes(t.textContent)) t.classList.add("active");
   t.onclick = ()=>{
