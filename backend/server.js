@@ -73,6 +73,7 @@ ensureDataDir();
 let items = loadJSON(ITEMS_FILE, []);
 let users = loadJSON(USERS_FILE, []);
 let accounts = loadJSON(ACCOUNTS_FILE, []);
+let feedback = loadJSON(FEEDBACK_FILE, []);
 
 // ===============================
 // DEVICE (GAST) SYSTEM
@@ -434,6 +435,33 @@ app.delete("/items/:id", (req, res) => {
   items.splice(index, 1);
   saveJSON(ITEMS_FILE, items);
   res.json({ success: true });
+});
+
+// ===============================
+// FEEDBACK (MINIMAL, READ-ONLY)
+// ===============================
+app.post("/feedback", (req, res) => {
+  try {
+    const text = (req.body.description || "").trim();
+    if (text.length < 10) {
+      return res.status(400).json({ error: "Feedback too short" });
+    }
+
+    const entry = {
+      id: Date.now(),
+      text,
+      page: req.body.page || null,
+      createdAt: new Date().toISOString()
+    };
+
+    feedback.push(entry);
+    saveJSON(FEEDBACK_FILE, feedback);
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Feedback error:", err);
+    res.status(500).json({ error: "failed" });
+  }
 });
 
 // ===============================
