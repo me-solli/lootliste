@@ -53,7 +53,7 @@ body{
   padding-bottom:34px;
 }
 
-/* === AVATAR (DOMINANT) === */
+/* === AVATAR === */
 .avatar{
   width:180px;
   height:220px;
@@ -169,20 +169,24 @@ textarea{resize:vertical;min-height:90px}
   opacity:1;
 }
 
-/* TOGGLE */
-.toggle{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:13px;
+/* READ ONLY */
+.readonly input,
+.readonly textarea{
+  pointer-events:none;
+  opacity:.85;
 }
-.toggle input{width:auto}
+.readonly .class,
+.readonly .tag{
+  pointer-events:none;
+}
+.readonly .btn{
+  display:none;
+}
 </style>
 </head>
 
 <body>
 <div class="wrapper">
-
 <div class="profile-grid">
 
 <!-- LEFT -->
@@ -192,12 +196,12 @@ textarea{resize:vertical;min-height:90px}
     <div class="avatar" id="avatarBox">
       <span>TS</span>
     </div>
-    <div class="name">Testuser_001</div>
+    <div class="name" id="profileName">Testuser_001</div>
     <div class="sub">Community-Mitglied · seit Jan 2026</div>
     <div class="online">● zuletzt online vor 2 Tagen</div>
   </div>
 
-  <div class="card">
+  <div class="card" id="contactCard">
     <h3>Kontakt</h3>
     <div class="toggle">
       <input type="checkbox" id="btVisible">
@@ -209,7 +213,7 @@ textarea{resize:vertical;min-height:90px}
 </aside>
 
 <!-- RIGHT -->
-<section>
+<section id="profileContent">
 
   <div class="card">
     <h3>Über mich</h3>
@@ -246,7 +250,15 @@ textarea{resize:vertical;min-height:90px}
 </div>
 
 <script>
-const state = JSON.parse(localStorage.getItem("profile")) || {
+/* === USER CONTEXT === */
+const params = new URLSearchParams(location.search);
+const viewedUser = params.get("user") || "me_solli";
+const currentUser = localStorage.getItem("currentUser") || "me_solli";
+const isOwnProfile = viewedUser === currentUser;
+
+/* === STATE === */
+const storageKey = "profile_" + viewedUser;
+const state = JSON.parse(localStorage.getItem(storageKey)) || {
   about:"",
   favClass:"",
   tags:[],
@@ -254,15 +266,19 @@ const state = JSON.parse(localStorage.getItem("profile")) || {
   btVisible:false
 };
 
+/* === ELEMENTS === */
 const avatarBox = document.getElementById("avatarBox");
 const about = document.getElementById("about");
 const battleTag = document.getElementById("battleTag");
 const btVisible = document.getElementById("btVisible");
+document.getElementById("profileName").textContent = viewedUser;
 
+/* === INIT === */
 about.value = state.about;
 battleTag.value = state.battleTag;
 btVisible.checked = state.btVisible;
 
+/* === AVATAR === */
 function updateAvatar(){
   avatarBox.innerHTML = "";
   if(state.favClass){
@@ -277,9 +293,11 @@ function updateAvatar(){
 }
 updateAvatar();
 
+/* === CLASSES === */
 document.querySelectorAll(".class").forEach(c=>{
   if(c.dataset.class === state.favClass) c.classList.add("active");
   c.onclick = ()=>{
+    if(!isOwnProfile) return;
     document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
     c.classList.add("active");
     state.favClass = c.dataset.class;
@@ -288,20 +306,30 @@ document.querySelectorAll(".class").forEach(c=>{
   };
 });
 
+/* === TAGS === */
 document.querySelectorAll(".tag").forEach(t=>{
   if(state.tags.includes(t.textContent)) t.classList.add("active");
   t.onclick = ()=>{
+    if(!isOwnProfile) return;
     t.classList.toggle("active");
     state.tags = [...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
     saveProfile();
   };
 });
 
+/* === SAVE === */
 function saveProfile(){
+  if(!isOwnProfile) return;
   state.about = about.value;
   state.battleTag = battleTag.value;
   state.btVisible = btVisible.checked;
-  localStorage.setItem("profile", JSON.stringify(state));
+  localStorage.setItem(storageKey, JSON.stringify(state));
+}
+
+/* === READ ONLY MODE === */
+if(!isOwnProfile){
+  document.getElementById("profileContent").classList.add("readonly");
+  document.getElementById("contactCard").classList.add("readonly");
 }
 </script>
 
