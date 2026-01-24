@@ -148,6 +148,19 @@ textarea{
 .btn:hover{
   background:rgba(245,196,81,.18);
 }
+
+  /* FIX: Klickbarkeit erzwingen */
+.profile-grid > section {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.profile-grid > aside {
+  position: relative;
+  z-index: 1;
+}
+
 </style>
 </head>
 
