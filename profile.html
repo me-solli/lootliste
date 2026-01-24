@@ -70,7 +70,9 @@ body{
   grid-template-columns:360px 1fr;
   gap:22px;
 }
-@media(max-width:1100px){.profile-grid{grid-template-columns:1fr}}
+@media(max-width:1100px){
+  .profile-grid{grid-template-columns:1fr}
+}
 
 .card{
   background:#121212;
@@ -85,7 +87,7 @@ body{
   font-weight:600;
 }
 
-/* ===== LEFT ===== */
+/* LEFT */
 .avatar-big{
   width:96px;height:96px;border-radius:18px;
   background:#000;border:1px solid #333;
@@ -96,23 +98,36 @@ body{
 .profile-name{font-size:22px;font-weight:700}
 .profile-sub{font-size:13px;color:#aaa;margin-top:6px}
 
-.kv{display:grid;grid-template-columns:140px 1fr;gap:6px 10px;font-size:13px}
+.kv{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:6px 10px;
+  font-size:13px
+}
 .kv span{color:#aaa}
 
 .online{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--green)
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--green)
 }
 .online::before{
-  content:"";width:8px;height:8px;border-radius:50%;background:var(--green)
+  content:"";
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--green)
 }
 
-/* ===== BIO ===== */
+/* BIO */
 .bio{
-  font-size:14px;line-height:1.55;color:#ddd
+  font-size:14px;
+  line-height:1.55;
+  color:#ddd
 }
 
-/* ===== CLASSES ===== */
+/* CLASSES */
 .classes{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
@@ -133,9 +148,14 @@ body{
   background:linear-gradient(to bottom, rgba(245,196,81,.18), rgba(245,196,81,.05));
   font-weight:600;
 }
-.class img{width:32px;height:32px;opacity:.9;margin-bottom:8px}
+.class img{
+  width:32px;
+  height:32px;
+  opacity:.9;
+  margin-bottom:8px
+}
 
-/* ===== TAGS ===== */
+/* TAGS */
 .tags{display:flex;flex-wrap:wrap;gap:8px}
 .tag{
   padding:6px 12px;
@@ -147,24 +167,43 @@ body{
 }
 .tag.good{color:var(--green);border-color:rgba(76,255,76,.4)}
 
-/* ===== TRUST ===== */
+/* TRUST */
 .trust{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:14px
 }
 .trust-box{
-  background:#0f0f0f;border:1px solid #222;border-radius:14px;padding:14px
+  background:#0f0f0f;
+  border:1px solid #222;
+  border-radius:14px;
+  padding:14px
 }
 .trust-box strong{font-size:22px}
-.trust-box small{display:block;margin-top:4px;font-size:12px;color:#aaa}
-
-/* ===== CONTACT ===== */
-.contact{
-  display:flex;flex-direction:column;gap:8px;font-size:13px
+.trust-box small{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+  color:#aaa
 }
-.contact .hidden{color:#777;font-style:italic}
+
+/* CONTACT */
+.contact{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size:13px
+}
+.contact .hidden{
+  color:#777;
+  font-style:italic
+}
 
 .footer-note{
-  margin-top:40px;text-align:center;font-size:12px;color:#777
+  margin-top:40px;
+  text-align:center;
+  font-size:12px;
+  color:#777
 }
 </style>
 </head>
