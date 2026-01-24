@@ -264,6 +264,7 @@ th{
     <div class="admin-nav">
       <button id="tabItems" class="active">📦 Items</button>
       <button id="tabUsers">👥 User</button>
+      <button id="tabFeedback">📝 Feedback</button>
     </div>
 
     <!-- ITEMS -->
@@ -325,6 +326,22 @@ th{
       </div>
     </div>
 
+    <!-- FEEDBACK -->
+    <div id="view-feedback" style="display:none">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Seite</th>
+              <th>Feedback</th>
+            </tr>
+          </thead>
+          <tbody id="feedbackTable"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -335,6 +352,7 @@ th{
 <script>
 const API = "https://lootliste-production.up.railway.app";
 const ADMIN = "me_solli";
+const ADMIN_TOKEN = "lootliste-admin-2025";
 
 const pageLogin = document.getElementById("page-login");
 const pageAdmin = document.getElementById("page-admin");
@@ -342,8 +360,11 @@ const adminName = document.getElementById("adminName");
 
 const tabItems = document.getElementById("tabItems");
 const tabUsers = document.getElementById("tabUsers");
+const tabFeedback = document.getElementById("tabFeedback");
+
 const viewItems = document.getElementById("view-items");
 const viewUsers = document.getElementById("view-users");
+const viewFeedback = document.getElementById("view-feedback");
 
 /* ===== INIT ===== */
 async function init(){
@@ -393,16 +414,30 @@ function logout(){
 tabItems.onclick=()=>{
   tabItems.classList.add("active");
   tabUsers.classList.remove("active");
+  tabFeedback.classList.remove("active");
   viewItems.style.display="block";
   viewUsers.style.display="none";
+  viewFeedback.style.display="none";
 };
 
 tabUsers.onclick=()=>{
   tabUsers.classList.add("active");
   tabItems.classList.remove("active");
+  tabFeedback.classList.remove("active");
   viewItems.style.display="none";
   viewUsers.style.display="block";
+  viewFeedback.style.display="none";
   loadUsers();
+};
+
+tabFeedback.onclick=()=>{
+  tabFeedback.classList.add("active");
+  tabItems.classList.remove("active");
+  tabUsers.classList.remove("active");
+  viewItems.style.display="none";
+  viewUsers.style.display="none";
+  viewFeedback.style.display="block";
+  loadFeedback();
 };
 
 /* ===== ITEMS ===== */
@@ -413,15 +448,7 @@ async function loadItems(){
 
 function isDone(i){
   if(i.status === "vergeben") return true;
-
-  if(
-    i.handover &&
-    i.handover.donorConfirmed === true &&
-    i.handover.receiverConfirmed === true
-  ){
-    return true;
-  }
-
+  if(i.handover && i.handover.donorConfirmed && i.handover.receiverConfirmed) return true;
   return false;
 }
 
@@ -440,26 +467,24 @@ function render(items){
   cRes.textContent=list.filter(i=>i.phase==="reserviert").length;
   cDone.textContent=list.filter(i=>i.phase==="vergeben").length;
 
-  list
-    .filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse))
-    .forEach(i=>{
-      const tr=document.createElement("tr");
-      tr.innerHTML=`
-        <td>${i.id}</td>
-        <td>
-          <div class="item-cell">
-            <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
-              <img src="img/icons/${i.type||"sonstiges"}.png">
-            </div>
-            <strong>${i.name}</strong>
+  list.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse)).forEach(i=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${i.id}</td>
+      <td>
+        <div class="item-cell">
+          <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
+            <img src="img/icons/${i.type||"sonstiges"}.png">
           </div>
-        </td>
-        <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
-        <td>${i.donor||"–"}</td>
-        <td>${i.season||"–"}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
+          <strong>${i.name}</strong>
+        </div>
+      </td>
+      <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
+      <td>${i.donor||"–"}</td>
+      <td>${i.season||"–"}</td>
+    `;
+    tableBody.appendChild(tr);
+  });
 }
 
 function showShot(src){
@@ -474,7 +499,6 @@ filterSeason.onchange=loadItems;
 /* ===== USERS ===== */
 async function loadUsers(){
   const users = await fetch(API+"/admin/accounts").then(r=>r.json());
-
   userTable.innerHTML="";
   users.forEach(u=>{
     const tr=document.createElement("tr");
@@ -486,6 +510,24 @@ async function loadUsers(){
       <td>–</td>
     `;
     userTable.appendChild(tr);
+  });
+}
+
+/* ===== FEEDBACK ===== */
+async function loadFeedback(){
+  const list = await fetch(API+"/admin/feedback",{
+    headers:{ "X-Admin-Token": ADMIN_TOKEN }
+  }).then(r=>r.json());
+
+  feedbackTable.innerHTML="";
+  list.forEach(f=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${new Date(f.createdAt).toLocaleString()}</td>
+      <td>${f.page||"–"}</td>
+      <td>${f.text}</td>
+    `;
+    feedbackTable.appendChild(tr);
   });
 }
 
