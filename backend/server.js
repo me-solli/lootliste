@@ -466,6 +466,24 @@ app.post("/feedback", (req, res) => {
 });
 
 // ===============================
+// ADMIN: FEEDBACK READ-ONLY
+// ===============================
+app.get("/admin/feedback", (req, res) => {
+  const adminToken = req.headers["x-admin-token"];
+
+  if (adminToken !== "lootliste-admin-2025") {
+    return res.status(403).json({ error: "forbidden" });
+  }
+
+  try {
+    res.json([...feedback].reverse()); // neuestes zuerst
+  } catch (err) {
+    console.error("admin feedback error", err);
+    res.status(500).json({ error: "failed" });
+  }
+});
+
+// ===============================
 // START SERVER
 // ===============================
 app.listen(PORT, () => {
