@@ -1,238 +1,280 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mein Profil – Lootliste</title>
+<meta charset="UTF-8">
+<title>Mein Profil – Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --bg: #0e0f13;
-      --panel: #141622;
-      --panel-soft: #1b1e2e;
-      --text: #e6e7eb;
-      --muted: #9aa0b3;
-      --accent: #c89b3c;
-      --border: #2a2e44;
-      --ok: #3fb950;
-    }
+<style>
+:root{
+  --gold:#f5c451;
+  --border:#2a2a2a;
+  --green:#4cff4c;
+  --yellow:#f0e68c;
+  --blue:#6fa8ff;
+  --red:#ff6b6b;
+  --orange:#ffb347;
+}
+*{box-sizing:border-box}
 
-    * { box-sizing: border-box; }
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#eaeaea;
+}
 
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -200px, #1a1d2e 0%, var(--bg) 55%);
-      color: var(--text);
-    }
+.wrapper{max-width:1600px;margin:0 auto}
 
-    header {
-      border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(200,155,60,0.15), rgba(200,155,60,0.03));
-    }
+/* ===== HERO ===== */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:200px;
+}
+.hero-inner{
+  padding:34px 36px 30px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.75));
+}
+.hero h1{margin:0;font-size:34px;font-weight:700}
+.hero p{margin:10px 0 0;opacity:.85}
 
-    .hero {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 36px 20px 30px;
-      display: flex;
-      gap: 26px;
-      align-items: center;
-    }
+/* AUTH BOX */
+.auth-box{
+  position:absolute;
+  top:22px;
+  right:24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
+  font-size:13px;
+}
+.auth-box img{width:26px;height:26px;border-radius:50%}
+.auth-link{font-size:12px;color:var(--gold);text-decoration:none;opacity:.85}
+.auth-link:hover{text-decoration:underline;opacity:1}
 
-    .avatar {
-      width: 96px;
-      height: 96px;
-      border-radius: 12px;
-      background: linear-gradient(145deg, #2a2e44, #11131d);
-      border: 1px solid var(--border);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: 30px;
-      color: var(--accent);
-    }
+/* ===== CONTENT ===== */
+.container{padding:38px 32px 70px}
 
-    .hero-main { flex: 1; }
+.profile-grid{
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:22px;
+}
+@media(max-width:1100px){.profile-grid{grid-template-columns:1fr}}
 
-    .username {
-      font-size: 24px;
-      font-weight: 700;
-    }
+.card{
+  background:#121212;
+  border:1px solid #222;
+  border-radius:18px;
+  padding:18px 18px 20px;
+}
+.card + .card{margin-top:18px}
+.card h3{
+  margin:0 0 12px;
+  font-size:15px;
+  font-weight:600;
+}
 
-    .subtitle {
-      margin-top: 6px;
-      font-size: 13px;
-      color: var(--muted);
-    }
+/* ===== LEFT ===== */
+.avatar-big{
+  width:96px;height:96px;border-radius:18px;
+  background:#000;border:1px solid #333;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:700;color:var(--gold);
+  margin-bottom:14px;
+}
+.profile-name{font-size:22px;font-weight:700}
+.profile-sub{font-size:13px;color:#aaa;margin-top:6px}
 
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 30px 20px 60px;
-    }
+.kv{display:grid;grid-template-columns:140px 1fr;gap:6px 10px;font-size:13px}
+.kv span{color:#aaa}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 22px;
-    }
+.online{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--green)
+}
+.online::before{
+  content:"";width:8px;height:8px;border-radius:50%;background:var(--green)
+}
 
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-    }
+/* ===== BIO ===== */
+.bio{
+  font-size:14px;line-height:1.55;color:#ddd
+}
 
-    .card {
-      background: linear-gradient(180deg, var(--panel), var(--panel-soft));
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-    }
+/* ===== CLASSES ===== */
+.classes{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:14px;
+}
+.class{
+  background:#0f0f0f;
+  border:1px solid #222;
+  border-radius:14px;
+  padding:14px 10px;
+  text-align:center;
+  font-size:13px;
+  color:#aaa;
+}
+.class.active{
+  border-color:var(--gold);
+  color:var(--gold);
+  background:linear-gradient(to bottom, rgba(245,196,81,.18), rgba(245,196,81,.05));
+  font-weight:600;
+}
+.class img{width:32px;height:32px;opacity:.9;margin-bottom:8px}
 
-    .card h3 {
-      margin: 0 0 12px;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: .2px;
-    }
+/* ===== TAGS ===== */
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  background:#0f0f0f;
+  border:1px solid #333;
+  color:#aaa
+}
+.tag.good{color:var(--green);border-color:rgba(76,255,76,.4)}
 
-    .card + .card { margin-top: 16px; }
+/* ===== TRUST ===== */
+.trust{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px
+}
+.trust-box{
+  background:#0f0f0f;border:1px solid #222;border-radius:14px;padding:14px
+}
+.trust-box strong{font-size:22px}
+.trust-box small{display:block;margin-top:4px;font-size:12px;color:#aaa}
 
-    .stat {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      padding: 6px 0;
-      color: var(--muted);
-    }
+/* ===== CONTACT ===== */
+.contact{
+  display:flex;flex-direction:column;gap:8px;font-size:13px
+}
+.contact .hidden{color:#777;font-style:italic}
 
-    .stat strong { color: var(--text); font-weight: 600; }
-
-    .bio {
-      font-size: 14px;
-      line-height: 1.5;
-      color: var(--text);
-    }
-
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .badge {
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      border: 1px solid var(--border);
-      background: #10121b;
-      color: var(--muted);
-    }
-
-    .badge.ok { color: var(--ok); border-color: rgba(63,185,80,.4); }
-
-    .hero-select {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px,1fr));
-      gap: 12px;
-    }
-
-    .hero-card {
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #10121b;
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .hero-card.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: linear-gradient(180deg, rgba(200,155,60,.15), rgba(200,155,60,.03));
-      font-weight: 600;
-    }
-
-    .note {
-      margin-top: 34px;
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-    }
-  </style>
+.footer-note{
+  margin-top:40px;text-align:center;font-size:12px;color:#777
+}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="hero">
-    <div class="avatar" id="avatar">TS</div>
-    <div class="hero-main">
-      <div class="username" id="username">Testuser_001</div>
-      <div class="subtitle" id="subtitle">Ein Mitglied der Lootliste</div>
+<div class="wrapper">
+
+<header class="hero">
+  <div class="hero-inner">
+
+    <div class="auth-box">
+      <img src="img/avatars/default.png" alt="Avatar">
+      <span id="playerName">Testuser_001</span>
+      <a href="index.html" class="auth-link">Lootliste</a>
+      <a href="my-items.html" class="auth-link">Meine Items</a>
     </div>
+
+    <h1>Mein Profil</h1>
+    <p>Charakter, Haltung und Identität innerhalb der Lootliste</p>
+
   </div>
 </header>
 
-<main>
-  <div class="grid">
+<div class="container">
 
+  <div class="profile-grid">
+
+    <!-- LEFT -->
     <aside>
       <div class="card">
-        <h3>Identität</h3>
-        <div class="stat"><span>Account-ID</span><strong>acc-001</strong></div>
-        <div class="stat"><span>Dabei seit</span><strong>Jan 2026</strong></div>
-        <div class="stat"><span>Status</span><strong style="color:var(--ok)">Aktiv</strong></div>
+        <div class="avatar-big">TS</div>
+        <div class="profile-name">Testuser_001</div>
+        <div class="profile-sub">Community-Mitglied · seit Jan 2026</div>
+        <div style="margin-top:12px" class="online">zuletzt online vor 2 Tagen</div>
       </div>
 
       <div class="card">
-        <h3>Vertrauen</h3>
-        <div class="stat"><span>Bestätigte Übergaben</span><strong>12</strong></div>
-        <div class="stat"><span>Offene Konflikte</span><strong>0</strong></div>
-        <div class="stat"><span>Letzte Aktivität</span><strong>vor 2 Tagen</strong></div>
+        <h3>Identität</h3>
+        <div class="kv">
+          <span>Account-ID</span><div>acc-001</div>
+          <span>Region</span><div>EU</div>
+          <span>Spielmodus</span><div>Non-Ladder</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Kontakt</h3>
+        <div class="contact">
+          <div>BattleTag: <strong>Hidden</strong></div>
+          <div class="hidden">Kontakt wird nur bei aktiver Übergabe geteilt</div>
+        </div>
       </div>
     </aside>
 
+    <!-- RIGHT -->
     <section>
+
       <div class="card">
         <h3>Über mich</h3>
         <div class="bio">
-          Spielt Diablo seit Classic. Fokus auf fairen Loot, saubere Übergaben
-          und langfristige Community-Strukturen. Lieber ruhig als laut.
+          Spielt Diablo seit Classic mit Fokus auf faire Übergaben und ruhige
+          Community-Strukturen. Kein Drama, kein Stress – Loot soll verbinden
+          und nicht spalten.
         </div>
       </div>
 
       <div class="card">
-        <h3>Lieblingsheld</h3>
-        <div class="hero-select">
-          <div class="hero-card active">Paladin</div>
-          <div class="hero-card">Sorceress</div>
-          <div class="hero-card">Barbarian</div>
-          <div class="hero-card">Assassin</div>
+        <h3>Lieblingsklassen</h3>
+        <div class="classes">
+          <div class="class active"><img src="img/classes/paladin.png"><div>Paladin</div></div>
+          <div class="class"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
+          <div class="class"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
+          <div class="class"><img src="img/classes/assassin.png"><div>Assassin</div></div>
+          <div class="class"><img src="img/classes/druid.png"><div>Druid</div></div>
+          <div class="class"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
+          <div class="class"><img src="img/classes/amazon.png"><div>Amazon</div></div>
         </div>
       </div>
 
       <div class="card">
-        <h3>Spielstil</h3>
-        <div class="badges">
-          <div class="badge ok">Fair Player</div>
-          <div class="badge">Community-orientiert</div>
-          <div class="badge">Low Drama</div>
-          <div class="badge">Spender-freundlich</div>
+        <h3>Spielstil & Haltung</h3>
+        <div class="tags">
+          <div class="tag good">Fair Player</div>
+          <div class="tag">Ruhiger Trader</div>
+          <div class="tag">Community-orientiert</div>
+          <div class="tag">Low Drama</div>
+          <div class="tag">Spenderfreundlich</div>
         </div>
       </div>
+
+      <div class="card">
+        <h3>Vertrauen & Aktivität</h3>
+        <div class="trust">
+          <div class="trust-box"><strong>12</strong><small>Bestätigte Übergaben</small></div>
+          <div class="trust-box"><strong>0</strong><small>Offene Konflikte</small></div>
+          <div class="trust-box"><strong>98%</strong><small>Positive Interaktionen</small></div>
+          <div class="trust-box"><strong>Jan 2026</strong><small>Mitglied seit</small></div>
+        </div>
+      </div>
+
     </section>
 
   </div>
 
-  <div class="note">
-    Profilseite – Persönliche Darstellung. Items, Claims und Verwaltung sind bewusst ausgelagert.
+  <div class="footer-note">
+    Profilseite – dient der persönlichen Darstellung. Items, Claims und Aktionen sind bewusst ausgelagert.
   </div>
-</main>
+
+</div>
+</div>
 
 </body>
 </html>
