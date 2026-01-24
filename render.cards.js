@@ -35,8 +35,9 @@ export function renderCards(items, container) {
       ? `${type} • ${item.sub}`
       : type;
 
+    // 🔗 NEU: Spender klickbar → Profil
     const sourceLabel = item.donor
-      ? `Spender: ${item.donor}`
+      ? `Spender: <a href="profile.html" class="profile-link">${item.donor}</a>`
       : "Quelle: Community-Drop";
 
     card.innerHTML = `
