@@ -1,22 +1,13 @@
 const API = "https://lootliste-production.up.railway.app";
 
-/* ===============================
-   KONSTANTEN
-=============================== */
 const VALID_TYPES = [
   "waffe","helm","ruestung","schild","guertel",
   "handschuhe","schuhe","amulett","ring",
   "charm","rune","sonstiges"
 ];
 
-/* ===============================
-   HELPER
-=============================== */
 function stop(e){ e.stopPropagation(); }
 
-/* ===============================
-   RENDER
-=============================== */
 export function renderCards(items, container){
   container.innerHTML = "";
 
@@ -27,83 +18,78 @@ export function renderCards(items, container){
     const isOwner = item.isOwner === true;
 
     const card = document.createElement("article");
-    card.className = "card";
+    card.className = `card altar ${isOwner ? "is-own" : ""}`;
     card.dataset.open = "false";
-    card.dataset.type = type;
 
     /* =========================
-       SPENDER / PROFIL
+       SPENDER
     ========================== */
     const donorHTML = item.donor
       ? `
         <a
           href="profile.html?user=${encodeURIComponent(item.donor)}"
-          class="profile-link"
-          title="Profil ansehen"
+          class="donor-link"
           onclick="event.stopPropagation()"
+          title="Profil ansehen"
         >
-          ${item.donor}
+          ✦ ${item.donor}
         </a>
       `
-      : `<span class="source-muted">Community</span>`;
+      : `<span class="donor-unknown">✦ Unbekannte Herkunft</span>`;
 
     /* =========================
-       STATUS (NUR WENN RELEVANT)
+       SIEGEL (OWN ITEM)
     ========================== */
-    const ownerBadge = isOwner
-      ? `<span class="badge-own">🔒 Dein Item</span>`
+    const seal = isOwner
+      ? `<div class="own-seal">🔒 Dein Artefakt</div>`
       : ``;
 
     /* =========================
        TEMPLATE
     ========================== */
     card.innerHTML = `
-      <!-- HEADER -->
-      <button class="card-header" type="button">
-        <span class="card-chevron">▶</span>
+      <!-- HEADER / ALTAR -->
+      <div class="altar-header" onclick="this.closest('.card').dataset.open =
+        this.closest('.card').dataset.open === 'true' ? 'false' : 'true'">
 
-        <img
-          class="item-type-icon"
-          src="img/icons/${type}.png"
-          alt="${type}"
-        >
+        <img class="altar-icon"
+             src="img/icons/${type}.png"
+             alt="${type}">
 
-        <div class="card-title">
+        <div class="altar-title">
           <div class="item-name ${qualityClass}">
-            ${item.name || "Unbekanntes Item"}
+            ${item.name || "Unbekanntes Artefakt"}
           </div>
-          <div class="item-category">
+          <div class="item-type">
             ${type.toUpperCase()}
           </div>
         </div>
 
-        ${ownerBadge}
-      </button>
+        ${seal}
+      </div>
 
-      <!-- DETAILS -->
-      <div class="card-details">
+      <!-- BODY -->
+      <div class="altar-body">
 
         ${item.screenshot ? `
-          <div class="card-image">
-            <img
-              src="${item.screenshot}"
-              alt="Screenshot von ${item.name}"
-              loading="lazy"
-            >
+          <div class="altar-image">
+            <img src="${item.screenshot}" loading="lazy">
           </div>
         ` : ""}
 
-        <div class="card-body">
+        <div class="altar-info">
 
           ${item.roll ? `
-            <div class="item-roll">${item.roll}</div>
+            <div class="altar-roll">
+              ${item.roll}
+            </div>
           ` : ""}
 
-          <div class="player">
-            Spender: ${donorHTML}
+          <div class="altar-origin">
+            ${donorHTML}
           </div>
 
-          <div class="actions">
+          <div class="altar-action">
             <button class="claim-btn">🖐️ Nehmen</button>
           </div>
 
@@ -112,24 +98,13 @@ export function renderCards(items, container){
     `;
 
     /* =========================
-       OPEN / CLOSE
-    ========================== */
-    const header = card.querySelector(".card-header");
-    header.addEventListener("click", () => {
-      const open = card.dataset.open === "true";
-      document.querySelectorAll(".card[data-open='true']")
-        .forEach(c => c.dataset.open = "false");
-      card.dataset.open = open ? "false" : "true";
-    });
-
-    /* =========================
        CLAIM LOGIK
     ========================== */
     const btn = card.querySelector(".claim-btn");
 
     if(isOwner){
       btn.disabled = true;
-      btn.textContent = "🔒 Dein Item";
+      btn.textContent = "🔒 Dein Artefakt";
     }
 
     btn.addEventListener("click", async e => {
@@ -161,15 +136,16 @@ export function renderCards(items, container){
         if(!res.ok){
           btn.disabled = false;
           btn.textContent = "🖐️ Nehmen";
-          alert("Konnte nicht reserviert werden.");
+          alert("Konnte nicht beansprucht werden.");
           return;
         }
 
         if(typeof showToast === "function"){
-          showToast("Item reserviert");
+          showToast("Artefakt beansprucht");
         }
 
-        card.remove();
+        card.classList.add("fade-out");
+        setTimeout(()=>card.remove(),200);
 
       }catch{
         btn.disabled = false;
