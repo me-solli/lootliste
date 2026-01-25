@@ -22,11 +22,10 @@ export function renderCards(items, container){
 
     card.innerHTML = `
       <!-- HEADER -->
-      <div class="altar-header"
-           onclick="this.closest('.card').dataset.open =
-           this.closest('.card').dataset.open === 'true' ? 'false' : 'true'">
+      <div class="altar-header">
+        <button class="altar-toggle" title="Details ein/aus">▾</button>
 
-        <img class="altar-icon" src="img/icons/${type}.png">
+        <img class="altar-icon" src="img/icons/${type}.png" alt="">
 
         <div class="altar-title">
           <div class="item-name">${item.name}</div>
@@ -34,7 +33,6 @@ export function renderCards(items, container){
         </div>
 
         ${isOwner ? `<div class="own-seal">🔒 Dein Item</div>` : ``}
-        <div class="toggle-indicator">▾</div>
       </div>
 
       <!-- BODY -->
@@ -42,7 +40,7 @@ export function renderCards(items, container){
 
         ${item.screenshot ? `
           <div class="altar-image">
-            <img src="${item.screenshot}" loading="lazy">
+            <img src="${item.screenshot}" loading="lazy" alt="">
           </div>
         ` : ``}
 
@@ -56,13 +54,23 @@ export function renderCards(items, container){
           </div>
 
           <div class="altar-action">
-            <button class="claim-btn">${isOwner ? "🔒 Dein Item" : "🖐️ Nehmen"}</button>
+            <button class="claim-btn">
+              ${isOwner ? "🔒 Dein Item" : "🖐️ Nehmen"}
+            </button>
           </div>
 
         </div>
       </div>
     `;
 
+    // Toggle
+    const toggle = card.querySelector(".altar-toggle");
+    toggle.addEventListener("click", e => {
+      stop(e);
+      card.dataset.open = card.dataset.open === "true" ? "false" : "true";
+    });
+
+    // Claim
     const btn = card.querySelector(".claim-btn");
     if(isOwner) btn.disabled = true;
 
