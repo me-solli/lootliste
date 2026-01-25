@@ -11,19 +11,8 @@
 /* ===============================
    RESET & BASIS
 =============================== */
-*,
-*::before,
-*::after{
-  box-sizing:border-box;
-  pointer-events:auto;
-}
-
-html, body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;height:100%}
 
 body{
   font-family:Inter,system-ui,sans-serif;
@@ -38,16 +27,12 @@ body{
   max-width:1400px;
   margin:0 auto;
   padding:40px;
-  position:relative;
-  z-index:1;
 }
 
 .profile-grid{
   display:grid;
   grid-template-columns:340px 1fr;
   gap:26px;
-  position:relative;
-  z-index:2;
 }
 
 @media(max-width:900px){
@@ -55,7 +40,7 @@ body{
 }
 
 /* ===============================
-   CARDS
+   GENERIC CARD
 =============================== */
 .card{
   background:#121212;
@@ -63,53 +48,55 @@ body{
   border-radius:22px;
   padding:26px;
   margin-bottom:18px;
-  position:relative;
-  z-index:3;
 }
 
 /* ===============================
-   LEFT / HEADER
+   PROFILE HERO (LEFT)
 =============================== */
-.profile-head{
+.profile-hero{
+  position:relative;
+  padding:46px 20px;
   display:flex;
   flex-direction:column;
   align-items:center;
-  text-align:center;
-  padding:36px 20px;
 }
 
-.avatar{
-  width:180px;
-  height:220px;
-  border-radius:28px;
-  background:#000;
-  border:1px solid rgba(245,196,81,.45);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:22px;
-  overflow:hidden;
-  box-shadow:0 0 60px rgba(245,196,81,.25);
+.hero-visual{
+  position:relative;
+  width:200px;
+  aspect-ratio:3/4;
+  margin-bottom:28px;
 }
 
-.avatar img{
+.hero-visual img{
   width:100%;
   height:100%;
   object-fit:contain;
+  filter:drop-shadow(0 18px 40px rgba(0,0,0,.85));
+  position:relative;
+  z-index:2;
 }
 
-.avatar span{
-  font-size:38px;
-  font-weight:700;
-  color:#f5c451;
+.hero-glow{
+  position:absolute;
+  inset:-20%;
+  background:radial-gradient(circle at center,
+    rgba(245,196,81,.35) 0%,
+    rgba(245,196,81,.18) 35%,
+    rgba(0,0,0,0) 70%
+  );
+  filter:blur(24px);
+  z-index:1;
+  pointer-events:none;
 }
 
-.name{font-size:26px;font-weight:700}
-.sub{font-size:14px;color:#aaa;margin-top:8px}
-.online{font-size:14px;color:#4cff4c;margin-top:12px}
+.hero-meta{text-align:center}
+.hero-name{font-size:28px;font-weight:700}
+.hero-sub{margin-top:6px;font-size:14px;color:#aaa}
+.hero-status{margin-top:12px;font-size:14px;color:#4cff4c}
 
 /* ===============================
-   INTERAKTION
+   FORM / INTERACTION
 =============================== */
 textarea{
   width:100%;
@@ -122,7 +109,20 @@ textarea{
   resize:vertical;
 }
 
-/* CLASSES */
+.btn{
+  margin-top:12px;
+  padding:8px 16px;
+  border-radius:999px;
+  border:1px solid #f5c451;
+  background:rgba(245,196,81,.08);
+  color:#f5c451;
+  cursor:pointer;
+}
+.btn:hover{background:rgba(245,196,81,.18)}
+
+/* ===============================
+   CLASSES
+=============================== */
 .classes{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
@@ -139,30 +139,19 @@ textarea{
   opacity:.6;
 }
 
-.class img{
-  width:38px;
-  height:38px;
-  margin-bottom:8px;
-}
+.class img{width:38px;height:38px;margin-bottom:8px}
 
 .class.active{
   border-color:#f5c451;
-  background:linear-gradient(
-    to bottom,
-    rgba(245,196,81,.25),
-    rgba(245,196,81,.05)
-  );
+  background:linear-gradient(to bottom,rgba(245,196,81,.25),rgba(245,196,81,.05));
   color:#f5c451;
   opacity:1;
 }
 
-/* TAGS */
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
+/* ===============================
+   TAGS
+=============================== */
+.tags{display:flex;flex-wrap:wrap;gap:8px}
 .tag{
   padding:6px 12px;
   border-radius:999px;
@@ -172,42 +161,24 @@ textarea{
   cursor:pointer;
   opacity:.6;
 }
-
-.tag.active{
-  border-color:#4cff4c;
-  color:#4cff4c;
-  opacity:1;
-}
-
-/* BUTTON */
-.btn{
-  margin-top:12px;
-  padding:8px 16px;
-  border-radius:999px;
-  border:1px solid #f5c451;
-  background:rgba(245,196,81,.08);
-  color:#f5c451;
-  cursor:pointer;
-}
-
-.btn:hover{
-  background:rgba(245,196,81,.18);
-}
+.tag.active{border-color:#4cff4c;color:#4cff4c;opacity:1}
 </style>
 </head>
 
 <body>
-
 <div class="wrapper">
 <div class="profile-grid">
 
-<!-- LEFT -->
-<aside>
-  <div class="card profile-head">
-    <div class="avatar" id="avatarBox"><span>TS</span></div>
-    <div class="name">me_solli</div>
-    <div class="sub">Community-Mitglied · seit Jan 2026</div>
-    <div class="online">● Mein Profil (intern)</div>
+<!-- LEFT / HERO -->
+<aside class="profile-hero">
+  <div class="hero-visual">
+    <img id="heroImg" src="img/classes/assassin.png" alt="Assassin">
+    <div class="hero-glow"></div>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-name">me_solli</div>
+    <div class="hero-sub">Community-Mitglied · seit Jan 2026</div>
+    <div class="hero-status">● Mein Profil (intern)</div>
   </div>
 </aside>
 
@@ -249,56 +220,46 @@ textarea{
 </div>
 
 <script>
-/* ===============================
-   STATE (LOKAL)
-=============================== */
-const state = JSON.parse(localStorage.getItem("my_profile")) || {
-  about:"",
-  favClass:"",
-  tags:[]
-};
+const state = JSON.parse(localStorage.getItem("my_profile")) || {about:"",favClass:"",tags:[]};
+const about=document.getElementById("about");
+const heroImg=document.getElementById("heroImg");
+about.value=state.about;
 
-const about = document.getElementById("about");
-const avatarBox = document.getElementById("avatarBox");
-about.value = state.about;
-
-/* AVATAR */
-function renderAvatar(){
-  avatarBox.innerHTML = state.favClass
-    ? `<img src="img/classes/${state.favClass.toLowerCase()}.png">`
-    : "<span>TS</span>";
+function renderHero(){
+  if(state.favClass){
+    heroImg.src=`img/classes/${state.favClass.toLowerCase()}.png`;
+  }
 }
-renderAvatar();
+renderHero();
 
-/* CLASSES */
-document.querySelectorAll(".class").forEach(c=>{
-  if(c.dataset.class === state.favClass) c.classList.add("active");
-  c.onclick = ()=>{
-    document.querySelectorAll(".class").forEach(x=>x.classList.remove("active"));
-    c.classList.add("active");
-    state.favClass = c.dataset.class;
-    renderAvatar();
-    save();
-  };
-});
-
-/* TAGS */
-document.querySelectorAll(".tag").forEach(t=>{
-  if(state.tags.includes(t.textContent)) t.classList.add("active");
-  t.onclick = ()=>{
-    t.classList.toggle("active");
-    state.tags = [...document.querySelectorAll(".tag.active")].map(x=>x.textContent);
-    save();
-  };
-});
-
-/* SAVE */
 function save(){
-  state.about = about.value;
-  localStorage.setItem("my_profile", JSON.stringify(state));
+  state.about=about.value;
+  localStorage.setItem("my_profile",JSON.stringify(state));
 }
-document.getElementById("saveBtn").onclick = save;
-</script>
 
+document.getElementById("saveBtn").onclick=save;
+
+// Classes
+document.querySelectorAll('.class').forEach(c=>{
+  if(c.dataset.class===state.favClass)c.classList.add('active');
+  c.onclick=()=>{
+    document.querySelectorAll('.class').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    state.favClass=c.dataset.class;
+    renderHero();
+    save();
+  };
+});
+
+// Tags
+document.querySelectorAll('.tag').forEach(t=>{
+  if(state.tags.includes(t.textContent))t.classList.add('active');
+  t.onclick=()=>{
+    t.classList.toggle('active');
+    state.tags=[...document.querySelectorAll('.tag.active')].map(x=>x.textContent);
+    save();
+  };
+});
+</script>
 </body>
 </html>
