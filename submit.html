@@ -173,54 +173,53 @@ button:disabled{opacity:.6;cursor:default}
 .notice strong{color:var(--gold)}
 
 .notice-fairplay{
-  margin-top:18px;
-  padding:14px 16px;
-  border:1px solid rgba(255,255,255,.12);
+  margin-top:22px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.14);
   border-radius:14px;
   background:rgba(255,255,255,.04);
   font-size:13px;
-  opacity:.9;
+  line-height:1.45;
+}
+
+.notice-legal{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid rgba(245,196,81,.35);
+  border-radius:14px;
+  background:rgba(245,196,81,.06);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.confirm-box{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+  font-size:13px;
+}
+.confirm-box input{
+  width:auto;
+  margin-top:2px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- =====================
-     GAST-SPERRE (FINAL)
-===================== -->
 <script>
 const accountId = localStorage.getItem("lootliste_account_id");
 if(!accountId){
   document.body.innerHTML = `
-    <div style="
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
-      color:#eaeaea;
-      font-family:system-ui;
-    ">
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);color:#eaeaea;">
       <div>
         <h1>🔒 Zugriff eingeschränkt</h1>
         <p>Du musst eingeloggt sein, um Items einzureichen.</p>
-        <a href="auth.html"
-           style="
-             display:inline-block;
-             margin-top:18px;
-             padding:12px 18px;
-             border-radius:999px;
-             border:1px solid #f5c451;
-             color:#f5c451;
-             text-decoration:none;
-           ">
+        <a href="auth.html" style="display:inline-block;margin-top:18px;padding:12px 18px;border-radius:999px;border:1px solid #f5c451;color:#f5c451;text-decoration:none;">
           Jetzt einloggen
         </a>
       </div>
-    </div>
-  `;
+    </div>`;
   throw new Error("Guest blocked");
 }
 </script>
@@ -230,7 +229,7 @@ if(!accountId){
 <header class="hero">
   <div class="hero-inner">
     <div class="auth-box">
-      <img src="img/avatars/default.png" alt="Avatar">
+      <img src="img/avatars/default.png">
       <span id="playerIdLabel">–</span>
       <a href="index.html" class="auth-link">Lootliste</a>
       <a href="my-items.html" class="auth-link">Meine Items</a>
@@ -243,10 +242,8 @@ if(!accountId){
 <div class="container">
 
   <div class="user-box">
-    Aktiver Nutzer:
-    <code id="userDisplay">–</code><br>
-    Saison:
-    <code>Non-Ladder</code>
+    Aktiver Nutzer: <code id="userDisplay">–</code><br>
+    Saison: <code>Non-Ladder</code>
   </div>
 
   <div class="form-card">
@@ -254,10 +251,10 @@ if(!accountId){
 
       <label>Screenshot (Pflicht)</label>
       <input type="file" id="image" accept="image/*" required>
-      <small class="hint">📸 Bitte komplettes Itemfenster inkl. Werte anzeigen</small>
+      <small class="hint">📸 Komplettes Itemfenster inkl. Werte anzeigen</small>
 
       <div class="preview" id="preview">
-        <img id="previewImg" alt="Vorschau">
+        <img id="previewImg">
       </div>
 
       <label>Item-Name</label>
@@ -290,31 +287,36 @@ if(!accountId){
       </select>
 
       <label>Interne Notiz (optional)</label>
-      <textarea id="note" maxlength="50" rows="2"
-        placeholder="z. B. für Javazon, evtl. dupe?"></textarea>
+      <textarea id="note" maxlength="50" rows="2" placeholder="z. B. für Javazon, evtl. dupe?"></textarea>
       <small class="hint">Nur für dich sichtbar</small>
 
-      <button type="submit" id="submitBtn">Item einreichen</button>
+      <!-- LEGAL BLOCK -->
+      <div class="notice-legal">
+        <strong>⚠️ Upload-Hinweis (verbindlich)</strong><br>
+        Mit dem Hochladen bestätigst du, dass der Screenshot ausschließlich Inhalte aus
+        <em>Diablo II: Resurrected</em> zeigt und <strong>keine</strong> pornografischen,
+        politischen, extremistischen, gewaltverherrlichenden oder rechtswidrigen Inhalte
+        enthält. Darstellungen von Minderjährigen außerhalb des Spiels sind untersagt.<br><br>
+        Missbräuchliche Uploads führen zur sofortigen Entfernung und zum dauerhaften
+        Ausschluss. Rechtswidrige Inhalte können straf- und zivilrechtliche Folgen haben.
+      </div>
+
+      <div class="confirm-box">
+        <input type="checkbox" id="confirm" required>
+        <label for="confirm" style="margin:0;font-weight:500">
+          Ich bestätige die oben genannten Punkte verbindlich.
+        </label>
+      </div>
+
+      <button type="submit" id="submitBtn" disabled>Item einreichen</button>
 
       <div class="notice-fairplay">
         <strong>Fair-Play-Hinweis</strong><br>
-        Bitte reiche nur Items ein, die du tatsächlich weitergeben möchtest.
-        Diese Lootliste basiert auf Vertrauen und freiwilliger Community-Teilnahme.
-        Offensichtlicher Missbrauch oder Spam kann zur Entfernung von Inhalten führen.
+        Uploads sind dauerhaft deinem Account zuordenbar.
+        Die Lootliste basiert auf Vertrauen und freiwilliger Community-Teilnahme.
       </div>
 
       <div class="status" id="status"></div>
-
-      <div class="notice">
-        <strong>ℹ️ Hinweis:</strong>
-        Dieses Item erscheint nach dem Einreichen öffentlich in der Lootliste.
-      </div>
-
-      <div class="notice">
-        <strong>🔐 Datenschutz:</strong>
-        BattleTags werden beim Einreichen nicht abgefragt
-        und sind nur bei einer späteren Item-Übergabe sichtbar.
-      </div>
 
     </form>
   </div>
@@ -327,40 +329,32 @@ if(!accountId){
 </div>
 
 <script>
-/* ===== ORIGINAL SCRIPT UNVERÄNDERT ===== */
-const API_BASE = "https://lootliste-production.up.railway.app";
-const API_ITEMS = API_BASE + "/items";
-const CLOUD_NAME = "dcczi93p6";
-const UPLOAD_PRESET = "lootliste_unsigned";
-const ACTIVE_SEASON = "non-ladder";
+const API_BASE="https://lootliste-production.up.railway.app";
+const API_ITEMS=API_BASE+"/items";
+const CLOUD_NAME="dcczi93p6";
+const UPLOAD_PRESET="lootliste_unsigned";
+const ACTIVE_SEASON="non-ladder";
 
-const deviceId  = localStorage.getItem("lootliste_user_id");
-const accountId2 = localStorage.getItem("lootliste_account_id");
+const deviceId=localStorage.getItem("lootliste_user_id");
+const accountId2=localStorage.getItem("lootliste_account_id");
 
-const label = document.getElementById("playerIdLabel");
-const userDisplay = document.getElementById("userDisplay");
-const submitBtn = document.getElementById("submitBtn");
-const qualitySelect = document.getElementById("quality");
+const submitBtn=document.getElementById("submitBtn");
+const confirmBox=document.getElementById("confirm");
+
+confirmBox.addEventListener("change",()=>{
+  submitBtn.disabled=!confirmBox.checked;
+});
 
 /* USER */
 (async()=>{
-  const headers = {};
-  if (deviceId) headers["X-User-Id"] = deviceId;
-  if (accountId2) headers["X-Account-Id"] = accountId2;
-
-  const res = await fetch(API_BASE + "/me", { headers });
-  const data = await res.json();
-  label.textContent = data.username || "Gast";
-  userDisplay.textContent = data.username || "Gast";
+  const headers={};
+  if(deviceId)headers["X-User-Id"]=deviceId;
+  if(accountId2)headers["X-Account-Id"]=accountId2;
+  const res=await fetch(API_BASE+"/me",{headers});
+  const data=await res.json();
+  document.getElementById("playerIdLabel").textContent=data.username||"–";
+  document.getElementById("userDisplay").textContent=data.username||"–";
 })();
-
-/* QUALITY COLOR */
-qualitySelect.addEventListener("change", () => {
-  qualitySelect.className = "";
-  if (qualitySelect.value) {
-    qualitySelect.classList.add("quality-" + qualitySelect.value);
-  }
-});
 
 /* PREVIEW */
 const fileInput=document.getElementById("image");
@@ -385,36 +379,16 @@ async function uploadImage(file){
   const fd=new FormData();
   fd.append("file",file);
   fd.append("upload_preset",UPLOAD_PRESET);
-  const res=await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-    {method:"POST",body:fd}
-  );
+  const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:fd});
   const data=await res.json();
-  if(!data.secure_url) throw new Error("Upload fehlgeschlagen");
+  if(!data.secure_url)throw new Error("Upload fehlgeschlagen");
   return data.secure_url;
-}
-
-/* COOLDOWN CHECK */
-const cooldown = Number(localStorage.getItem("lootliste_submit_cooldown") || 0);
-if (Date.now() < cooldown) {
-  const timer = setInterval(() => {
-    const remaining = Math.ceil((cooldown - Date.now()) / 1000);
-    if (remaining <= 0) {
-      clearInterval(timer);
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Item einreichen";
-      localStorage.removeItem("lootliste_submit_cooldown");
-    } else {
-      submitBtn.disabled = true;
-      submitBtn.textContent = `Bitte ${remaining}s warten…`;
-    }
-  }, 1000);
 }
 
 /* SUBMIT */
 document.getElementById("form").addEventListener("submit",async e=>{
   e.preventDefault();
-  if(submitBtn.disabled) return;
+  if(submitBtn.disabled)return;
 
   const status=document.getElementById("status");
   submitBtn.disabled=true;
@@ -429,12 +403,12 @@ document.getElementById("form").addEventListener("submit",async e=>{
       method:"POST",
       headers:{
         "Content-Type":"application/json",
-        ...(deviceId  ? {"X-User-Id": deviceId}   : {}),
-        ...(accountId2 ? {"X-Account-Id": accountId2} : {})
+        ...(deviceId?{"X-User-Id":deviceId}:{ }),
+        ...(accountId2?{"X-Account-Id":accountId2}:{ })
       },
       body:JSON.stringify({
         name:document.getElementById("name").value.trim(),
-        quality:qualitySelect.value,
+        quality:document.getElementById("quality").value,
         type:document.getElementById("type").value,
         screenshot,
         season:ACTIVE_SEASON,
@@ -443,18 +417,14 @@ document.getElementById("form").addEventListener("submit",async e=>{
     });
 
     status.innerHTML='✅ Item eingereicht – <a href="my-items.html">Meine Items ansehen</a>';
-
-    const until = Date.now() + 60 * 1000;
-    localStorage.setItem("lootliste_submit_cooldown", until);
-
     e.target.reset();
     preview.style.display="none";
-    qualitySelect.className="";
+    submitBtn.disabled=true;
+    submitBtn.textContent="Item einreichen";
 
   }catch(err){
     console.error(err);
     status.textContent="❌ Fehler beim Einreichen";
-  }finally{
     submitBtn.disabled=false;
     submitBtn.textContent="Item einreichen";
   }
