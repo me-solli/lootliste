@@ -1208,46 +1208,67 @@ body{
   opacity:.65;
 }
 
-  /* ================================
+/* ================================
    ALTAR / CARD EXPAND FIX
-   (verhindert Screenshot-Scroll-Hölle)
+   (stabile Cards, kein Overflow-Chaos)
 ================================ */
 
-/* Details standardmäßig geschlossen */
+/* DETAILS: standardmäßig geschlossen */
 .card .card-details{
   max-height: 0;
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
+  transition:
+    max-height .35s ease,
+    opacity .25s ease;
 }
 
-/* Nur bei aktiver Card öffnen */
+/* DETAILS: nur bei geöffneter Card */
 .card[data-open="true"] .card-details{
-  max-height: 900px;
+  max-height: 900px;           /* bewusst hoch, aber begrenzt */
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Screenshot begrenzen */
+/* SCREENSHOT: sauber begrenzen */
+.card-details .card-image{
+  max-height: 260px;
+  overflow: hidden;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
 .card-details .card-image img{
   max-height: 260px;
   max-width: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
   display: block;
   margin: 0 auto;
 }
 
-/* Header bleibt kompakt */
+/* HEADER: klar klickbar */
 .card-header{
   cursor: pointer;
+  position: relative;
+  z-index: 2;
 }
 
-/* Chevron sichtbar & ruhig */
+/* CHEVRON: ruhig, nicht dominant */
 .card-chevron{
-  opacity: .6;
+  opacity: .55;
+  transition: transform .25s ease, opacity .25s ease;
 }
 
-/* Geöffnete Card klar hervorheben */
+/* Chevron drehen bei offen */
+.card[data-open="true"] .card-chevron{
+  transform: rotate(180deg);
+  opacity: .9;
+}
+
+/* AKTIVE CARD: dezentes Altar-Glow */
 .card[data-open="true"]{
   border-color: rgba(245,196,81,.45);
   box-shadow:
