@@ -4,23 +4,36 @@
 <meta charset="UTF-8">
 <title>Profil – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --gold:#f5c451;
-  --green:#4cff4c;
-}
-*{box-sizing:border-box}
+*,
+*::before,
+*::after{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Inter,system-ui,sans-serif;
   background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
-.wrapper{max-width:1400px;margin:0 auto;padding:40px}
-.profile-grid{display:grid;grid-template-columns:340px 1fr;gap:26px}
-@media(max-width:900px){.profile-grid{grid-template-columns:1fr}}
+
+.wrapper{
+  max-width:1400px;
+  margin:0 auto;
+  padding:40px;
+}
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:26px;
+}
+
+@media(max-width:900px){
+  .profile-grid{grid-template-columns:1fr}
+}
 
 .card{
   background:#121212;
@@ -30,7 +43,7 @@ body{
   margin-bottom:18px;
 }
 
-/* HEADER */
+/* LEFT */
 .profile-head{
   display:flex;
   flex-direction:column;
@@ -38,25 +51,47 @@ body{
   text-align:center;
   padding:36px 20px;
 }
+
 .avatar{
-  width:180px;height:220px;border-radius:28px;
-  background:#000;border:1px solid rgba(245,196,81,.45);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:22px;overflow:hidden;
+  width:180px;
+  height:220px;
+  border-radius:28px;
+  background:#000;
+  border:1px solid rgba(245,196,81,.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:22px;
+  overflow:hidden;
   box-shadow:0 0 60px rgba(245,196,81,.25);
 }
-.avatar img{width:100%;height:100%;object-fit:contain}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.avatar span{
+  font-size:38px;
+  font-weight:700;
+  color:#f5c451;
+}
+
 .name{font-size:26px;font-weight:700}
 .sub{font-size:14px;color:#aaa;margin-top:8px}
-.online{font-size:14px;color:var(--green);margin-top:12px}
+.hint{font-size:13px;color:#777;margin-top:10px}
 
 /* CONTENT */
-.textbox{
+h3{margin-top:0}
+
+.readonly-box{
   background:#0f0f0f;
-  border:1px solid #222;
+  border:1px solid #333;
   border-radius:14px;
   padding:14px;
-  line-height:1.6;
+  min-height:120px;
+  white-space:pre-wrap;
   color:#ddd;
 }
 
@@ -66,60 +101,69 @@ body{
   grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
   gap:14px;
 }
+
 .class{
   background:#0f0f0f;
   border:1px solid #222;
   border-radius:14px;
   padding:14px 10px;
   text-align:center;
-  opacity:.6;
+  opacity:.4;
 }
+
+.class img{
+  width:38px;
+  height:38px;
+  margin-bottom:8px;
+}
+
 .class.active{
-  border-color:var(--gold);
-  background:linear-gradient(to bottom, rgba(245,196,81,.25), rgba(245,196,81,.05));
-  color:var(--gold);
+  border-color:#f5c451;
+  background:linear-gradient(
+    to bottom,
+    rgba(245,196,81,.25),
+    rgba(245,196,81,.05)
+  );
+  color:#f5c451;
   opacity:1;
 }
-.class img{width:38px;height:38px;margin-bottom:8px}
 
 /* TAGS */
-.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
 .tag{
   padding:6px 12px;
   border-radius:999px;
   border:1px solid #333;
   background:#0f0f0f;
   font-size:12px;
-  opacity:.6;
+  opacity:.5;
 }
+
 .tag.active{
-  border-color:var(--green);
-  color:var(--green);
+  border-color:#4cff4c;
+  color:#4cff4c;
   opacity:1;
 }
 </style>
 </head>
 
 <body>
+
 <div class="wrapper">
 <div class="profile-grid">
 
 <!-- LEFT -->
 <aside>
   <div class="card profile-head">
-    <div class="avatar">
-      <img src="img/classes/barbarian.png" alt="">
-    </div>
-    <div class="name">me_solli</div>
-    <div class="sub">Community-Mitglied · seit Jan 2026</div>
-    <div class="online">● Profil öffentlich</div>
-  </div>
-
-  <div class="card">
-    <h3>Kontakt</h3>
-    <div class="textbox">
-      BattleTag wird nur bei aktiver Übergabe geteilt.
-    </div>
+    <div class="avatar" id="avatarBox"><span>TS</span></div>
+    <div class="name" id="username">Unbekannt</div>
+    <div class="sub">Community-Mitglied</div>
+    <div class="hint">Öffentliches Profil</div>
   </div>
 </aside>
 
@@ -128,37 +172,72 @@ body{
 
   <div class="card">
     <h3>Über mich</h3>
-    <div class="textbox">
-      D2 since 1997
+    <div class="readonly-box" id="aboutBox">
+      Dieses Profil wurde noch nicht ausgefüllt.
     </div>
   </div>
 
   <div class="card">
     <h3>Lieblingsklasse</h3>
-    <div class="classes">
-      <div class="class active"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
-      <div class="class"><img src="img/classes/paladin.png"><div>Paladin</div></div>
-      <div class="class"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
-      <div class="class"><img src="img/classes/assassin.png"><div>Assassin</div></div>
-      <div class="class"><img src="img/classes/druid.png"><div>Druid</div></div>
-      <div class="class"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-      <div class="class"><img src="img/classes/amazon.png"><div>Amazon</div></div>
-    </div>
+    <div class="classes" id="classGrid"></div>
   </div>
 
   <div class="card">
     <h3>Spielstil & Haltung</h3>
-    <div class="tags">
-      <div class="tag active">Fair Player</div>
-      <div class="tag active">Ruhiger Trader</div>
-      <div class="tag active">Community-orientiert</div>
-      <div class="tag">Low Drama</div>
-      <div class="tag">Spenderfreundlich</div>
-    </div>
+    <div class="tags" id="tagGrid"></div>
   </div>
 
 </section>
 </div>
 </div>
+
+<script>
+/* ===============================
+   LOCAL READ (SOFT SYNC)
+=============================== */
+
+const data = JSON.parse(localStorage.getItem("my_profile"));
+
+const classes = [
+  "Paladin","Sorceress","Barbarian",
+  "Assassin","Druid","Necromancer","Amazon"
+];
+
+const aboutBox = document.getElementById("aboutBox");
+const avatarBox = document.getElementById("avatarBox");
+const classGrid = document.getElementById("classGrid");
+const tagGrid = document.getElementById("tagGrid");
+
+/* ABOUT */
+if(data?.about){
+  aboutBox.textContent = data.about;
+}
+
+/* CLASSES */
+classes.forEach(c=>{
+  const div = document.createElement("div");
+  div.className = "class" + (data?.favClass === c ? " active" : "");
+  div.innerHTML = `<img src="img/classes/${c.toLowerCase()}.png"><div>${c}</div>`;
+  classGrid.appendChild(div);
+});
+
+/* AVATAR */
+if(data?.favClass){
+  avatarBox.innerHTML = `<img src="img/classes/${data.favClass.toLowerCase()}.png">`;
+}
+
+/* TAGS */
+if(data?.tags?.length){
+  data.tags.forEach(t=>{
+    const span = document.createElement("div");
+    span.className = "tag active";
+    span.textContent = t;
+    tagGrid.appendChild(span);
+  });
+}else{
+  tagGrid.innerHTML = `<div class="tag">Keine Angaben</div>`;
+}
+</script>
+
 </body>
 </html>
