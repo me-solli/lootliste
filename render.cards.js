@@ -35,12 +35,27 @@ export function renderCards(items, container) {
       ? `${type} • ${item.sub}`
       : type;
 
-    // 🔗 NEU: Spender klickbar → Profil
-    const sourceLabel = item.donor
-      ? `Spender: <a href="profile.html" class="profile-link">${item.donor}</a>`
-      : "Quelle: Community-Drop";
+    /* =========================
+       SPENDER / PROFIL-LINK
+    ========================== */
+    let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
+
+    if (item.donor) {
+      sourceLabel = `
+        <span class="source-label">Spender:</span>
+        <a
+          href="profile.html?user=${encodeURIComponent(item.donor)}"
+          class="profile-link"
+          title="Öffentliches Profil ansehen"
+          onclick="event.stopPropagation()"
+        >
+          👤 ${item.donor}
+        </a>
+      `;
+    }
 
     card.innerHTML = `
+      <!-- HEADER -->
       <button class="card-header" type="button">
         <span class="card-chevron">▶</span>
 
@@ -61,6 +76,7 @@ export function renderCards(items, container) {
         </div>
       </button>
 
+      <!-- DETAILS -->
       <div class="card-details">
 
         ${item.screenshot ? `
@@ -94,7 +110,7 @@ export function renderCards(items, container) {
     `;
 
     /* =========================
-       TOGGLE
+       TOGGLE OPEN / CLOSE
     ========================== */
     const header = card.querySelector(".card-header");
     header.addEventListener("click", () => {
@@ -106,7 +122,7 @@ export function renderCards(items, container) {
     });
 
     /* =========================
-       CLAIM LOGIK (ACCOUNT)
+       CLAIM LOGIK (UNVERÄNDERT)
     ========================== */
     const btn = card.querySelector(".claim-btn");
 
