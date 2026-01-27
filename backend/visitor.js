@@ -1,12 +1,8 @@
-// backend/visitor.js
+// backend/visitor.js (ESM)
 
 let visitCount = 0;
 
-function registerVisit() {
+export function registerVisit() {
   visitCount += 1;
   return visitCount;
 }
-
-module.exports = {
-  registerVisit
-};
