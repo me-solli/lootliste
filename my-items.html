@@ -355,9 +355,7 @@ async function confirmDone(id){
     headers: { "X-Account-Id": accountId }
   });
 
-  // ✅ UI-Zwischenstatus (nur Anzeige)
   localStorage.setItem("donor_confirmed_ui_"+id,"yes");
-
   load();
 }
 
@@ -367,6 +365,28 @@ async function removeItem(id){
   await fetch(API + "/items/" + id, {
     method: "DELETE",
     headers: { "X-Account-Id": accountId }
+  });
+
+  load();
+}
+
+/* ===== NEU: Interne Notiz bearbeiten ===== */
+async function editNote(id, current){
+  const value = prompt(
+    "Interne Notiz (max. 50 Zeichen):",
+    current || ""
+  );
+  if(value === null) return;
+
+  await fetch(API + "/items/" + id, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Account-Id": accountId
+    },
+    body: JSON.stringify({
+      note_private: value.trim().slice(0, 50)
+    })
   });
 
   load();
