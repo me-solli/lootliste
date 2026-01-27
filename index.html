@@ -1802,22 +1802,34 @@ function showToast(text){
 }
 </script>
 
-  <script>
+<script>
 (function () {
   const counterEl = document.querySelector(".visitor-count");
   if (!counterEl) return;
 
+  const deviceId = localStorage.getItem("lootliste_user_id");
+
   fetch("https://lootliste-production.up.railway.app/visit", {
-    method: "POST"
+    method: "POST",
+    headers: deviceId
+      ? { "X-User-Id": deviceId }
+      : {}
   })
-    .then(res => res.json())
+    .then(res => {
+      // Backend kann eine neue Device-ID setzen
+      const newId = res.headers.get("X-User-Id");
+      if (newId) {
+        localStorage.setItem("lootliste_user_id", newId);
+      }
+      return res.json();
+    })
     .then(data => {
       if (typeof data.count === "number") {
         counterEl.textContent = data.count;
       }
     })
     .catch(() => {
-      // bewusst leer → Fallback-Zahl bleibt stehen
+      // Fallback → alte Zahl bleibt stehen
     });
 })();
 </script>
