@@ -363,6 +363,37 @@ app.post("/items", (req, res) => {
   res.status(201).json(newItem);
 });
 
+
+// ===============================
+// PATCH ITEM (PRIVATE NOTE ONLY)
+// ===============================
+app.patch("/items/:id", (req, res) => {
+  const accountId = req.headers["x-account-id"];
+  const { note_private } = req.body;
+  const itemId = Number(req.params.id);
+
+  const account = accountId ? findAccountById(accountId) : null;
+  if (!account) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const item = items.find(i => i.id === itemId);
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  // 🔒 nur der Einreicher darf die interne Notiz ändern
+  if (item.donorAccountId !== account.id) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  item.note_private = (note_private || "").slice(0, 50);
+
+  saveJSON(ITEMS_FILE, items);
+  res.json({ ok: true });
+});
+
+
 // ===============================
 // CLAIM ITEM (MIT 60s COOLDOWN)
 // ===============================
