@@ -109,8 +109,19 @@ app.use((req, res, next) => {
   }
 
   // Fallback für alte Devices
-  if (!device.lastRegisterAt) {
+  let changed = false;
+
+  if (device.lastRegisterAt === undefined) {
     device.lastRegisterAt = 0;
+    changed = true;
+  }
+
+  if (device.lastVisitAt === undefined) {
+    device.lastVisitAt = 0;
+    changed = true;
+  }
+
+  if (changed) {
     saveJSON(USERS_FILE, users);
   }
 
