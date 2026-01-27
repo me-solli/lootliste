@@ -1802,6 +1802,26 @@ function showToast(text){
 }
 </script>
 
+  <script>
+(function () {
+  const counterEl = document.querySelector(".visitor-count");
+  if (!counterEl) return;
+
+  fetch("https://lootliste-production.up.railway.app/visit", {
+    method: "POST"
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (typeof data.count === "number") {
+        counterEl.textContent = data.count;
+      }
+    })
+    .catch(() => {
+      // bewusst leer → Fallback-Zahl bleibt stehen
+    });
+})();
+</script>
+
   <div id="toast" class="toast" hidden></div>
   
 </body>
