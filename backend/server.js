@@ -252,11 +252,29 @@ app.get("/", (req, res) => {
 });
 
 // ===============================
-// VISITOR COUNTER (LOW)
+// VISITOR COUNTER (1 / DEVICE / 24h)
 // ===============================
 app.post("/visit", (req, res) => {
-  const count = registerVisit();
-  res.json({ count });
+  const device = req.device;
+  const now = Date.now();
+  const DAY = 24 * 60 * 60 * 1000;
+
+  let counted = false;
+
+  // ✅ zählen, wenn erstes Mal oder >24h her
+  if (!device.lastVisitAt || now - device.lastVisitAt >= DAY) {
+    const count = registerVisit();
+    device.lastVisitAt = now;
+    saveJSON(USERS_FILE, users);
+    counted = true;
+    return res.json({ count, counted });
+  }
+
+  // ❌ sonst nicht zählen → nur aktuellen Stand zurückgeben
+  return res.json({
+    count: getVisitCount(),
+    counted
+  });
 });
 
 // ===============================
