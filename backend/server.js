@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
-import { registerVisit } from "./visitor.js";
+import { registerVisit, getVisitCount } from "./visitor.js";
 
 // ===============================
 // APP SETUP
@@ -85,7 +85,8 @@ function createDevice() {
   const device = {
     id,
     createdAt: new Date().toISOString(),
-    lastRegisterAt: 0 // ⬅️ NEU: Registrierungs-Cooldown
+    lastRegisterAt: 0, // Registrierungs-Cooldown
+    lastVisitAt: 0     // 👁️ Besucher-Cooldown (1 Count / 24h)
   };
   users.push(device);
   saveJSON(USERS_FILE, users);
