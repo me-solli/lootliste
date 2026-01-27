@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
+import { registerVisit } from "./visitor.js";
 
 // ===============================
 // APP SETUP
@@ -247,6 +248,14 @@ app.get("/me", (req, res) => {
 // ===============================
 app.get("/", (req, res) => {
   res.send("Lootliste Backend OK");
+});
+
+// ===============================
+// VISITOR COUNTER (LOW)
+// ===============================
+app.post("/visit", (req, res) => {
+  const count = registerVisit();
+  res.json({ count });
 });
 
 // ===============================
