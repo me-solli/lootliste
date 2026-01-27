@@ -301,37 +301,44 @@ async function load(){
 
     const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
 
-    const tr=document.createElement("tr");
-    if(needsAction) tr.classList.add("needs-action");
+const tr=document.createElement("tr");
+if(needsAction) tr.classList.add("needs-action");
 
-    tr.innerHTML=`
-      <td>${i.id}</td>
-      <td>
-        <div class="item-cell">
-          <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
-            <img src="img/icons/${i.type||"sonstiges"}.png">
-          </div>
-          <div class="item-meta">
-            <strong>${i.name}</strong>
-            <small>${i.quality||""} · ${i.type||""}</small>
-          </div>
+tr.innerHTML=`
+  <td>${i.id}</td>
+  <td>
+    <div class="item-cell">
+      <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
+        <img src="img/icons/${i.type||"sonstiges"}.png">
+      </div>
+      <div class="item-meta">
+        <strong>
+          ${i.name}
+          <span
+            class="note-icon"
+            title="${i.note_private || 'Interne Notiz bearbeiten'}"
+            onclick="editNote(${i.id}, '${(i.note_private || '').replace(/'/g,'&#39;')}')"
+          >📝</span>
+        </strong>
+        <small>${i.quality||""} · ${i.type||""}</small>
+      </div>
+    </div>
+  </td>
+  <td><span class="badge ${cls}">${label}</span></td>
+  <td>
+    ${claimer?`
+      <div class="detail-box">
+        <div class="kv">
+          <span>Spieler</span><div>${claimer.username}</div>
+          <span>BattleTag</span><div>${i.contact||"–"}</div>
         </div>
-      </td>
-      <td><span class="badge ${cls}">${label}</span></td>
-      <td>
-        ${claimer?`
-          <div class="detail-box">
-            <div class="kv">
-              <span>Spieler</span><div>${claimer.username}</div>
-              <span>BattleTag</span><div>${i.contact||"–"}</div>
-            </div>
-          </div>
-        `:"–"}
-      </td>
-      <td><div class="actions">${actionHtml}</div></td>
-      <td>${i.season||"–"}</td>
-    `;
-    tableBody.appendChild(tr);
+      </div>
+    `:"–"}
+  </td>
+  <td><div class="actions">${actionHtml}</div></td>
+  <td>${i.season||"–"}</td>
+`;
+tableBody.appendChild(tr);
   });
 
   cAll.textContent=mine.length;
