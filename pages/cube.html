@@ -30,21 +30,31 @@ body{
 
 /* HERO */
 .hero{
-  padding:38px 32px 32px;
-  background:linear-gradient(180deg,#1d1d1d,#0d0d0d);
+  padding:72px 32px 64px;
+  background:
+    radial-gradient(ellipse at top, rgba(0,0,0,.35), rgba(0,0,0,.9)),
+    url("../img/banner_diablo.png") center top / cover no-repeat;
   border-bottom:1px solid var(--border);
 }
+
+.hero-inner{
+  max-width:1400px;
+  margin:0 auto;
+}
+
 .hero h1{
   margin:0;
-  font-size:32px;
+  font-size:36px;
   color:var(--gold);
 }
+
 .hero p{
-  margin:10px 0 0;
+  margin:12px 0 0;
   font-size:15px;
   color:var(--muted);
 }
 
+/* CONTENT WRAP */
 main{
   max-width:1400px;
   margin:0 auto;
