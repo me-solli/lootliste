@@ -18,38 +18,94 @@
   --warn:#ffd24c;
   --bad:#ff5c5c;
 }
+
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:radial-gradient(ellipse at top,#1a1a1a 0%,#090909 65%);
   color:var(--text);
 }
-header{
-  padding:30px 34px 28px;
+
+/* HERO */
+.hero{
+  padding:38px 32px 32px;
   background:linear-gradient(180deg,#1d1d1d,#0d0d0d);
   border-bottom:1px solid var(--border);
 }
-header h1{margin:0;color:var(--gold);font-size:32px}
-header p{margin:10px 0 0;color:var(--muted);font-size:15px}
-main{max-width:1400px;margin:0 auto;padding:28px 26px 90px}
+.hero h1{
+  margin:0;
+  font-size:32px;
+  color:var(--gold);
+}
+.hero p{
+  margin:10px 0 0;
+  font-size:15px;
+  color:var(--muted);
+}
 
+main{
+  max-width:1400px;
+  margin:0 auto;
+  padding:28px 26px 90px;
+}
+
+/* TABS */
 .tabs{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
-.tab{padding:10px 18px;border-radius:16px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:13px;cursor:pointer}
-.tab.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(245,196,81,.45)}
+.tab{
+  padding:10px 18px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  font-size:13px;
+  cursor:pointer
+}
+.tab.active{
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px rgba(245,196,81,.45)
+}
 .tab-content{display:none}
 .tab-content.active{display:block}
 
-.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:28px}
-.panel{background:linear-gradient(180deg,#1a1a1a,#0f0f0f);border:1px solid var(--border);border-radius:24px;padding:22px 24px 26px}
+/* CONTENT */
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+  gap:28px
+}
+
+.panel{
+  background:linear-gradient(180deg,#1a1a1a,#0f0f0f);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:22px 24px 26px
+}
 .panel h3{margin:0 0 6px;font-size:18px;color:var(--gold)}
 .subtitle{font-size:13px;color:var(--muted);margin-bottom:18px}
 
-.phases{display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;gap:14px}
-.phase{background:var(--panel-soft);border:1px dashed var(--border);border-radius:18px;padding:16px 18px}
+.phases{
+  display:grid;
+  grid-template-columns:1fr 56px 1fr;
+  align-items:center;
+  gap:14px
+}
+.phase{
+  background:var(--panel-soft);
+  border:1px dashed var(--border);
+  border-radius:18px;
+  padding:16px 18px
+}
 .phase-arrow{text-align:center;font-size:22px;color:var(--muted)}
 
-.block-title{font-size:11px;letter-spacing:.8px;color:var(--gold);margin:8px 0 6px;text-transform:uppercase}
+.block-title{
+  font-size:11px;
+  letter-spacing:.8px;
+  color:var(--gold);
+  margin:8px 0 6px;
+  text-transform:uppercase
+}
 .block-content{font-size:13px;color:#fff;margin-bottom:10px}
 .block-list{margin:0 0 10px 0;padding:0;list-style:none}
 .block-list li{font-size:13px;color:var(--muted);margin:4px 0}
@@ -57,21 +113,40 @@ main{max-width:1400px;margin:0 auto;padding:28px 26px 90px}
 .example{margin-top:14px;font-size:13px;color:var(--muted)}
 .example strong{color:#fff}
 
-.tag{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid var(--border);margin-top:14px}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid var(--border);
+  margin-top:14px
+}
 .tag.warn{color:var(--warn)}
 .tag.good{color:var(--good)}
 .tag.bad{color:var(--bad)}
 
-footer{text-align:center;padding:34px 16px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:34px 16px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  font-size:12px
+}
 </style>
 </head>
+
 <body>
-<header>
-<h1>Horadrim-Würfel – Vollständiger Cube Codex</h1>
-<p>Horadrim-Würfel-Rezepte für Diablo II: Resurrected – sauber & einheitlich</p>
+
+<header class="hero">
+  <h1>Horadrim-Würfel</h1>
+  <p>Rezeptübersicht & Nachschlagewerk für Diablo II: Resurrected</p>
 </header>
 
 <main>
+  
 <div class="tabs">
 <button class="tab active" data-tab="sockel">🗡️ Sockeln</button>
 <button class="tab" data-tab="upgrade">⬆️ Upgrades</button>
@@ -530,11 +605,23 @@ footer{text-align:center;padding:34px 16px;border-top:1px solid var(--border);co
 </div></div>
 
 </main>
-<footer>Horadrim-Würfel · Cube Codex · vollständig & final</footer>
+
+<footer>
+  Community-Projekt · Diablo II: Resurrected · Cube Codex
+</footer>
+
 <script>
 const tabs=document.querySelectorAll('.tab');
 const contents=document.querySelectorAll('.tab-content');
-tabs.forEach(tab=>{tab.addEventListener('click',()=>{tabs.forEach(t=>t.classList.remove('active'));contents.forEach(c=>c.classList.remove('active'));tab.classList.add('active');document.getElementById(tab.dataset.tab).classList.add('active');});});
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    contents.forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
 </script>
+
 </body>
 </html>
