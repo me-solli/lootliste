@@ -299,12 +299,11 @@ async function load(){
       actionHtml=`<button class="action-btn red" onclick="removeItem(${i.id})">🗑 Entfernen</button>`;
     }
 
-    const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
+const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
 
-const tr=document.createElement("tr");
-    tr.id = `item-${i.id}`;
-    
-if(needsAction) tr.classList.add("needs-action");
+const tr = document.createElement("tr");
+tr.id = `item-${i.id}`;
+if (needsAction) tr.classList.add("needs-action");
 
 tr.innerHTML=`
   <td>${i.id}</td>
