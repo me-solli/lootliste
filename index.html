@@ -1604,18 +1604,18 @@ async function checkOwnerReservedItems() {
   i.donorAccountId === accountId
 );
 
-    if (reserved.length > 0) {
-      const info = document.getElementById("ownerReservedInfo");
-      if (info) {
-        info.textContent =
-          reserved.length === 1
-            ? "🔔 Ein Item von dir ist reserviert"
-            : "🔔 Items von dir sind reserviert";
-        info.style.display = "block";
-      }
+if (reserved.length > 0) {
+  const info = document.getElementById("ownerReservedInfo");
+  if (info) {
+    if (reserved.length === 1) {
+      info.href = `my-items.html#item-${reserved[0].id}`;
+      info.textContent = "🔔 Ein Item von dir ist reserviert";
+    } else {
+      info.href = "my-items.html";
+      info.textContent = "🔔 Items von dir sind reserviert";
     }
-  } catch {
-    // still & leise scheitern
+
+    info.style.display = "block";
   }
 }
 
