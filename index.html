@@ -1706,6 +1706,8 @@ async function setUserLabel() {
       if (submitLink) submitLink.style.display = "";
       if (logoutBtn) logoutBtn.hidden = false;
       if (accountLinks) accountLinks.hidden = false;
+
+      checkOwnerReservedItems();
     } else {
       // 👤 Gast
       label.textContent = "Gast";
