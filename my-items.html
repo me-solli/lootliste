@@ -302,6 +302,8 @@ async function load(){
     const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
 
 const tr=document.createElement("tr");
+    tr.id = `item-${i.id}`;
+    
 if(needsAction) tr.classList.add("needs-action");
 
 tr.innerHTML=`
