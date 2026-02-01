@@ -1572,9 +1572,42 @@ const ACTIVE_SEASON = "non-ladder";
 
 // 🔌 API (WICHTIG: Modul-Scope!)
 const API = "https://lootliste-production.up.railway.app";
-  
-  const currentAccountId =
+
+const currentAccountId =
   localStorage.getItem("lootliste_account_id") || null;
+
+// 🔔 Check: Wurde eines meiner Items reserviert?
+async function checkOwnerReservedItems() {
+  const accountId = localStorage.getItem("lootliste_account_id");
+  if (!accountId) return;
+
+  try {
+    const res = await fetch(API + "/items?mine=1", {
+      headers: {
+        "X-Account-Id": accountId
+      }
+    });
+
+    if (!res.ok) return;
+
+    const items = await res.json();
+
+    const reserved = items.filter(i => i.status === "reserviert");
+
+    if (reserved.length > 0) {
+      const info = document.getElementById("ownerReservedInfo");
+      if (info) {
+        info.textContent =
+          reserved.length === 1
+            ? "🔔 Ein Item von dir ist reserviert"
+            : "🔔 Items von dir sind reserviert";
+        info.style.display = "block";
+      }
+    }
+  } catch {
+    // still & leise scheitern
+  }
+}
 
 // DOM
 const container = document.querySelector(".cards");
