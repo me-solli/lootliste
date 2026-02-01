@@ -342,10 +342,18 @@ tr.innerHTML=`
 tableBody.appendChild(tr);
   });
 
-  cAll.textContent=mine.length;
-  cFree.textContent=cFreeN;
-  cRes.textContent=cResN;
-  cDone.textContent=cDoneN;
+  cAll.textContent = mine.length;
+  cFree.textContent = cFreeN;
+  cRes.textContent  = cResN;
+  cDone.textContent = cDoneN;
+
+  // 🔗 Anchor-Fix: nach async Rendern zum Item springen
+  if (location.hash) {
+    const el = document.querySelector(location.hash);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
 }
 
 async function confirmDone(id){
