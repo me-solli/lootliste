@@ -1592,7 +1592,10 @@ async function checkOwnerReservedItems() {
 
     const items = await res.json();
 
-    const reserved = items.filter(i => i.status === "reserviert");
+    const reserved = items.filter(i =>
+  i.status === "reserviert" &&
+  i.donorAccountId === accountId
+);
 
     if (reserved.length > 0) {
       const info = document.getElementById("ownerReservedInfo");
