@@ -1230,9 +1230,10 @@ body{
           data-placeholder="Spieler lädt…"
         ></span>
 
-        <!-- INFO: eigenes Item wurde reserviert -->
-<div
+<!-- INFO: eigenes Item wurde reserviert (klickbar) -->
+<a
   id="ownerReservedInfo"
+  href="my-items.html?status=reserviert"
   style="
     display:none;
     margin:8px 0 10px;
@@ -1243,15 +1244,16 @@ body{
     background:rgba(245,196,81,.06);
     border:1px solid rgba(245,196,81,.25);
     border-radius:10px;
-    pointer-events:none;
+    text-decoration:none;
+    cursor:pointer;
   "
 >
   🔔 Ein Item von dir ist reserviert
-</div>
+</a>
 
-        <a href="submit.html" class="auth-submit">
-          + Item einreichen
-        </a>
+<a href="submit.html" class="auth-submit">
+  + Item einreichen
+</a>
 
 <div class="auth-links">
   <span class="auth-account-links">
