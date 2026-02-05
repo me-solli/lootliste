@@ -314,6 +314,29 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
+// GET LATEST ITEMS (FOR OBS)
+// ===============================
+app.get("/api/items/latest", (req, res) => {
+  const limit = Math.min(Number(req.query.limit) || 20, 50);
+
+  const latestItems = [...items]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, limit)
+    .map(i => ({
+      id: i.id,
+      name: i.name,
+      quality: i.quality,
+      type: i.type,
+      status: i.status,
+      contact: i.contact,
+      donor: i.donor,
+      createdAt: i.createdAt
+    }));
+
+  res.json(latestItems);
+});
+
+// ===============================
 // POST ITEM (MIT 60s COOLDOWN)
 // ===============================
 app.post("/items", (req, res) => {
