@@ -41,7 +41,7 @@ body {
 
 <script>
 async function loadItems() {
-  const res = await fetch("/api/items/latest?limit=20");
+  const res = await fetch("https://lootliste-production.up.railway.app/api/items/latest?limit=20");
   const items = await res.json();
   const list = document.getElementById("list");
   list.innerHTML = "";
