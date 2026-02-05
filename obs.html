@@ -13,26 +13,61 @@ body {
 }
 
 .wrapper {
-  background: rgba(0,0,0,0.75);
-  padding: 12px;
+  width: 100%;
+  background: rgba(0,0,0,0.72);
+  padding: 10px;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 1.6fr 0.8fr 1fr 0.8fr;
+.item {
+  display: flex;
+  align-items: center;
   gap: 10px;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 8px 6px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  background: linear-gradient(
+    to right,
+    rgba(255,255,255,0.05),
+    rgba(0,0,0,0)
+  );
+}
+
+.icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.content {
+  flex: 1;
+}
+
+.name {
   font-size: 14px;
+  font-weight: bold;
+  line-height: 1.1;
 }
 
-.row:last-child {
-  border-bottom: none;
+.type {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-top: 2px;
 }
 
-.status.verfügbar { color: #7CFF7C; }
-.status.reserviert { color: #FFD479; }
-.status.vergeben { color: #FF7C7C; }
+.status {
+  width: 6px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.status.verfügbar { background: #5CFF7A; }
+.status.reserviert { background: #FFD479; }
+.status.vergeben   { background: #FF6A6A; }
 </style>
 </head>
 
@@ -40,22 +75,39 @@ body {
 <div class="wrapper" id="list">Loading…</div>
 
 <script>
+function iconForType(type) {
+  switch (type) {
+    case "WAFFE": return "⚔️";
+    case "RUESTUNG": return "🛡️";
+    case "HELM": return "🪖";
+    case "SCHILD": return "🛡️";
+    case "GUERTEL": return "🧷";
+    case "SCHUHE": return "👢";
+    case "CHARM": return "🔮";
+    default: return "📦";
+  }
+}
+
 async function loadItems() {
-  const res = await fetch("https://lootliste-production.up.railway.app/api/items/latest?limit=20");
+  const res = await fetch(
+    "https://lootliste-production.up.railway.app/api/items/latest?limit=15"
+  );
   const items = await res.json();
   const list = document.getElementById("list");
   list.innerHTML = "";
 
   items.forEach(i => {
-    const row = document.createElement("div");
-    row.className = "row";
-    row.innerHTML = `
-      <div>${i.name}</div>
-      <div>${i.type}</div>
-      <div>${i.quality}</div>
-      <div class="status ${i.status}">${i.status}</div>
+    const el = document.createElement("div");
+    el.className = "item";
+    el.innerHTML = `
+      <div class="icon">${iconForType(i.type)}</div>
+      <div class="content">
+        <div class="name">${i.name}</div>
+        <div class="type">${i.type}</div>
+      </div>
+      <div class="status ${i.status}"></div>
     `;
-    list.appendChild(row);
+    list.appendChild(el);
   });
 }
 
