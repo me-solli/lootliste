@@ -6,75 +6,62 @@
 
 <style>
 :root {
-  --gold: #e6d8a3;
-  --bg: rgba(0,0,0,0.68);
+  --set: #00ff66;
+  --unique: #d6b25e;
+  --magic: #6fa8ff;
+  --normal: #e6e6e6;
+
+  --available: #6cff8a;
+  --reserved: #ffd479;
+  --given: #ff6a6a;
 }
 
 body {
   margin: 0;
   background: transparent;
   font-family: Arial, sans-serif;
-  color: var(--gold);
+  color: var(--normal);
 }
 
 .wrapper {
-  width: 100%;
-  background: var(--bg);
+  background: rgba(0,0,0,0.7);
   padding: 10px 8px;
+  width: 100%;
 }
 
 .item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px;
+  padding: 8px 6px;
   margin-bottom: 6px;
-  border-radius: 12px;
+  border-radius: 10px;
   background: linear-gradient(
     90deg,
-    rgba(255,255,255,0.06),
+    rgba(255,255,255,0.05),
     rgba(0,0,0,0)
   );
-  animation: slideIn 0.4s ease-out;
+  animation: slideIn 0.35s ease-out;
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(-10px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-/* NEU-Glow */
-.item.new {
-  box-shadow: 0 0 12px rgba(255,180,80,0.35);
-}
-
-/* linke Runenlinie */
-.item::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 10%;
-  bottom: 10%;
-  width: 3px;
-  border-radius: 2px;
-  background: rgba(255,255,255,0.15);
-}
-
-.icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.08);
+.top {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 15px;
+  gap: 6px;
 }
 
-.content {
-  flex: 1;
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
+
+.dot.verfügbar { background: var(--available); }
+.dot.reserviert { background: var(--reserved); }
+.dot.vergeben { background: var(--given); }
 
 .name {
   font-size: 14px;
@@ -82,21 +69,17 @@ body {
   line-height: 1.1;
 }
 
+.name.set { color: var(--set); }
+.name.unique { color: var(--unique); }
+.name.magic { color: var(--magic); }
+.name.normal { color: var(--normal); }
+
 .type {
   font-size: 11px;
-  opacity: 0.65;
+  opacity: 0.6;
+  margin-left: 14px;
   margin-top: 2px;
 }
-
-.status {
-  width: 22px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.status.verfügbar { color: #6CFF8A; }
-.status.reserviert { color: #FFD479; }
-.status.vergeben { color: #FF6A6A; }
 </style>
 </head>
 
@@ -105,30 +88,14 @@ body {
 
 <script>
 const API = "https://lootliste-production.up.railway.app/api/items/latest?limit=14";
-const NEW_MINUTES = 30;
 
-function iconForType(type) {
-  switch (type) {
-    case "WAFFE": return "⚔️";
-    case "RUESTUNG": return "🛡️";
-    case "HELM": return "🪖";
-    case "SCHILD": return "🛡️";
-    case "GUERTEL": return "🧷";
-    case "SCHUHE": return "👢";
-    case "CHARM": return "🔮";
-    default: return "📦";
-  }
-}
-
-function statusIcon(status) {
-  if (status === "verfügbar") return "●";
-  if (status === "reserviert") return "◐";
-  return "✖";
-}
-
-function isNew(createdAt) {
-  const diff = Date.now() - new Date(createdAt).getTime();
-  return diff < NEW_MINUTES * 60 * 1000;
+function qualityClass(item) {
+  if (!item.quality) return "normal";
+  const q = item.quality.toLowerCase();
+  if (q.includes("set")) return "set";
+  if (q.includes("unique")) return "unique";
+  if (q.includes("magic")) return "magic";
+  return "normal";
 }
 
 async function loadItems() {
@@ -139,14 +106,15 @@ async function loadItems() {
 
   items.forEach(i => {
     const el = document.createElement("div");
-    el.className = "item" + (isNew(i.createdAt) ? " new" : "");
+    const qClass = qualityClass(i);
+
+    el.className = "item";
     el.innerHTML = `
-      <div class="icon">${iconForType(i.type)}</div>
-      <div class="content">
-        <div class="name">${i.name}</div>
-        <div class="type">${i.type}</div>
+      <div class="top">
+        <div class="dot ${i.status}"></div>
+        <div class="name ${qClass}">${i.name}</div>
       </div>
-      <div class="status ${i.status}">${statusIcon(i.status)}</div>
+      <div class="type">${i.type}</div>
     `;
     list.appendChild(el);
   });
