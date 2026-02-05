@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>D2R Lootliste OBS</title>
+
+<style>
+body {
+  margin: 0;
+  background: transparent;
+  font-family: Arial, sans-serif;
+  color: #e6d8a3;
+}
+
+.wrapper {
+  background: rgba(0,0,0,0.75);
+  padding: 12px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr 1fr 0.8fr;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 14px;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.status.verfügbar { color: #7CFF7C; }
+.status.reserviert { color: #FFD479; }
+.status.vergeben { color: #FF7C7C; }
+</style>
+</head>
+
+<body>
+<div class="wrapper" id="list">Loading…</div>
+
+<script>
+async function loadItems() {
+  const res = await fetch("/api/items/latest?limit=20");
+  const items = await res.json();
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  items.forEach(i => {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = `
+      <div>${i.name}</div>
+      <div>${i.type}</div>
+      <div>${i.quality}</div>
+      <div class="status ${i.status}">${i.status}</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+loadItems();
+setInterval(loadItems, 60000);
+</script>
+</body>
+</html>
