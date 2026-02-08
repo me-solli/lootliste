@@ -198,6 +198,15 @@ h3{margin-top:0}
 
 const data = JSON.parse(localStorage.getItem("my_profile"));
 
+  /* USERNAME AUS URL (öffentliches Profil) */
+const usernameEl = document.getElementById("username");
+const params = new URLSearchParams(window.location.search);
+const userFromUrl = params.get("user");
+
+if (userFromUrl && usernameEl) {
+  usernameEl.textContent = userFromUrl;
+}
+
 const classes = [
   "Paladin","Sorceress","Barbarian",
   "Assassin","Druid","Necromancer","Amazon"
