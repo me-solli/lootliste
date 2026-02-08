@@ -1603,54 +1603,81 @@ body{
 <script type="module">
   import { renderCards } from "./render.cards.js";
 
-// ===============================
-// SEASON (ZENTRAL)
-// ===============================
-const ACTIVE_SEASON = "non-ladder";
+  /* ===============================
+     STEP 3 – Klassen → Avatar-Bilder
+  =============================== */
+  const CLASS_AVATARS = {
+    amazon: "img/classes/amazon.png",
+    assassin: "img/classes/assassin.png",
+    barbarian: "img/classes/barbarian.png",
+    druid: "img/classes/druid.png",
+    necromancer: "img/classes/necromancer.png",
+    paladin: "img/classes/paladin.png",
+    sorceress: "img/classes/sorceress.png"
+  };
 
-// 🔌 API (WICHTIG: Modul-Scope!)
-const API = "https://lootliste-production.up.railway.app";
+  /* ===============================
+     STEP 4 – Klassen → Bild-Ausschnitt
+     (object-position)
+  =============================== */
+  const CLASS_AVATAR_CROP = {
+    amazon: "50% 25%",
+    assassin: "50% 22%",
+    barbarian: "50% 28%",
+    druid: "50% 20%",
+    necromancer: "50% 22%",
+    paladin: "50% 24%",
+    sorceress: "50% 18%"
+  };
 
-const currentAccountId =
-  localStorage.getItem("lootliste_account_id") || null;
+  // ===============================
+  // SEASON (ZENTRAL)
+  // ===============================
+  const ACTIVE_SEASON = "non-ladder";
 
-// 🔔 Check: Wurde eines meiner Items reserviert?
-async function checkOwnerReservedItems() {
-  const accountId = localStorage.getItem("lootliste_account_id");
-  if (!accountId) return;
+  // 🔌 API (WICHTIG: Modul-Scope!)
+  const API = "https://lootliste-production.up.railway.app";
 
-  try {
-    const res = await fetch(API + "/items?mine=1", {
-      headers: { "X-Account-Id": accountId }
-    });
+  const currentAccountId =
+    localStorage.getItem("lootliste_account_id") || null;
 
-    if (!res.ok) return;
+  // 🔔 Check: Wurde eines meiner Items reserviert?
+  async function checkOwnerReservedItems() {
+    const accountId = localStorage.getItem("lootliste_account_id");
+    if (!accountId) return;
 
-    const items = await res.json();
+    try {
+      const res = await fetch(API + "/items?mine=1", {
+        headers: { "X-Account-Id": accountId }
+      });
 
-    const reserved = items.filter(i =>
-      i.status === "reserviert" &&
-      i.donorAccountId === accountId
-    );
+      if (!res.ok) return;
 
-    if (reserved.length > 0) {
-      const info = document.getElementById("ownerReservedInfo");
-      if (info) {
-        if (reserved.length === 1) {
-          info.href = `my-items.html#item-${reserved[0].id}`;
-          info.textContent = "🔔 Ein Item von dir ist reserviert";
-        } else {
-          info.href = "my-items.html";
-          info.textContent = "🔔 Items von dir sind reserviert";
+      const items = await res.json();
+
+      const reserved = items.filter(i =>
+        i.status === "reserviert" &&
+        i.donorAccountId === accountId
+      );
+
+      if (reserved.length > 0) {
+        const info = document.getElementById("ownerReservedInfo");
+        if (info) {
+          if (reserved.length === 1) {
+            info.href = `my-items.html#item-${reserved[0].id}`;
+            info.textContent = "🔔 Ein Item von dir ist reserviert";
+          } else {
+            info.href = "my-items.html";
+            info.textContent = "🔔 Items von dir sind reserviert";
+          }
+          info.style.display = "block";
         }
-        info.style.display = "block";
       }
-    }
 
-  } catch {
-    // still & leise scheitern
+    } catch {
+      // still & leise scheitern
+    }
   }
-}
 
 // DOM
 const container = document.querySelector(".cards");
