@@ -1792,20 +1792,20 @@ async function setUserLabel() {
       if (logoutBtn) logoutBtn.hidden = false;
       if (accountLinks) accountLinks.hidden = false;
 
-      // 🎭 Klassen-Avatar (Ausschnitt!)
-const effectiveClass =
-  data.class ||
-  localStorage.getItem("lootliste_debug_class");
+      // 🎭 Klassen-Avatar (Backend ODER Debug)
+      const effectiveClass =
+        data.class ||
+        localStorage.getItem("lootliste_debug_class");
 
-if (
-  avatar &&
-  effectiveClass &&
-  CLASS_AVATARS[effectiveClass]
-) {
-  avatar.src = CLASS_AVATARS[effectiveClass];
-  avatar.style.objectPosition =
-    CLASS_AVATAR_CROP[effectiveClass] || "50% 50%";
-}
+      if (
+        avatar &&
+        effectiveClass &&
+        CLASS_AVATARS[effectiveClass]
+      ) {
+        avatar.src = CLASS_AVATARS[effectiveClass];
+        avatar.style.objectPosition =
+          CLASS_AVATAR_CROP[effectiveClass] || "50% 50%";
+      }
 
       checkOwnerReservedItems();
 
@@ -1824,6 +1824,8 @@ if (
   }
 }
 
+// 🔧 Dev / Debug: im Browser nutzbar machen (Module-Scope!)
+window.setUserLabel = setUserLabel;
 
 function updateMeta() {
   const list = state.filtered;
