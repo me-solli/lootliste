@@ -1785,14 +1785,18 @@ async function setUserLabel() {
       if (accountLinks) accountLinks.hidden = false;
 
       // 🎭 Klassen-Avatar (Ausschnitt!)
+const effectiveClass =
+  data.class ||
+  localStorage.getItem("lootliste_debug_class");
+
 if (
   avatar &&
-  data.class &&
-  CLASS_AVATARS[data.class]
+  effectiveClass &&
+  CLASS_AVATARS[effectiveClass]
 ) {
-  avatar.src = CLASS_AVATARS[data.class];
+  avatar.src = CLASS_AVATARS[effectiveClass];
   avatar.style.objectPosition =
-    CLASS_AVATAR_CROP[data.class] || "50% 50%";
+    CLASS_AVATAR_CROP[effectiveClass] || "50% 50%";
 }
 
       checkOwnerReservedItems();
