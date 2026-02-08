@@ -1748,6 +1748,7 @@ async function setUserLabel() {
   const loginLink = document.querySelector(".auth-login");
   const loginSep  = document.querySelector(".auth-login-sep");
   const accountLinks = document.querySelector(".auth-account-links");
+  const avatar = document.getElementById("playerAvatar");
 
   if (!label) return;
 
@@ -1761,6 +1762,12 @@ async function setUserLabel() {
   if (loginLink) loginLink.hidden = true;
   if (loginSep)  loginSep.hidden  = true;
   if (accountLinks) accountLinks.hidden = true;
+
+  // Default Avatar
+  if (avatar) {
+    avatar.src = "img/avatars/default.png";
+    avatar.style.objectPosition = "50% 50%";
+  }
 
   const headers = {};
   if (deviceId)  headers["X-User-Id"] = deviceId;
@@ -1777,13 +1784,26 @@ async function setUserLabel() {
       if (logoutBtn) logoutBtn.hidden = false;
       if (accountLinks) accountLinks.hidden = false;
 
+      // 🎭 Klassen-Avatar (Ausschnitt!)
+      if (
+        avatar &&
+        data.class &&
+        CLASS_AVATARS[data.class]
+      ) {
+        avatar.src = CLASS_AVATARS[data.class];
+        avatar.style.objectPosition =
+          CLASS_AVATAR_CROP[data.class] || "50% 50%";
+      }
+
       checkOwnerReservedItems();
+
     } else {
       // 👤 Gast
       label.textContent = "Gast";
       if (loginLink) loginLink.hidden = false;
       if (loginSep)  loginSep.hidden  = false;
     }
+
   } catch {
     // 👤 Fehler = Gast
     label.textContent = "Gast";
@@ -1791,6 +1811,7 @@ async function setUserLabel() {
     if (loginSep)  loginSep.hidden  = false;
   }
 }
+
 
 function updateMeta() {
   const list = state.filtered;
