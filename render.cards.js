@@ -1,5 +1,15 @@
 const API = "https://lootliste-production.up.railway.app";
 
+const CLASS_ICONS_MINI = {
+  amazon: "img/classes/amazon.png",
+  assassin: "img/classes/assassin.png",
+  barbarian: "img/classes/barbarian.png",
+  druid: "img/classes/druid.png",
+  necromancer: "img/classes/necromancer.png",
+  paladin: "img/classes/paladin.png",
+  sorceress: "img/classes/sorceress.png"
+};
+
 // erlaubte Item-Typen laut Icon-Bar
 const VALID_TYPES = [
   "waffe",
