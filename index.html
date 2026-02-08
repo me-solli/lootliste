@@ -1793,9 +1793,12 @@ async function setUserLabel() {
       if (accountLinks) accountLinks.hidden = false;
 
       // 🎭 Klassen-Avatar (Backend ODER Debug)
-      const effectiveClass =
-        data.class ||
-        localStorage.getItem("lootliste_debug_class");
+const profileData = JSON.parse(localStorage.getItem("my_profile") || "{}");
+
+const effectiveClass =
+  data.class ||
+  localStorage.getItem("lootliste_debug_class") ||
+  profileData.favClass?.toLowerCase();
 
       if (
         avatar &&
