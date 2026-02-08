@@ -40,19 +40,21 @@ export function renderCards(items, container) {
     ========================== */
     let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
-    if (item.donor) {
-      sourceLabel = `
-        <span class="source-label">Spender:</span>
-        <a
-          href="profile.html?user=${encodeURIComponent(item.donor)}"
-          class="profile-link"
-          title="Öffentliches Profil ansehen"
-          onclick="event.stopPropagation()"
-        >
-          👤 ${item.donor}
-        </a>
-      `;
-    }
+if (item.donor) {
+  sourceLabel = `
+    <div class="donor-block">
+      <span class="donor-label">Spender</span>
+      <a
+        href="profile.html?user=${encodeURIComponent(item.donor)}"
+        class="donor-name"
+        title="Öffentliches Profil ansehen"
+        onclick="event.stopPropagation()"
+      >
+        ${item.donor}
+      </a>
+    </div>
+  `;
+}
 
     card.innerHTML = `
       <!-- HEADER -->
