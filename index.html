@@ -1630,6 +1630,14 @@ body{
     sorceress: "50% 18%"
   };
 
+  /* ===============================
+   DEBUG – Klasse live wechseln
+=============================== */
+window.setDebugClass = function (cls) {
+  localStorage.setItem("lootliste_debug_class", cls);
+  setUserLabel(); // Avatar & Name sofort neu setzen
+};
+
   // ===============================
   // SEASON (ZENTRAL)
   // ===============================
