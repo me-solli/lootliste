@@ -51,17 +51,29 @@ export function renderCards(items, container) {
     let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
 if (item.donor) {
+  const donorClass =
+    item.donorClass ||
+    localStorage.getItem("lootliste_debug_class");
+
+  const donorIcon =
+    donorClass && CLASS_ICONS_MINI[donorClass]
+      ? `<img class="donor-class-icon" src="${CLASS_ICONS_MINI[donorClass]}" alt="">`
+      : "";
+
   sourceLabel = `
     <div class="donor-block">
       <span class="donor-label">Spender</span>
-      <a
-        href="profile.html?user=${encodeURIComponent(item.donor)}"
-        class="donor-name"
-        title="Öffentliches Profil ansehen"
-        onclick="event.stopPropagation()"
-      >
-        ${item.donor}
-      </a>
+      <div class="donor-line">
+        ${donorIcon}
+        <a
+          href="profile.html?user=${encodeURIComponent(item.donor)}"
+          class="donor-name"
+          title="Öffentliches Profil ansehen"
+          onclick="event.stopPropagation()"
+        >
+          ${item.donor}
+        </a>
+      </div>
     </div>
   `;
 }
