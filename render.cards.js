@@ -45,10 +45,10 @@ export function renderCards(items, container) {
       ? `${type} • ${item.sub}`
       : type;
 
-    /* =========================
-       SPENDER / PROFIL-LINK
-    ========================== */
-    let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
+/* =========================
+   SPENDER / PROFIL-LINK
+========================== */
+let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
 if (item.donor) {
   const donorClass =
@@ -64,7 +64,6 @@ if (item.donor) {
     <div class="donor-block">
       <span class="donor-label">Spender</span>
       <div class="donor-line">
-        ${donorIcon}
         <a
           href="profile.html?user=${encodeURIComponent(item.donor)}"
           class="donor-name"
@@ -73,6 +72,7 @@ if (item.donor) {
         >
           ${item.donor}
         </a>
+        ${donorIcon}
       </div>
     </div>
   `;
