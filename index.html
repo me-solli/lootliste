@@ -1496,15 +1496,26 @@ body{
   <!-- ================================
      RECENT ITEMS FEED (MINIMAL)
 ================================ -->
-<section class="recent-feed">
+<section class="recent-feed recent-feed-grid">
 
-  <div class="recent-feed-title">
-    Aktuelle Einträge
+  <div class="recent-feed-left">
+    <div class="recent-feed-title">
+      Aktuelle Einträge
+    </div>
+
+    <ul class="recent-feed-list" id="recentFeed">
+      <!-- JS füllt hier Items -->
+    </ul>
   </div>
 
-  <ul class="recent-feed-list" id="recentFeed">
-    <!-- JS füllt hier Items -->
-  </ul>
+  <div class="recent-feed-right">
+    <div class="loot-preview-grid">
+      <div class="loot-preview loot-weapon" title="Waffen"></div>
+      <div class="loot-preview loot-armor" title="Rüstung"></div>
+      <div class="loot-preview loot-jewelry" title="Schmuck"></div>
+      <div class="loot-preview loot-special" title="Besonderes"></div>
+    </div>
+  </div>
 
 </section>
 
