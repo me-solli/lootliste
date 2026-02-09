@@ -43,39 +43,39 @@ body{
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* ================================
-   HERO (OPTIK FINAL – KOMPAKT)
+   HERO (OPTIK FINAL – BALANCED)
 ================================ */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:220px;          /* ↓ vorher 260 */
+  min-height:240px;          /* ↑ bewusst wieder Luft */
   position:relative;
 }
 
 .hero-inner{
-  padding:32px 32px;         /* ↓ vorher 44px 36px */
+  padding:36px 36px;         /* ↑ nicht riesig, aber atmend */
   background: linear-gradient(
     to bottom,
-    rgba(0,0,0,.30),
+    rgba(0,0,0,.28),
     rgba(0,0,0,.72)
   );
 }
 
 .hero-logo img{
-  max-width:380px;           /* ↓ vorher 420 */
+  max-width:400px;           /* ↑ Logo wieder etwas präsenter */
   width:100%;
   filter:brightness(.82) contrast(1.05)
           drop-shadow(0 0 10px rgba(0,0,0,.6));
 }
 
 .hero p{
-  margin:8px 0 14px;         /* ↓ vertikal kompakter */
-  opacity:.9
+  margin:10px 0 16px;        /* zurück zu natürlichem Rhythmus */
+  opacity:.9;
 }
 
 .mode-banner{
-  margin:-4px 0 16px;        /* ↓ zieht alles leicht nach oben */
+  margin:-2px 0 18px;        /* weniger aggressiv nach oben */
   font-size:13px;
   letter-spacing:.3px;
   color:#dcdcdc;
@@ -86,13 +86,13 @@ body{
 
 .hero-stats{
   display:flex;
-  gap:14px;                  /* ↓ vorher 18 */
+  gap:16px;                  /* etwas mehr Luft */
   flex-wrap:wrap;
-  font-size:13px;            /* ↓ minimal */
+  font-size:14px;            /* wieder ruhiger lesbar */
 }
 
 .hero-stats div{
-  padding:6px 12px;          /* ↓ flacher */
+  padding:7px 14px;          /* nicht mehr gequetscht */
   background:rgba(0,0,0,.4);
   border:1px solid var(--border);
   border-radius:999px;
