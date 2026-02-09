@@ -2011,14 +2011,21 @@ function renderRecentFeed(items){
     const li = document.createElement("li");
     li.className = "recent-feed-item";
 
-    const name  = item.name || "Item";
-    const donor = item.donor || "Ein Spieler";
-    const time  = timeAgo(item.createdAt);
+    // + / - Logik (vorbereitet)
+    const action = "➕"; // später: ❌ bei entfernt / vergeben
+
+    // Item-Typ → Icon
+    const type = (item.type || item.category || "sonstiges").toLowerCase();
+    const iconUrl = `img/icons/${type}.png`;
 
     li.innerHTML = `
-      ➕ ${donor} hat
-      <a href="#item-${item.id}">${name}</a>
-      hinzugefügt · ${time}
+      <span class="recent-feed-icon" style="background-image:url('${iconUrl}')"></span>
+      <span>${action}</span>
+      <span>
+        ${item.donor || "Ein Spieler"} hat
+        <a href="#item-${item.id}">${item.name}</a>
+        hinzugefügt · ${timeAgo(item.createdAt)}
+      </span>
     `;
 
     feed.appendChild(li);
