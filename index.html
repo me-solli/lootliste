@@ -43,47 +43,56 @@ body{
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* ================================
-   HERO (OPTIK FINAL)
+   HERO (OPTIK FINAL – KOMPAKT)
 ================================ */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:260px;
+  min-height:220px;          /* ↓ vorher 260 */
   position:relative;
 }
 
 .hero-inner{
-  padding:44px 36px;
-  background: linear-gradient(to bottom, rgba(0,0,0,.28), rgba(0,0,0,.70));
+  padding:32px 32px;         /* ↓ vorher 44px 36px */
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.30),
+    rgba(0,0,0,.72)
+  );
 }
 
 .hero-logo img{
-  max-width:420px;
+  max-width:380px;           /* ↓ vorher 420 */
   width:100%;
   filter:brightness(.82) contrast(1.05)
           drop-shadow(0 0 10px rgba(0,0,0,.6));
 }
 
-.hero p{margin:10px 0 18px;opacity:.9}
+.hero p{
+  margin:8px 0 14px;         /* ↓ vertikal kompakter */
+  opacity:.9
+}
 
 .mode-banner{
-  margin:-6px 0 22px;
+  margin:-4px 0 16px;        /* ↓ zieht alles leicht nach oben */
   font-size:13px;
   letter-spacing:.3px;
   color:#dcdcdc;
 }
+
 .mode-banner strong{color:var(--green)}
 .mode-banner span{opacity:.7;font-size:12px}
 
 .hero-stats{
   display:flex;
-  gap:18px;
+  gap:14px;                  /* ↓ vorher 18 */
   flex-wrap:wrap;
-  font-size:14px;
+  font-size:13px;            /* ↓ minimal */
 }
+
 .hero-stats div{
-  padding:8px 14px;
+  padding:6px 12px;          /* ↓ flacher */
   background:rgba(0,0,0,.4);
   border:1px solid var(--border);
   border-radius:999px;
