@@ -32,6 +32,7 @@ export function renderCards(items, container) {
   items.forEach(item => {
     const card = document.createElement("article");
     card.className = "card";
+    card.id = `item-${item.id}`;
     card.dataset.open = "false";
 
     const type = VALID_TYPES.includes(item.type) ? item.type : "sonstiges";
