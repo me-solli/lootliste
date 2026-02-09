@@ -1857,6 +1857,43 @@ await setUserLabel();
 renderRecentFeed(state.items);
 }
 
+  // ===============================
+// RECENT ITEMS FEED (MINIMAL)
+// ===============================
+function renderRecentFeed(items){
+  const feed = document.getElementById("recentFeed");
+  if (!feed) return;
+
+  const list = items
+    .filter(i => i.createdAt)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
+
+  if (list.length === 0) {
+    feed.parentElement.style.display = "none";
+    return;
+  }
+
+  feed.innerHTML = "";
+
+  list.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "recent-feed-item";
+
+    const name  = item.name || "Item";
+    const donor = item.donor || "Ein Spieler";
+    const time  = timeAgo(item.createdAt);
+
+    li.innerHTML = `
+      ➕ ${donor} hat
+      <a href="#item-${item.id}">${name}</a>
+      hinzugefügt · ${time}
+    `;
+
+    feed.appendChild(li);
+  });
+}
+
 // 👤 Anzeige: Username (falls Account) → sonst Gast
 async function setUserLabel() {
   const label = document.getElementById("playerIdLabel");
