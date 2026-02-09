@@ -1852,6 +1852,9 @@ state.filtered = [...state.items];
 
 // Username laden
 await setUserLabel();
+
+// 🆕 Recent Items Feed
+renderRecentFeed(state.items);
 }
 
 // 👤 Anzeige: Username (falls Account) → sonst Gast
