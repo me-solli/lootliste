@@ -51,9 +51,9 @@ export function renderCards(items, container) {
 let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
 if (item.donor) {
-  const donorClass =
-    item.donorClass ||
-    localStorage.getItem("lootliste_debug_class");
+const donorClass =
+  item.donorClass ||
+  localStorage.getItem("lootliste_profile_class");
 
   const donorIcon =
     donorClass && CLASS_ICONS_MINI[donorClass]
