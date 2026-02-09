@@ -2124,6 +2124,25 @@ document.addEventListener("click", (e) => {
   return `vor ${days} Tag${days > 1 ? "en" : ""}`;
 }
 
+  // ===============================
+// FEED TARGET HIGHLIGHT (NO OPEN)
+// ===============================
+window.addEventListener("hashchange", highlightFromHash);
+window.addEventListener("load", highlightFromHash);
+
+function highlightFromHash(){
+  if (!location.hash.startsWith("#item-")) return;
+
+  const el = document.querySelector(location.hash);
+  if (!el) return;
+
+  el.classList.add("feed-highlight");
+
+  setTimeout(() => {
+    el.classList.remove("feed-highlight");
+  }, 1600);
+}
+
 </script>
 
   <script>
