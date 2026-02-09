@@ -1229,18 +1229,33 @@ body{
   transform: translateY(-4px);
 }
 
-  /* ================================
-   FEED TARGET HIGHLIGHT (TEMPORARY)
+/* ================================
+   FEED TARGET HIGHLIGHT (PULSE)
 ================================ */
 
+@keyframes feedPulse {
+  0% {
+    box-shadow:
+      0 0 0 1px rgba(245,196,81,.15),
+      0 0 6px rgba(245,196,81,.15);
+    border-color: rgba(245,196,81,.25);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(245,196,81,.45),
+      0 0 22px rgba(245,196,81,.45);
+    border-color: rgba(245,196,81,.55);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(245,196,81,.15),
+      0 0 6px rgba(245,196,81,.15);
+    border-color: rgba(245,196,81,.25);
+  }
+}
+
 .card.feed-highlight{
-  border-color: rgba(245,196,81,.45);
-  box-shadow:
-    0 0 0 1px rgba(245,196,81,.35),
-    0 0 22px rgba(245,196,81,.35);
-  transition:
-    box-shadow .8s ease,
-    border-color .8s ease;
+  animation: feedPulse 0.8s ease-in-out 3;
 }
 
   /* ================================
