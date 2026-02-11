@@ -161,11 +161,6 @@ const donorClass =
       e.stopPropagation();
       if (btn.disabled) return;
 
-      if (!accountId) {
-        alert("Zum Beanspruchen von Items bitte oben rechts einloggen oder registrieren.");
-        return;
-      }
-
       const battleTag = prompt(
         "BattleTag für Übergabe (z. B. me_solli#1234):"
       );
