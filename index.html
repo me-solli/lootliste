@@ -2043,9 +2043,6 @@ async function setUserLabel() {
 
   if (!label) return;
 
-  const deviceId  = localStorage.getItem("lootliste_user_id");
-  const accountId = localStorage.getItem("lootliste_account_id");
-
   // Default: alles aus
   label.textContent = label.dataset.placeholder || "Spieler lädt…";
   if (submitLink) submitLink.style.display = "none";
