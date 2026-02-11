@@ -1964,8 +1964,20 @@ async function loadItems() {
 
 const data = await res.json();
 
-// 🔒 Öffentliche Liste:
-// nur verfügbare Items DER AKTIVEN SEASON
+// Session-Account holen
+const meRes = await fetch(API + "/me", {
+  credentials: "include"
+});
+
+let accountId = null;
+
+if (meRes.ok) {
+  const me = await meRes.json();
+  if (me.loggedIn) {
+    accountId = me.accountId;
+  }
+}
+
 state.items = data
   .filter(i =>
     i.status === "verfügbar" &&
@@ -1974,8 +1986,8 @@ state.items = data
   .map(item => ({
     ...item,
     isOwner:
-      currentAccountId &&
-      item.donorAccountId === currentAccountId
+      accountId &&
+      item.donorAccountId === accountId
   }));
 
 state.filtered = [...state.items];
