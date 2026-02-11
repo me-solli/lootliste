@@ -186,10 +186,12 @@ registerForm.onsubmit = async e => {
     method:"POST",
     credentials:"include",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      username:regUser.value.trim(),
-      password:regPass.value
-    })
+body:JSON.stringify({
+  username:regUser.value.trim(),
+  password:regPass.value,
+  email:document.getElementById("regEmail").value.trim(),
+  battletag:document.getElementById("regBattletag").value.trim()
+})
   });
 
   const data = await res.json();
