@@ -156,6 +156,44 @@ function isAdmin(account) {
 }
 
 // ===============================
+// SESSION HELPERS (NEU – PHASE 1)
+// ===============================
+function saveSessions() {
+  saveJSON(SESSIONS_FILE, sessions);
+}
+
+function createSession(accountId) {
+  const token = crypto.randomBytes(24).toString("hex");
+
+  const session = {
+    token,
+    accountId,
+    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 Tage
+  };
+
+  sessions.push(session);
+  saveSessions();
+
+  return token;
+}
+
+function getAccountFromSession(req) {
+  const cookieHeader = req.headers.cookie;
+  if (!cookieHeader) return null;
+
+  const match = cookieHeader.match(/session=([^;]+)/);
+  if (!match) return null;
+
+  const token = match[1];
+  const session = sessions.find(s => s.token === token);
+
+  if (!session) return null;
+  if (Date.now() > session.expiresAt) return null;
+
+  return findAccountById(session.accountId);
+}
+
+// ===============================
 // MINIMAL COOLDOWN (60s)
 // ===============================
 function checkCooldown(account, seconds = 60) {
