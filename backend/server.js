@@ -343,21 +343,24 @@ app.post("/auth/login", async (req, res) => {
 });
 
 // ===============================
-// ME
+// ME (Session-first)
 // ===============================
 app.get("/me", (req, res) => {
-  const accountId = req.headers["x-account-id"];
-  const account = accountId ? findAccountById(accountId) : null;
+  const account = getAccountFromSession(req);
 
   if (!account) {
     return res.json({
+      loggedIn: false,
       deviceId: req.device.id
     });
   }
 
   res.json({
+    loggedIn: true,
     accountId: account.id,
-    username: account.username
+    username: account.username,
+    email: account.email,
+    battletag: account.battletag
   });
 });
 
