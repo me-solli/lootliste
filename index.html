@@ -1887,33 +1887,40 @@ window.setDebugClass = function (cls) {
         headers: { "X-Account-Id": accountId }
       });
 
-      if (!res.ok) return;
+if (!res.ok) return;
 
-      const items = await res.json();
+const items = await res.json();
 
-      const reserved = items.filter(i =>
-        i.status === "reserviert" &&
-        i.donorAccountId === accountId
-      );
+// Session-Account holen
+const meRes = await fetch(`${API}/me`, {
+  credentials: "include"
+});
 
-      if (reserved.length > 0) {
-        const info = document.getElementById("ownerReservedInfo");
-        if (info) {
-          if (reserved.length === 1) {
-            info.href = `my-items.html#item-${reserved[0].id}`;
-            info.textContent = "🔔 Ein Item von dir ist reserviert";
-          } else {
-            info.href = "my-items.html";
-            info.textContent = "🔔 Items von dir sind reserviert";
-          }
-          info.style.display = "block";
-        }
-      }
+if (!meRes.ok) return;
 
-    } catch {
-      // still & leise scheitern
+const me = await meRes.json();
+if (!me.loggedIn) return;
+
+const accountId = me.accountId;
+
+const reserved = items.filter(i =>
+  i.status === "reserviert" &&
+  i.donorAccountId === accountId
+);
+
+if (reserved.length > 0) {
+  const info = document.getElementById("ownerReservedInfo");
+  if (info) {
+    if (reserved.length === 1) {
+      info.href = `my-items.html#item-${reserved[0].id}`;
+      info.textContent = "🔔 Ein Item von dir ist reserviert";
+    } else {
+      info.href = "my-items.html";
+      info.textContent = "🔔 Items von dir sind reserviert";
     }
+    info.style.display = "block";
   }
+}
 
 // DOM
 const container = document.querySelector(".cards");
