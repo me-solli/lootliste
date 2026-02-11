@@ -1874,51 +1874,52 @@ window.setDebugClass = function (cls) {
   // 🔌 API (WICHTIG: Modul-Scope!)
   const API = "https://lootliste-production.up.railway.app";
 
-  const currentAccountId =
-    localStorage.getItem("lootliste_account_id") || null;
+// 🔔 Check: Wurde eines meiner Items reserviert?
+async function checkOwnerReservedItems() {
 
-  // 🔔 Check: Wurde eines meiner Items reserviert?
-  async function checkOwnerReservedItems() {
-    const accountId = localStorage.getItem("lootliste_account_id");
-    if (!accountId) return;
+  try {
+    // 1️⃣ Session-Account holen
+    const meRes = await fetch(API + "/me", {
+      credentials: "include"
+    });
 
-    try {
-      const res = await fetch(API + "/items?mine=1", {
-        headers: { "X-Account-Id": accountId }
-      });
+    if (!meRes.ok) return;
 
-if (!res.ok) return;
+    const me = await meRes.json();
+    if (!me.loggedIn) return;
 
-const items = await res.json();
+    const accountId = me.accountId;
 
-// Session-Account holen
-const meRes = await fetch(`${API}/me`, {
-  credentials: "include"
-});
+    // 2️⃣ Meine Items laden (Session-basiert)
+    const res = await fetch(API + "/items?mine=1", {
+      credentials: "include"
+    });
 
-if (!meRes.ok) return;
+    if (!res.ok) return;
 
-const me = await meRes.json();
-if (!me.loggedIn) return;
+    const items = await res.json();
 
-const accountId = me.accountId;
+    const reserved = items.filter(i =>
+      i.status === "reserviert" &&
+      i.donorAccountId === accountId
+    );
 
-const reserved = items.filter(i =>
-  i.status === "reserviert" &&
-  i.donorAccountId === accountId
-);
-
-if (reserved.length > 0) {
-  const info = document.getElementById("ownerReservedInfo");
-  if (info) {
-    if (reserved.length === 1) {
-      info.href = `my-items.html#item-${reserved[0].id}`;
-      info.textContent = "🔔 Ein Item von dir ist reserviert";
-    } else {
-      info.href = "my-items.html";
-      info.textContent = "🔔 Items von dir sind reserviert";
+    if (reserved.length > 0) {
+      const info = document.getElementById("ownerReservedInfo");
+      if (info) {
+        if (reserved.length === 1) {
+          info.href = `my-items.html#item-${reserved[0].id}`;
+          info.textContent = "🔔 Ein Item von dir ist reserviert";
+        } else {
+          info.href = "my-items.html";
+          info.textContent = "🔔 Items von dir sind reserviert";
+        }
+        info.style.display = "block";
+      }
     }
-    info.style.display = "block";
+
+  } catch {
+    // still & leise scheitern
   }
 }
 
