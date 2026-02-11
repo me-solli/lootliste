@@ -244,9 +244,21 @@ app.post("/auth/register", async (req, res) => {
   const device = req.device;
   const now = Date.now();
 
-  if (!username || !password) {
-    return res.status(400).json({ error: "Missing fields" });
-  }
+if (!username || !password || !email || !battletag) {
+  return res.status(400).json({ error: "Missing fields" });
+}
+
+if (!isValidBattletag(battletag)) {
+  return res.status(400).json({ error: "Invalid battletag format (Name#1234)" });
+}
+
+if (findAccountByEmail(email)) {
+  return res.status(409).json({ error: "Email already in use" });
+}
+
+if (findAccountByBattletag(battletag)) {
+  return res.status(409).json({ error: "Battletag already in use" });
+}
 
   // 🧱 DEVICE-REGISTRIERUNGS-BREMSE (1 / Stunde)
   if (device.lastRegisterAt && now - device.lastRegisterAt < 60 * 60 * 1000) {
