@@ -254,19 +254,19 @@ if (!username || !password || !email || !battletag) {
 }
 
 if (!isValidBattletag(battletag)) {
-  return res.status(400).json({ error: "Invalid battletag format (Name#1234)" });
+  return res.status(400).json({ error: "Ungültiges Battletag-Format (Name#1234)" });
 }
 
   if (!isValidEmail(email)) {
-  return res.status(400).json({ error: "Invalid email format" });
+  return res.status(400).json({ error: "Ungültiges E-Mail-Format" });
 }
 
 if (findAccountByEmail(email)) {
-  return res.status(409).json({ error: "Email already in use" });
+  return res.status(409).json({ error: "E-Mail wird bereits verwendet" });
 }
 
 if (findAccountByBattletag(battletag)) {
-  return res.status(409).json({ error: "Battletag already in use" });
+  return res.status(409).json({ error: "Battletag wird bereits verwendet" });
 }
 
   // 🧱 DEVICE-REGISTRIERUNGS-BREMSE (1 / Stunde)
