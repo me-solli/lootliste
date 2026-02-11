@@ -150,6 +150,7 @@ loginForm.onsubmit = async e => {
 
   const res = await fetch(API+"/auth/login",{
     method:"POST",
+    credentials:"include",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({
       username:loginUser.value.trim(),
@@ -163,8 +164,9 @@ loginForm.onsubmit = async e => {
     return;
   }
 
-  // ✅ MULTI DEVICE
+  // 🔁 localStorage bleibt vorerst als Fallback
   localStorage.setItem("lootliste_account_id", data.accountId);
+
   status.textContent="✅ Eingeloggt";
   location.href="index.html";
 };
@@ -176,12 +178,25 @@ registerForm.onsubmit = async e => {
 
   const res = await fetch(API+"/auth/register",{
     method:"POST",
+    credentials:"include",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({
       username:regUser.value.trim(),
       password:regPass.value
     })
   });
+
+  const data = await res.json();
+  if(!res.ok){
+    status.textContent="❌ Username bereits vergeben";
+    return;
+  }
+
+  localStorage.setItem("lootliste_account_id", data.accountId);
+
+  status.textContent="✅ Account erstellt";
+  location.href="index.html";
+};
 
   const data = await res.json();
   if(!res.ok){
