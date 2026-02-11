@@ -186,16 +186,16 @@ const donorClass =
       btn.textContent = "…";
 
       try {
-        const res = await fetch(`${API}/items/${item.id}/claim`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Account-Id": accountId
-          },
-          body: JSON.stringify({
-            contact: battleTag.trim()
-          })
-        });
+const res = await fetch(`${API}/items/${item.id}/claim`, {
+  method: "POST",
+  credentials: "include",   // 🔥 WICHTIG
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    contact: battleTag.trim()
+  })
+});
 
         if (!res.ok) {
           const err = await res.json();
