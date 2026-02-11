@@ -29,10 +29,16 @@ const SESSIONS_FILE = path.join(DATA_DIR, "sessions.json");
 // MIDDLEWARE (CORS)
 // ===============================
 app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://me-solli.github.io"
-  );
+  const allowedOrigins = [
+    "https://me-solli.github.io",
+    "https://d2r-lootliste.de"
+  ];
+
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
 
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
