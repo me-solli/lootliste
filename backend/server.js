@@ -29,15 +29,23 @@ const SESSIONS_FILE = path.join(DATA_DIR, "sessions.json");
 // MIDDLEWARE (CORS)
 // ===============================
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://me-solli.github.io"
+  );
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type, X-User-Id, X-Account-Id, X-Admin-Token"
   );
-res.setHeader(
-  "Access-Control-Allow-Methods",
-  "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-);
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+
   res.setHeader(
     "Access-Control-Expose-Headers",
     "X-User-Id"
@@ -46,6 +54,7 @@ res.setHeader(
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
+
   next();
 });
 
