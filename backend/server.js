@@ -257,6 +257,10 @@ if (!isValidBattletag(battletag)) {
   return res.status(400).json({ error: "Invalid battletag format (Name#1234)" });
 }
 
+  if (!isValidEmail(email)) {
+  return res.status(400).json({ error: "Invalid email format" });
+}
+
 if (findAccountByEmail(email)) {
   return res.status(409).json({ error: "Email already in use" });
 }
