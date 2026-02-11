@@ -274,6 +274,16 @@ app.post("/auth/login", async (req, res) => {
   account.lastLoginAt = new Date().toISOString();
   saveAccounts();
 
+  // 🆕 Session erstellen
+  const token = createSession(account.id);
+
+  // 🆕 Cookie setzen (parallel zum alten System)
+  res.setHeader(
+    "Set-Cookie",
+    `session=${token}; HttpOnly; Path=/; Max-Age=${7*24*60*60}; SameSite=Lax`
+  );
+
+  // 🔁 Alte Antwort bleibt bestehen (Fallback aktiv)
   res.json({
     accountId: account.id,
     username: account.username
