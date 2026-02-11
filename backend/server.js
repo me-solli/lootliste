@@ -326,21 +326,45 @@ app.post("/auth/login", async (req, res) => {
   account.lastLoginAt = new Date().toISOString();
   saveAccounts();
 
-  // 🆕 Session erstellen
+  // Session erstellen
   const token = createSession(account.id);
 
-  // 🆕 Cookie setzen (parallel zum alten System)
+  // Cookie setzen (Cross-Origin GitHub → Railway)
   res.setHeader(
     "Set-Cookie",
     `session=${token}; HttpOnly; Path=/; Max-Age=${7*24*60*60}; SameSite=None; Secure`
   );
 
-  // 🔁 Alte Antwort bleibt bestehen (Fallback aktiv)
   res.json({
-    accountId: account.id,
-    username: account.username
+    ok: true
   });
 });
+
+
+// ===============================
+// AUTH – LOGOUT
+// ===============================
+app.post("/auth/logout", (req, res) => {
+  const cookieHeader = req.headers.cookie;
+
+  if (cookieHeader) {
+    const match = cookieHeader.match(/session=([^;]+)/);
+    if (match) {
+      const token = match[1];
+      sessions = sessions.filter(s => s.token !== token);
+      saveSessions();
+    }
+  }
+
+  // Cookie löschen
+  res.setHeader(
+    "Set-Cookie",
+    "session=; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure"
+  );
+
+  res.json({ ok: true });
+});
+
 
 // ===============================
 // ME (SESSION ONLY – CLEAN)
