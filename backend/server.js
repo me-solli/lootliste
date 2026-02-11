@@ -273,14 +273,17 @@ if (findAccountByBattletag(battletag)) {
 
   const passwordHash = await bcrypt.hash(password, 10);
 
-  const account = {
-    id: "acc_" + crypto.randomBytes(6).toString("hex"),
-    username,
-    passwordHash,
-    createdAt: new Date().toISOString(),
-    lastLoginAt: new Date().toISOString(),
-    lastActionAt: 0
-  };
+const account = {
+  id: "acc_" + crypto.randomBytes(6).toString("hex"),
+  username,
+  passwordHash,
+  email,
+  battletag,
+  profileLocked: true,
+  createdAt: new Date().toISOString(),
+  lastLoginAt: new Date().toISOString(),
+  lastActionAt: 0
+};
 
   accounts.push(account);
   saveAccounts();
