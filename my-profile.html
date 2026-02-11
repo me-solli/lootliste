@@ -280,6 +280,62 @@ document.querySelectorAll('.tag').forEach(t=>{
     save();
   };
 });
+
+   // ===============================
+// ACCOUNT DATEN (SESSION)
+// ===============================
+const API = "https://lootliste-production.up.railway.app";
+
+async function loadAccountData() {
+  try {
+    const res = await fetch(API + "/me", {
+      credentials: "include"
+    });
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    if (!data.loggedIn) return;
+
+    document.getElementById("accountEmail").value =
+      data.email || "";
+
+    document.getElementById("accountBattletag").value =
+      data.battletag || "";
+
+  } catch {}
+}
+
+document
+  .getElementById("saveAccountBtn")
+  ?.addEventListener("click", async () => {
+
+    const email = document
+      .getElementById("accountEmail").value;
+
+    const battletag = document
+      .getElementById("accountBattletag").value;
+
+    const res = await fetch(API + "/me", {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, battletag })
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      alert(result.error || "Speichern fehlgeschlagen.");
+      return;
+    }
+
+    alert("Account-Daten gespeichert.");
+  });
+
+loadAccountData();
 </script>
 </body>
 </html>
