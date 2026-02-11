@@ -2216,6 +2216,25 @@ setTimeout(async () => {
     applyFilters();
   });
 
+  // 🔓 Logout (SESSION CLEAN)
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("auth-logout")) return;
+
+  try {
+    await fetch(API + "/auth/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
+
+  localStorage.removeItem("lootliste_account_id");
+  localStorage.removeItem("lootliste_user_id");
+
+  location.reload();
+});
+
   function timeAgo(date){
   const seconds = Math.floor((Date.now() - new Date(date)) / 1000);
 
