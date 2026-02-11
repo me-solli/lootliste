@@ -23,6 +23,7 @@ const ITEMS_FILE = path.join(DATA_DIR, "items.json");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 const ACCOUNTS_FILE = path.join(DATA_DIR, "accounts.json");
 const FEEDBACK_FILE = path.join(DATA_DIR, "feedback.json");
+const SESSIONS_FILE = path.join(DATA_DIR, "sessions.json");
 
 // ===============================
 // MIDDLEWARE (CORS)
@@ -80,6 +81,7 @@ let items = loadJSON(ITEMS_FILE, []);
 let users = loadJSON(USERS_FILE, []);
 let accounts = loadJSON(ACCOUNTS_FILE, []);
 let feedback = loadJSON(FEEDBACK_FILE, []);
+let sessions = loadJSON(SESSIONS_FILE, []);
 
 // ===============================
 // DEVICE (GAST) SYSTEM
