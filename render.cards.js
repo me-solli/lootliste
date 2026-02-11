@@ -191,13 +191,23 @@ const res = await fetch(`${API}/items/${item.id}/claim`, {
   })
 });
 
-        if (!res.ok) {
-          const err = await res.json();
-          alert(err.error || "Item konnte nicht beansprucht werden.");
-          btn.disabled = false;
-          btn.textContent = "🖐️ Nehmen";
-          return;
-        }
+if (!res.ok) {
+  const err = await res.json();
+
+  if (res.status === 400 && err.error === "Cannot claim own item") {
+    showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
+  } else if (res.status === 401) {
+    showToast?.("Bitte zuerst einloggen.");
+  } else if (res.status === 429) {
+    showToast?.("Bitte kurz warten, bevor du erneut claimst.");
+  } else {
+    showToast?.(err.error || "Item konnte nicht beansprucht werden.");
+  }
+
+  btn.disabled = false;
+  btn.textContent = "🖐️ Nehmen";
+  return;
+}
 
         if (typeof showToast === "function") {
           showToast("Item reserviert – BattleTag gespeichert");
