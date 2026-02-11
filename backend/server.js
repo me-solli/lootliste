@@ -170,6 +170,19 @@ function isAdmin(account) {
   return account && account.username === ADMIN_USERNAME;
 }
 
+function findAccountByEmail(email) {
+  return accounts.find(a => a.email === email);
+}
+
+function findAccountByBattletag(battletag) {
+  return accounts.find(a => a.battletag === battletag);
+}
+
+function isValidBattletag(tag) {
+  const regex = /^[A-Za-z0-9]{3,12}#[0-9]{4}$/;
+  return regex.test(tag);
+}
+
 // ===============================
 // SESSION HELPERS (NEU – PHASE 1)
 // ===============================
