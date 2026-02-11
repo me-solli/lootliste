@@ -240,7 +240,7 @@ function checkCooldown(account, seconds = 60) {
 // AUTH – REGISTER (1 PRO STUNDE / DEVICE)
 // ===============================
 app.post("/auth/register", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email, battletag } = req.body;
   const device = req.device;
   const now = Date.now();
 
