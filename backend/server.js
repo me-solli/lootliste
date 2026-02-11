@@ -549,18 +549,15 @@ app.patch("/items/:id", (req, res) => {
 // CLAIM ITEM (MIT 60s COOLDOWN)
 // ===============================
 app.post("/items/:id/claim", (req, res) => {
-  const accountId = req.headers["x-account-id"];
-  const itemId = Number(req.params.id);
-  const { contact } = req.body;
+  const account = getAccountFromSession(req);
 
-  if (!accountId) {
+  if (!account) {
     return res.status(401).json({ error: "Not authenticated" });
   }
 
-  const account = findAccountById(accountId);
-  if (!account) {
-    return res.status(401).json({ error: "Account not found" });
-  }
+  const accountId = account.id;
+  const itemId = Number(req.params.id);
+  const { contact } = req.body;
 
   if (!checkCooldown(account, 60)) {
     return res.status(429).json({
