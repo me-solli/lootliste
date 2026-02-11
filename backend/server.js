@@ -332,7 +332,7 @@ app.post("/auth/login", async (req, res) => {
   // 🆕 Cookie setzen (parallel zum alten System)
   res.setHeader(
     "Set-Cookie",
-    `session=${token}; HttpOnly; Path=/; Max-Age=${7*24*60*60}; SameSite=Lax`
+    `session=${token}; HttpOnly; Path=/; Max-Age=${7*24*60*60}; SameSite=None; Secure`
   );
 
   // 🔁 Alte Antwort bleibt bestehen (Fallback aktiv)
