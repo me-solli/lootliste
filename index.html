@@ -2052,20 +2052,19 @@ async function setUserLabel() {
     avatar.style.objectPosition = "50% 50%";
   }
 
-  const headers = {};
-  if (deviceId)  headers["X-User-Id"] = deviceId;
-  if (accountId) headers["X-Account-Id"] = accountId;
+try {
+  const res = await fetch(API + "/me", {
+    credentials: "include"
+  });
 
-  try {
-    const res = await fetch(API + "/me", { headers });
-    const data = await res.json();
+  const data = await res.json();
 
-    if (data.username) {
-      // ✅ Eingeloggt
-      label.textContent = data.username;
-      if (submitLink) submitLink.style.display = "";
-      if (logoutBtn) logoutBtn.hidden = false;
-      if (accountLinks) accountLinks.hidden = false;
+  if (data.loggedIn) {
+    // ✅ Eingeloggt
+    label.textContent = data.username;
+    if (submitLink) submitLink.style.display = "";
+    if (logoutBtn) logoutBtn.hidden = false;
+    if (accountLinks) accountLinks.hidden = false;
 
       // 🎭 Klassen-Avatar (Backend ODER Debug)
 const profileData = JSON.parse(localStorage.getItem("my_profile") || "{}");
