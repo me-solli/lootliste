@@ -183,6 +183,11 @@ function isValidBattletag(tag) {
   return regex.test(tag);
 }
 
+function isValidEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
 // ===============================
 // SESSION HELPERS (NEU – PHASE 1)
 // ===============================
