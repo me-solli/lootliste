@@ -161,7 +161,6 @@ const donorClass =
       e.stopPropagation();
       if (btn.disabled) return;
 
-      const accountId = localStorage.getItem("lootliste_account_id");
       if (!accountId) {
         alert("Zum Beanspruchen von Items bitte oben rechts einloggen oder registrieren.");
         return;
