@@ -195,10 +195,10 @@ body:JSON.stringify({
   });
 
   const data = await res.json();
-  if(!res.ok){
-    status.textContent="❌ Username bereits vergeben";
-    return;
-  }
+if(!res.ok){
+  status.textContent = "❌ " + (data.error || "Registrierung fehlgeschlagen");
+  return;
+}
 
   localStorage.setItem("lootliste_account_id", data.accountId);
   status.textContent="✅ Account erstellt";
