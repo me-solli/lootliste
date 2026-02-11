@@ -250,7 +250,7 @@ app.post("/auth/register", async (req, res) => {
   const now = Date.now();
 
 if (!username || !password || !email || !battletag) {
-  return res.status(400).json({ error: "Missing fields" });
+  return res.status(400).json({ error: "Bitte alle Felder ausfüllen" });
 }
 
 if (!isValidBattletag(battletag)) {
@@ -277,7 +277,7 @@ if (findAccountByBattletag(battletag)) {
   }
 
   if (findAccountByUsername(username)) {
-    return res.status(409).json({ error: "Username already exists" });
+   return res.status(409).json({ error: "Benutzername ist bereits vergeben" });
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
