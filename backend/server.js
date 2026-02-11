@@ -388,6 +388,48 @@ app.get("/me", (req, res) => {
 });
 
 // ===============================
+// UPDATE ACCOUNT (MAIL + BATTLETAG) – 30 TAGE COOLDOWN
+// ===============================
+app.patch("/me", (req, res) => {
+  const account = getAccountFromSession(req);
+
+  if (!account) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const { email, battletag } = req.body;
+
+  const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
+
+  if (account.profileUpdatedAt) {
+    const last = new Date(account.profileUpdatedAt).getTime();
+    if (Date.now() - last < THIRTY_DAYS) {
+      return res.status(429).json({
+        error: "Profil kann nur alle 30 Tage geändert werden."
+      });
+    }
+  }
+
+  if (email && isValidEmail(email)) {
+    account.email = email.trim();
+  }
+
+  if (battletag && isValidBattletag(battletag)) {
+    account.battletag = battletag.trim();
+  }
+
+  account.profileUpdatedAt = new Date().toISOString();
+
+  saveAccounts();
+
+  res.json({
+    ok: true,
+    email: account.email,
+    battletag: account.battletag
+  });
+});
+
+// ===============================
 // HEALTHCHECK
 // ===============================
 app.get("/", (req, res) => {
