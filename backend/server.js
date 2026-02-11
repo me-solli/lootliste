@@ -343,19 +343,18 @@ app.post("/auth/login", async (req, res) => {
 });
 
 // ===============================
-// ME (Session-first)
+// ME (SESSION ONLY – CLEAN)
 // ===============================
 app.get("/me", (req, res) => {
   const account = getAccountFromSession(req);
 
   if (!account) {
     return res.json({
-      loggedIn: false,
-      deviceId: req.device.id
+      loggedIn: false
     });
   }
 
-  res.json({
+  return res.json({
     loggedIn: true,
     accountId: account.id,
     username: account.username,
