@@ -484,6 +484,20 @@ app.get("/items", (req, res) => {
 });
 
 // ===============================
+// GET MY ITEMS (SESSION BASED)
+// ===============================
+app.get("/items/mine", (req, res) => {
+  const account = getAccountFromSession(req);
+
+  if (!account) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const mine = items.filter(i => i.donorAccountId === account.id);
+  res.json(mine);
+});
+
+// ===============================
 // GET LATEST ITEMS (FOR OBS)
 // ===============================
 app.get("/api/items/latest", (req, res) => {
