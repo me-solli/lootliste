@@ -253,34 +253,34 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 
 <script>
 const API = "https://lootliste-production.up.railway.app";
-const deviceId  = localStorage.getItem("lootliste_user_id");
 
+// ===== AUTH (SESSION-BASED) =====
 (async()=>{
-  if(!accountId) return;
-  const r = await fetch(API+"/me",{headers:{"X-Account-Id":accountId,"X-User-Id":deviceId||""}});
+  const r = await fetch(API+"/me",{credentials:"include"});
   const d = await r.json();
-  if(d.username) document.getElementById("playerName").textContent=d.username;
+  if(!d.loggedIn){
+    document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
+    return;
+  }
+  document.getElementById("playerName").textContent=d.username;
 })();
 
 async function load(){
-  const response = await fetch(API + "/items/mine", {
-  credentials: "include"
-});
+  const response = await fetch(API+"/items/mine",{credentials:"include"});
 
-if (response.status === 401) {
-  document.body.innerHTML = "<p style='padding:40px'>Nicht eingeloggt.</p>";
-  return;
-}
+  if(response.status===401){
+    document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
+    return;
+  }
 
-const mine = await response.json();
-
+  const mine = await response.json();
   const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
   let cFreeN=0,cResN=0,cDoneN=0;
   tableBody.innerHTML="";
 
   mine.forEach(i=>{
-    const donorConfirmedUI =
+    const donorConfirmedUI=
       localStorage.getItem("donor_confirmed_ui_"+i.id)==="yes";
 
     let label="Verfügbar", cls="green", needsAction=false, actionHtml="";
@@ -350,7 +350,6 @@ tableBody.appendChild(tr);
   cRes.textContent  = cResN;
   cDone.textContent = cDoneN;
 
-  // 🔗 Anchor-Fix: nach async Rendern zum Item springen
   if (location.hash) {
     const el = document.querySelector(location.hash);
     if (el) {
@@ -364,7 +363,7 @@ async function confirmDone(id){
 
   await fetch(API + "/items/" + id + "/confirm-donor", {
     method: "POST",
-    headers: { "X-Account-Id": accountId }
+    credentials:"include"
   });
 
   localStorage.setItem("donor_confirmed_ui_"+id,"yes");
@@ -376,13 +375,13 @@ async function removeItem(id){
 
   await fetch(API + "/items/" + id, {
     method: "DELETE",
-    headers: { "X-Account-Id": accountId }
+    credentials:"include"
   });
 
   load();
 }
 
-/* ===== NEU: Interne Notiz bearbeiten ===== */
+/* ===== Interne Notiz bearbeiten ===== */
 async function editNote(id, current){
   const value = prompt(
     "Interne Notiz (max. 50 Zeichen):",
@@ -392,9 +391,9 @@ async function editNote(id, current){
 
   await fetch(API + "/items/" + id, {
     method: "PATCH",
+    credentials:"include",
     headers: {
-      "Content-Type": "application/json",
-      "X-Account-Id": accountId
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       note_private: value.trim().slice(0, 50)
