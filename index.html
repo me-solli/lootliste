@@ -2033,7 +2033,7 @@ function renderRecentFeed(items){
       <span class="recent-feed-icon" style="background-image:url('${iconUrl}')"></span>
       <span>${action}</span>
       <span>
-        ${item.donor || "Ein Spieler"} hat
+        ${item.donor} hat
         <a href="#item-${item.id}">${item.name}</a>
         hinzugefügt · ${timeAgo(item.createdAt)}
       </span>
