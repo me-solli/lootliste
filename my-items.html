@@ -263,7 +263,17 @@ const deviceId  = localStorage.getItem("lootliste_user_id");
 })();
 
 async function load(){
-  const items = await fetch(API+"/items").then(r=>r.json());
+  const response = await fetch(API + "/items/mine", {
+  credentials: "include"
+});
+
+if (response.status === 401) {
+  document.body.innerHTML = "<p style='padding:40px'>Nicht eingeloggt.</p>";
+  return;
+}
+
+const mine = await response.json();
+
   const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
   const mine = items.filter(i=>i.donorAccountId===accountId);
