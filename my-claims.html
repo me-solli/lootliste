@@ -31,6 +31,7 @@ body{
   border-radius:0 0 26px 26px;
   overflow:hidden;
   min-height:180px;
+  position:relative;
 }
 .hero-inner{
   padding:32px 36px 28px;
@@ -218,23 +219,34 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 
 <script>
 const API = "https://lootliste-production.up.railway.app";
-const accountId = localStorage.getItem("lootliste_account_id");
-const deviceId  = localStorage.getItem("lootliste_user_id");
 
-(async()=>{
-  if(!accountId) return;
-  const r = await fetch(API+"/me",{headers:{"X-Account-Id":accountId,"X-User-Id":deviceId||""}});
+// ===== AUTH (SESSION-BASED) =====
+let currentUser = null;
+
+async function initAuth() {
+  const r = await fetch(API + "/me", {
+    credentials: "include"
+  });
+
   const d = await r.json();
-  if(d.username) document.getElementById("playerName").textContent=d.username;
-})();
 
-if(!accountId){
-  document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
+  if (!d.loggedIn) {
+    document.body.innerHTML =
+      "<p style='padding:40px'>Nicht eingeloggt.</p>";
+    return false;
+  }
+
+  currentUser = d;
+  document.getElementById("playerName").textContent = d.username;
+
+  return true;
 }
 
 async function load(){
-  const items = await fetch(API+"/items").then(r=>r.json());
-  const mine = items.filter(i=>i.claimedByAccountId===accountId);
+  const response = await fetch(API+"/items", { credentials:"include" });
+  const items = await response.json();
+
+  const mine = items.filter(i=>i.claimedByAccountId===currentUser.accountId);
 
   let cResN=0,cWaitN=0,cDoneN=0;
   tableBody.innerHTML="";
@@ -293,16 +305,22 @@ async function confirmReceive(id){
 
   await fetch(API + "/items/" + id + "/confirm-receiver", {
     method: "POST",
-    headers: { "X-Account-Id": accountId }
+    credentials:"include"
   });
 
-  // ✅ UI-Zwischenstatus setzen (nur Anzeige!)
   localStorage.setItem("receiver_confirmed_ui_"+id,"yes");
 
   load();
 }
 
-load();
+filterStatus.onchange = load;
+
+(async () => {
+  const ok = await initAuth();
+  if (ok) {
+    load();
+  }
+})();
 </script>
 
 </body>
