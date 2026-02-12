@@ -368,15 +368,25 @@ const viewFeedback = document.getElementById("view-feedback");
 
 /* ===== INIT ===== */
 async function init(){
-  const acc = localStorage.getItem("lootliste_account_id");
-  if(!acc) return;
   try{
-    const me = await fetch(API+"/me",{ headers:{ "X-Account-Id":acc }}).then(r=>r.json());
+    const me = await fetch(API + "/me", {
+      credentials: "include"
+    }).then(r=>r.json());
+
+    if(!me.loggedIn){
+      return;
+    }
+
     if(me.username === ADMIN){
       showAdmin(me.username);
       loadItems();
+    }else{
+      document.getElementById("loginError").textContent = "Kein Admin-Zugriff";
     }
-  }catch{}
+
+  }catch(e){
+    console.error(e);
+  }
 }
 
 /* ===== LOGIN ===== */
