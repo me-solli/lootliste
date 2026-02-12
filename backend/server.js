@@ -522,19 +522,24 @@ app.get("/api/items/latest", (req, res) => {
 });
 
 // ===============================
-// POST ITEM (MIT 60s COOLDOWN)
+// POST ITEM (SESSION + 60s COOLDOWN)
 // ===============================
 app.post("/items", (req, res) => {
   const { name, quality, type, screenshot, season, note_private } = req.body;
-  const accountId = req.headers["x-account-id"];
+
+  // 🔐 Account aus Session holen (kein X-Account-Id mehr!)
+  const account = getAccountFromSession(req);
+
+  if (!account) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
 
   if (!name || !quality || !type || !screenshot || !season) {
     return res.status(400).json({ error: "Missing fields" });
   }
 
-  const account = accountId ? findAccountById(accountId) : null;
-
-  if (account && !checkCooldown(account, 60)) {
+  // ⏳ Cooldown prüfen
+  if (!checkCooldown(account, 60)) {
     return res.status(429).json({
       error: "Bitte warte kurz, bevor du ein weiteres Item einreichst."
     });
@@ -550,8 +555,8 @@ app.post("/items", (req, res) => {
     status: "verfügbar",
     createdAt: new Date().toISOString(),
 
-    donorAccountId: account ? account.id : null,
-    donor: account ? account.username : null,
+    donorAccountId: account.id,
+    donor: account.username,
 
     note_private: note_private || "",
 
@@ -570,7 +575,6 @@ app.post("/items", (req, res) => {
 
   res.status(201).json(newItem);
 });
-
 
 // ===============================
 // PATCH ITEM (PRIVATE NOTE ONLY)
