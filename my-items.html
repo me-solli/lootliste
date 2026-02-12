@@ -276,8 +276,6 @@ const mine = await response.json();
 
   const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
-  const mine = items.filter(i=>i.donorAccountId===accountId);
-
   let cFreeN=0,cResN=0,cDoneN=0;
   tableBody.innerHTML="";
 
