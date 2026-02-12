@@ -575,11 +575,10 @@ app.post("/items", (req, res) => {
 // PATCH ITEM (PRIVATE NOTE ONLY)
 // ===============================
 app.patch("/items/:id", (req, res) => {
-  const accountId = req.headers["x-account-id"];
+  const account = getAccountFromSession(req);
   const { note_private } = req.body;
   const itemId = Number(req.params.id);
 
-  const account = accountId ? findAccountById(accountId) : null;
   if (!account) {
     return res.status(401).json({ error: "Not authenticated" });
   }
