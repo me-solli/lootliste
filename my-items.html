@@ -253,7 +253,6 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 
 <script>
 const API = "https://lootliste-production.up.railway.app";
-const accountId = localStorage.getItem("lootliste_account_id");
 const deviceId  = localStorage.getItem("lootliste_user_id");
 
 (async()=>{
@@ -262,10 +261,6 @@ const deviceId  = localStorage.getItem("lootliste_user_id");
   const d = await r.json();
   if(d.username) document.getElementById("playerName").textContent=d.username;
 })();
-
-if(!accountId){
-  document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
-}
 
 async function load(){
   const items = await fetch(API+"/items").then(r=>r.json());
