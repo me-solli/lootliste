@@ -255,15 +255,26 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 const API = "https://lootliste-production.up.railway.app";
 
 // ===== AUTH (SESSION-BASED) =====
-(async()=>{
-  const r = await fetch(API+"/me",{credentials:"include"});
+let currentUser = null;
+
+async function initAuth() {
+  const r = await fetch(API + "/me", {
+    credentials: "include"
+  });
+
   const d = await r.json();
-  if(!d.loggedIn){
-    document.body.innerHTML="<p style='padding:40px'>Nicht eingeloggt.</p>";
-    return;
+
+  if (!d.loggedIn) {
+    document.body.innerHTML =
+      "<p style='padding:40px'>Nicht eingeloggt.</p>";
+    return false;
   }
-  document.getElementById("playerName").textContent=d.username;
-})();
+
+  currentUser = d;
+  document.getElementById("playerName").textContent = d.username;
+
+  return true;
+}
 
 async function load(){
   const response = await fetch(API+"/items/mine",{credentials:"include"});
