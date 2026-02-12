@@ -398,22 +398,22 @@ document.getElementById("form").addEventListener("submit",async e=>{
     const screenshot=await uploadImage(fileInput.files[0]);
     status.textContent="💾 Speichere Item…";
 
-    await fetch(API_ITEMS,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        ...(deviceId?{"X-User-Id":deviceId}:{ }),
-        ...(accountId2?{"X-Account-Id":accountId2}:{ })
-      },
-      body:JSON.stringify({
-        name:document.getElementById("name").value.trim(),
-        quality:document.getElementById("quality").value,
-        type:document.getElementById("type").value,
-        screenshot,
-        season:ACTIVE_SEASON,
-        note_private:document.getElementById("note").value.trim()
-      })
-    });
+await fetch(API_ITEMS,{
+  method:"POST",
+  credentials:"include", // 🔥 WICHTIG
+  headers:{
+    "Content-Type":"application/json",
+    ...(deviceId?{"X-User-Id":deviceId}:{ })
+  },
+  body:JSON.stringify({
+    name:document.getElementById("name").value.trim(),
+    quality:document.getElementById("quality").value,
+    type:document.getElementById("type").value,
+    screenshot,
+    season:ACTIVE_SEASON,
+    note_private:document.getElementById("note").value.trim()
+  })
+});
 
     status.innerHTML='✅ Item eingereicht – <a href="my-items.html">Meine Items ansehen</a>';
     e.target.reset();
