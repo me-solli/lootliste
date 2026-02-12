@@ -402,8 +402,7 @@ loginBtn.onclick = async ()=>{
   });
   if(!res.ok) return loginError.textContent="Login fehlgeschlagen";
   const data = await res.json();
-  localStorage.setItem("lootliste_account_id", data.accountId);
-  if(data.username !== ADMIN) return loginError.textContent="Kein Admin-Zugriff";
+    if(data.username !== ADMIN) return loginError.textContent="Kein Admin-Zugriff";
   showAdmin(data.username);
   loadItems();
 };
