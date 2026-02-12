@@ -702,21 +702,29 @@ function finalizeItem(item) {
 }
 
 // ===============================
-// DELETE ITEM (OWNER ODER ADMIN)
+// DELETE ITEM (OWNER ODER ADMIN – SESSION)
 // ===============================
 app.delete("/items/:id", (req, res) => {
-  const acc = findAccountById(req.headers["x-account-id"]);
+
+  const acc = getAccountFromSession(req);
+
+  if (!acc) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
   const index = items.findIndex(i => i.id == req.params.id);
+
   if (index === -1) {
     return res.status(404).json({ error: "Item not found" });
   }
 
-  if (items[index].donorAccountId !== acc?.id && !isAdmin(acc)) {
+  if (items[index].donorAccountId !== acc.id && !isAdmin(acc)) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
   items.splice(index, 1);
   saveJSON(ITEMS_FILE, items);
+
   res.json({ success: true });
 });
 
