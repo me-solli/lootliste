@@ -455,7 +455,10 @@ tabFeedback.onclick=()=>{
 
 /* ===== ITEMS ===== */
 async function loadItems(){
-  const items = await fetch(API+"/items").then(r=>r.json());
+  const items = await fetch(API + "/items", {
+    credentials: "include"
+  }).then(r => r.json());
+
   render(items);
 }
 
@@ -466,38 +469,87 @@ function isDone(i){
 }
 
 function render(items){
-  tableBody.innerHTML="";
-  const fs=filterStatus.value;
-  const fse=filterSeason.value;
 
-  const list = items.map(i=>({
+  tableBody.innerHTML = "";
+
+  const fs  = filterStatus.value;
+  const fse = filterSeason.value;
+
+  const list = items.map(i => ({
     ...i,
     phase: isDone(i) ? "vergeben" : i.status
   }));
 
-  cAll.textContent=list.length;
-  cFree.textContent=list.filter(i=>i.phase==="verfügbar").length;
-  cRes.textContent=list.filter(i=>i.phase==="reserviert").length;
-  cDone.textContent=list.filter(i=>i.phase==="vergeben").length;
+  cAll.textContent  = list.length;
+  cFree.textContent = list.filter(i => i.phase === "verfügbar").length;
+  cRes.textContent  = list.filter(i => i.phase === "reserviert").length;
+  cDone.textContent = list.filter(i => i.phase === "vergeben").length;
 
-  list.filter(i=>(!fs||i.phase===fs)&&(!fse||i.season===fse)).forEach(i=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${i.id}</td>
-      <td>
-        <div class="item-cell">
-          <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
-            <img src="img/icons/${i.type||"sonstiges"}.png">
+  list
+    .filter(i => (!fs || i.phase === fs) && (!fse || i.season === fse))
+    .forEach(i => {
+
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${i.id}</td>
+        <td>
+          <div class="item-cell">
+            <div class="item-icon" onclick="showShot('${i.screenshot || ""}')">
+              <img src="img/icons/${i.type || "sonstiges"}.png">
+            </div>
+            <strong>${i.name}</strong>
           </div>
-          <strong>${i.name}</strong>
-        </div>
-      </td>
-      <td><span class="badge ${i.phase==="vergeben"?"blue":i.phase==="verfügbar"?"green":"yellow"}">${i.phase}</span></td>
-      <td>${i.donor||"–"}</td>
-      <td>${i.season||"–"}</td>
-    `;
-    tableBody.appendChild(tr);
+        </td>
+        <td>
+          <span class="badge ${
+            i.phase === "vergeben"
+              ? "blue"
+              : i.phase === "verfügbar"
+              ? "green"
+              : "yellow"
+          }">${i.phase}</span>
+        </td>
+        <td>${i.donor || "–"}</td>
+        <td>${i.season || "–"}</td>
+        <td>
+          <button onclick="deleteItem(${i.id})"
+            style="
+              padding:4px 8px;
+              border-radius:8px;
+              border:1px solid #ff6b6b;
+              background:#111;
+              color:#ff6b6b;
+              cursor:pointer;
+              font-size:12px;
+            ">
+            🗑 Löschen
+          </button>
+        </td>
+      `;
+
+      tableBody.appendChild(tr);
+    });
+}
+
+/* ===== DELETE ITEM ===== */
+async function deleteItem(id){
+
+  if(!confirm("Item wirklich löschen?")) return;
+
+  const res = await fetch(API + "/items/" + id, {
+    method: "DELETE",
+    credentials: "include"
   });
+
+  const data = await res.json();
+
+  if(res.ok){
+    alert("Item gelöscht");
+    loadItems();
+  }else{
+    alert("Fehler: " + (data.error || "Unbekannt"));
+  }
 }
 
 function showShot(src){
