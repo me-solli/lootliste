@@ -414,8 +414,11 @@ function showAdmin(username){
 }
 
 /* ===== LOGOUT ===== */
-function logout(){
-  localStorage.removeItem("lootliste_account_id");
+async function logout(){
+  await fetch(API + "/auth/logout", {
+    method: "POST",
+    credentials: "include"
+  });
   location.reload();
 }
 
