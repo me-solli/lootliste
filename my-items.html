@@ -423,7 +423,12 @@ function showShot(src){
 filterStatus.onchange = load;
 filterSeason.onchange = load;
 
-load();
+(async () => {
+  const ok = await initAuth();
+  if (ok) {
+    load();
+  }
+})();
 </script>
 
 </body>
