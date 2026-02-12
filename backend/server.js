@@ -31,12 +31,13 @@ const SESSIONS_FILE = path.join(DATA_DIR, "sessions.json");
 app.use((req, res, next) => {
   const allowedOrigins = [
     "https://me-solli.github.io",
-    "https://d2r-lootliste.de"
+    "https://d2r-lootliste.de",
+    "https://www.d2r-lootliste.de"
   ];
 
   const origin = req.headers.origin;
 
-  if (allowedOrigins.includes(origin)) {
+  if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
