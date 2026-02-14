@@ -21,20 +21,20 @@ body{
 }
 .wrapper{max-width:1500px;margin:0 auto}
 
-/* ================= HERO (wie my-items) ================= */
+/* ================= HERO ================= */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:180px;
+  min-height:200px;
   position:relative;
 }
 .hero-inner{
-  padding:36px 40px 30px;
+  padding:42px 40px 36px;
   background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.75));
 }
-.hero h1{margin:0;font-size:32px;font-weight:700}
-.hero p{margin:8px 0 0;opacity:.8}
+.hero h1{margin:0;font-size:34px;font-weight:700}
+.hero p{margin:10px 0 0;opacity:.85}
 
 .auth-box{
   position:absolute;
@@ -58,24 +58,28 @@ body{
 .auth-link:hover{text-decoration:underline;opacity:1}
 
 /* ================= LAYOUT ================= */
-.container{padding:50px 40px 80px}
+.container{padding:0 40px 80px}
 .profile-grid{
   display:grid;
   grid-template-columns:360px 1fr;
-  gap:40px;
+  gap:60px;
+  margin-top:-80px; /* schwebt in hero rein */
 }
 @media(max-width:1000px){
-  .profile-grid{grid-template-columns:1fr}
+  .profile-grid{grid-template-columns:1fr;margin-top:40px}
 }
 
-/* ================= CHARACTER CARD ================= */
+/* ================= FLOATING CHARACTER CARD ================= */
 .character-card{
-  background:#121212;
-  border:1px solid #222;
-  border-radius:26px;
-  padding:40px 30px;
+  padding:50px 30px 40px;
   text-align:center;
   position:relative;
+  background:linear-gradient(180deg,rgba(20,20,20,.9),rgba(10,10,10,.95));
+  border-radius:28px;
+  border:1px solid rgba(245,196,81,.25);
+  box-shadow:
+    0 0 0 1px rgba(245,196,81,.15),
+    0 25px 60px rgba(0,0,0,.8);
 }
 .character-visual{
   width:200px;
@@ -87,31 +91,40 @@ body{
   width:100%;
   height:100%;
   object-fit:contain;
-  filter:drop-shadow(0 20px 50px rgba(0,0,0,.9));
+  filter:drop-shadow(0 25px 60px rgba(0,0,0,.9));
   z-index:2;
   position:relative;
 }
 .character-glow{
   position:absolute;
-  inset:-25%;
+  inset:-30%;
   background:radial-gradient(circle,rgba(245,196,81,.35),transparent 70%);
-  filter:blur(40px);
+  filter:blur(45px);
   z-index:1;
 }
-.character-name{font-size:24px;font-weight:700}
-.character-status{margin-top:10px;color:var(--green);font-size:13px}
+.character-name{font-size:26px;font-weight:700}
+.character-meta{
+  margin-top:8px;
+  font-size:13px;
+  color:#aaa;
+}
+.character-status{
+  margin-top:12px;
+  font-size:14px;
+  color:var(--green);
+}
 
-/* ================= CONTENT SECTIONS ================= */
+/* ================= SECTIONS ================= */
 .section{
   background:#121212;
   border:1px solid #222;
   border-radius:22px;
-  padding:36px;
-  margin-bottom:36px;
+  padding:40px;
+  margin-bottom:40px;
 }
 .section h3{
   margin-top:0;
-  margin-bottom:24px;
+  margin-bottom:26px;
   font-size:18px;
   color:var(--gold);
 }
@@ -143,21 +156,25 @@ textarea{
   background:rgba(76,255,76,.15);
 }
 
+/* ================= FAVORITE CLASS ROW ================= */
 .classes{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  display:flex;
   gap:18px;
+  justify-content:space-between;
+  flex-wrap:nowrap;
 }
 .class{
-  padding:16px;
-  border-radius:18px;
+  flex:1;
+  min-width:0;
+  padding:14px 10px;
+  border-radius:16px;
   background:#0f0f0f;
   border:1px solid #222;
   text-align:center;
   cursor:pointer;
   opacity:.6;
 }
-.class img{width:42px;height:42px;margin-bottom:8px}
+.class img{width:38px;height:38px;margin-bottom:6px}
 .class.active{
   border-color:var(--gold);
   background:linear-gradient(to bottom,rgba(245,196,81,.25),rgba(245,196,81,.05));
@@ -215,17 +232,16 @@ textarea{
 <div class="container">
   <div class="profile-grid">
 
-    <!-- CHARACTER CARD -->
     <aside class="character-card">
       <div class="character-visual">
         <img id="heroImg" src="img/classes/assassin.png">
         <div class="character-glow"></div>
       </div>
       <div class="character-name" id="heroName">Spieler</div>
-      <div class="character-status">● Internes Profil</div>
+      <div class="character-meta">Community-Mitglied · seit Jan 2026</div>
+      <div class="character-status">● Mein Profil (intern)</div>
     </aside>
 
-    <!-- CONTENT -->
     <section>
 
       <div class="section">
