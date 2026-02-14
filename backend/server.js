@@ -617,8 +617,7 @@ app.post("/items/:id/claim", (req, res) => {
 
   const accountId = account.id;
   const itemId = Number(req.params.id);
-  const { contact } = req.body;
-
+ 
   if (!checkCooldown(account, 60)) {
     return res.status(429).json({
       error: "Bitte warte kurz, bevor du ein weiteres Item claimst."
