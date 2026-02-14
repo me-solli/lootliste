@@ -46,38 +46,38 @@ export function renderCards(items, container) {
       ? `${type} • ${item.sub}`
       : type;
 
-/* =========================
-   SPENDER / PROFIL-LINK
-========================== */
-let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
+    /* =========================
+       SPENDER / PROFIL-LINK
+    ========================== */
+    let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
-if (item.donor) {
-const donorClass =
-  item.donorClass ||
-  localStorage.getItem("lootliste_profile_class");
+    if (item.donor) {
+      const donorClass =
+        item.donorClass ||
+        localStorage.getItem("lootliste_profile_class");
 
-  const donorIcon =
-    donorClass && CLASS_ICONS_MINI[donorClass]
-      ? `<img class="donor-class-icon" src="${CLASS_ICONS_MINI[donorClass]}" alt="">`
-      : "";
+      const donorIcon =
+        donorClass && CLASS_ICONS_MINI[donorClass]
+          ? `<img class="donor-class-icon" src="${CLASS_ICONS_MINI[donorClass]}" alt="">`
+          : "";
 
-  sourceLabel = `
-    <div class="donor-block">
-      <span class="donor-label">Spender</span>
-      <div class="donor-line">
-        <a
-          href="profile.html?user=${encodeURIComponent(item.donor)}"
-          class="donor-name"
-          title="Öffentliches Profil ansehen"
-          onclick="event.stopPropagation()"
-        >
-          ${item.donor}
-        </a>
-        ${donorIcon}
-      </div>
-    </div>
-  `;
-}
+      sourceLabel = `
+        <div class="donor-block">
+          <span class="donor-label">Spender</span>
+          <div class="donor-line">
+            <a
+              href="profile.html?user=${encodeURIComponent(item.donor)}"
+              class="donor-name"
+              title="Öffentliches Profil ansehen"
+              onclick="event.stopPropagation()"
+            >
+              ${item.donor}
+            </a>
+            ${donorIcon}
+          </div>
+        </div>
+      `;
+    }
 
     card.innerHTML = `
       <!-- HEADER -->
@@ -147,7 +147,7 @@ const donorClass =
     });
 
     /* =========================
-       CLAIM LOGIK (UNVERÄNDERT)
+       CLAIM LOGIK (OHNE PROMPT)
     ========================== */
     const btn = card.querySelector(".claim-btn");
 
@@ -161,57 +161,44 @@ const donorClass =
       e.stopPropagation();
       if (btn.disabled) return;
 
-      const battleTag = prompt(
-        "BattleTag für Übergabe (z. B. me_solli#1234):"
+      const confirmed = confirm(
+        "Möchtest du dieses Item verbindlich reservieren?\n\nDein hinterlegter BattleTag wird für die Übergabe verwendet."
       );
-      if (!battleTag) return;
 
-      const parts = battleTag.split("#");
-      if (
-        parts.length !== 2 ||
-        parts[0].trim() === "" ||
-        parts[1].trim() === ""
-      ) {
-        alert("Bitte einen gültigen BattleTag im Format Name#1234 eingeben.");
-        return;
-      }
+      if (!confirmed) return;
 
       btn.disabled = true;
       btn.textContent = "…";
 
       try {
-const res = await fetch(`${API}/items/${item.id}/claim`, {
-  method: "POST",
-  credentials: "include",   // 🔥 WICHTIG
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    contact: battleTag.trim()
-  })
-});
+        const res = await fetch(`${API}/items/${item.id}/claim`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({})
+        });
 
-if (!res.ok) {
-  const err = await res.json();
+        if (!res.ok) {
+          const err = await res.json();
 
-  if (res.status === 400 && err.error === "Cannot claim own item") {
-    showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
-  } else if (res.status === 401) {
-    showToast?.("Bitte zuerst einloggen.");
-  } else if (res.status === 429) {
-    showToast?.("Bitte kurz warten, bevor du erneut claimst.");
-  } else {
-    showToast?.(err.error || "Item konnte nicht beansprucht werden.");
-  }
+          if (res.status === 400 && err.error === "Cannot claim own item") {
+            showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
+          } else if (res.status === 401) {
+            showToast?.("Bitte zuerst einloggen.");
+          } else if (res.status === 429) {
+            showToast?.("Bitte kurz warten.");
+          } else {
+            showToast?.(err.error || "Item konnte nicht reserviert werden.");
+          }
 
-  btn.disabled = false;
-  btn.textContent = "🖐️ Nehmen";
-  return;
-}
-
-        if (typeof showToast === "function") {
-          showToast("Item reserviert – BattleTag gespeichert");
+          btn.disabled = false;
+          btn.textContent = "🖐️ Nehmen";
+          return;
         }
+
+        showToast?.("Item reserviert.");
 
         card.style.opacity = "0";
         card.style.transform = "scale(0.96)";
