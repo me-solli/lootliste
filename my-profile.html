@@ -5,63 +5,47 @@
 <title>Mein Profil – Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-/* ===============================
-   RESET & BASIS
-=============================== */
-*,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0;width:100%;height:100%}
 
+<style>
+/* =========================
+   BASIS
+========================= */
+*{box-sizing:border-box}
 body{
+  margin:0;
   font-family:Inter,system-ui,sans-serif;
   background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
+.wrapper{max-width:1300px;margin:0 auto;padding:40px 24px}
 
-/* ===============================
+/* =========================
    LAYOUT
-=============================== */
-.wrapper{max-width:1400px;margin:0 auto;padding:40px}
-
-.profile-grid{
+========================= */
+.profile-layout{
   display:grid;
-  grid-template-columns:340px 1fr;
-  gap:26px;
+  grid-template-columns:320px 1fr;
+  gap:40px;
 }
-
 @media(max-width:900px){
-  .profile-grid{grid-template-columns:1fr}
+  .profile-layout{grid-template-columns:1fr}
 }
 
-/* ===============================
-   GENERIC CARD
-=============================== */
-.card{
-  background:#121212;
-  border:1px solid #222;
-  border-radius:22px;
-  padding:26px;
-  margin-bottom:18px;
-}
-
-/* ===============================
-   PROFILE HERO (LEFT, FREIGESTELLT)
-=============================== */
+/* =========================
+   HERO (SPIELER)
+========================= */
 .profile-hero{
-  position:relative;
-  padding:46px 20px;
   display:flex;
   flex-direction:column;
   align-items:center;
+  text-align:center;
 }
-
 .hero-visual{
-  position:relative;
-  width:200px;
+  width:180px;
   aspect-ratio:3/4;
-  margin-bottom:28px;
+  position:relative;
+  margin-bottom:24px;
 }
-
 .hero-visual img{
   width:100%;
   height:100%;
@@ -70,7 +54,6 @@ body{
   position:relative;
   z-index:2;
 }
-
 .hero-glow{
   position:absolute;
   inset:-20%;
@@ -79,19 +62,44 @@ body{
     rgba(245,196,81,.18) 35%,
     rgba(0,0,0,0) 70%
   );
-  filter:blur(24px);
+  filter:blur(22px);
   z-index:1;
-  pointer-events:none;
+}
+.hero-name{
+  font-size:24px;
+  font-weight:700;
+}
+.hero-sub{
+  font-size:13px;
+  color:#aaa;
+  margin-top:4px;
+}
+.hero-status{
+  margin-top:10px;
+  font-size:13px;
+  color:#4cff4c;
 }
 
-.hero-meta{text-align:center}
-.hero-name{font-size:28px;font-weight:700}
-.hero-sub{margin-top:6px;font-size:14px;color:#aaa}
-.hero-status{margin-top:12px;font-size:14px;color:#4cff4c}
+/* =========================
+   SEKTIONEN
+========================= */
+.section{
+  background:#121212;
+  border:1px solid #222;
+  border-radius:20px;
+  padding:28px;
+  margin-bottom:28px;
+}
+.section h3{
+  margin-top:0;
+  margin-bottom:18px;
+  font-size:18px;
+  color:#f5c451;
+}
 
-/* ===============================
-   FORM / INTERACTION
-=============================== */
+/* =========================
+   ÜBER MICH
+========================= */
 textarea{
   width:100%;
   background:#0f0f0f;
@@ -99,48 +107,46 @@ textarea{
   border-radius:14px;
   padding:14px;
   color:#fff;
-  min-height:120px;
+  min-height:110px;
   resize:vertical;
 }
 
 .btn{
-  margin-top:12px;
+  margin-top:14px;
   padding:8px 16px;
   border-radius:999px;
   border:1px solid #f5c451;
   background:rgba(245,196,81,.08);
   color:#f5c451;
   cursor:pointer;
+  font-size:13px;
 }
 .btn:hover{background:rgba(245,196,81,.18)}
-
 .btn.saved{
   border-color:#4cff4c;
   color:#4cff4c;
   background:rgba(76,255,76,.12);
 }
 
-/* ===============================
-   CLASSES
-=============================== */
+/* =========================
+   KLASSEN
+========================= */
 .classes{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
   gap:14px;
 }
-
 .class{
   background:#0f0f0f;
   border:1px solid #222;
   border-radius:14px;
-  padding:14px 10px;
+  padding:12px;
   text-align:center;
   cursor:pointer;
   opacity:.6;
+  transition:.15s ease;
 }
-
-.class img{width:38px;height:38px;margin-bottom:8px}
-
+.class img{width:36px;height:36px;margin-bottom:6px}
 .class.active{
   border-color:#f5c451;
   background:linear-gradient(to bottom,rgba(245,196,81,.25),rgba(245,196,81,.05));
@@ -148,9 +154,9 @@ textarea{
   opacity:1;
 }
 
-/* ===============================
+/* =========================
    TAGS
-=============================== */
+========================= */
 .tags{display:flex;flex-wrap:wrap;gap:8px}
 .tag{
   padding:6px 12px;
@@ -162,104 +168,139 @@ textarea{
   opacity:.6;
 }
 .tag.active{border-color:#4cff4c;color:#4cff4c;opacity:1}
+
+/* =========================
+   ACCOUNT
+========================= */
+.account-fields{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.account-fields input{
+  padding:10px 12px;
+  background:#0f0f0f;
+  border:1px solid #333;
+  border-radius:12px;
+  color:#fff;
+}
+.account-note{
+  font-size:12px;
+  color:#777;
+  margin-top:6px;
+}
 </style>
 </head>
 <body>
 <div class="wrapper">
-<div class="profile-grid">
 
-<!-- LEFT / HERO -->
-<aside class="profile-hero">
-  <div class="hero-visual">
-    <img id="heroImg" src="img/classes/assassin.png" alt="Assassin">
-    <div class="hero-glow"></div>
-  </div>
-  <div class="hero-meta">
-    <div class="hero-name">me_solli</div>
-    <div class="hero-sub">Community-Mitglied · seit Jan 2026</div>
-    <div class="hero-status">● Mein Profil (intern)</div>
-  </div>
-</aside>
+<div class="profile-layout">
 
-<!-- RIGHT -->
-<section>
-
-  <div class="card">
-    <h3>Über mich</h3>
-    <textarea id="about" placeholder="Beschreibe dich, deinen Spielstil oder deine Motivation…"></textarea>
-    <button class="btn" id="saveBtn">Speichern</button>
-  </div>
-
-  <div class="card">
-    <h3>Lieblingsklasse</h3>
-    <div class="classes">
-      <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
-      <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
-      <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
-      <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
-      <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
-      <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-      <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
+  <!-- SPIELER HERO -->
+  <aside class="profile-hero">
+    <div class="hero-visual">
+      <img id="heroImg" src="img/classes/assassin.png">
+      <div class="hero-glow"></div>
     </div>
-  </div>
+    <div class="hero-name" id="heroName">Spieler</div>
+    <div class="hero-sub">Community-Mitglied</div>
+    <div class="hero-status">● Internes Profil</div>
+  </aside>
 
-  <div class="card">
-    <h3>Spielidentität</h3>
-    <div class="tags">
-      <div class="tag">PvM-Fokus</div>
-      <div class="tag">Farm-orientiert</div>
-      <div class="tag">Build-optimiert</div>
-      <div class="tag">Solo-orientiert</div>
-      <div class="tag">Party-tauglich</div>
-      <div class="tag">Self-Found-nah</div>
-      <div class="tag">Oldschool-Spielstil</div>
-      <div class="tag">Entspanntes Gameplay</div>
+  <!-- RECHTS -->
+  <section>
+
+    <!-- IDENTITÄT -->
+    <div class="section">
+      <h3>Spieler-Identität</h3>
+
+      <label>Über mich</label>
+      <textarea id="about"></textarea>
+      <button class="btn" id="saveBtn">Speichern</button>
+
+      <div style="margin-top:26px">
+        <label>Lieblingsklasse</label>
+        <div class="classes">
+          <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
+          <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
+          <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
+          <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
+          <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
+          <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
+          <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
+        </div>
+      </div>
+
+      <div style="margin-top:26px">
+        <label>Spielstil</label>
+        <div class="tags">
+          <div class="tag">PvM-Fokus</div>
+          <div class="tag">Farm-orientiert</div>
+          <div class="tag">Build-optimiert</div>
+          <div class="tag">Solo-orientiert</div>
+          <div class="tag">Party-tauglich</div>
+          <div class="tag">Self-Found-nah</div>
+          <div class="tag">Oldschool-Spielstil</div>
+          <div class="tag">Entspanntes Gameplay</div>
+        </div>
+      </div>
     </div>
-  </div>
 
-     <div class="card">
-    <h3>Account-Daten</h3>
+    <!-- ACCOUNT -->
+    <div class="section">
+      <h3>Account & Übergabe</h3>
 
-    <div style="display:flex; flex-direction:column; gap:12px;">
-      <input id="accountEmail" type="email" placeholder="E-Mail">
-      <input id="accountBattletag" type="text" placeholder="BattleTag (Name#1234)">
-      <button class="btn" id="saveAccountBtn">Speichern</button>
+      <div class="account-fields">
+        <input id="accountEmail" type="email" placeholder="E-Mail">
+        <input id="accountBattletag" type="text" placeholder="BattleTag (Name#1234)">
+        <button class="btn" id="saveAccountBtn">Account speichern</button>
+      </div>
+
+      <div class="account-note">
+        Dein BattleTag wird bei Reservierungen automatisch verwendet.
+      </div>
     </div>
-  </div>
 
-</section>
+  </section>
+
 </div>
 </div>
+
 <script>
+const API = "https://lootliste-production.up.railway.app";
+
+/* =========================
+   PROFIL STATE (LOCAL)
+========================= */
 const state = JSON.parse(localStorage.getItem("my_profile")) || {about:"",favClass:"",tags:[]};
 const about=document.getElementById("about");
 const heroImg=document.getElementById("heroImg");
+const heroName=document.getElementById("heroName");
 const saveBtn=document.getElementById("saveBtn");
 
 about.value=state.about;
 
 function renderHero(){
-  if(state.favClass){heroImg.src=`img/classes/${state.favClass.toLowerCase()}.png`;}
+  if(state.favClass){
+    heroImg.src=`img/classes/${state.favClass.toLowerCase()}.png`;
+  }
 }
 renderHero();
 
-function save(){
+function saveLocal(){
   state.about=about.value;
   localStorage.setItem("my_profile",JSON.stringify(state));
 
   saveBtn.classList.add("saved");
   saveBtn.textContent="Gespeichert ✓";
-
-  clearTimeout(saveBtn._timer);
-  saveBtn._timer=setTimeout(()=>{
+  setTimeout(()=>{
     saveBtn.classList.remove("saved");
     saveBtn.textContent="Speichern";
-  },1600);
+  },1500);
 }
+saveBtn.onclick=saveLocal;
 
-saveBtn.onclick=save;
-
-// Classes
+/* Klassen */
 document.querySelectorAll('.class').forEach(c=>{
   if(c.dataset.class===state.favClass)c.classList.add('active');
   c.onclick=()=>{
@@ -267,74 +308,51 @@ document.querySelectorAll('.class').forEach(c=>{
     c.classList.add('active');
     state.favClass=c.dataset.class;
     renderHero();
-    save();
+    saveLocal();
   };
 });
 
-// Tags
+/* Tags */
 document.querySelectorAll('.tag').forEach(t=>{
   if(state.tags.includes(t.textContent))t.classList.add('active');
   t.onclick=()=>{
     t.classList.toggle('active');
     state.tags=[...document.querySelectorAll('.tag.active')].map(x=>x.textContent);
-    save();
+    saveLocal();
   };
 });
 
-   // ===============================
-// ACCOUNT DATEN (SESSION)
-// ===============================
-const API = "https://lootliste-production.up.railway.app";
+/* =========================
+   ACCOUNT (SESSION)
+========================= */
+async function loadAccountData(){
+  const res=await fetch(API+"/me",{credentials:"include"});
+  if(!res.ok)return;
+  const data=await res.json();
+  if(!data.loggedIn)return;
 
-async function loadAccountData() {
-  try {
-    const res = await fetch(API + "/me", {
-      credentials: "include"
-    });
-
-    if (!res.ok) return;
-
-    const data = await res.json();
-    if (!data.loggedIn) return;
-
-    document.getElementById("accountEmail").value =
-      data.email || "";
-
-    document.getElementById("accountBattletag").value =
-      data.battletag || "";
-
-  } catch {}
+  heroName.textContent=data.username;
+  document.getElementById("accountEmail").value=data.email||"";
+  document.getElementById("accountBattletag").value=data.battletag||"";
 }
 
-document
-  .getElementById("saveAccountBtn")
-  ?.addEventListener("click", async () => {
+async function saveAccount(){
+  const email=document.getElementById("accountEmail").value;
+  const battletag=document.getElementById("accountBattletag").value;
 
-    const email = document
-      .getElementById("accountEmail").value;
-
-    const battletag = document
-      .getElementById("accountBattletag").value;
-
-    const res = await fetch(API + "/me", {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, battletag })
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      alert(result.error || "Speichern fehlgeschlagen.");
-      return;
-    }
-
-    alert("Account-Daten gespeichert.");
+  const res=await fetch(API+"/me",{
+    method:"PATCH",
+    credentials:"include",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email,battletag})
   });
 
+  const result=await res.json();
+  if(!res.ok){alert(result.error||"Speichern fehlgeschlagen.");return;}
+  alert("Account gespeichert.");
+}
+
+document.getElementById("saveAccountBtn").onclick=saveAccount;
 loadAccountData();
 </script>
 </body>
