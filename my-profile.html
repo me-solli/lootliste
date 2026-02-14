@@ -7,51 +7,83 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+:root{
+  --gold:#f5c451;
+  --border:#2a2a2a;
+  --green:#4cff4c;
+}
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:Inter,system-ui,sans-serif;
-  background:radial-gradient(ellipse at top,#1a1a1a 0%,#090909 70%);
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
   color:#eaeaea;
 }
+.wrapper{max-width:1500px;margin:0 auto}
 
-.wrapper{max-width:1200px;margin:0 auto;padding:0 24px 60px}
-
-/* ================= HERO ================= */
-.profile-hero{
-  position:relative;
-  margin-top:40px;
-  border-radius:28px;
+/* ================= HERO (wie my-items) ================= */
+.hero{
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
   overflow:hidden;
-  background:linear-gradient(135deg,#141414,#0c0c0c);
-  border:1px solid rgba(245,196,81,.25);
-  box-shadow:
-    0 0 0 1px rgba(245,196,81,.15),
-    0 0 40px rgba(0,0,0,.6);
+  min-height:180px;
+  position:relative;
 }
+.hero-inner{
+  padding:36px 40px 30px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.75));
+}
+.hero h1{margin:0;font-size:32px;font-weight:700}
+.hero p{margin:8px 0 0;opacity:.8}
 
-.hero-banner{
+.auth-box{
   position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 30% 20%,rgba(245,196,81,.15),transparent 60%),
-             radial-gradient(circle at 70% 80%,rgba(245,196,81,.1),transparent 60%);
-  opacity:.4;
-}
-
-.hero-content{
-  position:relative;
+  top:22px;
+  right:24px;
   display:flex;
-  gap:40px;
-  padding:60px 60px;
+  gap:10px;
   align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.5);
+  font-size:13px;
+}
+.auth-link{
+  font-size:12px;
+  color:var(--gold);
+  text-decoration:none;
+  opacity:.85;
+}
+.auth-link:hover{text-decoration:underline;opacity:1}
+
+/* ================= LAYOUT ================= */
+.container{padding:50px 40px 80px}
+.profile-grid{
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:40px;
+}
+@media(max-width:1000px){
+  .profile-grid{grid-template-columns:1fr}
 }
 
-.hero-visual{
-  width:220px;
-  aspect-ratio:3/4;
+/* ================= CHARACTER CARD ================= */
+.character-card{
+  background:#121212;
+  border:1px solid #222;
+  border-radius:26px;
+  padding:40px 30px;
+  text-align:center;
   position:relative;
 }
-.hero-visual img{
+.character-visual{
+  width:200px;
+  aspect-ratio:3/4;
+  margin:0 auto 30px;
+  position:relative;
+}
+.character-visual img{
   width:100%;
   height:100%;
   object-fit:contain;
@@ -59,42 +91,31 @@ body{
   z-index:2;
   position:relative;
 }
-.hero-glow{
+.character-glow{
   position:absolute;
   inset:-25%;
   background:radial-gradient(circle,rgba(245,196,81,.35),transparent 70%);
   filter:blur(40px);
   z-index:1;
 }
+.character-name{font-size:24px;font-weight:700}
+.character-status{margin-top:10px;color:var(--green);font-size:13px}
 
-.hero-meta{flex:1}
-.hero-name{
-  font-size:38px;
-  font-weight:700;
-  margin-bottom:10px;
-}
-.hero-sub{font-size:15px;color:#aaa;margin-bottom:12px}
-.hero-status{
-  font-size:14px;
-  color:#4cff4c;
-}
-
-/* ================= SECTIONS ================= */
+/* ================= CONTENT SECTIONS ================= */
 .section{
-  margin-top:50px;
   background:#121212;
   border:1px solid #222;
   border-radius:22px;
-  padding:40px;
+  padding:36px;
+  margin-bottom:36px;
 }
 .section h3{
   margin-top:0;
   margin-bottom:24px;
-  font-size:20px;
-  color:#f5c451;
+  font-size:18px;
+  color:var(--gold);
 }
 
-/* ABOUT */
 textarea{
   width:100%;
   min-height:120px;
@@ -110,21 +131,18 @@ textarea{
   margin-top:18px;
   padding:10px 20px;
   border-radius:999px;
-  border:1px solid #f5c451;
+  border:1px solid var(--gold);
   background:rgba(245,196,81,.08);
-  color:#f5c451;
+  color:var(--gold);
   cursor:pointer;
   font-size:14px;
-  transition:.15s ease;
 }
-.btn:hover{background:rgba(245,196,81,.2)}
 .btn.saved{
-  border-color:#4cff4c;
-  color:#4cff4c;
+  border-color:var(--green);
+  color:var(--green);
   background:rgba(76,255,76,.15);
 }
 
-/* CLASSES */
 .classes{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
@@ -138,17 +156,15 @@ textarea{
   text-align:center;
   cursor:pointer;
   opacity:.6;
-  transition:.2s ease;
 }
 .class img{width:42px;height:42px;margin-bottom:8px}
 .class.active{
-  border-color:#f5c451;
+  border-color:var(--gold);
   background:linear-gradient(to bottom,rgba(245,196,81,.25),rgba(245,196,81,.05));
-  color:#f5c451;
+  color:var(--gold);
   opacity:1;
 }
 
-/* TAGS */
 .tags{display:flex;flex-wrap:wrap;gap:12px}
 .tag{
   padding:8px 14px;
@@ -159,9 +175,8 @@ textarea{
   cursor:pointer;
   opacity:.6;
 }
-.tag.active{border-color:#4cff4c;color:#4cff4c;opacity:1}
+.tag.active{border-color:var(--green);color:var(--green);opacity:1}
 
-/* ACCOUNT */
 .account-fields{
   display:flex;
   flex-direction:column;
@@ -175,88 +190,97 @@ textarea{
   color:#fff;
 }
 .account-note{
-  margin-top:10px;
+  margin-top:12px;
   font-size:13px;
   color:#777;
-}
-
-@media(max-width:900px){
-  .hero-content{flex-direction:column;text-align:center}
 }
 </style>
 </head>
 <body>
 <div class="wrapper">
 
-<!-- HERO -->
-<div class="profile-hero">
-  <div class="hero-banner"></div>
-  <div class="hero-content">
-    <div class="hero-visual">
-      <img id="heroImg" src="img/classes/assassin.png">
-      <div class="hero-glow"></div>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="auth-box">
+      <span id="playerName">–</span>
+      <a href="index.html" class="auth-link">Lootliste</a>
+      <a href="my-items.html" class="auth-link">Meine Items</a>
+      <a href="my-claims.html" class="auth-link">Meine Claims</a>
     </div>
-    <div class="hero-meta">
-      <div class="hero-name" id="heroName">Spieler</div>
-      <div class="hero-sub">Lootliste Community</div>
-      <div class="hero-status">● Internes Profil</div>
-    </div>
+    <h1>Mein Profil</h1>
+    <p>Dein Charakter in der Lootliste</p>
+  </div>
+</header>
+
+<div class="container">
+  <div class="profile-grid">
+
+    <!-- CHARACTER CARD -->
+    <aside class="character-card">
+      <div class="character-visual">
+        <img id="heroImg" src="img/classes/assassin.png">
+        <div class="character-glow"></div>
+      </div>
+      <div class="character-name" id="heroName">Spieler</div>
+      <div class="character-status">● Internes Profil</div>
+    </aside>
+
+    <!-- CONTENT -->
+    <section>
+
+      <div class="section">
+        <h3>Spieler-Identität</h3>
+        <label>Über mich</label>
+        <textarea id="about"></textarea>
+        <button class="btn" id="saveBtn">Speichern</button>
+      </div>
+
+      <div class="section">
+        <h3>Lieblingsklasse</h3>
+        <div class="classes">
+          <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
+          <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
+          <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
+          <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
+          <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
+          <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
+          <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Spielstil</h3>
+        <div class="tags">
+          <div class="tag">PvM-Fokus</div>
+          <div class="tag">Farm-orientiert</div>
+          <div class="tag">Build-optimiert</div>
+          <div class="tag">Solo-orientiert</div>
+          <div class="tag">Party-tauglich</div>
+          <div class="tag">Self-Found-nah</div>
+          <div class="tag">Oldschool-Spielstil</div>
+          <div class="tag">Entspanntes Gameplay</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Account & Übergabe</h3>
+        <div class="account-fields">
+          <input id="accountEmail" type="email" placeholder="E-Mail">
+          <input id="accountBattletag" type="text" placeholder="BattleTag (Name#1234)">
+          <button class="btn" id="saveAccountBtn">Account speichern</button>
+        </div>
+        <div class="account-note">Dein BattleTag wird bei Reservierungen automatisch verwendet.</div>
+      </div>
+
+    </section>
   </div>
 </div>
-
-<!-- IDENTITÄT -->
-<div class="section">
-  <h3>Spieler-Identität</h3>
-
-  <label>Über mich</label>
-  <textarea id="about"></textarea>
-  <button class="btn" id="saveBtn">Speichern</button>
-
-  <div style="margin-top:40px">
-    <label>Lieblingsklasse</label>
-    <div class="classes">
-      <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
-      <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
-      <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
-      <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
-      <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
-      <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-      <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
-    </div>
-  </div>
-
-  <div style="margin-top:40px">
-    <label>Spielstil</label>
-    <div class="tags">
-      <div class="tag">PvM-Fokus</div>
-      <div class="tag">Farm-orientiert</div>
-      <div class="tag">Build-optimiert</div>
-      <div class="tag">Solo-orientiert</div>
-      <div class="tag">Party-tauglich</div>
-      <div class="tag">Self-Found-nah</div>
-      <div class="tag">Oldschool-Spielstil</div>
-      <div class="tag">Entspanntes Gameplay</div>
-    </div>
-  </div>
-</div>
-
-<!-- ACCOUNT -->
-<div class="section">
-  <h3>Account & Übergabe</h3>
-  <div class="account-fields">
-    <input id="accountEmail" type="email" placeholder="E-Mail">
-    <input id="accountBattletag" type="text" placeholder="BattleTag (Name#1234)">
-    <button class="btn" id="saveAccountBtn">Account speichern</button>
-  </div>
-  <div class="account-note">Dein BattleTag wird bei Reservierungen automatisch verwendet.</div>
-</div>
-
 </div>
 
 <script>
 const API="https://lootliste-production.up.railway.app";
-
 const state=JSON.parse(localStorage.getItem("my_profile"))||{about:"",favClass:"",tags:[]};
+
 const about=document.getElementById("about");
 const heroImg=document.getElementById("heroImg");
 const heroName=document.getElementById("heroName");
@@ -301,13 +325,14 @@ document.querySelectorAll('.tag').forEach(t=>{
 });
 
 async function loadAccountData(){
- const res=await fetch(API+"/me",{credentials:"include"});
- if(!res.ok)return;
- const data=await res.json();
- if(!data.loggedIn)return;
- heroName.textContent=data.username;
- document.getElementById("accountEmail").value=data.email||"";
- document.getElementById("accountBattletag").value=data.battletag||"";
+ const r=await fetch(API+"/me",{credentials:"include"});
+ if(!r.ok)return;
+ const d=await r.json();
+ if(!d.loggedIn)return;
+ heroName.textContent=d.username;
+ document.getElementById("playerName").textContent=d.username;
+ document.getElementById("accountEmail").value=d.email||"";
+ document.getElementById("accountBattletag").value=d.battletag||"";
 }
 
 async function saveAccount(){
