@@ -640,7 +640,7 @@ app.post("/items/:id/claim", (req, res) => {
   item.status = "reserviert";
   item.claimedByAccountId = accountId;
   item.claimedAt = new Date().toISOString();
-  item.contact = contact || null;
+  item.contact = account.battletag;
 
   saveJSON(ITEMS_FILE, items);
   res.json(item);
