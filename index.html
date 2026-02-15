@@ -1653,13 +1653,23 @@ body{
 
   <div class="status-line">
     <span class="status-dot"></span>
+
     <span class="status-text">
       <strong>Items teilen oder Bedarf anmelden</strong>
     </span>
+
+    <button class="status-help-toggle" onclick="toggleHelp()">
+      ? Wie läuft das?
+    </button>
   </div>
 
   <div class="status-note">
     📥 Item einreichen · 🎲 Bedarf anmelden · 🤝 Faire Übergabe
+  </div>
+
+  <div class="status-help" id="statusHelp">
+    Spieler reichen Items ein. Andere melden Bedarf an.
+    Nach Ablauf erfolgt die Vergabe transparent und fair.
   </div>
 
   <div class="status-actions">
