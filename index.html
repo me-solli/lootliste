@@ -869,24 +869,27 @@ body{
 .status-line{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
   font-size:13px;
   color:#d2d2d2;
 }
 
-/* Punkt */
+/* Goldener Aktiv-Akzent (statt grauer Punkt) */
 .status-dot{
-  width:6px;
-  height:6px;
+  width:8px;
+  height:8px;
   border-radius:50%;
-  background:#8a8a8a;
-  opacity:.6;
+  background:var(--gold);
+  box-shadow:
+    0 0 6px rgba(245,196,81,.6),
+    0 0 12px rgba(245,196,81,.35);
 }
 
 /* Status */
 .status-text strong{
-  color:#eaeaea;
+  color:#f0e6c8;   /* leicht wärmer als reines weiß */
   font-weight:600;
+  letter-spacing:.2px;
 }
 
 /* Help Toggle */
