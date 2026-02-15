@@ -2476,10 +2476,10 @@ function showToast(text){
 
   <div id="toast" class="toast" hidden></div>
 
-  <script>
+<script>
 function toggleHelp(){
   const el = document.getElementById("statusHelp");
-  el.style.display = el.style.display === "block" ? "none" : "block";
+  el.classList.toggle("active");
 }
 </script>
   
