@@ -43,61 +43,113 @@ body{
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* ================================
-   HERO (OPTIK FINAL – BALANCED)
+   HERO (OPTIK FINAL – STRUCTURED)
 ================================ */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:240px;          /* ↑ bewusst wieder Luft */
+  min-height:260px;
   position:relative;
 }
 
 .hero-inner{
-  padding:36px 36px;         /* ↑ nicht riesig, aber atmend */
+  padding:42px 36px 38px;
   background: linear-gradient(
     to bottom,
-    rgba(0,0,0,.28),
-    rgba(0,0,0,.72)
+    rgba(0,0,0,.35),
+    rgba(0,0,0,.78)
   );
 }
 
+/* ================================
+   LOGO
+================================ */
 .hero-logo img{
-  max-width:440px;           /* ↑ Logo wieder etwas präsenter */
+  max-width:440px;
   width:100%;
-  filter:brightness(.82) contrast(1.05)
-          drop-shadow(0 0 10px rgba(0,0,0,.6));
+  margin-bottom:18px;
+  filter:
+    brightness(.85)
+    contrast(1.05)
+    drop-shadow(0 0 12px rgba(0,0,0,.7));
 }
 
-.hero p{
-  margin:10px 0 16px;        /* zurück zu natürlichem Rhythmus */
-  opacity:.9;
+/* ================================
+   HEADLINE STRUCTURE
+================================ */
+.hero-headline{
+  margin-top:6px;
+  margin-bottom:14px;
 }
 
+.hero-headline h2{
+  font-size:26px;
+  font-weight:600;
+  margin:0 0 6px;
+  letter-spacing:.3px;
+}
+
+.hero-subline{
+  font-size:14px;
+  opacity:.75;
+  letter-spacing:.2px;
+}
+
+/* ================================
+   MODE BANNER
+================================ */
 .mode-banner{
-  margin:-2px 0 18px;        /* weniger aggressiv nach oben */
+  margin:6px 0 14px;
   font-size:13px;
   letter-spacing:.3px;
   color:#dcdcdc;
 }
 
-.mode-banner strong{color:var(--green)}
-.mode-banner span{opacity:.7;font-size:12px}
+.mode-banner strong{
+  color:var(--green);
+}
 
+.mode-banner span{
+  opacity:.6;
+  font-size:12px;
+}
+
+/* ================================
+   DROP FLOW LABEL
+================================ */
+.drop-flow{
+  margin-top:10px;
+  padding:6px 14px;
+  display:inline-block;
+  font-size:12px;
+  opacity:.75;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  background:rgba(255,255,255,.04);
+}
+
+/* ================================
+   HERO STATS
+================================ */
 .hero-stats{
   display:flex;
-  gap:16px;                  /* etwas mehr Luft */
+  gap:14px;
   flex-wrap:wrap;
-  font-size:14px;            /* wieder ruhiger lesbar */
+  font-size:14px;
+  margin-top:18px;
 }
 
 .hero-stats div{
-  padding:7px 14px;          /* nicht mehr gequetscht */
-  background:rgba(0,0,0,.4);
-  border:1px solid var(--border);
+  padding:8px 16px;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.08);
   border-radius:999px;
 }
 
+/* ================================
+   AUTH BOX
+================================ */
 .auth-box{
   position:absolute;
   top:22px;
@@ -106,9 +158,9 @@ body{
   gap:10px;
   align-items:center;
   padding:10px 14px;
-  border:1px solid var(--border);
+  border:1px solid rgba(255,255,255,.08);
   border-radius:14px;
-  background:rgba(0,0,0,.55);
+  background:rgba(0,0,0,.65);
   font-size:13px;
 }
 
@@ -125,7 +177,7 @@ body{
   text-decoration:underline;
 }
 
-  .auth-sep{
+.auth-sep{
   margin:0 4px;
   opacity:.5;
   font-size:12px;
