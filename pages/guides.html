@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>D2R Guides | D2R Lootliste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="D2R Guides für RotWL – Referenzseiten zu Runen-Upgrades, Cow Level, Sunder Charms, Terror Zonen und Ladder-Unterschieden.">
+
+<style>
+:root{
+  --gold:#f5c451;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
+}
+
+.wrapper{
+  max-width:1100px;
+  margin:0 auto;
+}
+
+/* ================= HERO ================= */
+.hero{
+  background:url("../img/banner_diablo.png") center top / cover no-repeat;
+  border-radius:0 0 26px 26px;
+  overflow:hidden;
+  min-height:220px;
+  position:relative;
+}
+
+.hero-inner{
+  padding:64px 36px 48px;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.15) 0%,
+    rgba(0,0,0,.55) 45%,
+    rgba(0,0,0,.9) 100%
+  );
+  position:relative;
+}
+
+.hero-nav{
+  position:absolute;
+  top:26px;
+  left:34px;
+  display:flex;
+  gap:22px;
+  align-items:center;
+  padding:6px 14px;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  backdrop-filter:blur(4px);
+  font-size:13px;
+}
+
+.hero-link{
+  color:#d6d6d6;
+  text-decoration:none;
+  opacity:.85;
+  font-weight:500;
+}
+
+.hero-link:hover{color:var(--gold);opacity:1}
+.hero-link.active{color:var(--gold)}
+
+h1{
+  font-size:30px;
+  margin-bottom:8px;
+  letter-spacing:.5px;
+}
+
+.hero p{
+  opacity:.9;
+  font-size:15px;
+}
+
+/* ================= GRID ================= */
+.container{
+  padding:50px 28px 80px;
+}
+
+.guides-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:26px;
+}
+
+.guide-card{
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.04),
+    rgba(0,0,0,.35)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:26px 24px;
+  text-decoration:none;
+  color:#e6e6e6;
+  position:relative;
+  transition:all .18s ease;
+}
+
+.guide-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:var(--gold);
+  border-radius:20px 20px 0 0;
+  opacity:.6;
+}
+
+.guide-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(245,196,81,.35);
+}
+
+.guide-card h3{
+  margin:0 0 10px;
+  font-size:18px;
+  color:var(--gold);
+}
+
+.guide-card p{
+  margin:0 0 14px;
+  font-size:14px;
+  opacity:.85;
+  line-height:1.5;
+}
+
+.guide-card span{
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav{
+  margin-top:70px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav a{color:var(--gold);text-decoration:none}
+.footer-nav a:hover{text-decoration:underline}
+
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<header class="hero">
+  <div class="hero-inner">
+
+    <nav class="hero-nav">
+      <a href="../index.html" class="hero-link">Lootliste</a>
+      <a href="#" class="hero-link active">Guides</a>
+    </nav>
+
+    <h1>D2R Guides</h1>
+    <p>Aktuelle RotWL Referenzseiten für Diablo II: Resurrected</p>
+
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="guides-grid">
+
+    <a href="runen-upgrade.html" class="guide-card">
+      <h3>Runen Upgrade Tabelle</h3>
+      <p>Alle Horadrim-Würfel-Rezepte von El bis Zod inklusive Edelstein-Anforderungen.</p>
+      <span>→ Guide öffnen</span>
+    </a>
+
+    <a href="cow-level.html" class="guide-card">
+      <h3>Cow Level Guide</h3>
+      <p>Öffnen des geheimen Kuh-Levels, König-Mechanik und Farm-Tipps.</p>
+      <span>→ Guide öffnen</span>
+    </a>
+
+    <a href="sunder-charms.html" class="guide-card">
+      <h3>Sunder Charms</h3>
+      <p>Funktionsweise, Resistenzen brechen und Einsatz in aktuellen Builds.</p>
+      <span>→ Guide öffnen</span>
+    </a>
+
+    <a href="terror-zonen.html" class="guide-card">
+      <h3>Terror Zonen</h3>
+      <p>Wie Terror Zonen funktionieren und warum sie im RotWL relevant sind.</p>
+      <span>→ Guide öffnen</span>
+    </a>
+
+    <a href="ladder-rotwl.html" class="guide-card">
+      <h3>RotWL & Ladder Unterschiede</h3>
+      <p>Was ist neu, was bleibt und welche Unterschiede sind relevant.</p>
+      <span>→ Guide öffnen</span>
+    </a>
+
+  </div>
+
+  <div class="footer-nav">
+    <a href="../index.html">← Zurück zur Lootliste</a>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
