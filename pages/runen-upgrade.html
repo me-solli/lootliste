@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Runen Upgrade | D2R Lootliste</title>
+<title>D2R Runen Upgrade Tabelle (El bis Zod) – Horadrim Würfel Rezepte</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Runen Upgrade Tabelle für Diablo II: Resurrected (RotWL & Non-Ladder). Alle Horadrim-Würfel-Rezepte von El bis Zod klar und strukturiert.">
 
@@ -20,29 +20,38 @@ body{
 
 .wrapper{max-width:1100px;margin:0 auto;}
 
-/* ================= HERO (ruhiger) ================= */
+/* ================= HERO (ruhiger + mehr Luft) ================= */
 .hero{
-  background:url("../img/runen-upgrade-banner.png") center center / cover no-repeat;
-  border-radius:0 0 24px 24px;
-  overflow:hidden;
-  min-height:260px;
   position:relative;
+  background:url("../img/runen-upgrade-banner.png") center center / cover no-repeat;
+  border-radius:0 0 28px 28px;
+  overflow:hidden;
+  min-height:300px;
+}
+
+/* kompletter, aber dezenter Overlay */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.65) 0%,
+    rgba(0,0,0,.75) 50%,
+    rgba(0,0,0,.92) 100%
+  );
 }
 
 .hero-inner{
-  padding:70px 36px 60px;
-  background:linear-gradient(
-    to bottom,
-    rgba(0,0,0,.55) 0%,
-    rgba(0,0,0,.75) 60%,
-    rgba(0,0,0,.95) 100%
-  );
+  position:relative;
+  z-index:1;
+  padding:90px 40px 80px;
 }
 
 .hero-nav{
   position:absolute;
-  top:22px;
-  left:28px;
+  top:24px;
+  left:32px;
   display:flex;
   gap:18px;
   padding:6px 14px;
@@ -58,14 +67,14 @@ body{
 
 h1{
   font-size:30px;
-  margin:0 0 12px;
+  margin:0 0 16px;
   letter-spacing:.4px;
 }
 
 .hero p{
-  max-width:600px;
-  line-height:1.6;
-  opacity:.85;
+  max-width:640px;
+  line-height:1.65;
+  opacity:.88;
   margin:0;
 }
 
@@ -163,10 +172,11 @@ tr:hover{background:rgba(245,196,81,.05)}
       <a href="#" class="hero-link active">Runen Upgrade</a>
     </nav>
 
-    <h1>Runen Upgrade – El bis Zod</h1>
+    <h1>D2R Runen Upgrade Tabelle – El bis Zod</h1>
     <p>
-      Alle Horadrim-Würfel-Rezepte klar strukturiert.
-      Schnell erfassbar. Optimiert für RotWL & Non-Ladder.
+      In Diablo II: Resurrected (D2R) lassen sich Runen im Horadrim-Würfel aufwerten.
+      Diese Runen-Upgrade-Tabelle zeigt alle Rezepte von El bis Zod inklusive Edelstein-Anforderungen
+      für RotWL und Non-Ladder – klar strukturiert und schnell erfassbar.
     </p>
 
   </div>
@@ -206,7 +216,7 @@ tr:hover{background:rgba(245,196,81,.05)}
       <tr><td>3x Sol</td><td>Shael</td></tr>
       <tr><td>3x Shael</td><td>Dol</td></tr>
       <tr><td>3x Dol</td><td>Hel</td></tr>
-      <tr><td>3x Hel + Fehlerhafter Edelstein</td><td>Io</td></tr>
+      <tr><td>3x Hel + Angeschlagener Edelstein</td><td>Io</td></tr>
       <tr><td>3x Io + Fehlerhafter Edelstein</td><td>Lum</td></tr>
       <tr><td>3x Lum + Fehlerhafter Edelstein</td><td>Ko</td></tr>
       <tr><td>3x Ko + Fehlerhafter Edelstein</td><td>Fal</td></tr>
