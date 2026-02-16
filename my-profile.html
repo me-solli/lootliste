@@ -388,14 +388,43 @@ document.querySelectorAll('.tag').forEach(t=>{
 });
 
 async function loadAccountData(){
- const r=await fetch(API+"/me",{credentials:"include"});
- if(!r.ok)return;
- const d=await r.json();
- if(!d.loggedIn)return;
- heroName.textContent=d.username;
- document.getElementById("playerName").textContent=d.username;
- document.getElementById("accountEmail").value=d.email||"";
- document.getElementById("accountBattletag").value=d.battletag||"";
+ const r = await fetch(API + "/me", { credentials: "include" });
+ if(!r.ok) return;
+
+ const d = await r.json();
+ if(!d.loggedIn) return;
+
+ heroName.textContent = d.username;
+ document.getElementById("playerName").textContent = d.username;
+
+ const emailInput = document.getElementById("accountEmail");
+ const battletagInput = document.getElementById("accountBattletag");
+ const saveBtn = document.getElementById("saveAccountBtn");
+ const note = document.querySelector(".account-note");
+
+ emailInput.value = d.email || "";
+ battletagInput.value = d.battletag || "";
+
+ // 🔒 Cooldown prüfen (Backend muss battletagNextChange liefern)
+ if(d.battletagNextChange){
+
+   const nextDate = new Date(d.battletagNextChange);
+   const now = new Date();
+
+   if(nextDate > now){
+
+     battletagInput.disabled = true;
+     saveBtn.disabled = true;
+
+     const diffDays = Math.ceil((nextDate - now) / (1000*60*60*24));
+
+     note.innerHTML = `
+       🔒 BattleTag änderbar wieder am 
+       <strong>${nextDate.toLocaleDateString("de-DE")}</strong>
+       (in ${diffDays} Tagen)
+     `;
+   }
+ }
 }
 
 async function saveAccount(){
