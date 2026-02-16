@@ -60,6 +60,34 @@ body{
     rgba(0,0,0,.35),
     rgba(0,0,0,.78)
   );
+  position:relative; /* wichtig für nav positioning */
+}
+
+/* ================= HERO NAV ================= */
+.hero-nav{
+  position:absolute;
+  top:18px;
+  left:28px;
+  display:flex;
+  gap:18px;
+  font-size:14px;
+  z-index:6;
+}
+
+.hero-link{
+  color:#cfcfcf;
+  text-decoration:none;
+  opacity:.85;
+  font-weight:500;
+}
+
+.hero-link:hover{
+  color:var(--gold);
+  opacity:1;
+}
+
+.hero-link.active{
+  color:var(--gold);
 }
 
 /* ================================
