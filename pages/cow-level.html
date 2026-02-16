@@ -2,9 +2,9 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>D2R Cow Level Guide – Öffnen, König & Farmen (RotWL)</title>
+<title>D2R Cow Level Guide – Öffnen, König & Farming (RotWL & Non-Ladder)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="D2R Cow Level Guide für Diablo II: Resurrected (RotWL & Non-Ladder). Öffnen des Secret Cow Levels, König-Mechanik und Farming-Effizienz erklärt.">
+<meta name="description" content="D2R Cow Level Guide für Diablo II: Resurrected (RotWL & Non-Ladder). Öffnen, Standort, Cow King Mechanik, Gegner, Loot und effiziente Farming-Taktiken.">
 
 <style>
 :root{ --gold:#f5c451; }
@@ -23,7 +23,7 @@ body{
 /* ================= HERO ================= */
 .hero{
   position:relative;
-  background:url("../img/cow-level-banner.png") 55% 40% / cover no-repeat; /* Portal stärker sichtbar */
+  background:url("../img/cow-level-banner.png") 55% 40% / cover no-repeat;
   border-radius:0 0 28px 28px;
   overflow:hidden;
   min-height:270px;
@@ -44,7 +44,7 @@ body{
 .hero-inner{
   position:relative;
   z-index:1;
-  padding:95px 40px 50px;
+  padding:90px 40px 50px;
 }
 
 .hero-nav{
@@ -73,7 +73,7 @@ h1{
 .hero p{
   max-width:640px;
   line-height:1.6;
-  opacity:.75;
+  opacity:.78;
   font-size:15px;
   margin:0;
 }
@@ -104,9 +104,10 @@ h1{
 
 /* ================= CONTENT ================= */
 .container{padding:30px 28px 90px}
-.section{max-width:950px;margin-bottom:80px}
+.section{max-width:950px;margin-bottom:90px}
 .section h2{color:var(--gold);margin-bottom:18px;font-size:21px}
-.section p{line-height:1.65;opacity:.9;font-size:15px}
+.section p, .section ul{line-height:1.7;opacity:.9;font-size:15px}
+.section ul{margin-left:16px;list-style:disc;}
 
 .card{
   background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.35));
@@ -144,9 +145,9 @@ h1{
 
     <h1>D2R Cow Level – Öffnen, König & Farming Guide</h1>
     <p>
-      Das Secret Cow Level in Diablo II: Resurrected (D2R) bietet hohe Monsterdichte
-      und effizientes Farming. Hier findest du Öffnungsmechanik, König-Regel
-      und Einschätzung zur Loot-Relevanz im RotWL-Modus.
+      Entdecke das Secret Cow Level in Diablo II: Resurrected (D2R) – inklusive
+      Öffnungsmechanik, Cow King Regeln, Gegner-Strategien und effizienten
+      Farming-Hinweisen für RotWL & Non-Ladder.
     </p>
 
   </div>
@@ -156,50 +157,103 @@ h1{
 
   <div class="section-nav">
     <a href="#open">Öffnen</a>
-    <a href="#king">König</a>
-    <a href="#loot">Loot & Effizienz</a>
-    <a href="#meta">Meta-Einschätzung</a>
+    <a href="#location">Standort</a>
+    <a href="#king">Cow King</a>
+    <a href="#enemies">Gegner & Taktik</a>
+    <a href="#loot">Loot & Farming</a>
+    <a href="#meta">Effizienz (RotWL)</a>
   </div>
 
   <section class="section" id="open">
-    <h2>Cow Level öffnen</h2>
+    <h2>Öffnen des Cow Levels</h2>
     <div class="card">
       <p>
-        Voraussetzung: Baal im jeweiligen Schwierigkeitsgrad besiegt.
-        Kombiniere Wirt's Bein + Foliant des Stadtportals im Horadrim-Würfel
-        in Akt I (Lager der Jägerinnen), um das rote Portal zu öffnen.
+        Um das Secret Cow Level zu öffnen, muss Baal im entsprechenden Schwierigkeitsgrad
+        besiegt werden (z.B. Normal, NM oder Hell). Danach kombiniert man im Horadrim-Würfel
+        <strong>Wirt's Bein</strong> mit einem <strong>Folianten des Stadtportals</strong>
+        (Town Portal). Dieser Craft wirkt im Rogue Encampment (Akt I). Ein rotes Portal
+        erscheint, das in das geheime Cow Level führt.
+      </p>
+      <ul>
+        <li>Benötigt: Wirt's Bein + Town Portal Scroll / Tome</li>
+        <li>Nur einmal pro Session pro Schwierigkeitsgrad</li>
+        <li>Baal muss im jeweiligen Schwierigkeitsgrad besiegt worden sein</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="location">
+    <h2>Wo befindet sich das Portal?</h2>
+    <div class="card">
+      <p>
+        Das Cow Level-Portal erscheint direkt im Rogue Encampment (Akt I),
+        nachdem die richtige Kombination im Cube angewendet wurde.
+        Es gibt keine Map-Markierung; achte auf das große rote Portal
+        und auf Kühe mit roten Augen im Hintergrund.
       </p>
     </div>
   </section>
 
   <section class="section" id="king">
-    <h2>Der Kuhkönig</h2>
+    <h2>Cow King – Mechanik & Regeln</h2>
     <div class="card">
       <p>
-        In D2R kannst du das Cow Level erneut öffnen, selbst wenn der König
-        getötet wurde. Die alte Blockade-Mechanik aus Classic greift hier nicht mehr.
+        In Diablo II: Resurrected gibt es keine permanente Blockade mehr,
+        wenn der Cow King getötet wurde. Du kannst das Cow Level weiterhin
+        öffnen, solange die Voraussetzungen erfüllt sind.
       </p>
+      <ul>
+        <li>Der Cow King droppt potentiell bessere Items als Standard-Bovines</li>
+        <li>In manchen Versionen wurde früher eine Blockade aktiviert – das gilt in D2R so nicht</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="enemies">
+    <h2>Gegner & Taktik</h2>
+    <div class="card">
+      <p>
+        Die Hauptgegner im Cow Level sind die <strong>Hell Bovines</strong>.
+        Sie haben hohe Trefferpunkte, sind zahlreich und können flankieren.
+        Nutze Flächenschaden (AoE) und Crowd Control, um effektiv durch die
+        Massen zu kommen.
+      </p>
+      <ul>
+        <li>Hohe Dichte = gute XP & Loot</li>
+        <li>Bewegungsskills helfen beim Kiten</li>
+        <li>AoE Builds (Blizzard, Tornado, Fissure, etc.) laufen hier stark</li>
+    </ul>
     </div>
   </section>
 
   <section class="section" id="loot">
-    <h2>Loot & Farming-Effizienz</h2>
+    <h2>Loot & Farming-Strategien</h2>
     <div class="card">
       <p>
-        Das Cow Level bietet hohe Monsterdichte ohne Boss-Phasen.
-        Ideal für Rune-Farming im Mid-Bereich sowie Base-Items mit vielen Sockeln.
+        Das Cow Level ist beliebt für Rune-Farming im Mid-Bereich und
+        hochwertige Bases für Sockets. Besonders interessant sind:
       </p>
+      <ul>
+        <li>Mittelgroße Runen (Sol, Lo, etc.) durch Gegner-Drops</li>
+        <li>Sockets auf würfelfähigen Items</li>
+        <li>Set & Unique Drops vom Cow King</li>
+      </ul>
     </div>
   </section>
 
   <section class="section" id="meta">
-    <h2>Meta-Einschätzung (RotWL)</h2>
+    <h2>Effizienz & RotWL-Betrachtung</h2>
     <div class="card">
       <p>
-        Besonders effizient für Builds mit Flächenschaden.
-        Weniger relevant für gezieltes High-Rune-Farming im Vergleich
-        zu spezialisierten Terror-Zonen.
+        Im RotWL-Modus lohnt sich das Cow Level vor allem für Mid-Runen-Farming
+        und Erfahrung. Für High-Runen ist es weniger effizient als spezialisierte
+        Terror-Zonen oder andere Endgame-Inhalte.
       </p>
+      <ul>
+        <li>Ideal für Flexible XP Runs</li>
+        <li>Besser als reine Durchgangs-Maps bei hoher Dichte</li>
+        <li>Vergleich mit anderen Spots lohnt sich</li>
+      </ul>
     </div>
   </section>
 
