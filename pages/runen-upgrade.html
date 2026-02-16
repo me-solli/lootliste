@@ -15,6 +15,8 @@
 
 *{box-sizing:border-box}
 
+html{scroll-behavior:smooth}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -77,53 +79,7 @@ body{
 h1{font-size:34px;margin-bottom:14px;letter-spacing:.5px}
 .hero p{max-width:720px;opacity:.9;line-height:1.7}
 
-/* ================= PROFILE PANEL ================= */
-.profile-panel{
-  max-width:1000px;
-  margin:30px auto 0;
-  padding:20px 24px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.08);
-  background:linear-gradient(to bottom,rgba(255,255,255,.04),rgba(0,0,0,.4));
-  display:none;
-}
-
-.profile-panel.active{display:block}
-
-.profile-panel-header{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-bottom:10px;
-}
-
-.profile-panel-header img{
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  object-fit:cover;
-  border:1px solid rgba(255,255,255,.18);
-}
-
-.profile-panel-name{font-size:16px;font-weight:600}
-
-.profile-panel-links{
-  font-size:13px;
-  display:flex;
-  gap:16px;
-  flex-wrap:wrap;
-  margin-top:6px;
-}
-
-.profile-panel-links a{
-  color:#eaeaea;
-  text-decoration:none;
-  opacity:.85;
-}
-
-.profile-panel-links a:hover{color:var(--gold)}
-
-/* ================= QUICK NAV ================= */
+/* ================= STICKY QUICK NAV ================= */
 .quick-nav{
   margin-top:40px;
   display:flex;
@@ -145,6 +101,48 @@ h1{font-size:34px;margin-bottom:14px;letter-spacing:.5px}
 .quick-nav a:hover{
   border-color:rgba(245,196,81,.4);
   color:var(--gold);
+}
+
+.sticky-nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter:blur(8px);
+  background:rgba(10,10,10,.85);
+  padding:12px 30px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;
+  gap:14px;
+}
+
+.sticky-nav a{
+  font-size:12px;
+  text-decoration:none;
+  color:#ccc;
+  padding:6px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.sticky-nav a:hover{color:var(--gold);border-color:rgba(245,196,81,.4)}
+
+/* ================= PROGRESSION BAR ================= */
+.progress-wrapper{
+  max-width:1000px;
+  margin:60px auto 80px;
+}
+
+.progress-title{
+  font-size:13px;
+  opacity:.7;
+  margin-bottom:10px;
+}
+
+.progress-bar{
+  height:6px;
+  border-radius:999px;
+  background:linear-gradient(to right,#555,var(--gold));
+  box-shadow:0 0 8px rgba(245,196,81,.4);
 }
 
 /* ================= CONTENT ================= */
@@ -229,10 +227,9 @@ tr:hover{background:rgba(245,196,81,.06)}
     <div class="hero-badge">System Referenz</div>
     <h1>Runen Upgrade – Vollständige Referenz El bis Zod</h1>
     <p>
-      Diese Seite ist als dauerhaftes Referenz‑Tool innerhalb der Lootliste aufgebaut.
-      Alle Horadrim‑Würfel‑Rezepte sind vollständig aufgeführt,
-      inklusive Edelstein‑Anforderungen und High‑Rune‑Progression.
-      Optimiert für RotWL und Non‑Ladder.
+      Dauerhafte Referenz für alle Horadrim-Würfel-Rezepte.
+      Optimiert für RotWL, Non-Ladder und aktive Endgame-Builds.
+      Entwickelt als integraler Bestandteil der Lootliste.
     </p>
 
     <div class="quick-nav">
@@ -244,28 +241,23 @@ tr:hover{background:rgba(245,196,81,.06)}
   </div>
 </header>
 
-<section id="profilePanel" class="profile-panel">
-  <div class="profile-panel-header">
-    <img id="profilePanelAvatar" src="../img/avatars/default.png" alt="Avatar">
-    <div>
-      <div class="profile-panel-name" id="profilePanelName">Spieler</div>
-      <a href="../submit.html">+ Item einreichen</a>
-    </div>
-  </div>
+<div class="sticky-nav">
+  <a href="#low">Low</a>
+  <a href="#mid">Mid</a>
+  <a href="#high">High</a>
+  <a href="#lohnt">Wann upgraden?</a>
+</div>
 
-  <div class="profile-panel-links">
-    <a href="../my-profile.html">Profil</a>
-    <a href="../my-items.html">Meine Items</a>
-    <a href="../my-claims.html">Meine Claims</a>
-    <a href="../archive.html">Archiv</a>
-    <a href="#" id="profilePanelLogout">Logout</a>
-  </div>
-</section>
+<div class="progress-wrapper">
+  <div class="progress-title">Runen Progression: El → Zod</div>
+  <div class="progress-bar"></div>
+</div>
 
 <div class="container">
 
   <section class="section" id="low">
-    <h2>Low‑Runen (El – Thul)</h2>
+    <h2>Low-Runen (El – Thul)</h2>
+    <p>Grundstufe der Runenprogression. Meist für frühe Runenwörter oder Crafting-Basis relevant.</p>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
       <tr><td>3x <span class="rune">El</span></td><td>Eld</td></tr>
@@ -281,7 +273,8 @@ tr:hover{background:rgba(245,196,81,.06)}
   </section>
 
   <section class="section" id="mid">
-    <h2>Mid‑Runen (Amn – Gul)</h2>
+    <h2>Mid-Runen (Amn – Gul)</h2>
+    <p>Relevanter Bereich für viele Meta-Runenwörter und Economy-Aufbau.</p>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
       <tr><td>3x Thul</td><td>Amn</td></tr>
@@ -300,11 +293,11 @@ tr:hover{background:rgba(245,196,81,.06)}
       <tr><td>2x Mal + 1x <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ist</td></tr>
       <tr><td>2x Ist + 1x <span class="gem-saphir">Perfekter Saphir</span></td><td>Gul</td></tr>
     </table>
-    <div class="note">Ab Hel werden Edelsteine benötigt. Ab Pul ausschließlich perfekte Edelsteine.</div>
   </section>
 
   <section class="section section-high" id="high">
-    <h2>High‑Runen (Vex – Zod)</h2>
+    <h2>High-Runen (Vex – Zod)</h2>
+    <p>Endgame-Progression. Relevant für Enigma, Infinity, Fortitude und weitere Meta-Builds.</p>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
       <tr><td>2x Gul + 1x <span class="gem-rubin">Perfekter Rubin</span></td><td>Vex</td></tr>
@@ -316,7 +309,16 @@ tr:hover{background:rgba(245,196,81,.06)}
       <tr><td>2x Jah + 1x <span class="gem-rubin">Perfekter Rubin</span></td><td>Cham</td></tr>
       <tr><td>2x Cham + 1x <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Zod</td></tr>
     </table>
-    <div class="note">High‑Runen entstehen immer aus zwei Runen der vorherigen Stufe + perfektem Edelstein.</div>
+  </section>
+
+  <section class="section" id="lohnt">
+    <h2>Wann lohnt sich Runen upgraden wirklich?</h2>
+    <p>
+      Upgraden lohnt sich primär im High-Rune-Bereich, wenn gezielt auf bestimmte
+      Endgame-Runenwörter hingearbeitet wird.
+      Im Mid-Bereich hängt es stark von Marktwert und Build-Ziel ab.
+      Low-Runen werden meist direkt genutzt oder gesammelt.
+    </p>
   </section>
 
   <div class="footer-nav">
@@ -325,32 +327,6 @@ tr:hover{background:rgba(245,196,81,.06)}
 
 </div>
 </div>
-
-<script>
-async function loadProfilePanel(){
-  try{
-    const res = await fetch("/me");
-    const data = await res.json();
-    if(!data.loggedIn) return;
-
-    const panel = document.getElementById("profilePanel");
-    const name = document.getElementById("profilePanelName");
-
-    panel.classList.add("active");
-    name.textContent = data.username;
-
-    document.getElementById("profilePanelLogout")
-      .addEventListener("click", async (e)=>{
-        e.preventDefault();
-        await fetch("/logout",{method:"POST"});
-        location.reload();
-      });
-
-  }catch(e){}
-}
-
-loadProfilePanel();
-</script>
 
 </body>
 </html>
