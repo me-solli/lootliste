@@ -102,6 +102,16 @@ body{
   color:var(--gold);
 }
 
+  .hero-link:not(:last-child)::after{
+  content:"";
+  display:inline-block;
+  width:1px;
+  height:12px;
+  background:rgba(255,255,255,.25);
+  margin:0 14px;
+  vertical-align:middle;
+}
+
 /* ================================
    LOGO
 ================================ */
