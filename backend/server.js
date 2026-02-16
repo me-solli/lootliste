@@ -379,13 +379,26 @@ app.get("/me", (req, res) => {
     });
   }
 
-  return res.json({
-    loggedIn: true,
-    accountId: account.id,
-    username: account.username,
-    email: account.email,
-    battletag: account.battletag
-  });
+const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
+
+let battletagNextChange = null;
+
+if (account.profileUpdatedAt) {
+  const next = new Date(
+    new Date(account.profileUpdatedAt).getTime() + THIRTY_DAYS
+  );
+
+  battletagNextChange = next.toISOString();
+}
+
+return res.json({
+  loggedIn: true,
+  accountId: account.id,
+  username: account.username,
+  email: account.email,
+  battletag: account.battletag,
+  battletagNextChange
+});
 });
 
 // ===============================
