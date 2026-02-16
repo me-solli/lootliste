@@ -407,5 +407,32 @@ h1{
 
 </div>
 </div>
+
+  <script>
+async function loadProfilePanel(){
+  try{
+    const res = await fetch("/me");
+    const data = await res.json();
+    if(!data.loggedIn) return;
+
+    const panel = document.getElementById("profilePanel");
+    const name = document.getElementById("profilePanelName");
+
+    panel.classList.add("active");
+    name.textContent = data.username;
+
+    document.getElementById("profilePanelLogout")
+      .addEventListener("click", async (e)=>{
+        e.preventDefault();
+        await fetch("/logout",{method:"POST"});
+        location.reload();
+      });
+
+  }catch(e){}
+}
+
+loadProfilePanel();
+</script>
+  
 </body>
 </html>
