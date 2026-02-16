@@ -151,6 +151,55 @@ a:hover{text-decoration:underline}
   margin-top:10px;
 }
 
+
+
+/* ================= EXTRA POLISH ================= */
+
+/* Result rune emphasis */
+td:nth-child(2){
+  font-weight:600;
+  color:#ffffff;
+}
+
+/* High rune visual glow */
+.section:last-of-type table td:nth-child(2){
+  color:var(--gold);
+  text-shadow:0 0 6px rgba(245,196,81,.4);
+}
+
+/* Row hover effect */
+table tr{
+  transition:all .15s ease;
+}
+
+table tr:hover{
+  background:rgba(245,196,81,.06);
+}
+
+/* Softer table container feel */
+table{
+  border-radius:10px;
+  overflow:hidden;
+}
+
+/* Section divider subtle line */
+.section:not(:last-child){
+  padding-bottom:18px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+/* Hero title refinement */
+h1{
+  font-size:28px;
+  margin-bottom:6px;
+  letter-spacing:.5px;
+}
+
+.hero p{
+  opacity:.85;
+  font-size:15px;
+}
+
 </style>
 </head>
 
