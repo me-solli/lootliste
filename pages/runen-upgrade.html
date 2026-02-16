@@ -2,19 +2,13 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Runen Upgrade Referenz | D2R Lootliste</title>
+<title>Runen Upgrade | D2R Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Komplette Runen Upgrade Referenz für Diablo II: Resurrected (RotWL & Non-Ladder). Alle Horadrim-Würfel-Rezepte von El bis Zod strukturiert, erklärt und systemintegriert.">
-<meta name="keywords" content="D2R Runen Upgrade, Diablo 2 Runen Tabelle, Horadrim Würfel Rezepte, RotWL Runen, Rune Cubing D2R">
+<meta name="description" content="Runen Upgrade Tabelle für Diablo II: Resurrected (RotWL & Non-Ladder). Alle Horadrim-Würfel-Rezepte von El bis Zod klar und strukturiert.">
 
 <style>
-:root{
-  --gold:#f5c451;
-  --border:#2a2a2a;
-}
-
+:root{ --gold:#f5c451; }
 *{box-sizing:border-box}
-
 html{scroll-behavior:smooth}
 
 body{
@@ -24,37 +18,36 @@ body{
   color:#e6e6e6;
 }
 
-.wrapper{max-width:1150px;margin:0 auto;}
+.wrapper{max-width:1100px;margin:0 auto;}
 
-/* ================= HERO ================= */
+/* ================= HERO (ruhiger) ================= */
 .hero{
   background:url("../img/runen-upgrade-banner.png") center center / cover no-repeat;
-  border-radius:0 0 26px 26px;
+  border-radius:0 0 24px 24px;
   overflow:hidden;
-  min-height:320px;
+  min-height:260px;
   position:relative;
 }
 
 .hero-inner{
-  padding:90px 40px 70px;
+  padding:70px 36px 60px;
   background:linear-gradient(
     to bottom,
-    rgba(0,0,0,.25) 0%,
-    rgba(0,0,0,.65) 45%,
-    rgba(0,0,0,.97) 100%
+    rgba(0,0,0,.55) 0%,
+    rgba(0,0,0,.75) 60%,
+    rgba(0,0,0,.95) 100%
   );
-  position:relative;
 }
 
 .hero-nav{
   position:absolute;
-  top:26px;
-  left:34px;
+  top:22px;
+  left:28px;
   display:flex;
-  gap:22px;
+  gap:18px;
   padding:6px 14px;
-  background:rgba(0,0,0,.45);
-  border:1px solid rgba(255,255,255,.1);
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.08);
   border-radius:999px;
   font-size:13px;
 }
@@ -63,31 +56,29 @@ body{
 .hero-link:hover{color:var(--gold);opacity:1}
 .hero-link.active{color:var(--gold)}
 
-.hero-badge{
-  display:inline-block;
-  margin:12px 0 20px;
-  padding:6px 16px;
-  font-size:12px;
-  letter-spacing:.6px;
-  text-transform:uppercase;
-  background:rgba(245,196,81,.12);
-  border:1px solid rgba(245,196,81,.35);
-  border-radius:999px;
-  color:var(--gold);
+h1{
+  font-size:30px;
+  margin:0 0 12px;
+  letter-spacing:.4px;
 }
 
-h1{font-size:34px;margin-bottom:14px;letter-spacing:.5px}
-.hero p{max-width:720px;opacity:.9;line-height:1.7}
+.hero p{
+  max-width:600px;
+  line-height:1.6;
+  opacity:.85;
+  margin:0;
+}
 
-/* ================= STICKY QUICK NAV ================= */
-.quick-nav{
-  margin-top:40px;
+/* ================= SECTION NAV (nur einmal, klar) ================= */
+.section-nav{
+  margin:40px auto 20px;
   display:flex;
-  gap:16px;
+  gap:14px;
   flex-wrap:wrap;
+  justify-content:flex-start;
 }
 
-.quick-nav a{
+.section-nav a{
   padding:7px 16px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
@@ -98,71 +89,29 @@ h1{font-size:34px;margin-bottom:14px;letter-spacing:.5px}
   transition:.15s;
 }
 
-.quick-nav a:hover{
+.section-nav a:hover{
   border-color:rgba(245,196,81,.4);
   color:var(--gold);
 }
 
-.sticky-nav{
-  position:sticky;
-  top:0;
-  z-index:50;
-  backdrop-filter:blur(8px);
-  background:rgba(10,10,10,.85);
-  padding:12px 30px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  display:flex;
-  gap:14px;
-}
-
-.sticky-nav a{
-  font-size:12px;
-  text-decoration:none;
-  color:#ccc;
-  padding:6px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.sticky-nav a:hover{color:var(--gold);border-color:rgba(245,196,81,.4)}
-
-/* ================= PROGRESSION BAR ================= */
-.progress-wrapper{
-  max-width:1000px;
-  margin:60px auto 80px;
-}
-
-.progress-title{
-  font-size:13px;
-  opacity:.7;
-  margin-bottom:10px;
-}
-
-.progress-bar{
-  height:6px;
-  border-radius:999px;
-  background:linear-gradient(to right,#555,var(--gold));
-  box-shadow:0 0 8px rgba(245,196,81,.4);
-}
-
 /* ================= CONTENT ================= */
-.container{padding:70px 32px 100px}
-.section{max-width:1000px;margin-bottom:90px}
-.section h2{color:var(--gold);margin-bottom:20px;font-size:22px}
-.section p{line-height:1.7;opacity:.9;font-size:15px}
+.container{padding:40px 28px 90px}
+.section{max-width:950px;margin-bottom:80px}
+.section h2{color:var(--gold);margin-bottom:18px;font-size:21px}
+.section p{line-height:1.65;opacity:.9;font-size:15px}
 
 /* ================= TABLE ================= */
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:24px;
+  margin-top:20px;
   font-size:14px;
-  border-radius:12px;
+  border-radius:10px;
   overflow:hidden;
 }
 
 th, td{
-  padding:12px 14px;
+  padding:11px 13px;
   border:1px solid rgba(255,255,255,.08);
   text-align:left;
 }
@@ -174,9 +123,7 @@ th{
 }
 
 tr:nth-child(even){background:rgba(255,255,255,.02)}
-tr:hover{background:rgba(245,196,81,.06)}
-
-.rune{font-weight:600;letter-spacing:.3px}
+tr:hover{background:rgba(245,196,81,.05)}
 
 .gem-smaragd{color:#3ddc84;font-weight:600}
 .gem-topas{color:#ffd54a;font-weight:600}
@@ -185,22 +132,14 @@ tr:hover{background:rgba(245,196,81,.06)}
 .gem-rubin{color:#ff5252;font-weight:600}
 .gem-diamant{color:#e0f7fa;font-weight:600}
 
-.section-high table td:nth-child(2){
+.section-high td:nth-child(2){
   color:var(--gold);
-  text-shadow:0 0 6px rgba(245,196,81,.35);
   font-weight:600;
 }
 
-.note{
-  font-size:13px;
-  opacity:.75;
-  margin-top:14px;
-}
-
-/* ================= FOOTER ================= */
 .footer-nav{
-  margin-top:100px;
-  padding-top:26px;
+  margin-top:80px;
+  padding-top:22px;
   border-top:1px solid #222;
   font-size:13px;
   opacity:.8;
@@ -224,43 +163,29 @@ tr:hover{background:rgba(245,196,81,.06)}
       <a href="#" class="hero-link active">Runen Upgrade</a>
     </nav>
 
-    
     <h1>Runen Upgrade – El bis Zod</h1>
     <p>
-      Alle Horadrim-Würfel-Rezepte von El bis Zod.
-      Klar strukturiert, schnell erfassbar, optimiert für RotWL & Non-Ladder.
+      Alle Horadrim-Würfel-Rezepte klar strukturiert.
+      Schnell erfassbar. Optimiert für RotWL & Non-Ladder.
     </p>
-    </p>
-
-    <div class="quick-nav">
-      <a href="#low">Low Runen</a>
-      <a href="#mid">Mid Runen</a>
-      <a href="#high">High Runen</a>
-    </div>
 
   </div>
 </header>
 
-<div class="sticky-nav">
-  <a href="#low">Low</a>
-  <a href="#mid">Mid</a>
-  <a href="#high">High</a>
-  <a href="#lohnt">Wann upgraden?</a>
-</div>
-
-<div class="progress-wrapper">
-  <div class="progress-title">Runen Progression: El → Zod</div>
-  <div class="progress-bar"></div>
-</div>
-
 <div class="container">
+
+  <div class="section-nav">
+    <a href="#low">Low</a>
+    <a href="#mid">Mid</a>
+    <a href="#high">High</a>
+    <a href="#lohnt">Wann upgraden?</a>
+  </div>
 
   <section class="section" id="low">
     <h2>Low-Runen (El – Thul)</h2>
-    <p>Grundstufe der Runenprogression. Meist für frühe Runenwörter oder Crafting-Basis relevant.</p>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
-      <tr><td>3x <span class="rune">El</span></td><td>Eld</td></tr>
+      <tr><td>3x El</td><td>Eld</td></tr>
       <tr><td>3x Eld</td><td>Tir</td></tr>
       <tr><td>3x Tir</td><td>Nef</td></tr>
       <tr><td>3x Nef</td><td>Eth</td></tr>
@@ -274,7 +199,6 @@ tr:hover{background:rgba(245,196,81,.06)}
 
   <section class="section" id="mid">
     <h2>Mid-Runen (Amn – Gul)</h2>
-    <p>Relevanter Bereich für viele Meta-Runenwörter und Economy-Aufbau.</p>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
       <tr><td>3x Thul</td><td>Amn</td></tr>
@@ -282,42 +206,40 @@ tr:hover{background:rgba(245,196,81,.06)}
       <tr><td>3x Sol</td><td>Shael</td></tr>
       <tr><td>3x Shael</td><td>Dol</td></tr>
       <tr><td>3x Dol</td><td>Hel</td></tr>
-      <tr><td>3x Hel + 1x Angeschlagener Edelstein</td><td>Io</td></tr>
-      <tr><td>3x Io + 1x Fehlerhafter Edelstein</td><td>Lum</td></tr>
-      <tr><td>3x Lum + 1x Fehlerhafter Edelstein</td><td>Ko</td></tr>
-      <tr><td>3x Ko + 1x Fehlerhafter Edelstein</td><td>Fal</td></tr>
-      <tr><td>3x Fal + 1x Fehlerhafter Edelstein</td><td>Lem</td></tr>
-      <tr><td>3x Lem + 1x Fehlerhafter Edelstein</td><td>Pul</td></tr>
-      <tr><td>2x Pul + 1x <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Um</td></tr>
-      <tr><td>2x Um + 1x <span class="gem-topas">Perfekter Topas</span></td><td>Mal</td></tr>
-      <tr><td>2x Mal + 1x <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ist</td></tr>
-      <tr><td>2x Ist + 1x <span class="gem-saphir">Perfekter Saphir</span></td><td>Gul</td></tr>
+      <tr><td>3x Hel + Fehlerhafter Edelstein</td><td>Io</td></tr>
+      <tr><td>3x Io + Fehlerhafter Edelstein</td><td>Lum</td></tr>
+      <tr><td>3x Lum + Fehlerhafter Edelstein</td><td>Ko</td></tr>
+      <tr><td>3x Ko + Fehlerhafter Edelstein</td><td>Fal</td></tr>
+      <tr><td>3x Fal + Fehlerhafter Edelstein</td><td>Lem</td></tr>
+      <tr><td>3x Lem + Fehlerhafter Edelstein</td><td>Pul</td></tr>
+      <tr><td>2x Pul + <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Um</td></tr>
+      <tr><td>2x Um + <span class="gem-topas">Perfekter Topas</span></td><td>Mal</td></tr>
+      <tr><td>2x Mal + <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ist</td></tr>
+      <tr><td>2x Ist + <span class="gem-saphir">Perfekter Saphir</span></td><td>Gul</td></tr>
     </table>
   </section>
 
   <section class="section section-high" id="high">
     <h2>High-Runen (Vex – Zod)</h2>
-    <p>Endgame-Progression. Relevant für Enigma, Infinity, Fortitude und weitere Meta-Builds.</p>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
-      <tr><td>2x Gul + 1x <span class="gem-rubin">Perfekter Rubin</span></td><td>Vex</td></tr>
-      <tr><td>2x Vex + 1x <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Ohm</td></tr>
-      <tr><td>2x Ohm + 1x <span class="gem-diamant">Perfekter Diamant</span></td><td>Lo</td></tr>
-      <tr><td>2x Lo + 1x <span class="gem-topas">Perfekter Topas</span></td><td>Sur</td></tr>
-      <tr><td>2x Sur + 1x <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ber</td></tr>
-      <tr><td>2x Ber + 1x <span class="gem-saphir">Perfekter Saphir</span></td><td>Jah</td></tr>
-      <tr><td>2x Jah + 1x <span class="gem-rubin">Perfekter Rubin</span></td><td>Cham</td></tr>
-      <tr><td>2x Cham + 1x <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Zod</td></tr>
+      <tr><td>2x Gul + <span class="gem-rubin">Perfekter Rubin</span></td><td>Vex</td></tr>
+      <tr><td>2x Vex + <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Ohm</td></tr>
+      <tr><td>2x Ohm + <span class="gem-diamant">Perfekter Diamant</span></td><td>Lo</td></tr>
+      <tr><td>2x Lo + <span class="gem-topas">Perfekter Topas</span></td><td>Sur</td></tr>
+      <tr><td>2x Sur + <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ber</td></tr>
+      <tr><td>2x Ber + <span class="gem-saphir">Perfekter Saphir</span></td><td>Jah</td></tr>
+      <tr><td>2x Jah + <span class="gem-rubin">Perfekter Rubin</span></td><td>Cham</td></tr>
+      <tr><td>2x Cham + <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Zod</td></tr>
     </table>
   </section>
 
   <section class="section" id="lohnt">
-    <h2>Wann lohnt sich Runen upgraden wirklich?</h2>
+    <h2>Wann upgraden?</h2>
     <p>
-      Upgraden lohnt sich primär im High-Rune-Bereich, wenn gezielt auf bestimmte
+      Upgrades lohnen sich vor allem im High-Rune-Bereich, wenn gezielt auf
       Endgame-Runenwörter hingearbeitet wird.
       Im Mid-Bereich hängt es stark von Marktwert und Build-Ziel ab.
-      Low-Runen werden meist direkt genutzt oder gesammelt.
     </p>
   </section>
 
