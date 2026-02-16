@@ -36,10 +36,11 @@ body{
 
 .hero-inner{
   padding:64px 36px 48px;
-  background: linear-gradient(
+  background:linear-gradient(
     to bottom,
-    rgba(0,0,0,.35),
-    rgba(0,0,0,.78)
+    rgba(0,0,0,.15) 0%,
+    rgba(0,0,0,.55) 45%,
+    rgba(0,0,0,.9) 100%
   );
   position:relative;
 }
@@ -77,6 +78,18 @@ body{
 .section{
   max-width:900px;
   margin-bottom:44px;
+}
+
+.section-card{
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.04),
+    rgba(0,0,0,.35)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:26px 28px;
+  backdrop-filter:blur(6px);
 }
 
 .section h2{
@@ -244,11 +257,13 @@ h1{
 <div class="container">
 
   <div class="section">
-    <h2>Runen-Upgrade Übersicht</h2>
-    <p>
-      Vollständige Horadrim-Würfel-Rezepte für das Runen-Upgrade in Diablo II: Resurrected (RotWL).
-      Die Tabellen zeigen alle Kombinationen von <strong>El bis Zod</strong> – inklusive Edelstein-Anforderungen.
-    </p>
+    <div class="section-card">
+      <h2>Runen-Upgrade Übersicht</h2>
+      <p>
+        Vollständige Horadrim-Würfel-Rezepte für das Runen-Upgrade in Diablo II: Resurrected (RotWL).
+        Die Tabellen zeigen alle Kombinationen von <strong>El bis Zod</strong> – inklusive Edelstein-Anforderungen.
+      </p>
+    </div>
   </div>
 
   <div class="section">
