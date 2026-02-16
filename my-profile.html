@@ -411,19 +411,23 @@ async function loadAccountData(){
    const nextDate = new Date(d.battletagNextChange);
    const now = new Date();
 
-   if(nextDate > now){
+if(nextDate > now){
 
-     battletagInput.disabled = true;
-     saveBtn.disabled = true;
+  // 🔒 Beide Felder sperren
+  emailInput.disabled = true;
+  battletagInput.disabled = true;
 
-     const diffDays = Math.ceil((nextDate - now) / (1000*60*60*24));
+  // 🔒 Button deaktivieren
+  saveBtn.disabled = true;
 
-     note.innerHTML = `
-       🔒 BattleTag änderbar wieder am 
-       <strong>${nextDate.toLocaleDateString("de-DE")}</strong>
-       (in ${diffDays} Tagen)
-     `;
-   }
+  const diffDays = Math.ceil((nextDate - now) / (1000*60*60*24));
+
+  note.innerHTML = `
+    🔒 E-Mail & BattleTag änderbar wieder am 
+    <strong>${nextDate.toLocaleDateString("de-DE")}</strong>
+    (in ${diffDays} Tagen)
+  `;
+}
  }
 }
 
