@@ -233,6 +233,65 @@ h1{
   color:var(--gold);
 }
 
+  /* ================================
+   PROFILE PANEL (GUIDE PAGE)
+================================ */
+.profile-panel{
+  max-width:900px;
+  margin:30px auto 0;
+  padding:18px 22px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.04),
+    rgba(0,0,0,.35)
+  );
+  display:none;
+}
+
+.profile-panel.active{
+  display:block;
+}
+
+.profile-panel-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:10px;
+}
+
+.profile-panel-header img{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.18);
+}
+
+.profile-panel-name{
+  font-size:15px;
+  font-weight:600;
+}
+
+.profile-panel-links{
+  font-size:13px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+
+.profile-panel-links a{
+  color:#eaeaea;
+  text-decoration:none;
+  opacity:.85;
+}
+
+.profile-panel-links a:hover{
+  color:var(--gold);
+}
+
 </style>
 </head>
 
