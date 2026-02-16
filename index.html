@@ -1628,23 +1628,14 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
   filter:drop-shadow(0 0 4px rgba(0,0,0,.6));
 }
 
-  .guides-link {
-  display:flex;
-  align-items:center;
-  gap:6px;
+.guides-link {
+  position:relative;
+  transition:color .2s ease, text-shadow .2s ease;
 }
 
-.glyph-icon {
-  width:14px;
-  height:14px;
-  fill:currentColor;
-  opacity:.7;
-  transition:all .2s ease;
-}
-
-.guides-link:hover .glyph-icon {
-  opacity:1;
-  transform:scale(1.05);
+.guides-link:hover {
+  color:var(--gold);
+  text-shadow:0 0 6px rgba(245,196,81,.5);
 }
   
 </style>
