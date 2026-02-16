@@ -2,17 +2,14 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>D2R Wissensarchiv | D2R Lootliste</title>
+<title>D2R Guides – Runen, Cow Level & Terror Zonen</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Premium D2R Wissensarchiv für RotWL & Non-Ladder. Strukturierte Referenzseiten zu Runen-Upgrades, Cow Level und Terror Zonen – praxisnah, geprüft und aktuell.">
-<meta name="keywords" content="D2R Guides, Diablo 2 Resurrected Guides, RotWL Guides, Runen Upgrade Tabelle, Cow Level öffnen, Terror Zonen Erklärung">
+<meta name="description" content="Premium-Guide-Archiv für Diablo II: Resurrected (D2R). Runen Upgrade Tabelle, Cow Level Guide und Terror Zonen Analyse strukturiert und systemisch aufgebaut.">
 
 <style>
-:root{
-  --gold:#f5c451;
-}
-
+:root{ --gold:#f5c451; }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
@@ -21,136 +18,94 @@ body{
   color:#e6e6e6;
 }
 
-.wrapper{
-  max-width:1100px;
-  margin:0 auto;
-}
+.wrapper{max-width:1100px;margin:0 auto;}
 
 /* ================= HERO ================= */
 .hero{
-  background:url("../img/banner_diablo.png") center top / cover no-repeat;
-  border-radius:0 0 26px 26px;
-  overflow:hidden;
-  min-height:240px;
   position:relative;
+  border-radius:0 0 28px 28px;
+  overflow:hidden;
+  min-height:220px;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.6),
+    rgba(0,0,0,.85)
+  );
 }
 
 .hero-inner{
-  padding:72px 36px 54px;
-  background:linear-gradient(
-    to bottom,
-    rgba(0,0,0,.15) 0%,
-    rgba(0,0,0,.55) 45%,
-    rgba(0,0,0,.92) 100%
-  );
   position:relative;
+  padding:90px 40px 50px;
 }
 
 .hero-nav{
   position:absolute;
-  top:26px;
-  left:34px;
+  top:22px;
+  left:28px;
   display:flex;
-  gap:22px;
-  align-items:center;
-  padding:6px 14px;
-  background:rgba(0,0,0,.35);
+  gap:18px;
+  padding:8px 18px;
+  background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.08);
   border-radius:999px;
-  backdrop-filter:blur(4px);
   font-size:13px;
+  backdrop-filter:blur(6px);
 }
 
 .hero-link{
   color:#d6d6d6;
   text-decoration:none;
   opacity:.85;
-  font-weight:500;
+  transition:.15s;
 }
 
 .hero-link:hover{color:var(--gold);opacity:1}
 .hero-link.active{color:var(--gold)}
 
-.hero-badge{
+.hero-link:not(:last-child)::after{
+  content:"";
   display:inline-block;
-  margin:10px 0 16px;
-  padding:6px 14px;
-  font-size:12px;
-  letter-spacing:.4px;
-  text-transform:uppercase;
-  background:rgba(245,196,81,.12);
-  border:1px solid rgba(245,196,81,.35);
-  border-radius:999px;
-  color:var(--gold);
+  width:1px;
+  height:12px;
+  background:rgba(255,255,255,.25);
+  margin:0 14px;
+  vertical-align:middle;
 }
 
 h1{
-  font-size:30px;
-  margin-bottom:10px;
-  letter-spacing:.6px;
+  font-size:26px;
+  margin:0 0 14px;
+  font-weight:600;
 }
 
 .hero p{
-  opacity:.9;
+  max-width:640px;
+  line-height:1.6;
+  opacity:.78;
   font-size:15px;
-  max-width:620px;
-}
-
-/* ================= CONTENT ================= */
-.container{
-  padding:60px 28px 90px;
-}
-
-.section{
-  max-width:920px;
-  margin-bottom:60px;
-}
-
-.section h2{
-  color:var(--gold);
-  font-size:20px;
-  margin-bottom:14px;
-}
-
-.section p{
-  font-size:15px;
-  line-height:1.65;
-  opacity:.9;
+  margin:0;
 }
 
 /* ================= GRID ================= */
+.container{padding:40px 28px 100px}
+
 .guides-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:26px;
-  margin-top:30px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
 }
 
 .guide-card{
-  background:linear-gradient(
-    145deg,
-    rgba(255,255,255,.04),
-    rgba(0,0,0,.35)
-  );
+  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.35));
   border:1px solid rgba(255,255,255,.08);
   border-radius:20px;
-  padding:28px 24px;
   text-decoration:none;
   color:#e6e6e6;
   position:relative;
-  transition:all .18s ease;
-}
-
-.guide-card::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:3px;
-  background:var(--gold);
-  border-radius:20px 20px 0 0;
-  opacity:.6;
+  overflow:hidden;
+  transition:all .2s ease;
+  display:flex;
+  flex-direction:column;
 }
 
 .guide-card:hover{
@@ -158,28 +113,53 @@ h1{
   border-color:rgba(245,196,81,.35);
 }
 
-.guide-card h3{
-  margin:0 0 10px;
-  font-size:18px;
-  color:var(--gold);
+.guide-thumb{
+  height:130px;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+  transition:.3s ease;
 }
 
-.guide-card p{
-  margin:0 0 14px;
+.guide-thumb::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.2),
+    rgba(0,0,0,.7)
+  );
+}
+
+.guide-card:hover .guide-thumb{
+  transform:scale(1.04);
+}
+
+.guide-content{
+  padding:22px 22px 26px;
+}
+
+.guide-content h3{
+  margin:0 0 12px;
+  color:var(--gold);
+  font-size:18px;
+}
+
+.guide-content p{
+  margin:0 0 12px;
+  line-height:1.6;
   font-size:14px;
-  opacity:.85;
-  line-height:1.5;
+  opacity:.9;
 }
 
 .guide-meta{
   font-size:12px;
-  opacity:.7;
-  display:block;
-  margin-top:8px;
+  opacity:.6;
 }
 
 .footer-nav{
-  margin-top:70px;
+  margin-top:80px;
   padding-top:22px;
   border-top:1px solid #222;
   font-size:13px;
@@ -200,15 +180,16 @@ h1{
 
     <nav class="hero-nav">
       <a href="../index.html" class="hero-link">Lootliste</a>
+      <a href="runen-upgrade.html" class="hero-link">Runen</a>
+      <a href="cow-level.html" class="hero-link">Cow</a>
+      <a href="terror-zonen.html" class="hero-link">Terror</a>
       <a href="#" class="hero-link active">Guides</a>
     </nav>
 
-    <div class="hero-badge">Premium Archiv</div>
-    <h1>D2R Wissensarchiv</h1>
+    <h1>D2R Premium Guides</h1>
     <p>
-      Strukturierte Referenzseiten für RotWL & Non-Ladder.
-      Keine Massen-Guides. Keine Copy-Paste-Inhalte.
-      Nur das, was wirklich gespielt, gefarmt und gebaut wird.
+      Strukturierte Referenz-Seiten für Runen, Cow Level und Terror Zonen.
+      Systemisch aufgebaut – kein Blog, kein Wiki, sondern Tools.
     </p>
 
   </div>
@@ -216,60 +197,36 @@ h1{
 
 <div class="container">
 
-  <section class="section">
-    <h2>Diablo II: Resurrected – Praxisnahe Referenzseiten</h2>
-    <p>
-      Dieses Archiv bündelt ausgewählte D2R Guides mit klarem Fokus auf Spielpraxis.
-      Jede Seite ist bewusst kompakt gehalten, technisch korrekt aufgebaut
-      und auf aktuelle RotWL-Mechaniken abgestimmt.
-    </p>
-  </section>
+  <div class="guides-grid">
 
-  <section class="section">
-    <h2>Verfügbare Referenzseiten</h2>
-
-    <div class="guides-grid">
-
-      <a href="runen-upgrade.html" class="guide-card">
+    <a href="runen-upgrade.html" class="guide-card">
+      <div class="guide-thumb" style="background-image:url('../img/runen-upgrade-banner.png')"></div>
+      <div class="guide-content">
         <h3>Runen Upgrade Tabelle</h3>
-        <p>
-          Vollständige Horadrim-Würfel-Rezepte von El bis Zod.
-          Mit Edelstein-Anforderungen und klarer Struktur.
-        </p>
-        <span class="guide-meta">Aktualisiert: Januar 2026</span>
-      </a>
+        <p>Komplette Horadrim-Würfel-Rezepte von El bis Zod inklusive Edelstein-Anforderungen.</p>
+        <span class="guide-meta">Referenz-Tool</span>
+      </div>
+    </a>
 
-      <a href="cow-level.html" class="guide-card">
+    <a href="cow-level.html" class="guide-card">
+      <div class="guide-thumb" style="background-image:url('../img/cow-level-banner.png')"></div>
+      <div class="guide-content">
         <h3>Cow Level Guide</h3>
-        <p>
-          Voraussetzungen, Öffnungs-Mechanik und Hinweise zur König-Regel.
-          Klar erklärt – ohne Mythen.
-        </p>
-        <span class="guide-meta">Aktualisiert: Januar 2026</span>
-      </a>
+        <p>Öffnungsmechanik, König-Regeln, Farming-Effizienz und strategische Nutzung.</p>
+        <span class="guide-meta">Mechanik & Farming</span>
+      </div>
+    </a>
 
-      <a href="terror-zonen.html" class="guide-card">
-        <h3>Terror Zonen</h3>
-        <p>
-          Funktionsweise, Level-Scaling und Relevanz im RotWL-Modus.
-          Fokus auf XP und Endgame-Farming.
-        </p>
-        <span class="guide-meta">Aktualisiert: Januar 2026</span>
-      </a>
+    <a href="terror-zonen.html" class="guide-card">
+      <div class="guide-thumb" style="background-image:url('../img/terror-zonen-banner.png')"></div>
+      <div class="guide-content">
+        <h3>Terror Zonen Analyse</h3>
+        <p>Monster-Level-Skalierung, Loot-Vorteile und XP-Optimierung im Endgame.</p>
+        <span class="guide-meta">Endgame-System</span>
+      </div>
+    </a>
 
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>Warum dieses Archiv existiert</h2>
-    <p>
-      Viele D2R Guides wiederholen nur bekannte Inhalte.
-      Dieses Archiv verfolgt einen anderen Ansatz:
-      Wenige Seiten. Hohe Qualität. Technisch sauber strukturiert.
-      Jede Referenzseite soll bookmark-würdig sein –
-      als verlässliches Werkzeug während des Spiels.
-    </p>
-  </section>
+  </div>
 
   <div class="footer-nav">
     <a href="../index.html">← Zurück zur Lootliste</a>
