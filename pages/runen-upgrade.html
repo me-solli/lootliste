@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <title>Runen Upgrade Tabelle | D2R Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Alle Horadrim-Würfel-Rezepte zum Hochwerten von Runen in Diablo II: Resurrected (RoTWL). Übersichtliche Tabellen für Low-, Mid- und High-Runen.">
+<meta name="description" content="Komplette Runen Upgrade Tabelle für Diablo II: Resurrected (Rise of the World Ladder – RoTWL). Alle Horadrim-Würfel-Rezepte von El bis Zod übersichtlich erklärt.">
 
 <style>
 :root{
@@ -38,8 +37,10 @@ body{
 .hero-inner{
   padding:64px 36px 48px;
   background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.78));
+  position:relative;
 }
 
+/* HERO NAV */
 .hero-nav{
   position:absolute;
   top:26px;
@@ -51,7 +52,7 @@ body{
   background:rgba(0,0,0,.35);
   border:1px solid rgba(255,255,255,.08);
   border-radius:999px;
-  backdrop-filter: blur(4px);
+  backdrop-filter:blur(4px);
   font-size:13px;
 }
 
@@ -71,22 +72,23 @@ body{
 
 .section{
   max-width:900px;
-  margin-bottom:40px;
+  margin-bottom:44px;
 }
 
 .section h2{
-  margin:0 0 14px;
+  margin:0 0 16px;
   font-size:20px;
   color:var(--gold);
 }
 
 .section p{
-  margin:10px 0;
-  line-height:1.6;
+  margin:12px 0;
+  line-height:1.65;
   font-size:15px;
   opacity:.92;
 }
 
+/* TABLES */
 table{
   width:100%;
   border-collapse:collapse;
@@ -114,7 +116,7 @@ a{color:var(--gold);text-decoration:none}
 a:hover{text-decoration:underline}
 
 .footer-nav{
-  margin-top:50px;
+  margin-top:60px;
   padding-top:22px;
   border-top:1px solid #222;
   font-size:13px;
@@ -123,8 +125,33 @@ a:hover{text-decoration:underline}
 
 .footer-nav a{margin-right:16px}
 
-</style>
 
+
+/* ================= VISUAL ENHANCEMENTS ================= */
+.rune{
+  font-weight:600;
+  color:#f0f0f0;
+  letter-spacing:.3px;
+}
+
+.gem{
+  font-weight:600;
+}
+
+.gem-smaragd{color:#3ddc84}
+.gem-topas{color:#ffd54a}
+.gem-amethyst{color:#b388ff}
+.gem-saphir{color:#64b5f6}
+.gem-rubin{color:#ff5252}
+.gem-diamant{color:#e0f7fa}
+
+.table-note{
+  font-size:13px;
+  opacity:.75;
+  margin-top:10px;
+}
+
+</style>
 </head>
 
 <body>
@@ -133,13 +160,13 @@ a:hover{text-decoration:underline}
 <header class="hero">
   <div class="hero-inner">
 
-<nav class="hero-nav">
-  <a href="../index.html" class="hero-link">Lootliste</a>
-  <a href="#" class="hero-link active">Guides</a>
-</nav>
+    <nav class="hero-nav">
+      <a href="../index.html" class="hero-link">Lootliste</a>
+      <a href="#" class="hero-link active">Guides</a>
+    </nav>
 
-<h1>Runen Upgrade Tabelle</h1>
-<p>Alle Horadrim-Würfel-Rezepte für Diablo II: Resurrected (RoTWL)</p>
+    <h1>Runen Upgrade Tabelle</h1>
+    <p>Alle Horadrim-Würfel-Rezepte für Diablo II: Resurrected (Rise of the World Ladder – RoTWL)</p>
 
   </div>
 </header>
@@ -147,12 +174,14 @@ a:hover{text-decoration:underline}
 <div class="container">
 
   <div class="section">
+    <h2>Wie funktioniert das Runen-Upgrade?</h2>
     <p>
-      Mit dem Horadrim-Würfel können Runen in Diablo II: Resurrected zu höheren Runen aufgewertet werden.
-      Die folgenden Tabellen zeigen alle offiziellen Upgrade-Rezepte – strukturiert nach Low-, Mid- und High-Runen.
+      Mit dem Horadrim-Würfel können mehrere identische Runen kombiniert werden, um eine höherwertige Rune zu erzeugen.
+      Bei niedrigen Runen reichen drei gleiche Runen aus. Ab der Hel-Rune werden zusätzlich Edelsteine benötigt.
     </p>
     <p>
-      Die Rezepte gelten im aktuellen RoTWL-Modus für Ladder und Non-Ladder.
+      Die folgenden Tabellen enthalten alle offiziellen Upgrade-Rezepte im aktuellen Modus von
+      Diablo II: Resurrected (Rise of the World Ladder – RoTWL) für Ladder und Non-Ladder.
     </p>
   </div>
 
@@ -160,15 +189,15 @@ a:hover{text-decoration:underline}
     <h2>Low-Runen (El – Thul)</h2>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
-      <tr><td>3x El</td><td>Eld</td></tr>
-      <tr><td>3x Eld</td><td>Tir</td></tr>
-      <tr><td>3x Tir</td><td>Nef</td></tr>
-      <tr><td>3x Nef</td><td>Eth</td></tr>
-      <tr><td>3x Eth</td><td>Ith</td></tr>
-      <tr><td>3x Ith</td><td>Tal</td></tr>
-      <tr><td>3x Tal</td><td>Ral</td></tr>
-      <tr><td>3x Ral</td><td>Ort</td></tr>
-      <tr><td>3x Ort</td><td>Thul</td></tr>
+      <tr><td>3x <span class="rune">El</span></td><td>Eld</td></tr>
+      <tr><td>3x <span class="rune">Eld</span></td><td>Tir</td></tr>
+      <tr><td>3x <span class="rune">Tir</span></td><td>Nef</td></tr>
+      <tr><td>3x <span class="rune">Nef</span></td><td>Eth</td></tr>
+      <tr><td>3x <span class="rune">Eth</span></td><td>Ith</td></tr>
+      <tr><td>3x <span class="rune">Ith</span></td><td>Tal</td></tr>
+      <tr><td>3x <span class="rune">Tal</span></td><td>Ral</td></tr>
+      <tr><td>3x <span class="rune">Ral</span></td><td>Ort</td></tr>
+      <tr><td>3x <span class="rune">Ort</span></td><td>Thul</td></tr>
     </table>
   </div>
 
@@ -176,36 +205,39 @@ a:hover{text-decoration:underline}
     <h2>Mid-Runen (Amn – Gul)</h2>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
-      <tr><td>3x Thul</td><td>Amn</td></tr>
+      <tr><td>3x <span class="rune">Thul</span></td><td>Amn</td></tr>
       <tr><td>3x Amn</td><td>Sol</td></tr>
       <tr><td>3x Sol</td><td>Shael</td></tr>
       <tr><td>3x Shael</td><td>Dol</td></tr>
       <tr><td>3x Dol</td><td>Hel</td></tr>
-      <tr><td>3x Hel + 1x Chipped Gem</td><td>Io</td></tr>
-      <tr><td>3x Io + 1x Flawed Gem</td><td>Lum</td></tr>
-      <tr><td>3x Lum + 1x Flawed Gem</td><td>Ko</td></tr>
-      <tr><td>3x Ko + 1x Flawed Gem</td><td>Fal</td></tr>
-      <tr><td>3x Fal + 1x Flawed Gem</td><td>Lem</td></tr>
-      <tr><td>3x Lem + 1x Flawed Gem</td><td>Pul</td></tr>
-      <tr><td>2x Pul + 1x Perfect Emerald</td><td>Um</td></tr>
-      <tr><td>2x Um + 1x Perfect Topaz</td><td>Mal</td></tr>
-      <tr><td>2x Mal + 1x Perfect Amethyst</td><td>Ist</td></tr>
-      <tr><td>2x Ist + 1x Perfect Sapphire</td><td>Gul</td></tr>
+      <tr><td>3x Hel + 1x Angeschlagener Edelstein</td><td>Io</td></tr>
+      <tr><td>3x Io + 1x Fehlerhafter Edelstein</td><td>Lum</td></tr>
+      <tr><td>3x Lum + 1x Fehlerhafter Edelstein</td><td>Ko</td></tr>
+      <tr><td>3x Ko + 1x Fehlerhafter Edelstein</td><td>Fal</td></tr>
+      <tr><td>3x Fal + 1x Fehlerhafter Edelstein</td><td>Lem</td></tr>
+      <tr><td>3x Lem + 1x Fehlerhafter Edelstein</td><td>Pul</td></tr>
+      <tr><td>2x Pul + 1x <span class="gem gem-smaragd">Perfekter Smaragd</span></td><td>Um</td></tr>
+      <tr><td>2x Um + 1x <span class="gem gem-topas">Perfekter Topas</span></td><td>Mal</td></tr>
+      <tr><td>2x Mal + 1x <span class="gem gem-amethyst">Perfekter Amethyst</span></td><td>Ist</td></tr>
+      <tr><td>2x Ist + 1x <span class="gem gem-saphir">Perfekter Saphir</span></td><td>Gul</td></tr>
     </table>
+    <p>
+      Ab der Hel-Rune werden zusätzlich Edelsteine benötigt. Die benötigte Edelstein-Art ist im jeweiligen Rezept angegeben.
+    </p>
   </div>
 
   <div class="section">
     <h2>High-Runen (Vex – Zod)</h2>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
-      <tr><td>2x Gul + 1x Perfect Ruby</td><td>Vex</td></tr>
-      <tr><td>2x Vex + 1x Perfect Emerald</td><td>Ohm</td></tr>
-      <tr><td>2x Ohm + 1x Perfect Diamond</td><td>Lo</td></tr>
-      <tr><td>2x Lo + 1x Perfect Topaz</td><td>Sur</td></tr>
-      <tr><td>2x Sur + 1x Perfect Amethyst</td><td>Ber</td></tr>
-      <tr><td>2x Ber + 1x Perfect Sapphire</td><td>Jah</td></tr>
-      <tr><td>2x Jah + 1x Perfect Ruby</td><td>Cham</td></tr>
-      <tr><td>2x Cham + 1x Perfect Emerald</td><td>Zod</td></tr>
+      <tr><td>2x Gul + 1x <span class="gem gem-rubin">Perfekter Rubin</span></td><td>Vex</td></tr>
+      <tr><td>2x Vex + 1x <span class="gem gem-smaragd">Perfekter Smaragd</span></td><td>Ohm</td></tr>
+      <tr><td>2x Ohm + 1x <span class="gem gem-diamant">Perfekter Diamant</span></td><td>Lo</td></tr>
+      <tr><td>2x Lo + 1x <span class="gem gem-topas">Perfekter Topas</span></td><td>Sur</td></tr>
+      <tr><td>2x Sur + 1x <span class="gem gem-amethyst">Perfekter Amethyst</span></td><td>Ber</td></tr>
+      <tr><td>2x Ber + 1x <span class="gem gem-saphir">Perfekter Saphir</span></td><td>Jah</td></tr>
+      <tr><td>2x Jah + 1x <span class="gem gem-rubin">Perfekter Rubin</span></td><td>Cham</td></tr>
+      <tr><td>2x Cham + 1x <span class="gem gem-smaragd">Perfekter Smaragd</span></td><td>Zod</td></tr>
     </table>
   </div>
 
