@@ -2,9 +2,10 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Runen Upgrade Tabelle | D2R Lootliste</title>
+<title>Runen Upgrade Referenz | D2R Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Komplette Runen Upgrade Tabelle für Diablo II: Resurrected (RotWL). Alle Horadrim-Würfel-Rezepte von El bis Zod übersichtlich erklärt.">
+<meta name="description" content="Komplette Runen Upgrade Referenz für Diablo II: Resurrected (RotWL & Non-Ladder). Alle Horadrim-Würfel-Rezepte von El bis Zod strukturiert, erklärt und systemintegriert.">
+<meta name="keywords" content="D2R Runen Upgrade, Diablo 2 Runen Tabelle, Horadrim Würfel Rezepte, RotWL Runen, Rune Cubing D2R">
 
 <style>
 :root{
@@ -21,211 +22,51 @@ body{
   color:#e6e6e6;
 }
 
-.wrapper{
-  max-width:1100px;
-  margin:0 auto;
-}
+.wrapper{max-width:1150px;margin:0 auto;}
 
+/* ================= HERO ================= */
 .hero{
-  background:url("../img/banner_diablo.png") center top / cover no-repeat;
+  background:url("../img/runen-upgrade-banner.png") center center / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:220px;
+  min-height:320px;
   position:relative;
 }
 
 .hero-inner{
-  padding:64px 36px 48px;
+  padding:90px 40px 70px;
   background:linear-gradient(
     to bottom,
-    rgba(0,0,0,.15) 0%,
-    rgba(0,0,0,.55) 45%,
-    rgba(0,0,0,.9) 100%
+    rgba(0,0,0,.25) 0%,
+    rgba(0,0,0,.65) 45%,
+    rgba(0,0,0,.97) 100%
   );
   position:relative;
 }
 
-/* HERO NAV */
 .hero-nav{
   position:absolute;
   top:26px;
   left:34px;
   display:flex;
   gap:22px;
-  align-items:center;
   padding:6px 14px;
-  background:rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.1);
   border-radius:999px;
-  backdrop-filter:blur(4px);
   font-size:13px;
 }
 
-.hero-link{
-  color:#d6d6d6;
-  text-decoration:none;
-  opacity:.85;
-  font-weight:500;
-}
-
+.hero-link{color:#d6d6d6;text-decoration:none;opacity:.85}
 .hero-link:hover{color:var(--gold);opacity:1}
 .hero-link.active{color:var(--gold)}
 
-.container{
-  padding:40px 28px 70px;
-}
-
-.section{
-  max-width:900px;
-  margin-bottom:44px;
-}
-
-.section-card{
-  background:linear-gradient(
-    145deg,
-    rgba(255,255,255,.04),
-    rgba(0,0,0,.35)
-  );
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:26px 28px;
-  backdrop-filter:blur(6px);
-}
-
-.section h2{
-  margin:0 0 16px;
-  font-size:20px;
-  color:var(--gold);
-}
-
-.section p{
-  margin:12px 0;
-  line-height:1.65;
-  font-size:15px;
-  opacity:.92;
-}
-
-/* TABLES */
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:18px;
-  font-size:14px;
-}
-
-th, td{
-  padding:10px 12px;
-  border:1px solid rgba(255,255,255,.08);
-  text-align:left;
-}
-
-th{
-  background:rgba(255,255,255,.05);
-  color:var(--gold);
-  font-weight:600;
-}
-
-tr:nth-child(even){
-  background:rgba(255,255,255,.02);
-}
-
-a{color:var(--gold);text-decoration:none}
-a:hover{text-decoration:underline}
-
-.footer-nav{
-  margin-top:60px;
-  padding-top:22px;
-  border-top:1px solid #222;
-  font-size:13px;
-  opacity:.8;
-}
-
-.footer-nav a{margin-right:16px}
-
-
-
-/* ================= VISUAL ENHANCEMENTS ================= */
-.rune{
-  font-weight:600;
-  color:#f0f0f0;
-  letter-spacing:.3px;
-}
-
-.gem{
-  font-weight:600;
-}
-
-.gem-smaragd{color:#3ddc84}
-.gem-topas{color:#ffd54a}
-.gem-amethyst{color:#b388ff}
-.gem-saphir{color:#64b5f6}
-.gem-rubin{color:#ff5252}
-.gem-diamant{color:#e0f7fa}
-
-.table-note{
-  font-size:13px;
-  opacity:.75;
-  margin-top:10px;
-}
-
-
-
-/* ================= EXTRA POLISH ================= */
-
-/* Result rune emphasis */
-td:nth-child(2){
-  font-weight:600;
-  color:#ffffff;
-}
-
-/* High rune visual glow */
-.section:last-of-type table td:nth-child(2){
-  color:var(--gold);
-  text-shadow:0 0 6px rgba(245,196,81,.4);
-}
-
-/* Row hover effect */
-table tr{
-  transition:all .15s ease;
-}
-
-table tr:hover{
-  background:rgba(245,196,81,.06);
-}
-
-/* Softer table container feel */
-table{
-  border-radius:10px;
-  overflow:hidden;
-}
-
-/* Section divider subtle line */
-.section:not(:last-child){
-  padding-bottom:18px;
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-
-/* Hero title refinement */
-h1{
-  font-size:28px;
-  margin-bottom:6px;
-  letter-spacing:.5px;
-}
-
-.hero p{
-  opacity:.85;
-  font-size:15px;
-}
-
-
-
-/* HERO BADGE */
 .hero-badge{
   display:inline-block;
-  margin:8px 0 14px;
-  padding:6px 12px;
+  margin:12px 0 20px;
+  padding:6px 16px;
   font-size:12px;
-  letter-spacing:.4px;
+  letter-spacing:.6px;
   text-transform:uppercase;
   background:rgba(245,196,81,.12);
   border:1px solid rgba(245,196,81,.35);
@@ -233,26 +74,21 @@ h1{
   color:var(--gold);
 }
 
-  /* ================================
-   PROFILE PANEL (GUIDE PAGE)
-================================ */
+h1{font-size:34px;margin-bottom:14px;letter-spacing:.5px}
+.hero p{max-width:720px;opacity:.9;line-height:1.7}
+
+/* ================= PROFILE PANEL ================= */
 .profile-panel{
-  max-width:900px;
+  max-width:1000px;
   margin:30px auto 0;
-  padding:18px 22px;
+  padding:20px 24px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.08);
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,.04),
-    rgba(0,0,0,.35)
-  );
+  background:linear-gradient(to bottom,rgba(255,255,255,.04),rgba(0,0,0,.4));
   display:none;
 }
 
-.profile-panel.active{
-  display:block;
-}
+.profile-panel.active{display:block}
 
 .profile-panel-header{
   display:flex;
@@ -262,22 +98,19 @@ h1{
 }
 
 .profile-panel-header img{
-  width:50px;
-  height:50px;
+  width:54px;
+  height:54px;
   border-radius:50%;
   object-fit:cover;
   border:1px solid rgba(255,255,255,.18);
 }
 
-.profile-panel-name{
-  font-size:15px;
-  font-weight:600;
-}
+.profile-panel-name{font-size:16px;font-weight:600}
 
 .profile-panel-links{
   font-size:13px;
   display:flex;
-  gap:14px;
+  gap:16px;
   flex-wrap:wrap;
   margin-top:6px;
 }
@@ -288,9 +121,95 @@ h1{
   opacity:.85;
 }
 
-.profile-panel-links a:hover{
+.profile-panel-links a:hover{color:var(--gold)}
+
+/* ================= QUICK NAV ================= */
+.quick-nav{
+  margin-top:40px;
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.quick-nav a{
+  padding:7px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
+  font-size:13px;
+  text-decoration:none;
+  color:#ddd;
+  transition:.15s;
+}
+
+.quick-nav a:hover{
+  border-color:rgba(245,196,81,.4);
   color:var(--gold);
 }
+
+/* ================= CONTENT ================= */
+.container{padding:70px 32px 100px}
+.section{max-width:1000px;margin-bottom:90px}
+.section h2{color:var(--gold);margin-bottom:20px;font-size:22px}
+.section p{line-height:1.7;opacity:.9;font-size:15px}
+
+/* ================= TABLE ================= */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:24px;
+  font-size:14px;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+th, td{
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,.08);
+  text-align:left;
+}
+
+th{
+  background:rgba(255,255,255,.05);
+  color:var(--gold);
+  font-weight:600;
+}
+
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+tr:hover{background:rgba(245,196,81,.06)}
+
+.rune{font-weight:600;letter-spacing:.3px}
+
+.gem-smaragd{color:#3ddc84;font-weight:600}
+.gem-topas{color:#ffd54a;font-weight:600}
+.gem-amethyst{color:#b388ff;font-weight:600}
+.gem-saphir{color:#64b5f6;font-weight:600}
+.gem-rubin{color:#ff5252;font-weight:600}
+.gem-diamant{color:#e0f7fa;font-weight:600}
+
+.section-high table td:nth-child(2){
+  color:var(--gold);
+  text-shadow:0 0 6px rgba(245,196,81,.35);
+  font-weight:600;
+}
+
+.note{
+  font-size:13px;
+  opacity:.75;
+  margin-top:14px;
+}
+
+/* ================= FOOTER ================= */
+.footer-nav{
+  margin-top:100px;
+  padding-top:26px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav a{color:var(--gold);text-decoration:none}
+.footer-nav a:hover{text-decoration:underline}
 
 </style>
 </head>
@@ -303,22 +222,34 @@ h1{
 
     <nav class="hero-nav">
       <a href="../index.html" class="hero-link">Lootliste</a>
-      <a href="#" class="hero-link active">Guides</a>
+      <a href="guides.html" class="hero-link">Guides</a>
+      <a href="#" class="hero-link active">Runen Upgrade</a>
     </nav>
 
-    <h1>Runen Upgrade Tabelle</h1>
-    
-    <p>Alle Horadrim-Würfel-Rezepte für Diablo II: Resurrected (RotWL)</p>
+    <div class="hero-badge">System Referenz</div>
+    <h1>Runen Upgrade – Vollständige Referenz El bis Zod</h1>
+    <p>
+      Diese Seite ist als dauerhaftes Referenz‑Tool innerhalb der Lootliste aufgebaut.
+      Alle Horadrim‑Würfel‑Rezepte sind vollständig aufgeführt,
+      inklusive Edelstein‑Anforderungen und High‑Rune‑Progression.
+      Optimiert für RotWL und Non‑Ladder.
+    </p>
+
+    <div class="quick-nav">
+      <a href="#low">Low Runen</a>
+      <a href="#mid">Mid Runen</a>
+      <a href="#high">High Runen</a>
+    </div>
 
   </div>
 </header>
 
-  <section id="profilePanel" class="profile-panel">
+<section id="profilePanel" class="profile-panel">
   <div class="profile-panel-header">
     <img id="profilePanelAvatar" src="../img/avatars/default.png" alt="Avatar">
     <div>
       <div class="profile-panel-name" id="profilePanelName">Spieler</div>
-      <a href="../submit.html" class="auth-submit">+ Item einreichen</a>
+      <a href="../submit.html">+ Item einreichen</a>
     </div>
   </div>
 
@@ -333,37 +264,27 @@ h1{
 
 <div class="container">
 
-  <div class="section">
-    <div class="section-card">
-      <h2>Runen-Upgrade Übersicht</h2>
-      <p>
-        Vollständige Horadrim-Würfel-Rezepte für das Runen-Upgrade in Diablo II: Resurrected (RotWL).
-        Die Tabellen zeigen alle Kombinationen von <strong>El bis Zod</strong> – inklusive Edelstein-Anforderungen.
-      </p>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Low-Runen (El – Thul)</h2>
+  <section class="section" id="low">
+    <h2>Low‑Runen (El – Thul)</h2>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
       <tr><td>3x <span class="rune">El</span></td><td>Eld</td></tr>
-      <tr><td>3x <span class="rune">Eld</span></td><td>Tir</td></tr>
-      <tr><td>3x <span class="rune">Tir</span></td><td>Nef</td></tr>
-      <tr><td>3x <span class="rune">Nef</span></td><td>Eth</td></tr>
-      <tr><td>3x <span class="rune">Eth</span></td><td>Ith</td></tr>
-      <tr><td>3x <span class="rune">Ith</span></td><td>Tal</td></tr>
-      <tr><td>3x <span class="rune">Tal</span></td><td>Ral</td></tr>
-      <tr><td>3x <span class="rune">Ral</span></td><td>Ort</td></tr>
-      <tr><td>3x <span class="rune">Ort</span></td><td>Thul</td></tr>
+      <tr><td>3x Eld</td><td>Tir</td></tr>
+      <tr><td>3x Tir</td><td>Nef</td></tr>
+      <tr><td>3x Nef</td><td>Eth</td></tr>
+      <tr><td>3x Eth</td><td>Ith</td></tr>
+      <tr><td>3x Ith</td><td>Tal</td></tr>
+      <tr><td>3x Tal</td><td>Ral</td></tr>
+      <tr><td>3x Ral</td><td>Ort</td></tr>
+      <tr><td>3x Ort</td><td>Thul</td></tr>
     </table>
-  </div>
+  </section>
 
-  <div class="section">
-    <h2>Mid-Runen (Amn – Gul)</h2>
+  <section class="section" id="mid">
+    <h2>Mid‑Runen (Amn – Gul)</h2>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
-      <tr><td>3x <span class="rune">Thul</span></td><td>Amn</td></tr>
+      <tr><td>3x Thul</td><td>Amn</td></tr>
       <tr><td>3x Amn</td><td>Sol</td></tr>
       <tr><td>3x Sol</td><td>Shael</td></tr>
       <tr><td>3x Shael</td><td>Dol</td></tr>
@@ -374,32 +295,29 @@ h1{
       <tr><td>3x Ko + 1x Fehlerhafter Edelstein</td><td>Fal</td></tr>
       <tr><td>3x Fal + 1x Fehlerhafter Edelstein</td><td>Lem</td></tr>
       <tr><td>3x Lem + 1x Fehlerhafter Edelstein</td><td>Pul</td></tr>
-      <tr><td>2x Pul + 1x <span class="gem gem-smaragd">Perfekter Smaragd</span></td><td>Um</td></tr>
-      <tr><td>2x Um + 1x <span class="gem gem-topas">Perfekter Topas</span></td><td>Mal</td></tr>
-      <tr><td>2x Mal + 1x <span class="gem gem-amethyst">Perfekter Amethyst</span></td><td>Ist</td></tr>
-      <tr><td>2x Ist + 1x <span class="gem gem-saphir">Perfekter Saphir</span></td><td>Gul</td></tr>
+      <tr><td>2x Pul + 1x <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Um</td></tr>
+      <tr><td>2x Um + 1x <span class="gem-topas">Perfekter Topas</span></td><td>Mal</td></tr>
+      <tr><td>2x Mal + 1x <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ist</td></tr>
+      <tr><td>2x Ist + 1x <span class="gem-saphir">Perfekter Saphir</span></td><td>Gul</td></tr>
     </table>
-    <p>
-      Ab der Hel-Rune werden zusätzlich Edelsteine benötigt. Die benötigte Edelstein-Art ist im jeweiligen Rezept angegeben.
-    </p>
-  </div>
+    <div class="note">Ab Hel werden Edelsteine benötigt. Ab Pul ausschließlich perfekte Edelsteine.</div>
+  </section>
 
-  <div class="section">
-    <h2>High-Runen (Vex – Zod)</h2>
+  <section class="section section-high" id="high">
+    <h2>High‑Runen (Vex – Zod)</h2>
     <table>
       <tr><th>Rezept</th><th>Ergebnis</th></tr>
-      <tr><td>2x Gul + 1x <span class="gem gem-rubin">Perfekter Rubin</span></td><td>Vex</td></tr>
-      <tr><td>2x Vex + 1x <span class="gem gem-smaragd">Perfekter Smaragd</span></td><td>Ohm</td></tr>
-      <tr><td>2x Ohm + 1x <span class="gem gem-diamant">Perfekter Diamant</span></td><td>Lo</td></tr>
-      <tr><td>2x Lo + 1x <span class="gem gem-topas">Perfekter Topas</span></td><td>Sur</td></tr>
-      <tr><td>2x Sur + 1x <span class="gem gem-amethyst">Perfekter Amethyst</span></td><td>Ber</td></tr>
-      <tr><td>2x Ber + 1x <span class="gem gem-saphir">Perfekter Saphir</span></td><td>Jah</td></tr>
-      <tr><td>2x Jah + 1x <span class="gem gem-rubin">Perfekter Rubin</span></td><td>Cham</td></tr>
-      <tr><td>2x Cham + 1x <span class="gem gem-smaragd">Perfekter Smaragd</span></td><td>Zod</td></tr>
+      <tr><td>2x Gul + 1x <span class="gem-rubin">Perfekter Rubin</span></td><td>Vex</td></tr>
+      <tr><td>2x Vex + 1x <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Ohm</td></tr>
+      <tr><td>2x Ohm + 1x <span class="gem-diamant">Perfekter Diamant</span></td><td>Lo</td></tr>
+      <tr><td>2x Lo + 1x <span class="gem-topas">Perfekter Topas</span></td><td>Sur</td></tr>
+      <tr><td>2x Sur + 1x <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ber</td></tr>
+      <tr><td>2x Ber + 1x <span class="gem-saphir">Perfekter Saphir</span></td><td>Jah</td></tr>
+      <tr><td>2x Jah + 1x <span class="gem-rubin">Perfekter Rubin</span></td><td>Cham</td></tr>
+      <tr><td>2x Cham + 1x <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Zod</td></tr>
     </table>
-  </div>
-
-  
+    <div class="note">High‑Runen entstehen immer aus zwei Runen der vorherigen Stufe + perfektem Edelstein.</div>
+  </section>
 
   <div class="footer-nav">
     <a href="../index.html">← Zurück zur Lootliste</a>
@@ -408,7 +326,7 @@ h1{
 </div>
 </div>
 
-  <script>
+<script>
 async function loadProfilePanel(){
   try{
     const res = await fetch("/me");
@@ -433,6 +351,6 @@ async function loadProfilePanel(){
 
 loadProfilePanel();
 </script>
-  
+
 </body>
 </html>
