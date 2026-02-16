@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Runen Upgrade Tabelle | D2R Lootliste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Komplette Runen Upgrade Tabelle für Diablo II: Resurrected (Rise of the World Ladder – RoTWL). Alle Horadrim-Würfel-Rezepte von El bis Zod übersichtlich erklärt.">
+<meta name="description" content="Komplette Runen Upgrade Tabelle für Diablo II: Resurrected (RotWL). Alle Horadrim-Würfel-Rezepte von El bis Zod übersichtlich erklärt.">
 
 <style>
 :root{
@@ -35,8 +35,12 @@ body{
 }
 
 .hero-inner{
-  padding:64px 36px 48px;
-  background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.78));
+  padding:84px 36px 60px;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.25),
+    rgba(0,0,0,.85)
+  );
   position:relative;
 }
 
@@ -190,14 +194,33 @@ table{
 
 /* Hero title refinement */
 h1{
-  font-size:28px;
-  margin-bottom:6px;
-  letter-spacing:.5px;
+  font-size:34px;
+  margin-bottom:10px;
+  letter-spacing:.6px;
+  font-weight:700;
 }
 
 .hero p{
-  opacity:.85;
-  font-size:15px;
+  opacity:.92;
+  font-size:16px;
+  max-width:720px;
+  line-height:1.6;
+}
+
+
+
+/* HERO BADGE */
+.hero-badge{
+  display:inline-block;
+  margin:8px 0 14px;
+  padding:6px 12px;
+  font-size:12px;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  background:rgba(245,196,81,.12);
+  border:1px solid rgba(245,196,81,.35);
+  border-radius:999px;
+  color:var(--gold);
 }
 
 </style>
@@ -215,7 +238,8 @@ h1{
     </nav>
 
     <h1>Runen Upgrade Tabelle</h1>
-    <p>Alle Horadrim-Würfel-Rezepte für Diablo II: Resurrected (Rise of the World Ladder – RoTWL)</p>
+    <div class="hero-badge">Offizielle Horadrim‑Würfel‑Rezepte · Stand 2026</div>
+    <p>Alle Horadrim-Würfel-Rezepte für Diablo II: Resurrected (RotWL)</p>
 
   </div>
 </header>
@@ -230,7 +254,7 @@ h1{
     </p>
     <p>
       Die folgenden Tabellen enthalten alle offiziellen Upgrade-Rezepte im aktuellen Modus von
-      Diablo II: Resurrected (Rise of the World Ladder – RoTWL) für Ladder und Non-Ladder.
+      Diablo II: Resurrected (RotWL) für Ladder und Non-Ladder.
     </p>
   </div>
 
