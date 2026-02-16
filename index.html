@@ -2303,9 +2303,13 @@ function updateMeta() {
   }
 
   // Date
-  metaDate && (metaDate.textContent =
-    new Date().toLocaleDateString("de-DE")
-  );
+metaDate && (metaDate.textContent =
+  new Date().toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  })
+);
 }
 
   function updateResultsUI() {
