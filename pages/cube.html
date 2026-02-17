@@ -1,649 +1,264 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Horadrim-Würfel – Cube Codex (D2R)</title>
+<meta charset="UTF-8">
+<title>D2R Horadrim-Würfel – Cube Codex | Mechanik, Rezepte & Profi-Tipps</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Horadrim-Würfel Guide für Diablo II: Resurrected. Sockeln, Upgrades, Crafting, Rerolls und versteckte Mechaniken verständlich erklärt – inklusive Profi-Tipps und typischen Fehlern.">
 
 <style>
-:root{
-  --bg:#0b0b0b;
-  --panel:#141414;
-  --panel-soft:#1c1c1c;
-  --border:#2a2a2a;
-  --gold:#f5c451;
-  --text:#eaeaea;
-  --muted:#9a9a9a;
-  --good:#4cff4c;
-  --warn:#ffd24c;
-  --bad:#ff5c5c;
-}
-
+:root{ --gold:#f5c451; }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#1a1a1a 0%,#090909 65%);
-  color:var(--text);
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
 }
 
-/* HERO */
+.wrapper{max-width:1150px;margin:0 auto;}
+
+/* ================= HERO ================= */
 .hero{
-  padding:64px 32px 56px;
-  background:
-    radial-gradient(ellipse at top, rgba(0,0,0,.35), rgba(0,0,0,.9)),
-    url("../img/banner_diablo.png") center top / cover no-repeat;
-  border-bottom:1px solid var(--border);
+  position:relative;
+  background:linear-gradient(160deg,#1a1a1a,#0c0c0c);
+  border-radius:0 0 28px 28px;
+  overflow:hidden;
+  min-height:260px;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.35) 0%,
+    rgba(0,0,0,.65) 100%
+  );
 }
 
 .hero-inner{
-  max-width:1200px;
-  margin:0 auto;
-  padding-left:26px;
+  position:relative;
+  z-index:1;
+  padding:90px 40px 50px;
 }
 
-.hero h1{
-  margin:0;
-  font-size:36px;
-  color:var(--gold);
+.hero-nav{
+  position:absolute;
+  top:22px;
+  left:28px;
+  display:flex;
+  gap:18px;
+  padding:6px 14px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  font-size:13px;
 }
+
+.hero-link{color:#d6d6d6;text-decoration:none;opacity:.85}
+.hero-link:hover{color:var(--gold);opacity:1}
+.hero-link.active{color:var(--gold)}
+
+h1{font-size:26px;margin:0 0 14px;font-weight:600}
 
 .hero p{
-  margin:12px 0 0;
+  max-width:720px;
+  line-height:1.6;
+  opacity:.82;
   font-size:15px;
-  color:var(--muted);
+  margin:0;
 }
 
-/* CONTENT WRAP */
-main{
-  max-width:1400px;
-  margin:0 auto;
-  padding:28px 26px 90px;
-}
-
-/* TABS */
-.tabs{
+/* ================= NAV ================= */
+.section-nav{
+  margin:35px auto 10px;
   display:flex;
-  gap:12px;
+  gap:14px;
   flex-wrap:wrap;
-  margin:-16px auto 30px;
-  max-width:1200px;
 }
 
-.tab{
-  padding:10px 18px;
-  border-radius:16px;
-  border:1px solid var(--border);
-  background:var(--panel);
-  color:var(--text);
+.section-nav a{
+  padding:7px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
   font-size:13px;
-  cursor:pointer
-}
-.tab.active{
-  border-color:var(--gold);
-  box-shadow:0 0 0 1px rgba(245,196,81,.45)
-}
-.tab-content{display:none}
-.tab-content.active{display:block}
-
-/* CONTENT */
-.dashboard{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
-  gap:28px;
-  max-width:1200px;
-  margin:0 auto;
+  text-decoration:none;
+  color:#ddd;
+  transition:.15s;
 }
 
-.panel{
-  background:linear-gradient(180deg,#1a1a1a,#0f0f0f);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:22px 24px 26px
-}
-.panel h3{margin:0 0 6px;font-size:18px;color:var(--gold)}
-.subtitle{font-size:13px;color:var(--muted);margin-bottom:18px}
-
-.phases{
-  display:grid;
-  grid-template-columns:1fr 56px 1fr;
-  align-items:center;
-  gap:14px
-}
-.phase{
-  background:var(--panel-soft);
-  border:1px dashed var(--border);
-  border-radius:18px;
-  padding:16px 18px
-}
-.phase-arrow{text-align:center;font-size:22px;color:var(--muted)}
-
-.block-title{
-  font-size:11px;
-  letter-spacing:.8px;
+.section-nav a:hover{
+  border-color:rgba(245,196,81,.4);
   color:var(--gold);
-  margin:8px 0 6px;
-  text-transform:uppercase
 }
-.block-content{font-size:13px;color:#fff;margin-bottom:10px}
-.block-list{margin:0 0 10px 0;padding:0;list-style:none}
-.block-list li{font-size:13px;color:var(--muted);margin:4px 0}
 
-.example{margin-top:14px;font-size:13px;color:var(--muted)}
-.example strong{color:#fff}
+/* ================= CONTENT ================= */
+.container{padding:30px 28px 100px}
+.section{max-width:950px;margin-bottom:95px}
+.section h2{color:var(--gold);margin-bottom:18px;font-size:21px}
+.section p, .section ul{line-height:1.7;opacity:.92;font-size:15px}
+.section ul{margin-left:18px}
 
-.tag{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 12px;
+.card{
+  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.35));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:24px 26px;
+  margin-top:20px;
+}
+
+.badge{
+  display:inline-block;
+  padding:4px 10px;
   border-radius:999px;
   font-size:12px;
-  border:1px solid var(--border);
-  margin-top:14px
+  margin-top:12px;
+  border:1px solid rgba(255,255,255,.12);
 }
-.tag.warn{color:var(--warn)}
-.tag.good{color:var(--good)}
-.tag.bad{color:var(--bad)}
 
-/* FOOTER */
-footer{
-  text-align:center;
-  padding:34px 16px;
-  border-top:1px solid var(--border);
-  color:var(--muted);
-  font-size:12px
+.badge.warn{color:#ffd24c}
+.badge.good{color:#4cff4c}
+.badge.bad{color:#ff5c5c}
+
+.footer-nav{
+  margin-top:90px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
 }
+
+.footer-nav a{color:var(--gold);text-decoration:none}
+.footer-nav a:hover{text-decoration:underline}
+
 </style>
 </head>
 
 <body>
+<div class="wrapper">
 
-<header class="hero hero--cube">
+<header class="hero">
   <div class="hero-inner">
-    <h1>Horadrim-Würfel</h1>
-    <p>Rezeptübersicht & Nachschlagewerk für Diablo II: Resurrected</p>
+
+    <nav class="hero-nav">
+      <a href="../index.html" class="hero-link">Lootliste</a>
+      <a href="guides.html" class="hero-link">Guides</a>
+      <a href="#" class="hero-link active">Cube Codex</a>
+    </nav>
+
+    <h1>Horadrim-Würfel – Mechanik verstehen & Value maximieren</h1>
+    <p>
+      Der Horadrim-Würfel ist mehr als ein Rezept-Tool. Wer Item-Level,
+      Sockel-Logik und Upgrade-Mechanik versteht, vermeidet Anfängerfehler
+      und holt das Maximum aus Diablo II: Resurrected (RotWL & Non-Ladder).
+    </p>
+
   </div>
 </header>
 
-<main>
-  
-<div class="tabs">
-<button class="tab active" data-tab="sockel">🗡️ Sockeln</button>
-<button class="tab" data-tab="upgrade">⬆️ Upgrades</button>
-<button class="tab" data-tab="craft">🧪 Crafting</button>
-<button class="tab" data-tab="reroll">🎲 Reroll</button>
-<button class="tab" data-tab="runen">🧿 Runen & Gems</button>
-</div>
+<div class="container">
 
-<!-- SOCKELN -->
-<div id="sockel" class="tab-content active"><div class="dashboard">
+  <div class="section-nav">
+    <a href="#sockel">Sockeln</a>
+    <a href="#upgrade">Upgrades</a>
+    <a href="#craft">Crafting</a>
+    <a href="#reroll">Reroll</a>
+    <a href="#mechanik">Mechanik</a>
+    <a href="#fehler">Fehler vermeiden</a>
+  </div>
 
-<div class="panel">
-<h3>🗡️ Waffe sockeln</h3>
-<div class="subtitle">Nur weiße (normale) Waffen</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Normale Waffe</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Ral Rune</li>
-<li>Amn Rune</li>
-<li>Perf. Amethyst</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Gleiche Waffe</div>
-<ul class="block-list">
-<li>🎲 Zufällige Sockelanzahl</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Berserker Axe → 1–6 Sockel</div>
-<span class="tag warn">⚠️ irreversibel</span>
-</div>
+  <section class="section" id="sockel">
+    <h2>Sockel-Rezepte & Logik</h2>
+    <div class="card">
+      <p><strong>Waffe sockeln:</strong> Ral + Amn + Perf. Amethyst</p>
+      <p><strong>Rüstung:</strong> Tal + Thul + Perf. Topaz</p>
+      <p><strong>Schild:</strong> Tal + Amn + Perf. Ruby</p>
+      <ul>
+        <li>Zufällige Sockelanzahl</li>
+        <li>Item-Level & Max-Socket-Cap relevant</li>
+        <li>Irreversibel (nur leeren möglich)</li>
+      </ul>
+      <span class="badge warn">⚠️ Vorher Max-Sockel prüfen</span>
+    </div>
+  </section>
 
-<div class="panel">
-<h3>🛡️ Rüstung / Helm sockeln</h3>
-<div class="subtitle">Weiße Rüstungen & Helme</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Normale Rüstung / Helm</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Tal Rune</li>
-<li>Thul Rune</li>
-<li>Perf. Topaz</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Gesockeltes Item</div>
-<ul class="block-list">
-<li>🎲 Zufällige Sockelanzahl</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Mage Plate → bis zu 3 Sockel</div>
-</div>
+  <section class="section" id="upgrade">
+    <h2>Item-Upgrades</h2>
+    <div class="card">
+      <p><strong>Normal → Exceptional:</strong> Ral + Thul + Perf. Amethyst</p>
+      <p><strong>Exceptional → Elite:</strong> Lum + Pul + Perf. Emerald</p>
+      <ul>
+        <li>Werte werden neu gewürfelt</li>
+        <li>Anforderungen steigen deutlich</li>
+        <li>Nicht jedes Item profitiert sinnvoll</li>
+      </ul>
+      <span class="badge warn">⚠️ Low-Level-Nutzung kann verloren gehen</span>
+    </div>
+  </section>
 
-<div class="panel">
-<h3>🛡️ Schild sockeln</h3>
-<div class="subtitle">Keine Paladin-Exklusivmods</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Normaler Schild</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Tal Rune</li>
-<li>Amn Rune</li>
-<li>Perf. Ruby</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Gesockelter Schild</div>
-<ul class="block-list">
-<li>🎲 Zufällige Sockelanzahl</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Monarch → 1–4 Sockel</div>
-</div>
+  <section class="section" id="craft">
+    <h2>Crafting-System</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Caster:</strong> FCR / Mana</li>
+        <li><strong>Blood:</strong> Life / Life Leech</li>
+        <li><strong>Hitpower:</strong> Knockback</li>
+        <li><strong>Safety:</strong> Damage Reduction</li>
+      </ul>
+      <p>Crafts kombinieren feste Mods mit zufälligen Affixen – Item-Level bestimmt das Potenzial.</p>
+      <span class="badge good">🔥 High-End Amulets möglich</span>
+    </div>
+  </section>
 
-<div class="panel">
-<h3>🔓 Sockel leeren</h3>
-<div class="subtitle">Runen & Gems entfernen</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Gesockeltes Item</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Hel Rune</li>
-<li>Town Portal Scroll</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Leeres Sockel-Item</div>
-<ul class="block-list">
-<li>Sockel bleiben erhalten</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Spirit Monarch → leerer Monarch</div>
-<span class="tag warn">⚠️ Runen gehen verloren</span>
-</div>
+  <section class="section" id="reroll">
+    <h2>Reroll-Mechaniken</h2>
+    <div class="card">
+      <ul>
+        <li>3× Perf. Gems → Magic Item reroll</li>
+        <li>6× Perf. Skull → Rare reroll (iLvl sinkt!)</li>
+        <li>Charms behalten ihr iLvl</li>
+      </ul>
+      <span class="badge bad">❌ Rare Rerolls meist ineffizient</span>
+    </div>
+  </section>
 
-</div></div>
+  <section class="section" id="mechanik">
+    <h2>Cube-Mechanik verstehen (Aha-Bereich)</h2>
+    <div class="card">
+      <ul>
+        <li>Item-Level bestimmt Affix-Pool</li>
+        <li>Monster-Level beeinflusst Drop-iLvl</li>
+        <li>Max-Sockel hängt von Base & iLvl ab</li>
+        <li>Upgrade = Re-Roll der Basiswerte</li>
+      </ul>
+      <p>Viele Fehlentscheidungen entstehen, weil Spieler diese Zusammenhänge nicht kennen.</p>
+    </div>
+  </section>
 
-<!-- UPGRADE -->
-<div id="upgrade" class="tab-content"><div class="dashboard">
+  <section class="section" id="fehler">
+    <h2>Typische Cube-Fehler</h2>
+    <div class="card">
+      <ul>
+        <li>Monarch zu früh sockeln</li>
+        <li>Perfekte Low-Level-Items upgraden</li>
+        <li>Runen ineffizient hochziehen</li>
+        <li>Rare Items rerollen und iLvl zerstören</li>
+      </ul>
+      <span class="badge warn">⚠️ Erst prüfen – dann klicken</span>
+    </div>
+  </section>
 
-<div class="panel">
-<h3>⬆️ Normal → Exceptional</h3>
-<div class="subtitle">Unique & Set Items</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Normales Unique / Set</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Ral Rune</li>
-<li>Thul Rune</li>
-<li>Perf. Amethyst</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Exceptional-Version</div>
-<ul class="block-list">
-<li>🎲 Werte neu gewürfelt</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Goldwrap → Battle Belt</div>
-<span class="tag warn">⚠️ Re-Roll</span>
-</div>
+  <div class="footer-nav">
+    <a href="guides.html">← Zurück zu den Guides</a>
+  </div>
 
-<div class="panel">
-<h3>⬆️ Exceptional → Elite</h3>
-<div class="subtitle">Hohe Anforderungen</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Exceptional Item</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Lum Rune</li>
-<li>Pul Rune</li>
-<li>Perf. Emerald</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Elite-Version</div>
-<ul class="block-list">
-<li>🎲 Werte neu gewürfelt</li>
-</ul>
 </div>
 </div>
-<div class="example"><strong>Beispiel:</strong> Shaftstop → Boneweave</div>
-<span class="tag warn">⚠️ Anforderungen steigen</span>
-</div>
-
-<div class="panel">
-<h3>⚠️ Warum nicht alles upgraden?</h3>
-<div class="subtitle">Typische Anfängerfalle</div>
-<p style="font-size:13px;color:var(--muted);line-height:1.55">Upgrades erhöhen Level- und Attributanforderungen. Viele Items verlieren dadurch ihre Alltagstauglichkeit oder werden schlechter als Runewords.</p>
-<div class="example"><strong>Faustregel:</strong> Nur upgraden, wenn Basis & Mods wirklich stark sind.</div>
-</div>
-
-<div class="panel">
-<h3>📌 Upgrade-Checkliste</h3>
-<div class="subtitle">Vor dem Klick auf den Cube</div>
-<ul class="block-list">
-<li>✔ Ist das Item bereits gut gerollt?</li>
-<li>✔ Brauche ich den höheren Def-/Dmg-Wert?</li>
-<li>❌ Ersetzt ein Runeword das Item besser?</li>
-</ul>
-</div>
-
-</div></div>
-
-<!-- CRAFTING -->
-<div id="craft" class="tab-content"><div class="dashboard">
-
-<div class="panel">
-<h3>🧪 Caster Craft</h3>
-<div class="subtitle">FCR / Mana</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Magic Amulett</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Amn Rune</li>
-<li>Perf. Amethyst</li>
-<li>Jewel</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Caster Amulett</div>
-<ul class="block-list">
-<li>+ FCR / Mana</li>
-<li>+ Zufällige Affixe</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Magic Amu → +10% FCR Caster Amu</div>
-<span class="tag good">🔥 extrem beliebt</span>
-</div>
-
-<div class="panel">
-<h3>🩸 Blood Craft</h3>
-<div class="subtitle">Life / Life Leech</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Magic Handschuhe</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Nef Rune</li>
-<li>Perf. Ruby</li>
-<li>Jewel</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Blood Gloves</div>
-<ul class="block-list">
-<li>Life / Life Leech</li>
-<li>+ Zufällige Affixe</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Magic Gloves → Blood Gloves mit LL</div>
-</div>
-
-<div class="panel">
-<h3>💥 Hitpower Craft</h3>
-<div class="subtitle">Knockback / Attack Rating</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Magic Handschuhe</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Ort Rune</li>
-<li>Perf. Sapphire</li>
-<li>Jewel</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Hitpower Gloves</div>
-<ul class="block-list">
-<li>Knockback</li>
-<li>+ AR / Zufällige Affixe</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Magic Gloves → Hitpower Gloves mit KB</div>
-</div>
-
-<div class="panel">
-<h3>🛡️ Safety Craft</h3>
-<div class="subtitle">Damage Reduction / Resistenzen</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Magic Amulett</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Io Rune</li>
-<li>Perf. Emerald</li>
-<li>Jewel</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Safety Amulett</div>
-<ul class="block-list">
-<li>Damage Reduction</li>
-<li>+ Resistenzen</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Magic Amu → Safety Amu mit DR</div>
-</div>
-
-</div></div>
-
-<!-- REROLL -->
-<div id="reroll" class="tab-content"><div class="dashboard">
-
-<div class="panel">
-<h3>🎲 Magic Item rerollen</h3>
-<div class="subtitle">Charms, Circlets</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Magic Item</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>3× Perf. Gems</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Magic Item</div>
-<ul class="block-list">
-<li>🎲 Neue Affixe</li>
-</ul>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> GC → +Skill GC</div>
-</div>
-
-<div class="panel">
-<h3>🎯 Charm gezielt rerollen</h3>
-<div class="subtitle">Item-Level entscheidend</div>
-<p style="font-size:13px;color:var(--muted)">Charms behalten ihr iLvl. Baal-, Diablo- oder Nihlathak-Drops eignen sich für High-End-Affixe.</p>
-<div class="example"><strong>Beispiel:</strong> Baal GC → +Skill / Life</div>
-</div>
-
-<div class="panel">
-<h3>☠️ Rare Item rerollen</h3>
-<div class="subtitle">Fast nie sinnvoll</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Rare Item</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>6× Perf. Skull</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Rare Item</div>
-<ul class="block-list">
-<li>❌ Stark reduziertes iLvl</li>
-</ul>
-</div>
-</div>
-<span class="tag bad">❌ Anfängerfalle</span>
-</div>
-
-<div class="panel">
-<h3>📌 Reroll-Tipps</h3>
-<div class="subtitle">Kurz & wichtig</div>
-<ul class="block-list">
-<li>✔ Magic Items sind ideal</li>
-<li>✔ Charms lohnen sich langfristig</li>
-<li>❌ Rare Rerolls vermeiden</li>
-</ul>
-</div>
-
-</div></div>
-
-<!-- RUNEN -->
-<div id="runen" class="tab-content"><div class="dashboard">
-
-<div class="panel">
-<h3>🧿 Runen upgraden</h3>
-<div class="subtitle">3 → 1</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">3× gleiche Rune</div>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">1× höhere Rune</div>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> 3× Pul → Um</div>
-<span class="tag warn">⚠️ ab Vex ineffizient</span>
-</div>
-
-<div class="panel">
-<h3>💎 Gems upgraden</h3>
-<div class="subtitle">Chipped → Perfect</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">3× gleicher Gem</div>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">1× höherer Gem</div>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> 3× Flawed Ruby → Ruby</div>
-</div>
-
-<div class="panel">
-<h3>💀 Skulls upgraden</h3>
-<div class="subtitle">bis Perfect Skull</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">3× Skull</div>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">1× höherer Skull</div>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> 3× Flawless Skull → Perfect Skull</div>
-</div>
-
-<div class="panel">
-<h3>🔓 Sockel leeren</h3>
-<div class="subtitle">Runen & Gems entfernen</div>
-<div class="phases">
-<div class="phase">
-<div class="block-title">📦 Item</div>
-<div class="block-content">Gesockeltes Item</div>
-<div class="block-title">🧰 Materialien</div>
-<ul class="block-list">
-<li>Hel Rune</li>
-<li>Town Portal Scroll</li>
-</ul>
-</div>
-<div class="phase-arrow">➡️</div>
-<div class="phase">
-<div class="block-title">🎁 Ergebnis</div>
-<div class="block-content">Leeres Sockel-Item</div>
-</div>
-</div>
-<div class="example"><strong>Beispiel:</strong> Spirit Monarch → leerer Monarch</div>
-</div>
-
-</div></div>
-
-</main>
-
-<footer>
-  Community-Projekt · Diablo II: Resurrected · Cube Codex
-</footer>
-
-<script>
-const tabs=document.querySelectorAll('.tab');
-const contents=document.querySelectorAll('.tab-content');
-tabs.forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    tabs.forEach(t=>t.classList.remove('active'));
-    contents.forEach(c=>c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.tab).classList.add('active');
-  });
-});
-</script>
 
 </body>
 </html>
