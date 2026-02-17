@@ -914,6 +914,82 @@ body{
   text-decoration: underline;
 }
 
+  /* ================================
+   BUILD SPOTLIGHT
+================================ */
+
+.build-spotlight{
+  margin: 18px 28px 6px;
+}
+
+.spotlight-card{
+  display:flex;
+  flex-wrap:wrap;
+  gap:28px;
+  align-items:center;
+
+  padding:22px 24px;
+
+  border:1px solid rgba(245,196,81,.25);
+  border-radius:18px;
+
+  background:linear-gradient(
+    to bottom,
+    rgba(245,196,81,.05),
+    rgba(255,255,255,.02)
+  );
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.4);
+}
+
+.spotlight-left img{
+  width:100%;
+  max-width:380px;
+  border-radius:14px;
+  filter:brightness(.85);
+}
+
+.spotlight-right{
+  flex:1;
+  min-width:260px;
+}
+
+.spotlight-badge{
+  font-size:12px;
+  letter-spacing:.4px;
+  color:var(--gold);
+  margin-bottom:8px;
+  opacity:.9;
+}
+
+.spotlight-right h3{
+  margin:0 0 8px;
+  font-size:20px;
+}
+
+.spotlight-right p{
+  font-size:14px;
+  opacity:.85;
+  margin:0 0 14px;
+}
+
+.spotlight-btn{
+  display:inline-block;
+  padding:7px 16px;
+  border-radius:999px;
+  border:1px solid rgba(245,196,81,.45);
+  color:var(--gold);
+  text-decoration:none;
+  font-size:13px;
+  transition:.2s ease;
+}
+
+.spotlight-btn:hover{
+  background:rgba(245,196,81,.1);
+  box-shadow:0 0 10px rgba(245,196,81,.3);
+}
+
 /* ================================
    PROJECT STATUS
 ================================ */
