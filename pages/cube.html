@@ -23,10 +23,10 @@ body{
 /* ================= HERO ================= */
 .hero{
   position:relative;
-  background:linear-gradient(160deg,#1a1a1a,#0c0c0c);
+  background:url("/img/cube-codex-banner.png") center 40% / cover no-repeat;
   border-radius:0 0 28px 28px;
   overflow:hidden;
-  min-height:260px;
+  min-height:300px;
 }
 
 .hero::before{
@@ -250,6 +250,69 @@ h1{font-size:26px;margin:0 0 14px;font-weight:600}
         <li>Rare Items rerollen und iLvl zerstören</li>
       </ul>
       <span class="badge warn">⚠️ Erst prüfen – dann klicken</span>
+    </div>
+  </section>
+
+  <div class="footer-nav">
+    <a href="guides.html">← Zurück zu den Guides</a>
+  </div>
+
+  
+  <section class="section" id="insights">
+    <h2>Profi-Insights & Tiefenmechaniken</h2>
+    <div class="card">
+      <h3 style="margin-top:0;color:var(--gold)">Sockel-Logik im Detail</h3>
+      <p>
+        Die maximale Sockelanzahl eines Items wird durch <strong>Base-Typ</strong>
+        und <strong>Item-Level (iLvl)</strong> bestimmt. Larzuk gibt immer die
+        maximale Anzahl – der Cube würfelt zufällig innerhalb des erlaubten Bereichs.
+      </p>
+      <ul>
+        <li>Low iLvl = reduzierte Max-Sockel</li>
+        <li>High iLvl = volle Sockelanzahl möglich</li>
+        <li>Bestimmte Bases haben feste Caps (z.B. Monarch max 4)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;color:var(--gold)">Item-Level & Affix-Pool</h3>
+      <p>
+        Das iLvl entscheidet, welche Affixe überhaupt erscheinen dürfen.
+        Ein Baal-Drop hat ein höheres Potenzial als ein Early-Act-Drop –
+        selbst wenn beide Items gleich aussehen.
+      </p>
+      <ul>
+        <li>Charms behalten ihr ursprüngliches iLvl beim Reroll</li>
+        <li>Rare-Reroll reduziert iLvl drastisch</li>
+        <li>Crafting kombiniert festes + zufälliges Affix-Pool</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;color:var(--gold)">Runen-Ökonomie verstehen</h3>
+      <p>
+        Ab bestimmten Stufen (z.B. Vex+) wird das Hochziehen von Runen
+        mathematisch ineffizient. Der Marktwert steigt schneller als die
+        Cube-Kombination es rechtfertigt.
+      </p>
+      <ul>
+        <li>Low-Runen → sinnvoll kombinierbar</li>
+        <li>Mid-Runen → situativ</li>
+        <li>High-Runen → meist besser traden</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="quickcheck">
+    <h2>Quick-Check: Lohnt sich der Cube-Klick?</h2>
+    <div class="card">
+      <ul>
+        <li>Ist das Item bereits gut gerollt?</li>
+        <li>Verliere ich Level-/Str-Anforderungen?</li>
+        <li>Ersetzt ein Runeword das Item langfristig?</li>
+        <li>Kennt das Item sein maximales Sockel-Cap?</li>
+      </ul>
+      <span class="badge good">✔ Erst analysieren – dann kombinieren</span>
     </div>
   </section>
 
