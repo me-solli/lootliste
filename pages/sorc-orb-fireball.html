@@ -2,16 +2,16 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>D2R Sorc Guide – Frozen Orb / Fireball Hybrid</title>
+<title>D2R Sorc – Frozen Orb / Fireball Hybrid Referenz Guide</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Großer Orb/Fireball Hybrid Guide für Diablo II Resurrected (RotWL & Non-Ladder). Skills, FCR Breakpoints, Gear Progression, Farming-Meta & Systemanalyse.">
+<meta name="description" content="Umfassender Orb/Fireball Hybrid Guide für Diablo II Resurrected. Skill-System, Damage-Logik, Breakpoints, Farming-Matrix, Hardcore & RotWL Analyse.">
 
 <style>
 :root{
 --gold:#f5c451;
 --fire:#d94c2a;
 --ice:#4aa3ff;
---dark:#0d0d0f;
+--dark:#0b0b0d;
 }
 
 *{box-sizing:border-box}
@@ -20,122 +20,95 @@ html{scroll-behavior:smooth}
 body{
 margin:0;
 font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-background:radial-gradient(ellipse at top,#1b1b1f 0%,#0b0b0d 65%);
+background:radial-gradient(ellipse at top,#1a1a1f 0%,#0a0a0c 70%);
 color:#e6e6e6;
 }
 
-.wrapper{max-width:1200px;margin:0 auto;}
+.wrapper{max-width:1250px;margin:0 auto;}
 
 .hero{
 position:relative;
-background:linear-gradient(130deg,#0e1c2b,#3a1414);
+background:linear-gradient(135deg,#0e2233,#401515);
 border-radius:0 0 30px 30px;
+min-height:340px;
 overflow:hidden;
-min-height:320px;
 }
 
 .hero::before{
 content:"";
 position:absolute;
 inset:0;
-background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.85));
+background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.85));
 }
 
 .hero-inner{
 position:relative;
 z-index:1;
-padding:100px 50px 60px;
+padding:110px 60px 70px;
 }
 
 .hero-nav{
 position:absolute;
 top:25px;
-left:30px;
+left:35px;
 display:flex;
-gap:18px;
-padding:7px 15px;
+gap:20px;
+padding:7px 16px;
 background:rgba(0,0,0,.55);
-border:1px solid rgba(255,255,255,.08);
 border-radius:999px;
 font-size:13px;
+border:1px solid rgba(255,255,255,.1);
 }
 
-.hero-link{color:#d6d6d6;text-decoration:none;opacity:.85}
+.hero-link{color:#ddd;text-decoration:none;opacity:.85}
 .hero-link:hover{color:var(--gold)}
 .hero-link.active{color:var(--gold)}
 
-h1{
-font-size:30px;
-margin:0 0 16px;
-font-weight:600;
-}
+h1{font-size:32px;margin:0 0 18px;}
 
 .hero p{
-max-width:700px;
-opacity:.8;
-line-height:1.6;
+max-width:760px;
+opacity:.85;
+line-height:1.7;
+font-size:15px;
 }
 
-.section-nav{
-margin:40px auto 15px;
-display:flex;
-gap:14px;
-flex-wrap:wrap;
-}
-
-.section-nav a{
-padding:8px 18px;
-border-radius:999px;
-border:1px solid rgba(255,255,255,.12);
-background:rgba(255,255,255,.03);
-font-size:13px;
-text-decoration:none;
-color:#ddd;
-transition:.15s;
-}
-
-.section-nav a:hover{
-border-color:rgba(245,196,81,.4);
-color:var(--gold);
-}
-
-.container{padding:40px 35px 100px}
+.container{padding:45px 45px 120px}
 
 .section{
-max-width:1100px;
-margin-bottom:100px;
+margin-bottom:120px;
 }
 
 .section h2{
 color:var(--gold);
-margin-bottom:20px;
-font-size:22px;
+font-size:24px;
+margin-bottom:22px;
 }
 
 .card{
-background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(0,0,0,.4));
+background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(0,0,0,.45));
 border:1px solid rgba(255,255,255,.08);
-border-radius:20px;
-padding:28px;
-margin-top:20px;
+border-radius:22px;
+padding:30px;
+margin-top:22px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:25px;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:30px;
 margin-top:25px;
 }
 
 .table{
 width:100%;
 border-collapse:collapse;
-margin-top:15px;
 font-size:14px;
+margin-top:18px;
 }
 
 .table td{
-padding:9px;
+padding:10px;
 border-bottom:1px solid rgba(255,255,255,.08);
 }
 
@@ -143,18 +116,19 @@ border-bottom:1px solid rgba(255,255,255,.08);
 .fire{color:var(--fire)}
 .ice{color:var(--ice)}
 
-.tag{
+.badge{
 display:inline-block;
-padding:4px 10px;
+padding:4px 12px;
 border-radius:999px;
-background:rgba(255,255,255,.08);
 font-size:12px;
+background:rgba(255,255,255,.08);
 margin-right:6px;
+margin-bottom:6px;
 }
 
 .footer-nav{
-margin-top:80px;
-padding-top:25px;
+margin-top:100px;
+padding-top:30px;
 border-top:1px solid #222;
 font-size:13px;
 opacity:.8;
@@ -178,10 +152,10 @@ opacity:.8;
 <a href="#" class="hero-link active">Orb/Fireball</a>
 </nav>
 
-<h1>Frozen Orb / Fireball Sorceress</h1>
+<h1>Frozen Orb / Fireball Hybrid – Vollständige Referenz</h1>
 <p>
-Hybrid Build für sichere Ladder-Starts, stabile Terror-Zonen und flexible Immunitätskontrolle.
-Orb kontrolliert Flächen – Fireball übernimmt Single Target.
+Flexibler Ladder-Starter & Endgame-Hybrid. Kontrolliert Flächen mit Orb,
+eliminiert Immunitäten mit Fireball und bleibt stabil in Terror-Zonen.
 </p>
 
 </div>
@@ -189,139 +163,146 @@ Orb kontrolliert Flächen – Fireball übernimmt Single Target.
 
 <div class="container">
 
-<div class="section-nav">
-<a href="#identity">Build Identität</a>
-<a href="#skills">Skills</a>
-<a href="#fcr">FCR</a>
-<a href="#gear">Gear</a>
-<a href="#farm">Farming</a>
-<a href="#merc">Merc</a>
-<a href="#meta">Meta</a>
-</div>
-
-<section class="section" id="identity">
-<h2>Build Identität</h2>
+<section class="section">
+<h2>Build Architektur</h2>
 <div class="card">
-<span class="tag ice">Flächenkontrolle</span>
-<span class="tag fire">Single Target</span>
-<span class="tag">Ladder-Start</span>
-<span class="tag">Hybrid</span>
+<span class="badge ice">AoE Kontrolle</span>
+<span class="badge fire">Single Target</span>
+<span class="badge">Hybrid Stabilität</span>
+<span class="badge">Kein Respec-Zwang</span>
 
-<p style="margin-top:15px">
-Dieser Build ist ein System-Build. Kein maximaler DPS-Fokus, sondern Stabilität.
-Er verhindert Immun-Wände und erlaubt konstantes Farming.
+<p style="margin-top:18px">
+Dieser Build kombiniert sicheren Map-Clear mit flexibler Boss-Kontrolle.
+Er ist kein Max-DPS-Spezialist, sondern ein System-Ansatz gegen variable Immunitäten.
 </p>
 </div>
 </section>
 
-<section class="section" id="skills">
-<h2>Skill-System</h2>
+<section class="section">
+<h2>Level Progression (1–85)</h2>
 <div class="card">
-<h3 class="ice">Cold Tree</h3>
-20 Frozen Orb  
-20 Ice Bolt  
-1–10 Cold Mastery  
+Level 1–18 → Fireball Leveling<br>
+Level 18 → Teleport Unlock<br>
+Level 30 → Frozen Orb aktivieren<br>
+Ab 30 → Hybridisierung beginnen<br>
+Ab 60 → Mastery Feintuning<br>
 
-<h3 class="fire" style="margin-top:20px">Fire Tree</h3>
-20 Fireball  
-20 Meteor  
-1+ Fire Mastery  
-
-<h3 style="margin-top:20px">Utility</h3>
-1 Static  
-1 Teleport  
-1 Warmth  
-1 Frozen Armor  
-
-<p style="margin-top:15px">
-Cold Mastery nicht überinvestieren – Resist-Reduktion skaliert effizienter mit Gear.
+<p style="margin-top:18px">
+Frühe Punkte nicht sofort splitten. Erst Kernfähigkeiten stabilisieren.
 </p>
 </div>
 </section>
 
-<section class="section" id="fcr">
-<h2>FCR & FHR Breakpoints</h2>
+<section class="section">
+<h2>Damage-System Erklärung</h2>
 <div class="card">
-<table class="table">
-<tr><td>63% FCR</td><td>Minimum Hybrid</td></tr>
-<tr><td class="highlight">105% FCR</td><td>Optimal</td></tr>
-<tr><td>200% FCR</td><td>Spezial</td></tr>
-</table>
+<h3 class="ice">Cold Damage</h3>
+Frozen Orb profitiert stark von Ice Bolt Synergie.
+Cold Mastery reduziert Gegnerresistenzen – skaliert effektiver als Rohschaden.
 
-<br>
+<h3 class="fire" style="margin-top:25px">Fire Damage</h3>
+Fireball bekommt Synergie von Meteor.
+Fire Mastery skaliert multiplikativ.
 
-<table class="table">
-<tr><td>60% FHR</td><td>Solide</td></tr>
-<tr><td>86% FHR</td><td>Komfort</td></tr>
-</table>
-
+<p style="margin-top:20px">
+Hybrid bedeutet: Beide Elemente werden solide, nicht maximal gepusht.
+</p>
 </div>
 </section>
 
-<section class="section" id="gear">
-<h2>Gear Progression</h2>
+<section class="section">
+<h2>Breakpoints</h2>
+<div class="card">
+<table class="table">
+<tr><td>63 FCR</td><td>Minimum</td></tr>
+<tr><td class="highlight">105 FCR</td><td>Optimal</td></tr>
+<tr><td>200 FCR</td><td>High-End Spezial</td></tr>
+</table>
 
+<table class="table">
+<tr><td>60 FHR</td><td>Solide</td></tr>
+<tr><td>86 FHR</td><td>Komfort</td></tr>
+</table>
+</div>
+</section>
+
+<section class="section">
+<h2>Attribut Varianten</h2>
 <div class="grid">
-
 <div class="card">
-<h3>Early</h3>
-Spirit Sword<br>
-Lore<br>
-Stealth<br>
-Ancient's Pledge<br>
-FCR Ringe
+<h3>Vitality Build</h3>
+STR: für Gear<br>
+DEX: 0<br>
+VIT: Rest<br>
+Energy: 0
 </div>
 
 <div class="card">
-<h3>Midgame</h3>
-Spirit Monarch<br>
-Vipermagi<br>
-Magefist<br>
-Tal Amu<br>
-Res Boots
+<h3>Maxblock Variante</h3>
+Spirit ersetzen durch Stormshield<br>
+DEX investieren für 75% Block<br>
+Mehr Sicherheit, weniger Damage
 </div>
-
-<div class="card">
-<h3>Endgame</h3>
-Tal Rasha 3–5 Teile<br>
-Hoto<br>
-Arachnid Mesh<br>
-SoJ / FCR Ring<br>
-War Traveler
-</div>
-
 </div>
 </section>
 
-<section class="section" id="farm">
-<h2>Farming Effizienz</h2>
+<section class="section">
+<h2>MF vs Clear-Speed</h2>
+<div class="card">
+Bis ~250 MF kaum Clear-Verlust.<br>
+Ab 350+ MF deutlich spürbar langsamer.<br>
+Hybrid bevorzugt Balance.
+</div>
+</section>
 
+<section class="section">
+<h2>Farming Matrix</h2>
 <div class="card">
 <table class="table">
 <tr><td>Mephisto</td><td>Sehr Stark</td></tr>
-<tr><td>Chaos</td><td>Stark</td></tr>
+<tr><td>Chaos Sanctuary</td><td>Stark</td></tr>
 <tr><td>Cow Level</td><td>Stark</td></tr>
 <tr><td>Baal</td><td>Mittel</td></tr>
 <tr><td>Terror Zonen</td><td>Flexibel</td></tr>
 </table>
 </div>
-
 </section>
 
-<section class="section" id="merc">
-<h2>Mercenary</h2>
+<section class="section">
+<h2>Infinity & Immun-Break</h2>
 <div class="card">
-Act 2 Holy Freeze<br><br>
-Early: Insight + Treachery<br>
-Endgame: Infinity + Fortitude
+Infinity senkt Feuer- und Blitzresistenzen.<br>
+Cold Immunes bleiben oft teilweise immun.<br>
+Hybrid bleibt auch ohne Infinity spielbar.
 </div>
 </section>
 
-<section class="section" id="meta">
-<h2>Meta & RotWL Betrachtung</h2>
+<section class="section">
+<h2>Hardcore Hinweise</h2>
 <div class="card">
-Hybrid verhindert Immunitäts-Blockaden und bleibt auch in variablen Terror-Zonen stabil.
-Keine Respec-Abhängigkeit.
+Max Res Pflicht.<br>
+Energy Shield optional.<br>
+Teleport defensiv nutzen.<br>
+Nicht mitten in Elite-Packs orb-en.
+</div>
+</section>
+
+<section class="section">
+<h2>Spielrotation</h2>
+<div class="card">
+1. Teleport Position<br>
+2. Orb durch Pack ziehen<br>
+3. Fireball auf Elite<br>
+4. Static Boss<br>
+5. Bewegung halten
+</div>
+</section>
+
+<section class="section">
+<h2>RotWL Betrachtung</h2>
+<div class="card">
+Hybrid ist im RotWL-Umfeld besonders stabil,
+da variable Immunitäten und Map-Rotationen keine harte Spezialisierung erlauben.
 </div>
 </section>
 
