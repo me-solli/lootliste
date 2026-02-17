@@ -2,209 +2,188 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>D2R Sorc – Orb / Fireball Hybrid</title>
+<title>D2R Orb / Fireball Sorceress – Hybrid Guide (RotWL)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
---gold:#c8a14a;
---fire:#8f2b1d;
---ice:#2c6c94;
---bg:#07070a;
---stone:#111116;
+  --gold:#f5c451;
+  --fire:#b33a2a;
+  --ice:#3d7fa8;
 }
 
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 
 body{
-margin:0;
-font-family:Georgia, serif;
-background:
-radial-gradient(circle at top,#15151b 0%,#07070a 70%);
-color:#d6d6d6;
-letter-spacing:.3px;
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
 }
 
-.wrapper{max-width:1300px;margin:0 auto;}
+.wrapper{max-width:1100px;margin:0 auto;}
 
-/* HERO */
+/* ================= HERO ================= */
 
 .hero{
-position:relative;
-background:url("../img/sorc-guide-hero.jpg") center/cover no-repeat;
-min-height:480px;
-border-bottom:1px solid #1e1e25;
+  position:relative;
+  background:url("../img/sorc-guide-hero.jpg") center 35% / cover no-repeat;
+  border-radius:0 0 28px 28px;
+  overflow:hidden;
+  min-height:270px;
 }
 
 .hero::before{
-content:"";
-position:absolute;
-inset:0;
-background:
-radial-gradient(circle at center,rgba(0,0,0,.3),rgba(0,0,0,.85)),
-linear-gradient(to right,rgba(30,60,90,.6),rgba(60,20,20,.6));
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.45) 0%,
+    rgba(0,0,0,.55) 60%,
+    rgba(0,0,0,.75) 100%
+  );
 }
 
 .hero-inner{
-position:relative;
-z-index:1;
-padding:150px 70px 100px;
+  position:relative;
+  z-index:1;
+  padding:90px 40px 50px;
 }
 
-h1{
-font-size:40px;
-margin:0 0 20px;
-color:#f0e6c8;
-text-shadow:0 0 25px rgba(0,0,0,.8);
+.hero-nav{
+  position:absolute;
+  top:22px;
+  left:28px;
+  display:flex;
+  gap:18px;
+  padding:6px 14px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  font-size:13px;
 }
+
+.hero-link{color:#d6d6d6;text-decoration:none;opacity:.85}
+.hero-link:hover{color:var(--gold);opacity:1}
+.hero-link.active{color:var(--gold)}
+
+h1{font-size:26px;margin:0 0 14px;font-weight:600}
 
 .hero p{
-max-width:750px;
-opacity:.8;
-line-height:1.7;
-font-size:17px;
+  max-width:680px;
+  line-height:1.6;
+  opacity:.82;
+  font-size:15px;
+  margin:0;
 }
 
-/* SECTION */
+/* ================= NAV ================= */
 
-.section{
-padding:110px 70px;
-background:linear-gradient(180deg,#0e0e13,#0b0b10);
-border-top:1px solid #1a1a20;
+.section-nav{
+  margin:35px auto 10px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
 }
 
-.section h2{
-color:var(--gold);
-font-size:28px;
-margin-bottom:45px;
-text-transform:uppercase;
-letter-spacing:1px;
+.section-nav a{
+  padding:7px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
+  font-size:13px;
+  text-decoration:none;
+  color:#ddd;
+  transition:.15s;
 }
 
-/* CARD */
+.section-nav a:hover{
+  border-color:rgba(245,196,81,.4);
+  color:var(--gold);
+}
+
+/* ================= CONTENT ================= */
+
+.container{padding:30px 28px 100px}
+.section{max-width:950px;margin-bottom:95px}
+.section h2{color:var(--gold);margin-bottom:18px;font-size:21px}
+.section p, .section ul{line-height:1.7;opacity:.92;font-size:15px}
+.section ul{margin-left:18px}
 
 .card{
-background:
-linear-gradient(145deg,#15151a,#0f0f14);
-border:1px solid #1e1e26;
-border-radius:6px;
-padding:40px;
-margin-bottom:50px;
-box-shadow:
-inset 0 0 40px rgba(0,0,0,.6),
-0 0 30px rgba(0,0,0,.4);
+  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.35));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:24px 26px;
+  margin-top:20px;
 }
 
-/* GRID */
+/* ===== Skill Visual ===== */
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:45px;
+.skill-row{
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
-/* SKILLS */
-
-.skill-box{
-background:#111118;
-border:1px solid #1c1c22;
-padding:40px 30px;
-text-align:center;
-transition:.25s;
-position:relative;
+.skill-row img{
+  width:90px;
+  border-radius:12px;
 }
 
-.skill-box img{
-width:90px;
-margin-bottom:20px;
-filter:brightness(.9);
+.skill-row div{
+  flex:1;
 }
 
-.skill-box.ice::after{
-content:"";
-position:absolute;
-inset:0;
-box-shadow:0 0 40px rgba(44,108,148,.15);
+/* ===== Gear ===== */
+
+.gear-img{
+  width:100%;
+  max-width:420px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.1);
+  margin-bottom:20px;
 }
 
-.skill-box.fire::after{
-content:"";
-position:absolute;
-inset:0;
-box-shadow:0 0 40px rgba(143,43,29,.15);
+/* ===== Farming Cards ===== */
+
+.farm-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
 }
-
-.skill-box:hover{
-border-color:var(--gold);
-transform:translateY(-5px);
-}
-
-/* GEAR */
-
-.gear-wrapper{
-display:flex;
-gap:60px;
-align-items:center;
-flex-wrap:wrap;
-}
-
-.gear-wrapper img{
-width:280px;
-border:1px solid #1e1e25;
-box-shadow:0 0 25px rgba(0,0,0,.7);
-}
-
-/* BREAK BAR */
-
-.break-bar{
-height:14px;
-background:#16161c;
-border:1px solid #1e1e25;
-border-radius:3px;
-overflow:hidden;
-margin-top:18px;
-}
-
-.fill{
-height:100%;
-background:linear-gradient(90deg,#2c6c94,#8f2b1d);
-box-shadow:0 0 20px rgba(0,0,0,.5);
-}
-
-/* FARM CARDS */
 
 .farm-card{
-background:#111118;
-border:1px solid #1e1e26;
-transition:.3s;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  overflow:hidden;
+  background:rgba(0,0,0,.35);
 }
 
 .farm-card img{
-width:100%;
-height:200px;
-object-fit:cover;
-filter:brightness(.7);
+  width:100%;
+  height:170px;
+  object-fit:cover;
+  filter:brightness(.75);
 }
 
-.farm-content{
-padding:25px;
+.farm-card div{
+  padding:16px;
 }
 
-.farm-card:hover{
-border-color:var(--gold);
-transform:translateY(-5px);
+.footer-nav{
+  margin-top:90px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
 }
 
-/* FOOTER */
-
-footer{
-padding:90px;
-text-align:center;
-opacity:.5;
-font-size:13px;
-background:#07070a;
-border-top:1px solid #1a1a20;
-}
+.footer-nav a{color:var(--gold);text-decoration:none}
+.footer-nav a:hover{text-decoration:underline}
 
 </style>
 </head>
@@ -213,98 +192,125 @@ border-top:1px solid #1a1a20;
 <div class="wrapper">
 
 <header class="hero">
-<div class="hero-inner">
-<h1>Frozen Orb / Fireball Hybrid</h1>
-<p>
-Ein kontrollierter Hybrid-Build für düstere Map-Kontrolle.
-Kein reiner DPS-Bolide – sondern ein strategisches Werkzeug gegen variable Immunitäten.
-</p>
-</div>
+  <div class="hero-inner">
+
+    <nav class="hero-nav">
+      <a href="../index.html" class="hero-link">Lootliste</a>
+      <a href="guides.html" class="hero-link">Guides</a>
+      <a href="#" class="hero-link active">Orb / Fireball</a>
+    </nav>
+
+    <h1>D2R Orb / Fireball Sorceress – Hybrid Guide</h1>
+    <p>
+      Flexible Hybrid-Sorc für RotWL & Non-Ladder.  
+      Kombiniert Flächenkontrolle durch Frozen Orb mit
+      starkem Single Target via Fireball.
+    </p>
+
+  </div>
 </header>
 
-<section class="section">
-<h2>Core Skills</h2>
+<div class="container">
 
-<div class="grid">
+  <div class="section-nav">
+    <a href="#skills">Skills</a>
+    <a href="#fcr">FCR</a>
+    <a href="#gear">Gear</a>
+    <a href="#farming">Farming</a>
+    <a href="#meta">Meta</a>
+  </div>
 
-<div class="skill-box ice">
-<img src="../img/sorc-guide-orb.png">
-<h3>Frozen Orb</h3>
-<p>Flächenkontrolle & sichere Packs</p>
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <h2>Core Skills</h2>
+
+    <div class="card">
+      <div class="skill-row">
+        <img src="../img/sorc-guide-orb.png">
+        <div>
+          <strong style="color:var(--ice)">Frozen Orb</strong>
+          <p>Main AoE Clear – ideal für dichte Packs und Map-Kontrolle.</p>
+        </div>
+      </div>
+
+      <hr style="border:0;border-top:1px solid #222;margin:20px 0;">
+
+      <div class="skill-row">
+        <img src="../img/sorc-guide-fireball.png">
+        <div>
+          <strong style="color:var(--fire)">Fireball</strong>
+          <p>Single Target & Unterstützung gegen Kälte-Immunes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FCR -->
+  <section class="section" id="fcr">
+    <h2>105% FCR Sweetspot</h2>
+    <div class="card">
+      <p>
+        105% FCR sorgt für flüssigen Teleport und effizientes Fireball-Spamming.
+        Hybrid-Builds profitieren stark von diesem Breakpoint.
+      </p>
+    </div>
+  </section>
+
+  <!-- GEAR -->
+  <section class="section" id="gear">
+    <h2>Endgame Setup</h2>
+    <div class="card">
+      <img src="../img/sorc-guide-gear.png" class="gear-img">
+      <p>
+        Standard Hybrid Core: Hoto / Tal, Spirit Monarch,
+        Tal Armor, Arachnid Mesh, Magefist, FCR Ring + SoJ.
+      </p>
+    </div>
+  </section>
+
+  <!-- FARMING -->
+  <section class="section" id="farming">
+    <h2>Farming Einschätzung</h2>
+
+    <div class="farm-grid">
+
+      <div class="farm-card">
+        <img src="../img/sorc-guide-chaos.jpg">
+        <div>
+          <strong>Chaos Sanctuary</strong>
+          <p>Sehr stabil – Dual-Element Vorteil.</p>
+        </div>
+      </div>
+
+      <div class="farm-card">
+        <img src="../img/sorc-guide-cow.jpg">
+        <div>
+          <strong>Cow Level</strong>
+          <p>Hohe Dichte + Hybrid-Sicherheit.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- META -->
+  <section class="section" id="meta">
+    <h2>Meta (RotWL)</h2>
+    <div class="card">
+      <p>
+        Orb/Fireball bleibt eine der flexibelsten Hybrid-Lösungen
+        im RotWL-Endgame – kein Respec-Zwang, konstante Map-Stabilität
+        und solide XP-Leistung in Terror Zonen.
+      </p>
+    </div>
+  </section>
+
+  <div class="footer-nav">
+    <a href="guides.html">← Zurück zu den Guides</a>
+  </div>
+
+</div>
 </div>
 
-<div class="skill-box fire">
-<img src="../img/sorc-guide-fireball.png">
-<h3>Fireball</h3>
-<p>Single Target & Immun-Handling</p>
-</div>
-
-</div>
-</section>
-
-<section class="section">
-<h2>105% FCR Sweetspot</h2>
-
-<div class="card">
-<p>Optimale Hybrid-Geschwindigkeit ohne 200% Spezialisierung.</p>
-
-<div class="break-bar">
-<div class="fill" style="width:75%"></div>
-</div>
-
-</div>
-</section>
-
-<section class="section">
-<h2>Endgame Setup</h2>
-
-<div class="card gear-wrapper">
-
-<img src="../img/sorc-guide-gear.png">
-
-<div>
-<h3>Standard Hybrid Core</h3>
-<p>
-Hoto / Tal Weapon<br>
-Spirit Monarch<br>
-Tal Armor<br>
-Arachnid Mesh<br>
-Magefist<br>
-FCR + SoJ
-</p>
-</div>
-
-</div>
-</section>
-
-<section class="section">
-<h2>Farming Effizienz</h2>
-
-<div class="grid">
-
-<div class="farm-card">
-<img src="../img/sorc-guide-chaos.jpg">
-<div class="farm-content">
-<h4>Chaos Sanctuary</h4>
-<p>Sehr stabil im Hybrid-Spielstil.</p>
-</div>
-</div>
-
-<div class="farm-card">
-<img src="../img/sorc-guide-cow.jpg">
-<div class="farm-content">
-<h4>Cow Level</h4>
-<p>Dichte + Dual-Element Vorteil.</p>
-</div>
-</div>
-
-</div>
-</section>
-
-<footer>
-Orb / Fireball Hybrid – Düstere Referenz Version
-</footer>
-
-</div>
 </body>
 </html>
