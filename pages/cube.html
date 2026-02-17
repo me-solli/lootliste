@@ -75,10 +75,11 @@ h1{font-size:26px;margin:0 0 14px;font-weight:600}
 
 /* ================= NAV ================= */
 .section-nav{
-  margin:35px auto 10px;
+  margin:40px auto 20px;
   display:flex;
   gap:14px;
   flex-wrap:wrap;
+  justify-content:center;
 }
 
 .section-nav a{
@@ -100,25 +101,66 @@ h1{font-size:26px;margin:0 0 14px;font-weight:600}
 /* ================= CONTENT ================= */
 .container{padding:30px 28px 100px}
 .section{max-width:950px;margin-bottom:95px}
-.section h2{color:var(--gold);margin-bottom:18px;font-size:21px}
+.section h2{
+  color:var(--gold);
+  margin-bottom:22px;
+  font-size:22px;
+  position:relative;
+  display:inline-block;
+}
+
+.section h2::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  width:60%;
+  height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+}
 .section p, .section ul{line-height:1.7;opacity:.92;font-size:15px}
 .section ul{margin-left:18px}
 
 .card{
-  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.35));
+  background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(0,0,0,.45));
   border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:24px 26px;
-  margin-top:20px;
+  border-radius:22px;
+  padding:26px 30px;
+  margin-top:24px;
+  backdrop-filter:blur(4px);
+  transition:all .25s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,rgba(245,196,81,.08),transparent 40%);
+  opacity:0;
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(245,196,81,.35);
+  box-shadow:0 12px 28px rgba(0,0,0,.55);
+}
+
+.card:hover::before{
+  opacity:1;
 }
 
 .badge{
   display:inline-block;
-  padding:4px 10px;
+  padding:6px 14px;
   border-radius:999px;
   font-size:12px;
-  margin-top:12px;
+  margin-top:14px;
   border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.4);
+  letter-spacing:.4px;
 }
 
 .badge.warn{color:#ffd24c}
@@ -135,6 +177,50 @@ h1{font-size:26px;margin:0 0 14px;font-weight:600}
 
 .footer-nav a{color:var(--gold);text-decoration:none}
 .footer-nav a:hover{text-decoration:underline}
+
+
+/* ================= GRID INSIGHT LAYOUT ================= */
+.insight-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+}
+
+.stat-box{
+  background:linear-gradient(160deg,#111,#0a0a0a);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+  transition:.25s;
+}
+
+.stat-box:hover{
+  border-color:rgba(245,196,81,.4);
+  transform:translateY(-3px);
+}
+
+.stat-box h3{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:18px;
+}
+
+.stat-box p{
+  font-size:14px;
+  opacity:.8;
+  margin:0;
+}
+
+.fade-in{
+  animation:fadeIn .8s ease forwards;
+  opacity:0;
+}
+
+@keyframes fadeIn{
+  to{opacity:1; transform:none}
+  from{opacity:0; transform:translateY(10px)}
+}
 
 </style>
 </head>
@@ -229,14 +315,27 @@ h1{font-size:26px;margin:0 0 14px;font-weight:600}
 
   <section class="section" id="mechanik">
     <h2>Cube-Mechanik verstehen (Aha-Bereich)</h2>
+
+    <div class="insight-grid">
+      <div class="stat-box fade-in">
+        <h3>Item-Level</h3>
+        <p>Bestimmt Affix-Pool und Craft-Potenzial. Drop-Ort entscheidet über Qualität.</p>
+      </div>
+
+      <div class="stat-box fade-in">
+        <h3>Max-Sockel</h3>
+        <p>Abhängig von Base + iLvl. Larzuk ≠ Cube-Würfelmechanik.</p>
+      </div>
+
+      <div class="stat-box fade-in">
+        <h3>Re-Roll Logik</h3>
+        <p>Magic bleibt stark – Rare verliert iLvl. Charm behält sein Potenzial.</p>
+      </div>
+    </div>
+
     <div class="card">
-      <ul>
-        <li>Item-Level bestimmt Affix-Pool</li>
-        <li>Monster-Level beeinflusst Drop-iLvl</li>
-        <li>Max-Sockel hängt von Base & iLvl ab</li>
-        <li>Upgrade = Re-Roll der Basiswerte</li>
-      </ul>
-      <p>Viele Fehlentscheidungen entstehen, weil Spieler diese Zusammenhänge nicht kennen.</p>
+      <p>Viele Fehlentscheidungen entstehen nicht durch Pech, sondern durch fehlendes Verständnis der Systemmechanik.</p>
+      <span class="badge good">🧠 Wissen = Value</span>
     </div>
   </section>
 
