@@ -7,31 +7,33 @@
 
 <style>
 :root{
---gold:#f5c451;
---fire:#d94c2a;
---ice:#4aa3ff;
---bg:#0c0c10;
+--gold:#c8a14a;
+--fire:#8f2b1d;
+--ice:#2c6c94;
+--bg:#07070a;
+--stone:#111116;
 }
 
 *{box-sizing:border-box}
 
 body{
 margin:0;
-font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-background:radial-gradient(circle at top,#1b1b22 0%,#0c0c10 70%);
-color:#e6e6e6;
+font-family:Georgia, serif;
+background:
+radial-gradient(circle at top,#15151b 0%,#07070a 70%);
+color:#d6d6d6;
+letter-spacing:.3px;
 }
 
-.wrapper{max-width:1250px;margin:0 auto;}
+.wrapper{max-width:1300px;margin:0 auto;}
 
 /* HERO */
 
 .hero{
 position:relative;
 background:url("../img/sorc-guide-hero.jpg") center/cover no-repeat;
-min-height:420px;
-border-radius:0 0 35px 35px;
-overflow:hidden;
+min-height:480px;
+border-bottom:1px solid #1e1e25;
 }
 
 .hero::before{
@@ -39,49 +41,58 @@ content:"";
 position:absolute;
 inset:0;
 background:
-linear-gradient(to right,rgba(20,40,70,.7),rgba(70,20,20,.7)),
-linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.85));
+radial-gradient(circle at center,rgba(0,0,0,.3),rgba(0,0,0,.85)),
+linear-gradient(to right,rgba(30,60,90,.6),rgba(60,20,20,.6));
 }
 
 .hero-inner{
 position:relative;
 z-index:1;
-padding:120px 60px 80px;
+padding:150px 70px 100px;
 }
 
 h1{
-font-size:36px;
-margin:0 0 18px;
+font-size:40px;
+margin:0 0 20px;
+color:#f0e6c8;
+text-shadow:0 0 25px rgba(0,0,0,.8);
 }
 
 .hero p{
-max-width:700px;
-font-size:16px;
-opacity:.85;
-line-height:1.6;
+max-width:750px;
+opacity:.8;
+line-height:1.7;
+font-size:17px;
 }
 
-/* SECTIONS */
+/* SECTION */
 
 .section{
-padding:90px 60px;
+padding:110px 70px;
+background:linear-gradient(180deg,#0e0e13,#0b0b10);
+border-top:1px solid #1a1a20;
 }
 
 .section h2{
 color:var(--gold);
-font-size:26px;
-margin-bottom:35px;
+font-size:28px;
+margin-bottom:45px;
+text-transform:uppercase;
+letter-spacing:1px;
 }
 
 /* CARD */
 
 .card{
-background:linear-gradient(145deg,#15151c,#101015);
-border:1px solid rgba(255,255,255,.08);
-border-radius:24px;
-padding:35px;
-margin-bottom:40px;
-box-shadow:0 0 30px rgba(0,0,0,.4);
+background:
+linear-gradient(145deg,#15151a,#0f0f14);
+border:1px solid #1e1e26;
+border-radius:6px;
+padding:40px;
+margin-bottom:50px;
+box-shadow:
+inset 0 0 40px rgba(0,0,0,.6),
+0 0 30px rgba(0,0,0,.4);
 }
 
 /* GRID */
@@ -89,93 +100,110 @@ box-shadow:0 0 30px rgba(0,0,0,.4);
 .grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:35px;
+gap:45px;
 }
 
-/* SKILL VISUAL */
+/* SKILLS */
 
 .skill-box{
-background:#141419;
-border-radius:20px;
-padding:30px;
+background:#111118;
+border:1px solid #1c1c22;
+padding:40px 30px;
 text-align:center;
-border:1px solid rgba(255,255,255,.08);
-transition:.2s;
+transition:.25s;
+position:relative;
 }
 
 .skill-box img{
-width:85px;
-margin-bottom:18px;
+width:90px;
+margin-bottom:20px;
+filter:brightness(.9);
 }
 
-.skill-box.ice{box-shadow:0 0 30px rgba(74,163,255,.15);}
-.skill-box.fire{box-shadow:0 0 30px rgba(217,76,42,.15);}
+.skill-box.ice::after{
+content:"";
+position:absolute;
+inset:0;
+box-shadow:0 0 40px rgba(44,108,148,.15);
+}
+
+.skill-box.fire::after{
+content:"";
+position:absolute;
+inset:0;
+box-shadow:0 0 40px rgba(143,43,29,.15);
+}
 
 .skill-box:hover{
-transform:translateY(-6px);
 border-color:var(--gold);
+transform:translateY(-5px);
 }
 
 /* GEAR */
 
 .gear-wrapper{
 display:flex;
-gap:40px;
+gap:60px;
 align-items:center;
 flex-wrap:wrap;
 }
 
 .gear-wrapper img{
-width:260px;
-border-radius:20px;
-border:1px solid rgba(255,255,255,.1);
+width:280px;
+border:1px solid #1e1e25;
+box-shadow:0 0 25px rgba(0,0,0,.7);
 }
 
 /* BREAK BAR */
 
 .break-bar{
 height:14px;
-background:#1e1e25;
-border-radius:999px;
+background:#16161c;
+border:1px solid #1e1e25;
+border-radius:3px;
 overflow:hidden;
-margin-top:15px;
+margin-top:18px;
 }
 
 .fill{
 height:100%;
-background:linear-gradient(90deg,var(--ice),var(--fire));
+background:linear-gradient(90deg,#2c6c94,#8f2b1d);
+box-shadow:0 0 20px rgba(0,0,0,.5);
 }
 
 /* FARM CARDS */
 
 .farm-card{
-background:#141419;
-border-radius:24px;
-overflow:hidden;
-border:1px solid rgba(255,255,255,.08);
-transition:.2s;
+background:#111118;
+border:1px solid #1e1e26;
+transition:.3s;
 }
 
 .farm-card img{
 width:100%;
-height:180px;
+height:200px;
 object-fit:cover;
+filter:brightness(.7);
 }
 
 .farm-content{
-padding:20px;
+padding:25px;
 }
 
 .farm-card:hover{
-transform:translateY(-6px);
 border-color:var(--gold);
+transform:translateY(-5px);
 }
 
+/* FOOTER */
+
 footer{
-padding:70px;
+padding:90px;
 text-align:center;
-opacity:.6;
+opacity:.5;
 font-size:13px;
+background:#07070a;
+border-top:1px solid #1a1a20;
 }
 
 </style>
@@ -188,13 +216,11 @@ font-size:13px;
 <div class="hero-inner">
 <h1>Frozen Orb / Fireball Hybrid</h1>
 <p>
-Hybrid Sorceress für stabile Ladder-Starts, variable Terror-Zonen
-und kontrollierte Immunitäts-Strategie.
+Ein kontrollierter Hybrid-Build für düstere Map-Kontrolle.
+Kein reiner DPS-Bolide – sondern ein strategisches Werkzeug gegen variable Immunitäten.
 </p>
 </div>
 </header>
-
-<!-- BUILD CORE -->
 
 <section class="section">
 <h2>Core Skills</h2>
@@ -204,25 +230,23 @@ und kontrollierte Immunitäts-Strategie.
 <div class="skill-box ice">
 <img src="../img/sorc-guide-orb.png">
 <h3>Frozen Orb</h3>
-<p>Main AoE Control & Map Clear</p>
+<p>Flächenkontrolle & sichere Packs</p>
 </div>
 
 <div class="skill-box fire">
 <img src="../img/sorc-guide-fireball.png">
 <h3>Fireball</h3>
-<p>Single Target & Immun-Break Support</p>
+<p>Single Target & Immun-Handling</p>
 </div>
 
 </div>
 </section>
 
-<!-- BREAKPOINT -->
-
 <section class="section">
 <h2>105% FCR Sweetspot</h2>
 
 <div class="card">
-<p>Optimale Teleport- & Fireball-Animation für Hybrid-Flow.</p>
+<p>Optimale Hybrid-Geschwindigkeit ohne 200% Spezialisierung.</p>
 
 <div class="break-bar">
 <div class="fill" style="width:75%"></div>
@@ -230,8 +254,6 @@ und kontrollierte Immunitäts-Strategie.
 
 </div>
 </section>
-
-<!-- GEAR -->
 
 <section class="section">
 <h2>Endgame Setup</h2>
@@ -241,21 +263,19 @@ und kontrollierte Immunitäts-Strategie.
 <img src="../img/sorc-guide-gear.png">
 
 <div>
-<h3>Standard Hybrid Setup</h3>
+<h3>Standard Hybrid Core</h3>
 <p>
-Weapon: Hoto / Tal<br>
-Shield: Spirit Monarch<br>
-Armor: Tal Rasha<br>
-Belt: Arachnid<br>
-Gloves: Magefist<br>
-Ring: FCR + SoJ
+Hoto / Tal Weapon<br>
+Spirit Monarch<br>
+Tal Armor<br>
+Arachnid Mesh<br>
+Magefist<br>
+FCR + SoJ
 </p>
 </div>
 
 </div>
 </section>
-
-<!-- FARMING -->
 
 <section class="section">
 <h2>Farming Effizienz</h2>
@@ -266,7 +286,7 @@ Ring: FCR + SoJ
 <img src="../img/sorc-guide-chaos.jpg">
 <div class="farm-content">
 <h4>Chaos Sanctuary</h4>
-<p>Sehr stabil – Hybrid effizient.</p>
+<p>Sehr stabil im Hybrid-Spielstil.</p>
 </div>
 </div>
 
@@ -274,7 +294,7 @@ Ring: FCR + SoJ
 <img src="../img/sorc-guide-cow.jpg">
 <div class="farm-content">
 <h4>Cow Level</h4>
-<p>Stark für Rune- & Base-Farming.</p>
+<p>Dichte + Dual-Element Vorteil.</p>
 </div>
 </div>
 
@@ -282,7 +302,7 @@ Ring: FCR + SoJ
 </section>
 
 <footer>
-Orb / Fireball Hybrid – Referenz Guide
+Orb / Fireball Hybrid – Düstere Referenz Version
 </footer>
 
 </div>
