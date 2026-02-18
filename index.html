@@ -2724,12 +2724,12 @@ if (ACTIVE_SEASON === "ladder") {
 // ===============================
 // MODE TABS
 // ===============================
-document.querySelectorAll(".mode-tab").forEach(tab => {
+document.querySelectorAll("[data-season]").forEach(tab => {
   tab.addEventListener("click", async () => {
 
     // Active Tab wechseln
-    document.querySelectorAll(".mode-tab")
-      .forEach(t => t.classList.remove("active"));
+document.querySelectorAll("[data-season]")
+  .forEach(t => t.classList.remove("active"));
 
     tab.classList.add("active");
 
