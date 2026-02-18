@@ -2610,15 +2610,6 @@ if (state.type) {
     list = list.filter(i => (i.name || "").toLowerCase().includes(q));
   }
 
-  // Sort
-  if (state.sort === "rating-desc") {
-    list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  }
-
-  if (state.sort === "rating-asc") {
-    list.sort((a, b) => (a.rating || 0) - (b.rating || 0));
-  }
-
   state.filtered = list;
   renderCards(state.filtered, container);
   updateMeta();
