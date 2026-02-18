@@ -150,6 +150,14 @@ export function renderCards(items, container) {
       ? `${type} • ${item.sub}`
       : type;
 
+    const seasonLabel = item.season === "ladder"
+  ? "Ladder"
+  : "Non-Ladder";
+
+const seasonClass = item.season === "ladder"
+  ? "season-ladder"
+  : "season-nonladder";
+
     let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
     if (item.donor) {
