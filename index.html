@@ -2618,6 +2618,25 @@ setTimeout(async () => {
     applyFilters();
   });
 
+  // ===============================
+// SEASON TOGGLE
+// ===============================
+document.querySelectorAll(".season-toggle").forEach(btn => {
+  btn.addEventListener("click", async () => {
+
+    document.querySelectorAll(".season-toggle")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    ACTIVE_SEASON = btn.dataset.season;
+
+    // neu laden
+    await loadItems();
+    applyFilters();
+  });
+});
+
   // 🔓 Logout (SESSION CLEAN)
 document.addEventListener("click", async (e) => {
   if (!e.target.classList.contains("auth-logout")) return;
