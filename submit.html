@@ -423,10 +423,10 @@ let selectedSeason = null;
 const notice = document.getElementById("ladderNotice");
   const modeHint = document.getElementById("modeHint");
 
-document.querySelectorAll(".submit-mode-tab").forEach(tab => {
+document.querySelectorAll(".submit-mode-visual").forEach(tab => {
   tab.addEventListener("click", () => {
 
-    document.querySelectorAll(".submit-mode-tab")
+    document.querySelectorAll(".submit-mode-visual")
       .forEach(t => t.classList.remove("active"));
 
     tab.classList.add("active");
