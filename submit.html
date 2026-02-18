@@ -243,10 +243,27 @@ if(!accountId){
 
   <div class="user-box">
     Aktiver Nutzer: <code id="userDisplay">–</code><br>
-    Saison: <code>Non-Ladder</code>
+      </div>
+
+  <!-- SEASON SELECT -->
+<div class="submit-season-wrapper">
+
+  <div class="submit-mode-tab" data-season="non-ladder">
+    🏛 NON-LADDER
   </div>
 
-  <div class="form-card">
+  <div class="submit-mode-tab" data-season="ladder">
+    ⚔ LADDER
+  </div>
+
+</div>
+
+<div id="ladderNotice" class="ladder-notice" style="display:none;">
+  ⚔ Ladder-Items sind saisongebunden und werden nach Season-Ende
+  nicht automatisch in Non-Ladder übernommen.
+</div>
+
+  <div class="form-card" id="submitFormWrapper" style="display:none;">
     <form id="form">
 
       <label>Screenshot (Pflicht)</label>
