@@ -1191,7 +1191,7 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
 ================================ */
 .filter-slogan-wrap{
   margin: 18px 28px 6px;
-  padding: 10px 14px 20px;
+  padding: 10px 14px 14px;
   border-radius: 18px;
   background:
     linear-gradient(
@@ -1207,57 +1207,51 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
   letter-spacing:.2px;
   color:#cfcfcf;
   opacity:.9;
-  margin-bottom:18px;
+  margin-bottom:12px;
 }
 
 /* ================================
-   SEASON MODE CARDS
+   MODE BAR (KOMPAKT)
 ================================ */
 
-.season-mode-wrapper{
+.mode-bar{
   display:flex;
-  justify-content:center;
-  gap:28px;
-  margin:6px 0 8px;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
   flex-wrap:wrap;
 }
 
-.season-mode-card{
-  width:260px;
-  padding:22px 18px;
-  border-radius:18px;
-  background:rgba(20,20,20,.65);
-  border:1px solid rgba(255,255,255,.06);
-  text-align:center;
+.mode-switch{
+  display:flex;
+  gap:10px;
+}
+
+.mode-tab{
+  padding:6px 16px;
+  border-radius:999px;
+  font-size:12px;
+  letter-spacing:1px;
   cursor:pointer;
-  transition:all .25s ease;
-  opacity:.55;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);
+  color:#aaa;
+  transition:all .2s ease;
 }
 
-.season-mode-card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(245,196,81,.35);
+.mode-tab:hover{
+  border-color:rgba(245,196,81,.4);
+  color:#eaeaea;
 }
 
-.season-mode-card.active{
-  opacity:1;
+.mode-tab.active{
+  background:rgba(245,196,81,.12);
   border-color:rgba(245,196,81,.6);
-  box-shadow:0 0 28px rgba(245,196,81,.25);
+  color:#f5c451;
+  box-shadow:0 0 12px rgba(245,196,81,.25);
 }
 
-.season-mode-icon{
-  font-size:22px;
-  margin-bottom:8px;
-}
-
-.season-mode-title{
-  font-size:15px;
-  letter-spacing:1.6px;
-  font-weight:700;
-  margin-bottom:6px;
-}
-
-.season-mode-sub{
+.mode-date{
   font-size:12px;
   opacity:.7;
 }
