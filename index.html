@@ -2637,6 +2637,7 @@ if (state.type) {
 
   state.filtered = list;
   renderCards(state.filtered, container);
+  renderRecentFeed(state.filtered);
   updateMeta();
   updateResultsUI();
 }
