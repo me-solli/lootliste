@@ -285,12 +285,21 @@ async function load(){
   }
 
   const mine = await response.json();
+  const seasonFilter = document.getElementById("filterSeason").value;
+const statusFilter = document.getElementById("filterStatus").value;
+
+const filtered = mine.filter(i => {
+  const seasonMatch = seasonFilter ? i.season === seasonFilter : true;
+  const statusMatch = statusFilter ? i.status === statusFilter : true;
+  return seasonMatch && statusMatch;
+});
+
   const accounts = await fetch(API+"/admin/accounts").then(r=>r.json());
 
   let cFreeN=0,cResN=0,cDoneN=0;
   tableBody.innerHTML="";
 
-  mine.forEach(i=>{
+  filtered.forEach(i=>{
     const donorConfirmedUI=
       localStorage.getItem("donor_confirmed_ui_"+i.id)==="yes";
 
