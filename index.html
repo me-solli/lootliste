@@ -2092,37 +2092,32 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
 </nav>
 
 <!-- ================================
-     SLOGAN + SEASON MODE
+     SLOGAN + MODE BAR
 ================================ -->
 <div class="filter-slogan-wrap">
 
   <div class="loot-slogan">
-    🩸 — 🗡️ Kein Kampf.   Kein Blut.   Nur Loot. 🗡️ — 🩸
+    🩸 — 🗡️ Kein Kampf. Kein Blut. Nur Loot. 🗡️ — 🩸
   </div>
 
-  <!-- SEASON MODE SELECTOR -->
-  <div class="season-mode-wrapper">
+  <div class="mode-bar">
 
-    <div class="season-mode-card active" data-season="non-ladder">
-      <div class="season-mode-icon">🏛</div>
-      <div class="season-mode-title">NON-LADDER</div>
-      <div class="season-mode-sub">
-        Dauerhafte Items
+    <div class="mode-switch">
+      <div class="mode-tab active" data-season="non-ladder">
+        NON-LADDER
+      </div>
+      <div class="mode-tab" data-season="ladder">
+        LADDER
       </div>
     </div>
 
-    <div class="season-mode-card" data-season="ladder">
-      <div class="season-mode-icon">⚔</div>
-      <div class="season-mode-title">LADDER</div>
-      <div class="season-mode-sub">
-        Aktuelle Season
-      </div>
+    <div class="mode-date">
+      🕒 Stand: <span id="metaDate">–</span>
     </div>
 
   </div>
 
 </div>
-
   
 <!-- ================================
      CONTENT
