@@ -125,6 +125,36 @@ function showClaimModal() {
       from{transform:translateY(8px);opacity:0}
       to{transform:translateY(0);opacity:1}
     }
+
+/* === Season Badge === */
+
+.item-meta {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  opacity:.85;
+}
+
+.season-badge {
+  padding:2px 6px;
+  border-radius:6px;
+  font-size:11px;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+}
+
+.season-ladder {
+  background:rgba(90,170,90,.15);
+  border:1px solid rgba(90,170,90,.4);
+  color:#6fdc6f;
+}
+
+.season-nonladder {
+  background:rgba(150,150,150,.12);
+  border:1px solid rgba(150,150,150,.3);
+  color:#bbb;
+}    
   `;
 
   document.head.appendChild(style);
