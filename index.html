@@ -2426,10 +2426,14 @@ if (meRes.ok) {
 }
 
 state.items = data
-  .filter(i =>
-    i.status === "verfügbar" &&
-    (i.season ?? "non-ladder") === ACTIVE_SEASON
-  )
+  .filter(i => {
+    const season = (i.season || "non-ladder").toLowerCase().trim();
+    return (
+      i.status === "verfügbar" &&
+      season === ACTIVE_SEASON
+    );
+  })
+
   .map(item => ({
     ...item,
     isOwner:
