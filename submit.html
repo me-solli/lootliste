@@ -442,18 +442,14 @@ confirmBox.addEventListener("change",()=>{
 });
 
 // ================================
-// AUTH INIT (Submit korrekt)
+// AUTH INIT (Submit stabil)
 // ================================
 async function initAuth(){
 
-  const deviceId = localStorage.getItem("lootliste_user_id");
-  const accountId = localStorage.getItem("lootliste_account_id");
+  const res = await fetch(API_BASE + "/me", {
+    credentials: "include"
+  });
 
-  const headers = {};
-  if(deviceId) headers["X-User-Id"] = deviceId;
-  if(accountId) headers["X-Account-Id"] = accountId;
-
-  const res = await fetch(API_BASE + "/me", { headers });
   const data = await res.json();
 
   if(!data.loggedIn){
