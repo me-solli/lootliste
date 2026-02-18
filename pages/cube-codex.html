@@ -2,9 +2,9 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>D2R Horadrim-Würfel – Cube Codex V3 | Systemreferenz</title>
+<title>D2R Horadrim-Würfel – Cube Codex | Mechanik, Rezepte & Profi-Tipps</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Vollständiger Systemcodex zum Horadrim-Würfel in Diablo II: Resurrected. Rezepte, Item-Level, Affix-Level, Craft-Formeln, Sockel-Logik, Upgrade-Mechaniken und ökonomische Analyse.">
+<meta name="description" content="Horadrim-Würfel Guide für Diablo II: Resurrected. Sockeln, Upgrades, Crafting, Rerolls und versteckte Mechaniken verständlich erklärt – inklusive Profi-Tipps und typischen Fehlern.">
 
 <style>
 :root{ --gold:#f5c451; }
@@ -20,6 +20,7 @@ body{
 
 .wrapper{max-width:1150px;margin:0 auto;}
 
+/* ================= HERO ================= */
 .hero{
   position:relative;
   background:url("../img/cube-codex-banner.png") center 40% / cover no-repeat;
@@ -32,13 +33,17 @@ body{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.45) 0%,rgba(0,0,0,.7) 100%);
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.35) 0%,
+    rgba(0,0,0,.65) 100%
+  );
 }
 
 .hero-inner{
   position:relative;
   z-index:1;
-  padding:100px 40px 60px;
+  padding:90px 40px 50px;
 }
 
 .hero-nav{
@@ -58,11 +63,19 @@ body{
 .hero-link:hover{color:var(--gold);opacity:1}
 .hero-link.active{color:var(--gold)}
 
-h1{font-size:28px;margin:0 0 16px;font-weight:600}
-.hero p{max-width:760px;line-height:1.7;opacity:.9;font-size:15px;margin:0}
+h1{font-size:26px;margin:0 0 14px;font-weight:600}
 
+.hero p{
+  max-width:720px;
+  line-height:1.6;
+  opacity:.82;
+  font-size:15px;
+  margin:0;
+}
+
+/* ================= NAV ================= */
 .section-nav{
-  margin:45px auto 15px;
+  margin:40px auto 20px;
   display:flex;
   gap:14px;
   flex-wrap:wrap;
@@ -85,49 +98,78 @@ h1{font-size:28px;margin:0 0 16px;font-weight:600}
   color:var(--gold);
 }
 
-.container{padding:40px 28px 140px}
-.section{max-width:950px;margin-bottom:120px}
-.section h2{color:var(--gold);margin-bottom:22px;font-size:23px}
-.section h3{margin-top:36px;margin-bottom:10px;font-size:17px;color:#ddd}
-.section p,.section ul{line-height:1.8;opacity:.95;font-size:15px}
-.section ul{margin-left:20px}
+/* ================= CONTENT ================= */
+.container{padding:30px 28px 100px}
+.section{max-width:950px;margin-bottom:95px}
+.section h2{
+  color:var(--gold);
+  margin-bottom:22px;
+  font-size:22px;
+  position:relative;
+  display:inline-block;
+}
+
+.section h2::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  width:60%;
+  height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+}
+.section p, .section ul{line-height:1.7;opacity:.92;font-size:15px}
+.section ul{margin-left:18px}
 
 .card{
   background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(0,0,0,.45));
   border:1px solid rgba(255,255,255,.08);
   border-radius:22px;
-  padding:30px 32px;
-  margin-top:26px;
+  padding:26px 30px;
+  margin-top:24px;
+  backdrop-filter:blur(4px);
+  transition:all .25s ease;
+  position:relative;
+  overflow:hidden;
 }
 
-.formula{
-  font-family:monospace;
-  background:#0e0e0e;
-  border:1px solid #222;
-  padding:16px 18px;
-  border-radius:12px;
-  margin:18px 0;
-  font-size:14px;
-  overflow-x:auto;
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,rgba(245,196,81,.08),transparent 40%);
+  opacity:0;
+  transition:.3s;
 }
 
-.insight-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:24px;
-  margin-top:25px;
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(245,196,81,.35);
+  box-shadow:0 12px 28px rgba(0,0,0,.55);
 }
 
-.stat-box{
-  background:#111;
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:18px;
-  padding:24px;
+.card:hover::before{
+  opacity:1;
 }
+
+.badge{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:12px;
+  margin-top:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.4);
+  letter-spacing:.4px;
+}
+
+.badge.warn{color:#ffd24c}
+.badge.good{color:#4cff4c}
+.badge.bad{color:#ff5c5c}
 
 .footer-nav{
-  margin-top:120px;
-  padding-top:24px;
+  margin-top:90px;
+  padding-top:22px;
   border-top:1px solid #222;
   font-size:13px;
   opacity:.8;
@@ -135,6 +177,51 @@ h1{font-size:28px;margin:0 0 16px;font-weight:600}
 
 .footer-nav a{color:var(--gold);text-decoration:none}
 .footer-nav a:hover{text-decoration:underline}
+
+
+/* ================= GRID INSIGHT LAYOUT ================= */
+.insight-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+}
+
+.stat-box{
+  background:linear-gradient(160deg,#111,#0a0a0a);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+  transition:.25s;
+}
+
+.stat-box:hover{
+  border-color:rgba(245,196,81,.4);
+  transform:translateY(-3px);
+}
+
+.stat-box h3{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:18px;
+}
+
+.stat-box p{
+  font-size:14px;
+  opacity:.8;
+  margin:0;
+}
+
+.fade-in{
+  animation:fadeIn .8s ease forwards;
+  opacity:0;
+}
+
+@keyframes fadeIn{
+  to{opacity:1; transform:none}
+  from{opacity:0; transform:translateY(10px)}
+}
+
 </style>
 </head>
 
@@ -143,142 +230,188 @@ h1{font-size:28px;margin:0 0 16px;font-weight:600}
 
 <header class="hero">
   <div class="hero-inner">
+
     <nav class="hero-nav">
       <a href="../index.html" class="hero-link">Lootliste</a>
       <a href="guides.html" class="hero-link">Guides</a>
       <a href="#" class="hero-link active">Cube Codex</a>
     </nav>
 
-    <h1>Horadrim-Würfel – Vollständiger Systemcodex</h1>
+    <h1>Horadrim-Würfel – Mechanik verstehen & Value maximieren</h1>
     <p>
-      Technische Referenz zu Rezepten, Item-Level (iLvl), Affix-Level (aLvl), Craft-Berechnung,
-      Sockel-Mechaniken, Upgrade-Logik und Runen-Ökonomie in Diablo II: Resurrected.
-      Diese Seite dient als strukturierte Systemdokumentation.
+      Der Horadrim-Würfel ist mehr als ein Rezept-Tool. Wer Item-Level,
+      Sockel-Logik und Upgrade-Mechanik versteht, vermeidet Anfängerfehler
+      und holt das Maximum aus Diablo II: Resurrected (RotWL & Non-Ladder).
     </p>
+
   </div>
 </header>
 
 <div class="container">
 
   <div class="section-nav">
-    <a href="#ilvl">Item-Level</a>
-    <a href="#affix">Affix-Level</a>
-    <a href="#craft">Crafting</a>
-    <a href="#sockel">Sockel</a>
+    <a href="#sockel">Sockeln</a>
     <a href="#upgrade">Upgrades</a>
+    <a href="#craft">Crafting</a>
     <a href="#reroll">Reroll</a>
-    <a href="#oekonomie">Ökonomie</a>
-    <a href="#praxis">Praxis-Check</a>
+    <a href="#mechanik">Mechanik</a>
+    <a href="#fehler">Fehler vermeiden</a>
   </div>
 
-  <section class="section" id="ilvl">
-    <h2>Item-Level (iLvl)</h2>
-    <div class="card">
-      <p>Das Item-Level bestimmt Affix-Pool, Craft-Potenzial und Sockelobergrenzen.</p>
-
-      <h3>Drop-Logik</h3>
-      <ul>
-        <li>Normale Monster → iLvl = Area-Level</li>
-        <li>Champions → Area-Level +2</li>
-        <li>Boss/Unique → Area-Level +3</li>
-      </ul>
-
-      <div class="insight-grid">
-        <div class="stat-box">
-          <h3>Area-Level 85</h3>
-          <p>Erlaubt High-End-Affixe auf vielen Basen.</p>
-        </div>
-        <div class="stat-box">
-          <h3>Low iLvl</h3>
-          <p>Begrenzt Sockel & Affix-Struktur erheblich.</p>
-        </div>
-        <div class="stat-box">
-          <h3>Charms</h3>
-          <p>Behalten iLvl bei Reroll vollständig.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="affix">
-    <h2>Affix-Level (aLvl)</h2>
-    <div class="card">
-      <p>Das Affix-Level basiert auf Item-Level und Qualitätslevel (qLvl).</p>
-
-      <div class="formula">
-if (ilvl < 99 - qlvl/2)
-  alvl = ilvl - qlvl/2
-else
-  alvl = 2*ilvl - 99
-      </div>
-
-      <p>Höhere aLvl-Werte ermöglichen High-Tier-Modifikatoren.</p>
-    </div>
-  </section>
-
-  <section class="section" id="craft">
-    <h2>Craft-Formel & Optimierung</h2>
-    <div class="card">
-      <p>Neues Craft-iLvl wird aus Charakter-Level und Basis-iLvl berechnet.</p>
-
-      <div class="formula">
-new_ilvl = floor( (clvl / 2) + (ilvl / 2) )
-      </div>
-
-      <p>Für High-End-Amulette ist häufig clvl 93+ optimal.</p>
-    </div>
-  </section>
-
   <section class="section" id="sockel">
-    <h2>Sockel-Mechanik</h2>
+    <h2>Sockel-Rezepte & Logik</h2>
     <div class="card">
+      <p><strong>Waffe sockeln:</strong> Ral + Amn + Perf. Amethyst</p>
+      <p><strong>Rüstung:</strong> Tal + Thul + Perf. Topaz</p>
+      <p><strong>Schild:</strong> Tal + Amn + Perf. Ruby</p>
       <ul>
-        <li>Cube vergibt zufällige Sockel innerhalb Base-Limits.</li>
-        <li>Larzuk vergibt maximale Sockelanzahl.</li>
-        <li>Low iLvl reduziert mögliche Sockel.</li>
+        <li>Zufällige Sockelanzahl</li>
+        <li>Item-Level & Max-Socket-Cap relevant</li>
+        <li>Irreversibel (nur leeren möglich)</li>
       </ul>
+      <span class="badge warn">⚠️ Vorher Max-Sockel prüfen</span>
     </div>
   </section>
 
   <section class="section" id="upgrade">
     <h2>Item-Upgrades</h2>
     <div class="card">
+      <p><strong>Normal → Exceptional:</strong> Ral + Thul + Perf. Amethyst</p>
+      <p><strong>Exceptional → Elite:</strong> Lum + Pul + Perf. Emerald</p>
       <ul>
-        <li>Normal → Exceptional</li>
-        <li>Exceptional → Elite</li>
+        <li>Werte werden neu gewürfelt</li>
+        <li>Anforderungen steigen deutlich</li>
+        <li>Nicht jedes Item profitiert sinnvoll</li>
       </ul>
-      <p>Basiswerte werden auf neue Item-Basis neu berechnet.</p>
+      <span class="badge warn">⚠️ Low-Level-Nutzung kann verloren gehen</span>
+    </div>
+  </section>
+
+  <section class="section" id="craft">
+    <h2>Crafting-System</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Caster:</strong> FCR / Mana</li>
+        <li><strong>Blood:</strong> Life / Life Leech</li>
+        <li><strong>Hitpower:</strong> Knockback</li>
+        <li><strong>Safety:</strong> Damage Reduction</li>
+      </ul>
+      <p>Crafts kombinieren feste Mods mit zufälligen Affixen – Item-Level bestimmt das Potenzial.</p>
+      <span class="badge good">🔥 High-End Amulets möglich</span>
     </div>
   </section>
 
   <section class="section" id="reroll">
-    <h2>Reroll-System</h2>
+    <h2>Reroll-Mechaniken</h2>
     <div class="card">
       <ul>
-        <li>3× Perfekte Gems → Magic Reroll</li>
-        <li>6× Perfekte Skulls → Rare Reroll (iLvl sinkt)</li>
-        <li>Charms behalten iLvl</li>
+        <li>3× Perf. Gems → Magic Item reroll</li>
+        <li>6× Perf. Skull → Rare reroll (iLvl sinkt!)</li>
+        <li>Charms behalten ihr iLvl</li>
       </ul>
+      <span class="badge bad">❌ Rare Rerolls meist ineffizient</span>
     </div>
   </section>
 
-  <section class="section" id="oekonomie">
-    <h2>Runen-Ökonomie</h2>
+  <section class="section" id="mechanik">
+    <h2>Cube-Mechanik verstehen (Aha-Bereich)</h2>
+
+    <div class="insight-grid">
+      <div class="stat-box fade-in">
+        <h3>Item-Level</h3>
+        <p>Bestimmt Affix-Pool und Craft-Potenzial. Drop-Ort entscheidet über Qualität.</p>
+      </div>
+
+      <div class="stat-box fade-in">
+        <h3>Max-Sockel</h3>
+        <p>Abhängig von Base + iLvl. Larzuk ≠ Cube-Würfelmechanik.</p>
+      </div>
+
+      <div class="stat-box fade-in">
+        <h3>Re-Roll Logik</h3>
+        <p>Magic bleibt stark – Rare verliert iLvl. Charm behält sein Potenzial.</p>
+      </div>
+    </div>
+
     <div class="card">
-      <p>Runen folgen 3:1-Upgrade-Struktur bis zu Breakpoints.</p>
-      <p>Ab mittleren Runenstufen steigt Aufwand exponentiell.</p>
+      <p>Viele Fehlentscheidungen entstehen nicht durch Pech, sondern durch fehlendes Verständnis der Systemmechanik.</p>
+      <span class="badge good">🧠 Wissen = Value</span>
     </div>
   </section>
 
-  <section class="section" id="praxis">
-    <h2>Praxis-Check & typische Fehler</h2>
+  <section class="section" id="fehler">
+    <h2>Typische Cube-Fehler</h2>
     <div class="card">
       <ul>
-        <li>Monarch mit zu niedrigem iLvl sockeln</li>
-        <li>Rare-Reroll bei High-End-Items</li>
+        <li>Monarch zu früh sockeln</li>
+        <li>Perfekte Low-Level-Items upgraden</li>
         <li>Runen ineffizient hochziehen</li>
-        <li>Upgrade ohne Anforderungsprüfung</li>
+        <li>Rare Items rerollen und iLvl zerstören</li>
       </ul>
+      <span class="badge warn">⚠️ Erst prüfen – dann klicken</span>
+    </div>
+  </section>
+
+  <div class="footer-nav">
+    <a href="guides.html">← Zurück zu den Guides</a>
+  </div>
+
+  
+  <section class="section" id="insights">
+    <h2>Profi-Insights & Tiefenmechaniken</h2>
+    <div class="card">
+      <h3 style="margin-top:0;color:var(--gold)">Sockel-Logik im Detail</h3>
+      <p>
+        Die maximale Sockelanzahl eines Items wird durch <strong>Base-Typ</strong>
+        und <strong>Item-Level (iLvl)</strong> bestimmt. Larzuk gibt immer die
+        maximale Anzahl – der Cube würfelt zufällig innerhalb des erlaubten Bereichs.
+      </p>
+      <ul>
+        <li>Low iLvl = reduzierte Max-Sockel</li>
+        <li>High iLvl = volle Sockelanzahl möglich</li>
+        <li>Bestimmte Bases haben feste Caps (z.B. Monarch max 4)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;color:var(--gold)">Item-Level & Affix-Pool</h3>
+      <p>
+        Das iLvl entscheidet, welche Affixe überhaupt erscheinen dürfen.
+        Ein Baal-Drop hat ein höheres Potenzial als ein Early-Act-Drop –
+        selbst wenn beide Items gleich aussehen.
+      </p>
+      <ul>
+        <li>Charms behalten ihr ursprüngliches iLvl beim Reroll</li>
+        <li>Rare-Reroll reduziert iLvl drastisch</li>
+        <li>Crafting kombiniert festes + zufälliges Affix-Pool</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;color:var(--gold)">Runen-Ökonomie verstehen</h3>
+      <p>
+        Ab bestimmten Stufen (z.B. Vex+) wird das Hochziehen von Runen
+        mathematisch ineffizient. Der Marktwert steigt schneller als die
+        Cube-Kombination es rechtfertigt.
+      </p>
+      <ul>
+        <li>Low-Runen → sinnvoll kombinierbar</li>
+        <li>Mid-Runen → situativ</li>
+        <li>High-Runen → meist besser traden</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="quickcheck">
+    <h2>Quick-Check: Lohnt sich der Cube-Klick?</h2>
+    <div class="card">
+      <ul>
+        <li>Ist das Item bereits gut gerollt?</li>
+        <li>Verliere ich Level-/Str-Anforderungen?</li>
+        <li>Ersetzt ein Runeword das Item langfristig?</li>
+        <li>Kennt das Item sein maximales Sockel-Cap?</li>
+      </ul>
+      <span class="badge good">✔ Erst analysieren – dann kombinieren</span>
     </div>
   </section>
 
