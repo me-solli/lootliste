@@ -488,6 +488,12 @@ async function uploadImage(file){
 /* SUBMIT */
 document.getElementById("form").addEventListener("submit",async e=>{
   e.preventDefault();
+
+  if (!selectedSeason) {
+    alert("Bitte zuerst Non-Ladder oder Ladder auswählen.");
+    return;
+  }
+
   if(submitBtn.disabled)return;
 
   const status=document.getElementById("status");
