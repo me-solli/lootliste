@@ -2047,23 +2047,30 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
     🩸 — 🗡️ Kein Kampf.   Kein Blut.   Nur Loot. 🗡️ — 🩸
   </div>
 
-  <!-- SEASON TOGGLE -->
-  <div class="season-switch">
-    <button class="season-toggle active" data-season="non-ladder">
-      Non-Ladder
-    </button>
-    <button class="season-toggle" data-season="ladder">
-      Ladder
-    </button>
-  </div>
+  <!-- SEASON MODE SELECTOR -->
+  <div class="season-mode-wrapper">
 
-  <!-- SEASON MODE BANNER -->
-  <div id="seasonModeBanner" class="season-mode-banner non-ladder">
-    🏛 NON-LADDER MODUS – Dauerhafte Items
+    <div class="season-mode-card active" data-season="non-ladder">
+      <div class="season-mode-icon">🏛</div>
+      <div class="season-mode-title">NON-LADDER</div>
+      <div class="season-mode-sub">
+        Dauerhafte Items
+      </div>
+    </div>
+
+    <div class="season-mode-card" data-season="ladder">
+      <div class="season-mode-icon">⚔</div>
+      <div class="season-mode-title">LADDER</div>
+      <div class="season-mode-sub">
+        Aktuelle Season
+      </div>
+    </div>
+
   </div>
 
 </div>
 
+  
 <!-- ================================
      CONTENT
 ================================ -->
