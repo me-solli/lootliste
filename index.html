@@ -1286,43 +1286,51 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
   background: rgba(255,215,120,.10);
 }
 
-  /* ================================
-   VISUAL MODE SWITCH
+/* ================================
+   VISUAL MODE SWITCH (CLEAN FINAL)
 ================================ */
 
 .mode-switch-visual{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:40px;
+  gap:60px;
 }
 
 .mode-visual{
   cursor:pointer;
-  opacity:.65;
+  opacity:.55;
   transition:
-    opacity .2s ease,
-    transform .2s ease,
-    filter .2s ease;
+    opacity .25s ease,
+    transform .25s ease,
+    filter .25s ease;
 }
 
+/* Banner Größe */
 .mode-visual img{
-  height:90px;
+  height:110px;
   display:block;
   pointer-events:none;
 }
 
+/* Hover – sehr dezent */
 .mode-visual:hover{
-  opacity:.9;
-  transform:translateY(-2px);
+  opacity:.85;
+  transform:translateY(-1px);
 }
 
+/* Active – ruhig & edel */
 .mode-visual.active{
   opacity:1;
-  transform:scale(1.08);
+  transform:scale(1.04);
   filter:
-    drop-shadow(0 0 18px rgba(245,196,81,.7))
-    drop-shadow(0 0 28px rgba(245,196,81,.35));
+    drop-shadow(0 0 10px rgba(245,196,81,.35));
+}
+
+/* Ladder aktiv – dezentes Rot */
+body.mode-ladder .mode-visual.active{
+  filter:
+    drop-shadow(0 0 10px rgba(220,80,80,.35));
 }
 
 /* ================================
