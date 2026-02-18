@@ -511,7 +511,7 @@ await fetch(API_ITEMS,{
     quality:document.getElementById("quality").value,
     type:document.getElementById("type").value,
     screenshot,
-    season:ACTIVE_SEASON,
+    season:selectedSeason,
     note_private:document.getElementById("note").value.trim()
   })
 });
