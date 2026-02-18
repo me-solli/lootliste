@@ -2673,6 +2673,15 @@ document.querySelectorAll(".mode-tab").forEach(tab => {
     // Season setzen
     ACTIVE_SEASON = tab.dataset.season;
 
+    // Body-Klasse für Visual Mode setzen
+    document.body.classList.remove("mode-ladder", "mode-non-ladder");
+
+    if (ACTIVE_SEASON === "ladder") {
+      document.body.classList.add("mode-ladder");
+    } else {
+      document.body.classList.add("mode-non-ladder");
+    }
+
     // Items neu laden
     await loadItems();
     applyFilters();
