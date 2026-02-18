@@ -442,15 +442,19 @@ confirmBox.addEventListener("change",()=>{
 });
 
 // ================================
-// AUTH INIT (Submit sauber)
+// AUTH INIT (Submit korrekt)
 // ================================
 async function initAuth(){
-  const headers={};
-  if(deviceId)headers["X-User-Id"]=deviceId;
-  if(accountId2)headers["X-Account-Id"]=accountId2;
 
-  const res=await fetch(API_BASE+"/me",{headers});
-  const data=await res.json();
+  const deviceId = localStorage.getItem("lootliste_user_id");
+  const accountId = localStorage.getItem("lootliste_account_id");
+
+  const headers = {};
+  if(deviceId) headers["X-User-Id"] = deviceId;
+  if(accountId) headers["X-Account-Id"] = accountId;
+
+  const res = await fetch(API_BASE + "/me", { headers });
+  const data = await res.json();
 
   if(!data.loggedIn){
     document.body.innerHTML =
@@ -458,7 +462,6 @@ async function initAuth(){
     return false;
   }
 
-  // Nur oben rechts anzeigen (auth-box)
   document.getElementById("playerName").textContent =
     data.username || "–";
 
