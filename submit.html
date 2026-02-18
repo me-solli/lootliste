@@ -426,15 +426,19 @@ document.querySelectorAll(".submit-mode-tab").forEach(tab => {
 
     document.body.classList.remove("submit-ladder","submit-non-ladder");
 
-    if (selectedSeason === "ladder") {
-      document.body.classList.add("submit-ladder");
-      notice.style.display="block";
-    } else {
-      document.body.classList.add("submit-non-ladder");
-      notice.style.display="none";
-    }
+if (selectedSeason === "ladder") {
+  document.body.classList.add("submit-ladder");
+  notice.style.display = "block";
+} else {
+  document.body.classList.add("submit-non-ladder");
+  notice.style.display = "none";
+}
 
-    formWrapper.style.display="block";
+formWrapper.style.display = "block";
+
+if (modeHint) {
+  modeHint.style.display = "none";
+}
   });
 });
 
