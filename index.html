@@ -2677,6 +2677,15 @@ setTimeout(async () => {
     applyFilters();
   });
 
+  // Initial Visual Mode (beim ersten Laden)
+document.body.classList.remove("mode-ladder","mode-non-ladder");
+
+if (ACTIVE_SEASON === "ladder") {
+  document.body.classList.add("mode-ladder");
+} else {
+  document.body.classList.add("mode-non-ladder");
+}
+
 // ===============================
 // MODE TABS
 // ===============================
