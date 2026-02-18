@@ -203,50 +203,59 @@ button:disabled{opacity:.6;cursor:default}
   margin-top:2px;
 }
 
-  /* ================================
-   SUBMIT SEASON SELECT
+/* ================================
+   SUBMIT – VISUAL SEASON SWITCH
 ================================ */
 
-.submit-season-wrapper{
+.submit-season-visual{
   display:flex;
   justify-content:center;
-  gap:18px;
-  margin-bottom:24px;
+  align-items:center;
+  gap:60px;
+  margin-bottom:28px;
 }
 
-.submit-mode-tab{
-  padding:10px 22px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.04);
+.submit-mode-visual{
   cursor:pointer;
-  font-size:13px;
-  letter-spacing:1px;
-  transition:.2s;
+  opacity:.55;
+  transition:
+    opacity .25s ease,
+    transform .25s ease,
+    filter .25s ease;
 }
 
-.submit-mode-tab:hover{
-  border-color:rgba(245,196,81,.4);
+.submit-mode-visual img{
+  height:100px;
+  display:block;
+  pointer-events:none;
 }
 
-.submit-mode-tab.active{
-  border-color:rgba(245,196,81,.6);
-  background:rgba(245,196,81,.12);
-  color:#f5c451;
+.submit-mode-visual:hover{
+  opacity:.85;
+  transform:translateY(-1px);
 }
 
+.submit-mode-visual.active{
+  opacity:1;
+  transform:scale(1.04);
+  filter:
+    drop-shadow(0 0 10px rgba(245,196,81,.35));
+}
+
+/* Ladder Background (wie vorher, leicht verfeinert) */
 body.submit-ladder{
   background:
     radial-gradient(circle at top, rgba(120,30,30,.18), transparent 60%),
     #0d0d0d;
 }
 
-body.submit-ladder .submit-mode-tab.active{
-  border-color:rgba(220,80,80,.6);
-  background:rgba(180,60,60,.18);
-  color:#ffb3b3;
+/* Ladder aktives Banner – dezentes Rot */
+body.submit-ladder .submit-mode-visual.active{
+  filter:
+    drop-shadow(0 0 10px rgba(220,80,80,.35));
 }
 
+/* Ladder Hinweis bleibt gleich */
 .ladder-notice{
   max-width:720px;
   margin:0 auto 18px;
