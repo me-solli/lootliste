@@ -441,15 +441,34 @@ confirmBox.addEventListener("change",()=>{
   submitBtn.disabled=!confirmBox.checked;
 });
 
-/* USER */
-(async()=>{
+// ================================
+// AUTH INIT (Submit sauber)
+// ================================
+async function initAuth(){
   const headers={};
   if(deviceId)headers["X-User-Id"]=deviceId;
   if(accountId2)headers["X-Account-Id"]=accountId2;
+
   const res=await fetch(API_BASE+"/me",{headers});
   const data=await res.json();
-  document.getElementById("playerIdLabel").textContent=data.username||"–";
-  document.getElementById("userDisplay").textContent=data.username||"–";
+
+  if(!data.loggedIn){
+    document.body.innerHTML =
+      "<p style='padding:40px'>Nicht eingeloggt.</p>";
+    return false;
+  }
+
+  // Nur oben rechts anzeigen (auth-box)
+  document.getElementById("playerName").textContent =
+    data.username || "–";
+
+  return true;
+}
+
+// Init
+(async()=>{
+  const ok = await initAuth();
+  if(!ok) return;
 })();
 
 /* PREVIEW */
