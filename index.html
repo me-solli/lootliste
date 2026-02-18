@@ -1226,11 +1226,9 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
 ================================ */
 
 .mode-bar{
-  display:flex;
-  justify-content:space-between;
+  display:grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items:center;
-  gap:20px;
-  flex-wrap:wrap;
 }
 
 .mode-switch{
@@ -1287,8 +1285,9 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
 
 .mode-switch-visual{
   display:flex;
-  gap:22px;
+  justify-content:center;
   align-items:center;
+  gap:40px;
 }
 
 .mode-visual{
@@ -1301,7 +1300,7 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
 }
 
 .mode-visual img{
-  height:70px;
+  height:210px;
   display:block;
   pointer-events:none;
 }
