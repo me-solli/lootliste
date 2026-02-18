@@ -2619,6 +2619,12 @@ metaDate && (metaDate.textContent =
 function applyFilters() {
   let list = [...state.items];
 
+  // Season Filter
+list = list.filter(i => {
+  const season = (i.season || "non-ladder").toLowerCase().trim();
+  return season === ACTIVE_SEASON;
+});
+
 // Type (robust: type first, fallback category)
 if (state.type) {
   list = list.filter(i => {
