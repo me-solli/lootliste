@@ -1186,12 +1186,12 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
   background-image:url("img/icons/charm.png");
 }
 
-  /* ================================
+/* ================================
    FILTER + SLOGAN FLOW
 ================================ */
 .filter-slogan-wrap{
   margin: 18px 28px 6px;
-  padding: 10px 14px 14px;
+  padding: 10px 14px 20px;
   border-radius: 18px;
   background:
     linear-gradient(
@@ -1207,6 +1207,59 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
   letter-spacing:.2px;
   color:#cfcfcf;
   opacity:.9;
+  margin-bottom:18px;
+}
+
+/* ================================
+   SEASON MODE CARDS
+================================ */
+
+.season-mode-wrapper{
+  display:flex;
+  justify-content:center;
+  gap:28px;
+  margin:6px 0 8px;
+  flex-wrap:wrap;
+}
+
+.season-mode-card{
+  width:260px;
+  padding:22px 18px;
+  border-radius:18px;
+  background:rgba(20,20,20,.65);
+  border:1px solid rgba(255,255,255,.06);
+  text-align:center;
+  cursor:pointer;
+  transition:all .25s ease;
+  opacity:.55;
+}
+
+.season-mode-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(245,196,81,.35);
+}
+
+.season-mode-card.active{
+  opacity:1;
+  border-color:rgba(245,196,81,.6);
+  box-shadow:0 0 28px rgba(245,196,81,.25);
+}
+
+.season-mode-icon{
+  font-size:22px;
+  margin-bottom:8px;
+}
+
+.season-mode-title{
+  font-size:15px;
+  letter-spacing:1.6px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.season-mode-sub{
+  font-size:12px;
+  opacity:.7;
 }
 
 /* Icon-Bar sanfter andocken */
