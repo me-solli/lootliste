@@ -2630,13 +2630,6 @@ setTimeout(async () => {
     applyFilters();
   });
 
-  // Sort
-  const sortSelect = document.getElementById("filterSort");
-  sortSelect?.addEventListener("change", () => {
-    state.sort = sortSelect.value;
-    applyFilters();
-  });
-
   // Icon bar
   const iconBar = document.querySelector(".icon-bar");
   iconBar?.addEventListener("click", e => {
