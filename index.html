@@ -518,13 +518,13 @@ body{
 }
 
 /* ================================
-   CARDS (OPTIK BASIS – KOMPAKT)
+   CARDS (OPTIK BASIS – KOMPAKT & BREITER)
 ================================ */
 .cards{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(320px, 360px));
-  gap:18px;
-  justify-content:center;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:16px;
+  margin: 14px 28px 40px;
 }
 
 .card{
@@ -532,12 +532,19 @@ body{
   flex-direction:column;
   background:linear-gradient(180deg,#191919,#0f0f0f);
   border:1px solid var(--border);
-  border-radius:20px;
+  border-radius:18px;
   overflow:hidden;
+  transition:transform .15s ease, box-shadow .2s ease;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
 }
 
 .card-image{
-  width:120px;
+  width:100%;
+  height:110px;
   background:#0b0b0b;
   display:flex;
   align-items:center;
@@ -545,22 +552,21 @@ body{
 }
 
 .card-image img{
-  width:72px;
-  height:72px;
+  width:64px;
+  height:64px;
 }
 
 .card-body{
-  padding:16px;
+  padding:14px 14px 16px;
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:5px;
 }
 
 /* NAME IMMER EINZEILIG */
 .item-name{
-  font-size:16px;
+  font-size:15px;
   font-weight:600;
-
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -568,19 +574,15 @@ body{
 }
 
 .item-sub{
-  font-size:11px;
+  font-size:10px;
   color:#8a8a8a;
   letter-spacing:.6px;
   text-transform:uppercase;
 }
 
-.stars{
-  color:var(--gold);
-}
-
 .player{
-  font-size:13px;
-  opacity:.85;
+  font-size:12px;
+  opacity:.8;
 }
 
 /* ================================
