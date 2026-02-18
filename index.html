@@ -2671,19 +2671,19 @@ setTimeout(async () => {
   });
 
 // ===============================
-// SEASON MODE CARDS
+// MODE TABS
 // ===============================
-document.querySelectorAll(".season-mode-card").forEach(card => {
-  card.addEventListener("click", async () => {
+document.querySelectorAll(".mode-tab").forEach(tab => {
+  tab.addEventListener("click", async () => {
 
-    // Active Card wechseln
-    document.querySelectorAll(".season-mode-card")
-      .forEach(c => c.classList.remove("active"));
+    // Active Tab wechseln
+    document.querySelectorAll(".mode-tab")
+      .forEach(t => t.classList.remove("active"));
 
-    card.classList.add("active");
+    tab.classList.add("active");
 
     // Season setzen
-    ACTIVE_SEASON = card.dataset.season;
+    ACTIVE_SEASON = tab.dataset.season;
 
     // Items neu laden
     await loadItems();
