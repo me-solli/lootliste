@@ -2685,32 +2685,19 @@ setTimeout(async () => {
   });
 
 // ===============================
-// SEASON TOGGLE
+// SEASON MODE CARDS
 // ===============================
-document.querySelectorAll(".season-toggle").forEach(btn => {
-  btn.addEventListener("click", async () => {
+document.querySelectorAll(".season-mode-card").forEach(card => {
+  card.addEventListener("click", async () => {
 
-    // Active Button wechseln
-    document.querySelectorAll(".season-toggle")
-      .forEach(b => b.classList.remove("active"));
+    // Active Card wechseln
+    document.querySelectorAll(".season-mode-card")
+      .forEach(c => c.classList.remove("active"));
 
-    btn.classList.add("active");
+    card.classList.add("active");
 
     // Season setzen
-    ACTIVE_SEASON = btn.dataset.season;
-
-    // Banner anpassen
-    const banner = document.getElementById("seasonModeBanner");
-
-    if (ACTIVE_SEASON === "ladder") {
-      banner.classList.remove("non-ladder");
-      banner.classList.add("ladder");
-      banner.textContent = "⚔ LADDER MODUS – Aktuelle Season";
-    } else {
-      banner.classList.remove("ladder");
-      banner.classList.add("non-ladder");
-      banner.textContent = "🏛 NON-LADDER MODUS – Dauerhafte Items";
-    }
+    ACTIVE_SEASON = card.dataset.season;
 
     // Items neu laden
     await loadItems();
