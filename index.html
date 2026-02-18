@@ -483,6 +483,40 @@ body{
  .filter-panel{background:#121212;border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:18px}
 .filter-panel input,.filter-panel select{padding:10px 12px;background:#111;border:1px solid #333;color:#fff;border-radius:10px}
 
+  /* ================================
+   SEASON SWITCH
+================================ */
+
+.season-switch{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:6px 0 14px;
+}
+
+.season-toggle{
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.08);
+  color:#aaa;
+  font-size:12px;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+
+.season-toggle:hover{
+  border-color:rgba(245,196,81,.35);
+  color:#eaeaea;
+}
+
+.season-toggle.active{
+  background:rgba(245,196,81,.08);
+  border-color:rgba(245,196,81,.5);
+  color:#f5c451;
+  box-shadow:0 0 8px rgba(245,196,81,.35);
+}
+
 /* ================================
    CARDS (OPTIK BASIS – KOMPAKT)
 ================================ */
