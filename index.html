@@ -2520,7 +2520,7 @@ function renderRecentFeed(items){
   const list = items
     .filter(i => i.createdAt)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 3);
+    .slice(0, 10);
 
   if (list.length === 0) {
     feed.parentElement.style.display = "none";
