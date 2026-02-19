@@ -893,14 +893,14 @@ body{
 }
 
 /* ================================
-   RECENT FEED – CLEAN & ELEVATED
+   RECENT FEED – FINAL VERSION
 ================================ */
 
 .recent-feed{
-  margin: 14px 28px 18px;
+  margin: 12px 28px 22px;
   padding: 16px 18px;
 
-  background: rgba(255,255,255,.035);
+  background: rgba(255,255,255,.045);
   border: 1px solid rgba(255,255,255,.06);
   border-radius: 18px;
 
@@ -913,55 +913,73 @@ body{
   letter-spacing: .6px;
   text-transform: uppercase;
   color: #cfcfcf;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .recent-feed-list{
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  list-style:none;
+  padding:0;
+  margin:0;
 
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+
+  max-height:200px;     /* 👈 Scroll-Höhe */
+  overflow-y:auto;      /* 👈 Scroll aktiv */
+  padding-right:6px;    /* Platz für Scrollbar */
+}
+
+/* Scrollbar Styling */
+.recent-feed-list::-webkit-scrollbar{
+  width:6px;
+}
+
+.recent-feed-list::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+.recent-feed-list::-webkit-scrollbar-thumb{
+  background:rgba(245,196,81,.35);
+  border-radius:6px;
 }
 
 /* 🔥 Feed-Eintrag */
 .recent-feed-item{
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
 
-  font-size: 13px;
-  color: #d6d6d6;
+  font-size:13px;
+  color:#d6d6d6;
 
-  padding: 6px 0;
+  padding:6px 0;
 }
 
 /* 🧱 Mini Item Icon */
 .recent-feed-icon{
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  width:22px;
+  height:22px;
+  border-radius:6px;
 
-  background-size: cover;
-  background-position: center;
-  background-color: rgba(0,0,0,.35);
+  background-size:cover;
+  background-position:center;
+  background-color:rgba(0,0,0,.35);
 
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.06);
 
-  flex-shrink: 0;
-  opacity: .9;
+  flex-shrink:0;
+  opacity:.9;
 }
 
 .recent-feed-item a{
-  color: #e6c36a;
-  text-decoration: none;
+  color:#e6c36a;
+  text-decoration:none;
 }
 
 .recent-feed-item a:hover{
-  text-decoration: underline;
+  text-decoration:underline;
 }
 
 /* ================================
