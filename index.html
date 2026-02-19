@@ -2520,7 +2520,7 @@ await setUserLabel();
   }
 
 // ===============================
-// RECENT FEED (COMPACT + FUTURE EVENTS)
+// RECENT FEED (COMPACT)
 // ===============================
 function renderRecentFeed(items){
   const feed = document.getElementById("recentFeed");
@@ -2528,11 +2528,10 @@ function renderRecentFeed(items){
 
   if (!feed) return;
 
-  // Sortierung nach Datum
   const list = items
     .filter(i => i.createdAt)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 10); // 👈 wichtig: mehr als 4 laden
+    .slice(0, 10);
 
   if (list.length === 0) {
     feed.parentElement.style.display = "none";
@@ -2545,7 +2544,6 @@ function renderRecentFeed(items){
     const li = document.createElement("li");
     li.className = "recent-feed-item";
 
-    // Aktion bestimmen (Vorbereitung für später)
     let action = "➕";
     let text = "hinzugefügt";
 
@@ -2570,15 +2568,29 @@ function renderRecentFeed(items){
     feed.appendChild(li);
   });
 
-  // 👇 Toggle nur anzeigen wenn mehr als 4 Einträge
   if (toggle){
-    if (list.length <= 4){
-      toggle.style.display = "none";
-    } else {
-      toggle.style.display = "block";
-    }
+    toggle.style.display = list.length > 4 ? "block" : "none";
   }
 }
+
+
+// ===============================
+// FEED TOGGLE (GLOBAL!)
+// ===============================
+window.toggleFeed = function () {
+  const list = document.querySelector(".recent-feed-list");
+  const text = document.getElementById("feedToggleText");
+
+  if (!list || !text) return;
+
+  list.classList.toggle("expanded");
+
+  if (list.classList.contains("expanded")) {
+    text.textContent = "Weniger anzeigen ↑";
+  } else {
+    text.textContent = "Mehr anzeigen ↓";
+  }
+};
 
 // 👤 Anzeige: Username (falls Account) → sonst Gast
 async function setUserLabel() {
