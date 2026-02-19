@@ -43,24 +43,26 @@ body{
 .wrapper{max-width:1500px;margin:0 auto}
 
 /* ================================
-   HERO (OPTIK FINAL – STRUCTURED)
+   HERO (AUTO HEIGHT – CLEAN)
 ================================ */
+
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
-  min-height:250px;
   position:relative;
+
+  min-height:unset;   /* 👈 keine feste Höhe mehr */
 }
 
 .hero-inner{
-  padding:72px 36px 48px;
+  padding:72px 36px 36px;   /* 👈 unten etwas reduziert */
   background: linear-gradient(
     to bottom,
     rgba(0,0,0,.35),
     rgba(0,0,0,.78)
   );
-  position:relative; /* wichtig für nav positioning */
+  position:relative;
 }
 
 /* ================= HERO NAV – CLEAN VERSION ================= */
