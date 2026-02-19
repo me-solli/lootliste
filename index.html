@@ -891,28 +891,33 @@ body{
 
   box-shadow:none;  /* Shadow raus */
 }
+  
 /* ================================
-   RECENT FEED – COMPACT + EXPAND
+   RECENT FEED – MINIMAL STRIP
 ================================ */
 
 .recent-feed{
-  margin: 12px 28px 18px;
-  padding: 14px 18px;
+  margin: 6px 28px 12px;
+  padding: 8px 0 4px;
 
-  background: rgba(255,255,255,.045);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 18px;
+  background: transparent;     /* 👈 Platte aufgelöst */
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
 
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.02);
+/* optional dezente Trennlinie oben */
+.recent-feed{
+  border-top: 1px solid rgba(255,255,255,.05);
+  padding-top: 12px;
 }
 
 .recent-feed-title{
-  font-size: 13px;
-  letter-spacing: .6px;
+  font-size: 11px;
+  letter-spacing: .5px;
   text-transform: uppercase;
-  color: #cfcfcf;
-  margin-bottom: 12px;
+  color: #9a9a9a;
+  margin-bottom: 8px;
 }
 
 .recent-feed-list{
@@ -922,15 +927,15 @@ body{
 
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:4px;
 
-  max-height:140px;      /* 👈 ca. 4 Einträge sichtbar */
-  overflow:hidden;       /* 👈 KEINE Scrollbar */
+  max-height:110px;      /* 👈 ca. 4 Einträge sichtbar */
+  overflow:hidden;
   transition:max-height .35s ease;
 }
 
 .recent-feed-list.expanded{
-  max-height:600px;      /* 👈 öffnet komplett */
+  max-height:600px;
 }
 
 /* 🔥 Feed-Eintrag */
@@ -939,17 +944,17 @@ body{
   align-items:center;
   gap:8px;
 
-  font-size:13px;
-  color:#d6d6d6;
+  font-size:12px;        /* 👈 kleiner */
+  color:#cfcfcf;
 
-  padding:3px 0;
+  padding:2px 0;
 }
 
 /* 🧱 Mini Item Icon */
 .recent-feed-icon{
-  width:22px;
-  height:22px;
-  border-radius:6px;
+  width:20px;            /* 👈 minimal kleiner */
+  height:20px;
+  border-radius:5px;
 
   background-size:cover;
   background-position:center;
@@ -959,7 +964,7 @@ body{
     inset 0 0 0 1px rgba(255,255,255,.06);
 
   flex-shrink:0;
-  opacity:.9;
+  opacity:.85;
 }
 
 .recent-feed-item a{
@@ -973,11 +978,11 @@ body{
 
 /* 👇 Toggle Button */
 .feed-toggle{
-  margin-top:10px;
-  font-size:12px;
+  margin-top:6px;
+  font-size:11px;        /* 👈 kleiner */
   color:var(--gold);
   cursor:pointer;
-  opacity:.85;
+  opacity:.8;
   user-select:none;
 }
 
