@@ -2519,17 +2519,20 @@ state.filtered = [...state.items];
 await setUserLabel();
   }
 
-  // ===============================
-// RECENT ITEMS FEED (MINIMAL)
+// ===============================
+// RECENT FEED (COMPACT + FUTURE EVENTS)
 // ===============================
 function renderRecentFeed(items){
   const feed = document.getElementById("recentFeed");
+  const toggle = document.getElementById("feedToggle");
+
   if (!feed) return;
 
+  // Sortierung nach Datum
   const list = items
     .filter(i => i.createdAt)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 10);
+    .slice(0, 10); // 👈 wichtig: mehr als 4 laden
 
   if (list.length === 0) {
     feed.parentElement.style.display = "none";
@@ -2542,10 +2545,15 @@ function renderRecentFeed(items){
     const li = document.createElement("li");
     li.className = "recent-feed-item";
 
-    // + / - Logik (vorbereitet)
-    const action = "➕"; // später: ❌ bei entfernt / vergeben
+    // Aktion bestimmen (Vorbereitung für später)
+    let action = "➕";
+    let text = "hinzugefügt";
 
-    // Item-Typ → Icon
+    if (item.status === "vergeben") {
+      action = "🤝";
+      text = "vergeben";
+    }
+
     const type = (item.type || item.category || "sonstiges").toLowerCase();
     const iconUrl = `img/icons/${type}.png`;
 
@@ -2555,12 +2563,21 @@ function renderRecentFeed(items){
       <span>
         ${item.donor} hat
         <a href="#item-${item.id}">${item.name}</a>
-        hinzugefügt · ${timeAgo(item.createdAt)}
+        ${text} · ${timeAgo(item.createdAt)}
       </span>
     `;
 
     feed.appendChild(li);
   });
+
+  // 👇 Toggle nur anzeigen wenn mehr als 4 Einträge
+  if (toggle){
+    if (list.length <= 4){
+      toggle.style.display = "none";
+    } else {
+      toggle.style.display = "block";
+    }
+  }
 }
 
 // 👤 Anzeige: Username (falls Account) → sonst Gast
