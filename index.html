@@ -224,22 +224,41 @@ body{
 }
 
 /* ================================
-   HERO GUIDE FOOTER (RIGHT ALIGNED)
+   HERO GUIDE FOOTER (RIGHT + ICONS)
 ================================ */
 
 .hero-guide-footer{
   margin-top:14px;
 
   display:flex;
-  justify-content:flex-end;   /* 👈 rechtsbündig */
+  justify-content:flex-end;   /* rechtsbündig */
   align-items:center;
-  gap:14px;
+  gap:10px;
 
   font-size:13px;
   color:#d2d2d2;
   opacity:.9;
 
-  padding-right:4px;          /* 👈 leicht nach innen ziehen */
+  padding-right:4px;
+}
+
+/* Mini Guide Icons Container */
+.hero-guide-footer .guide-icons{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+/* Mini Guide Icons */
+.hero-guide-footer .guide-icons img{
+  width:16px;
+  height:16px;
+  object-fit:cover;
+  border-radius:4px;
+  opacity:.85;
+
+  box-shadow:
+    0 0 6px rgba(230,195,106,.15);   /* dezenter magischer Touch */
 }
 
 .hero-guide-footer strong{
@@ -251,6 +270,7 @@ body{
   color:var(--gold);
   text-decoration:none;
   font-size:12px;
+  letter-spacing:.2px;
 }
 
 .hero-guide-footer a:hover{
