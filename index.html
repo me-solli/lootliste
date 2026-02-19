@@ -2041,44 +2041,31 @@ body.mode-ladder .mode-tab.active{
 <!-- ================================
      HOW IT WORKS / CTA
 ================================ -->
-<section class="project-status">
+<section class="project-status project-status--minimal">
 
   <div class="status-line">
-    <span class="status-icon">🗝️</span>
+    <span class="status-dot"></span>
 
     <span class="status-text">
-      <strong>Items teilen oder Bedarf anmelden</strong>
+      <strong>Lootliste aktiv</strong>
     </span>
 
-    <button class="status-help-toggle" onclick="toggleHelp()">
-      Wie funktioniert die Lootliste?
-    </button>
+    <div class="status-links">
+      <button class="status-help-toggle" onclick="toggleHelp()">
+        Wie funktioniert die Lootliste?
+      </button>
+
+      <a href="feedback.html" class="status-link">
+        Feedback / Bug melden
+      </a>
+    </div>
   </div>
 
-  <div class="status-note">
-    📥 Item einreichen · 🎲 Bedarf anmelden · 🤝 Faire Übergabe
-  </div>
-
-<div class="status-help" id="statusHelp">
-  <strong>So funktioniert es:</strong><br><br>
-
-  🗡️ Spieler können eigene Items in die Lootliste eintragen.  
-  📜 Die Items bleiben Eigentum des jeweiligen Spielers und sind öffentlich sichtbar.<br><br>
-
-  🗳️ Andere Spieler können Bedarf anmelden.  
-  🤝 Kommt es zur Vergabe, erfolgt die Übergabe direkt zwischen den Beteiligten.<br><br>
-
-  🎮 Die Kontaktaufnahme läuft über den intern hinterlegten Battletag.
-</div>
-
-  <div class="status-actions">
-    <a href="submit.html" class="status-btn">
-      Item einreichen
-    </a>
-
-    <a href="feedback.html" class="status-link">
-      Feedback / Bug melden
-    </a>
+  <div class="status-help" id="statusHelp">
+    <strong>So funktioniert es:</strong><br><br>
+    🗡️ Spieler können eigene Items eintragen.<br>
+    📜 Items bleiben Eigentum des Spielers.<br>
+    🤝 Übergabe erfolgt direkt zwischen Beteiligten.
   </div>
 
 </section>
