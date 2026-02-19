@@ -2095,13 +2095,13 @@ body.mode-ladder .mode-tab.active{
   </div>
 
 </section>
-
 <!-- ================================
      RECENT ITEMS FEED
 ================================ -->
-<section class="recent-feed recent-feed">
+<section class="recent-feed">
 
   <div class="recent-feed-left">
+
     <div class="recent-feed-title">
       🔥 Community-Aktivität
     </div>
@@ -2109,6 +2109,12 @@ body.mode-ladder .mode-tab.active{
     <ul class="recent-feed-list" id="recentFeed">
       <!-- JS füllt hier Items -->
     </ul>
+
+    <!-- Toggle Button -->
+    <div class="feed-toggle" onclick="toggleFeed()" id="feedToggle">
+      <span id="feedToggleText">Mehr anzeigen ↓</span>
+    </div>
+
   </div>
 
 </section>
