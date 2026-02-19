@@ -891,14 +891,13 @@ body{
 
   box-shadow:none;  /* Shadow raus */
 }
-
 /* ================================
-   RECENT FEED – FINAL VERSION
+   RECENT FEED – COMPACT + EXPAND
 ================================ */
 
 .recent-feed{
-  margin: 12px 28px 22px;
-  padding: 16px 18px;
+  margin: 12px 28px 18px;
+  padding: 14px 18px;
 
   background: rgba(255,255,255,.045);
   border: 1px solid rgba(255,255,255,.06);
@@ -913,7 +912,7 @@ body{
   letter-spacing: .6px;
   text-transform: uppercase;
   color: #cfcfcf;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .recent-feed-list{
@@ -925,23 +924,13 @@ body{
   flex-direction:column;
   gap:6px;
 
-  max-height:140px;     /* 👈 Scroll-Höhe */
-  overflow-y:auto;      /* 👈 Scroll aktiv */
-  padding-right:6px;    /* Platz für Scrollbar */
+  max-height:140px;      /* 👈 ca. 4 Einträge sichtbar */
+  overflow:hidden;       /* 👈 KEINE Scrollbar */
+  transition:max-height .35s ease;
 }
 
-/* Scrollbar Styling */
-.recent-feed-list::-webkit-scrollbar{
-  width:6px;
-}
-
-.recent-feed-list::-webkit-scrollbar-track{
-  background:transparent;
-}
-
-.recent-feed-list::-webkit-scrollbar-thumb{
-  background:rgba(245,196,81,.35);
-  border-radius:6px;
+.recent-feed-list.expanded{
+  max-height:600px;      /* 👈 öffnet komplett */
 }
 
 /* 🔥 Feed-Eintrag */
@@ -980,6 +969,20 @@ body{
 
 .recent-feed-item a:hover{
   text-decoration:underline;
+}
+
+/* 👇 Toggle Button */
+.feed-toggle{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--gold);
+  cursor:pointer;
+  opacity:.85;
+  user-select:none;
+}
+
+.feed-toggle:hover{
+  opacity:1;
 }
 
 /* ================================
