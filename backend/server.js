@@ -666,6 +666,46 @@ app.post("/items/:id/claim", (req, res) => {
 });
 
 // ===============================
+// HELP SEARCH ITEM
+// ===============================
+app.post("/items/:id/help", (req, res) => {
+
+  const account = getAccountFromSession(req);
+
+  if (!account) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const itemId = Number(req.params.id);
+  const item = items.find(i => i.id === itemId);
+
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (item.kind !== "search") {
+    return res.status(400).json({ error: "Not a search item" });
+  }
+
+  if (item.helpOffers?.some(h => h.accountId === account.id)) {
+    return res.status(400).json({ error: "Already offered help" });
+  }
+
+  item.helpOffers = item.helpOffers || [];
+
+  item.helpOffers.push({
+    accountId: account.id,
+    username: account.username,
+    battletag: account.battletag,
+    createdAt: new Date().toISOString()
+  });
+
+  saveJSON(ITEMS_FILE, items);
+
+  res.json({ ok: true });
+});
+
+// ===============================
 // CONFIRM HANDOVER (FINAL & ROBUST)
 // ===============================
 app.post("/items/:id/confirm-donor", (req, res) => {
