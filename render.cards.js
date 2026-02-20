@@ -19,21 +19,27 @@ const VALID_TYPES = [
 /* =========================
    DIABLO STYLE MODAL
 ========================== */
-function showClaimModal() {
+function showClaimModal(options = {}) {
+  const {
+    title = "Item reservieren",
+    text = `
+      Möchtest du dieses Item verbindlich reservieren?<br><br>
+      Dein hinterlegter BattleTag wird für die Übergabe verwendet.
+    `,
+    confirmText = "Verbindlich reservieren"
+  } = options;
+
   return new Promise(resolve => {
     const overlay = document.createElement("div");
     overlay.className = "claim-modal-overlay";
 
     overlay.innerHTML = `
       <div class="claim-modal">
-        <h3>Item reservieren</h3>
-        <p>
-          Möchtest du dieses Item verbindlich reservieren?<br><br>
-          Dein hinterlegter BattleTag wird für die Übergabe verwendet.
-        </p>
+        <h3>${title}</h3>
+        <p>${text}</p>
         <div class="claim-modal-actions">
           <button class="modal-cancel">Abbrechen</button>
-          <button class="modal-confirm">Verbindlich reservieren</button>
+          <button class="modal-confirm">${confirmText}</button>
         </div>
       </div>
     `;
