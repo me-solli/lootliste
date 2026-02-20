@@ -566,20 +566,29 @@ document.getElementById("form").addEventListener("submit",async e=>{
     return;
   }
 
-  if(submitBtn.disabled)return;
+if(submitBtn.disabled)return;
 
-  const status=document.getElementById("status");
-  submitBtn.disabled=true;
-  submitBtn.textContent="Wird eingereicht…";
-  status.textContent="📤 Lade Screenshot hoch…";
+const status=document.getElementById("status");
+submitBtn.disabled=true;
+submitBtn.textContent="Wird eingereicht…";
 
-  try{
-    const screenshot=await uploadImage(fileInput.files[0]);
-    status.textContent="💾 Speichere Item…";
+try{
+
+  // 🔎 Welcher Modus?
+  const selectedKind = document.querySelector('input[name="kind"]:checked').value;
+
+  let screenshot = null;
+
+  if (selectedKind === "offer") {
+    status.textContent="📤 Lade Screenshot hoch…";
+    screenshot = await uploadImage(fileInput.files[0]);
+  }
+
+  status.textContent="💾 Speichere Eintrag…";
 
 await fetch(API_ITEMS,{
   method:"POST",
-  credentials:"include", // 🔥 WICHTIG
+  credentials:"include",
   headers:{
     "Content-Type":"application/json",
     ...(deviceId?{"X-User-Id":deviceId}:{ })
