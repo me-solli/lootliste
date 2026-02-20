@@ -2890,7 +2890,7 @@ if (state.type) {
 // Trade Filter
 if (state.trade !== "all") {
   list = list.filter(i => {
-    return (i.tradeType || "offer") === state.trade;
+    return (i.kind || "offer") === state.trade;
   });
 }
   
