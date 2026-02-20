@@ -2327,16 +2327,32 @@ body.mode-ladder .mode-tab.active{
 
   <!-- FILTER -->
   <div class="filter-panel">
-    <div class="filter-row">
 
+    <!-- 🔥 Anbiete / Suche Toggle -->
+    <div class="trade-toggle">
+      <button class="trade-btn active" data-trade="all">
+        Alle
+      </button>
+
+      <button class="trade-btn" data-trade="offer">
+        Anbiete
+      </button>
+
+      <button class="trade-btn" data-trade="search">
+        Suche
+      </button>
+    </div>
+
+    <!-- 🔎 Suchfeld -->
+    <div class="filter-row">
       <input
         type="text"
         id="filterSearch"
         placeholder="Item suchen …"
         autocomplete="off"
       >
-
     </div>
+
   </div>
 
 </div>
