@@ -265,65 +265,68 @@ const seasonClass = item.season === "ladder"
       card.dataset.open = isOpen ? "false" : "true";
     });
 
-    const btn = card.querySelector(".claim-btn");
+const btn = card.querySelector(".claim-btn");
 
-    if (item.isOwner) {
-      btn.disabled = true;
-      btn.textContent = "🔒 Dein Item";
-      btn.classList.add("is-owner");
-    }
+// 🔎 Gesuch → kein Claim-Button anzeigen
+if (item.kind === "search") {
 
-    btn.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      if (btn.disabled) return;
+  if (btn) btn.remove();
 
-      const confirmed = await showClaimModal();
-      if (!confirmed) return;
+} else {
 
-      btn.disabled = true;
-      btn.textContent = "…";
+  if (item.isOwner) {
+    btn.disabled = true;
+    btn.textContent = "🔒 Dein Item";
+    btn.classList.add("is-owner");
+  }
 
-      try {
-        const res = await fetch(`${API}/items/${item.id}/claim`, {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        });
+  btn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    if (btn.disabled) return;
 
-        if (!res.ok) {
-          const err = await res.json();
+    const confirmed = await showClaimModal();
+    if (!confirmed) return;
 
-          if (res.status === 400 && err.error === "Cannot claim own item") {
-            showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
-          } else if (res.status === 401) {
-            showToast?.("Bitte zuerst einloggen.");
-          } else if (res.status === 429) {
-            showToast?.("Bitte kurz warten.");
-          } else {
-            showToast?.(err.error || "Item konnte nicht reserviert werden.");
-          }
+    btn.disabled = true;
+    btn.textContent = "…";
 
-          btn.disabled = false;
-          btn.textContent = "🖐️ Nehmen";
-          return;
+    try {
+      const res = await fetch(`${API}/items/${item.id}/claim`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+
+        if (res.status === 400 && err.error === "Cannot claim own item") {
+          showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
+        } else if (res.status === 401) {
+          showToast?.("Bitte zuerst einloggen.");
+        } else if (res.status === 429) {
+          showToast?.("Bitte kurz warten.");
+        } else {
+          showToast?.(err.error || "Item konnte nicht reserviert werden.");
         }
 
-        showToast?.("Item reserviert.");
-
-        card.style.opacity = "0";
-        card.style.transform = "scale(0.96)";
-        setTimeout(() => card.remove(), 200);
-
-      } catch {
-        alert("Netzwerkfehler.");
         btn.disabled = false;
         btn.textContent = "🖐️ Nehmen";
+        return;
       }
-    });
 
-    container.appendChild(card);
+      showToast?.("Item reserviert.");
+
+      card.style.opacity = "0";
+      card.style.transform = "scale(0.96)";
+      setTimeout(() => card.remove(), 200);
+
+    } catch {
+      alert("Netzwerkfehler.");
+      btn.disabled = false;
+      btn.textContent = "🖐️ Nehmen";
+    }
   });
-}
 
-window.renderCards = renderCards;
+}
