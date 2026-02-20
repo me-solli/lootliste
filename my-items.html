@@ -323,6 +323,7 @@ const filtered = mine.filter(i => {
     }
 
 const claimer = accounts.find(a=>a.id===i.claimedByAccountId);
+    const helpers = i.helpOffers || [];
 
 const tr = document.createElement("tr");
 tr.id = `item-${i.id}`;
