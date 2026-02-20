@@ -347,13 +347,15 @@ if(!accountId){
   <div class="form-card" id="submitFormWrapper" style="display:none;">
     <form id="form">
 
-      <label>Screenshot (Pflicht)</label>
-      <input type="file" id="image" accept="image/*" required>
-      <small class="hint">📸 Komplettes Itemfenster inkl. Werte anzeigen</small>
+<div id="screenshotBlock">
+  <label>Screenshot (Pflicht)</label>
+  <input type="file" id="image" accept="image/*" required>
+  <small class="hint">📸 Komplettes Itemfenster inkl. Werte anzeigen</small>
 
-      <div class="preview" id="preview">
-        <img id="previewImg">
-      </div>
+  <div class="preview" id="preview">
+    <img id="previewImg">
+  </div>
+</div>
 
       <label>Item-Name</label>
       <input id="name" required>
