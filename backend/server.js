@@ -561,36 +561,38 @@ app.post("/items", (req, res) => {
     });
   }
 
-  const newItem = {
-    id: Date.now(),
-    name,
-    quality,
-    type,
-    screenshot: screenshot || null,
-    season,
-    kind: kind || "offer",
-    status: "verfügbar",
-    createdAt: new Date().toISOString(),
+const newItem = {
+  id: Date.now(),
+  name,
+  quality,
+  type,
+  screenshot: screenshot || null,
+  season,
+  kind: kind || "offer",
+  status: "verfügbar",
+  createdAt: new Date().toISOString(),
 
-    donorAccountId: account.id,
-    donor: account.username,
+  donorAccountId: account.id,
+  donor: account.username,
 
-    note_private: note_private || "",
+  note_private: note_private || "",
 
-    claimedByAccountId: null,
-    contact: null,
-    claimedAt: null,
+  claimedByAccountId: null,
+  contact: null,
+  claimedAt: null,
 
-    handover: {
-      donorConfirmed: false,
-      receiverConfirmed: false
-    }
-  };
+  handover: {
+    donorConfirmed: false,
+    receiverConfirmed: false
+  },
 
-  items.push(newItem);
-  saveJSON(ITEMS_FILE, items);
+  helpOffers: []   // 🔥 neu für SUCHE-Helfer
+};
 
-  res.status(201).json(newItem);
+items.push(newItem);
+saveJSON(ITEMS_FILE, items);
+
+res.status(201).json(newItem);
 });
 
 // ===============================
