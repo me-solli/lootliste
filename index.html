@@ -2921,6 +2921,20 @@ setTimeout(async () => {
     applyFilters();
   });
 
+  // Trade Toggle
+document.querySelectorAll(".trade-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelectorAll(".trade-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    state.trade = btn.dataset.trade;
+    applyFilters();
+  });
+});
+
   // Icon bar
   const iconBar = document.querySelector(".icon-bar");
   iconBar?.addEventListener("click", e => {
