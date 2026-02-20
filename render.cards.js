@@ -278,10 +278,29 @@ const seasonClass = item.season === "ladder"
 
 const btn = card.querySelector(".claim-btn");
 
-// 🔎 Gesuch → kein Claim-Button anzeigen
+// 🔎 SUCHE → Helfen-Button statt Claim
 if (item.kind === "search") {
 
   if (btn) btn.remove();
+
+  const helpBtn = document.createElement("button");
+  helpBtn.className = "help-btn";
+  helpBtn.textContent = "🤝 Helfen";
+
+  const row = card.querySelector(".claim-row");
+  if (row) row.appendChild(helpBtn);
+
+  helpBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+
+    const confirmed = await showClaimModal();
+    if (!confirmed) return;
+
+    helpBtn.disabled = true;
+    helpBtn.textContent = "Gesendet";
+
+    // Backend kommt in Step 2
+  });
 
 } else {
 
