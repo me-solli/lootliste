@@ -687,6 +687,11 @@ app.post("/items/:id/help", (req, res) => {
     return res.status(400).json({ error: "Not a search item" });
   }
 
+  // Eigene Suche nicht unterstützen
+if (item.donorAccountId === account.id) {
+  return res.status(400).json({ error: "Cannot help your own search" });
+}
+
   if (item.helpOffers?.some(h => h.accountId === account.id)) {
     return res.status(400).json({ error: "Already offered help" });
   }
