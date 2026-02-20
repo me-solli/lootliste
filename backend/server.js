@@ -538,20 +538,23 @@ app.get("/api/items/latest", (req, res) => {
 // POST ITEM (SESSION + 60s COOLDOWN)
 // ===============================
 app.post("/items", (req, res) => {
-  const { name, quality, type, screenshot, season, note_private } = req.body;
+  const { name, quality, type, screenshot, season, note_private, kind } = req.body;
 
-  // 🔐 Account aus Session holen (kein X-Account-Id mehr!)
   const account = getAccountFromSession(req);
 
   if (!account) {
     return res.status(401).json({ error: "Not authenticated" });
   }
 
-  if (!name || !quality || !type || !screenshot || !season) {
+  if (!name || !quality || !type || !season) {
     return res.status(400).json({ error: "Missing fields" });
   }
 
-  // ⏳ Cooldown prüfen
+  // 🔥 Screenshot nur bei Offer erforderlich
+  if (kind !== "search" && !screenshot) {
+    return res.status(400).json({ error: "Screenshot required for offers" });
+  }
+
   if (!checkCooldown(account, 60)) {
     return res.status(429).json({
       error: "Bitte warte kurz, bevor du ein weiteres Item einreichst."
@@ -563,8 +566,9 @@ app.post("/items", (req, res) => {
     name,
     quality,
     type,
-    screenshot,
+    screenshot: screenshot || null,
     season,
+    kind: kind || "offer",
     status: "verfügbar",
     createdAt: new Date().toISOString(),
 
