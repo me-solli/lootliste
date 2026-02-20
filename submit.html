@@ -477,6 +477,28 @@ confirmBox.addEventListener("change",()=>{
   submitBtn.disabled=!confirmBox.checked;
 });
 
+  // ================================
+// MODE SWITCH LOGIK
+// ================================
+const screenshotBlock = document.getElementById("screenshotBlock");
+const imageInput = document.getElementById("image");
+
+document.querySelectorAll('input[name="kind"]').forEach(radio => {
+  radio.addEventListener("change", () => {
+
+    const selectedKind = document.querySelector('input[name="kind"]:checked').value;
+
+    if (selectedKind === "search") {
+      screenshotBlock.style.display = "none";
+      imageInput.removeAttribute("required");
+    } else {
+      screenshotBlock.style.display = "block";
+      imageInput.setAttribute("required", "required");
+    }
+
+  });
+});
+
 // ================================
 // AUTH INIT (Submit stabil)
 // ================================
