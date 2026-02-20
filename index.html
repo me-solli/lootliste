@@ -2887,6 +2887,13 @@ if (state.type) {
   });
 }
 
+// Trade Filter
+if (state.trade !== "all") {
+  list = list.filter(i => {
+    return (i.tradeType || "offer") === state.trade;
+  });
+}
+  
   // Search
   if (state.search) {
     const q = state.search.toLowerCase();
