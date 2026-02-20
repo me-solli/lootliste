@@ -170,9 +170,20 @@ export function renderCards(items, container) {
     card.dataset.open = "false";
 
     // 🔎 Falls es ein Gesuch ist → spezielle Card-Klasse
+// Trade-Type Badge
+const badge = document.createElement("div");
+badge.className = "trade-badge";
+
 if (item.kind === "search") {
+  badge.classList.add("badge-search");
+  badge.textContent = "GESUCH";
   card.classList.add("card-search");
+} else {
+  badge.classList.add("badge-offer");
+  badge.textContent = "ANGEBOT";
 }
+
+card.appendChild(badge);
 
     const type = VALID_TYPES.includes(item.type) ? item.type : "sonstiges";
     card.dataset.type = type;
