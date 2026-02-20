@@ -169,14 +169,14 @@ export function renderCards(items, container) {
     card.id = `item-${item.id}`;
     card.dataset.open = "false";
 
-    // 🔎 Falls es ein Gesuch ist → spezielle Card-Klasse
+    // 🔎 Falls es eine Suche ist → spezielle Card-Klasse
 // Trade-Type Badge
 const badge = document.createElement("div");
 badge.className = "trade-badge";
 
 if (item.kind === "search") {
   badge.classList.add("badge-search");
-  badge.textContent = "GESUCH";
+  badge.textContent = "SUCHE";
   card.classList.add("card-search");
 } else {
   badge.classList.add("badge-offer");
