@@ -350,16 +350,33 @@ tr.innerHTML=`
     </div>
   </td>
   <td><span class="badge ${cls}">${label}</span></td>
-  <td>
-    ${claimer?`
+<td>
+  ${
+    // 🔒 Normale Reservierung (ANGEBOT)
+    claimer ? `
       <div class="detail-box">
         <div class="kv">
           <span>Spieler</span><div>${claimer.username}</div>
           <span>BattleTag</span><div>${i.contact||"–"}</div>
         </div>
       </div>
-    `:"–"}
-  </td>
+    `
+    // 🤝 Helfer-Liste (SUCHE)
+    : (i.kind === "search" && helpers.length > 0) ? `
+      <div class="detail-box">
+        <strong>${helpers.length} Helfer</strong>
+        <div style="margin-top:6px">
+          ${helpers.map(h => `
+            <div style="margin-bottom:4px">
+              ${h.username} – ${h.battletag}
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `
+    : "–"
+  }
+</td>
   <td><div class="actions">${actionHtml}</div></td>
   <td>${i.season||"–"}</td>
 `;
