@@ -299,8 +299,17 @@ if (item.kind === "search") {
   helpBtn.addEventListener("click", async (e) => {
     e.stopPropagation();
 
-    const confirmed = await showClaimModal();
-    if (!confirmed) return;
+const confirmed = await showClaimModal({
+  title: "Hilfe anbieten",
+  text: `
+    Möchtest du dem Suchenden helfen?<br><br>
+    Dein hinterlegter BattleTag wird übermittelt,
+    damit er dich ingame kontaktieren kann.
+  `,
+  confirmText: "Hilfe senden"
+});
+
+if (!confirmed) return;
 
     helpBtn.disabled = true;
     helpBtn.textContent = "Gesendet";
