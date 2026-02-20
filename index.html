@@ -2963,7 +2963,7 @@ setTimeout(async () => {
     applyFilters();
   });
 
-  // Trade Toggle
+// Trade Toggle
 document.querySelectorAll(".trade-btn").forEach(btn => {
   btn.addEventListener("click", () => {
 
@@ -2972,7 +2972,7 @@ document.querySelectorAll(".trade-btn").forEach(btn => {
 
     btn.classList.add("active");
 
-    state.trade = btn.dataset.kind;
+    state.trade = btn.dataset.trade;   // <-- FIX
     applyFilters();
   });
 });
