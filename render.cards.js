@@ -169,6 +169,11 @@ export function renderCards(items, container) {
     card.id = `item-${item.id}`;
     card.dataset.open = "false";
 
+    // 🔎 Falls es ein Gesuch ist → spezielle Card-Klasse
+if (item.kind === "search") {
+  card.classList.add("card-search");
+}
+
     const type = VALID_TYPES.includes(item.type) ? item.type : "sonstiges";
     card.dataset.type = type;
 
