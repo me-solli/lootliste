@@ -330,7 +330,9 @@ if (item.kind === "search") {
 
   });
 
-}
+  // 👇 HIER gehört append hin – innerhalb von forEach
+  container.appendChild(card);
 
-// 👇 WICHTIG: HIER gehört append hin – NICHT im Listener
-container.appendChild(card);
+  });
+
+}
