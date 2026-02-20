@@ -289,32 +289,49 @@ if (item.kind === "search") {
 
   if (btn) btn.remove();
 
+  const row = card.querySelector(".claim-row");
+
+  // 🔒 Eigene Suche → kein Helfen
+  if (item.isOwner) {
+    if (row) {
+      const ownBtn = document.createElement("button");
+      ownBtn.className = "claim-btn is-owner";
+      ownBtn.textContent = "🔒 Deine Suche";
+      ownBtn.disabled = true;
+      row.appendChild(ownBtn);
+    }
+    container.appendChild(card);
+    return;
+  }
+
   const helpBtn = document.createElement("button");
   helpBtn.className = "help-btn";
   helpBtn.textContent = "🤝 Helfen";
 
-  const row = card.querySelector(".claim-row");
   if (row) row.appendChild(helpBtn);
 
   helpBtn.addEventListener("click", async (e) => {
     e.stopPropagation();
 
-const confirmed = await showClaimModal({
-  title: "Hilfe anbieten",
-  text: `
-    Möchtest du dem Suchenden helfen?<br><br>
-    Dein hinterlegter BattleTag wird übermittelt,
-    damit er dich ingame kontaktieren kann.
-  `,
-  confirmText: "Hilfe senden"
-});
+    const confirmed = await showClaimModal({
+      title: "Hilfe anbieten",
+      text: `
+        Möchtest du dem Suchenden helfen?<br><br>
+        Dein hinterlegter BattleTag wird übermittelt,
+        damit er dich ingame kontaktieren kann.
+      `,
+      confirmText: "Hilfe senden"
+    });
 
-if (!confirmed) return;
+    if (!confirmed) return;
 
     helpBtn.disabled = true;
     helpBtn.textContent = "Gesendet";
 
-    // Backend kommt in Step 2
+    await fetch(`${API}/items/${item.id}/help`, {
+      method: "POST",
+      credentials: "include"
+    });
   });
 
 } else {
