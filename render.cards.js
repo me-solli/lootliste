@@ -327,6 +327,7 @@ if (item.kind === "search") {
       btn.disabled = false;
       btn.textContent = "🖐️ Nehmen";
     }
+    container.appendChild(card);
   });
 
 }
