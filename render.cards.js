@@ -327,12 +327,11 @@ if (item.kind === "search") {
       btn.disabled = false;
       btn.textContent = "🖐️ Nehmen";
     }
-
   });
 
-  // 👇 HIER gehört append hin – innerhalb von forEach
-  container.appendChild(card);
+} // ← DIESE Klammer hat gefehlt oder war falsch platziert
 
-  });
-
+// 👇 append MUSS außerhalb vom if/else stehen
+container.appendChild(card);
+      }); // forEach
 }
