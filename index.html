@@ -2028,6 +2028,40 @@ body.mode-ladder .mode-tab.active{
   color: #ffb3b3;
   box-shadow: 0 0 14px rgba(220,80,80,.35);
 }
+
+  /* ================================
+   TRADE TOGGLE (ALLE / ANBIETE / SUCHE)
+================================ */
+
+.trade-toggle{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.trade-btn{
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  color:#aaa;
+  font-size:12px;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+
+.trade-btn:hover{
+  border-color:rgba(245,196,81,.4);
+  color:#eaeaea;
+}
+
+.trade-btn.active{
+  background:rgba(245,196,81,.12);
+  border-color:rgba(245,196,81,.6);
+  color:#f5c451;
+  box-shadow:0 0 12px rgba(245,196,81,.25);
+}
   
 </style>
 </head>
