@@ -571,7 +571,16 @@ const imageInput = document.getElementById("image");
 document.querySelectorAll('input[name="kind"]').forEach(radio => {
   radio.addEventListener("change", () => {
 
-    const selectedKind = document.querySelector('input[name="kind"]:checked').value;
+   const kindInput = document.querySelector('input[name="kind"]:checked');
+
+if (!kindInput) {
+  alert("Bitte zuerst 'Item anbieten' oder 'Suche erstellen' wählen.");
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Item einreichen";
+  return;
+}
+
+const selectedKind = kindInput.value;
 
     const legalBlock = document.getElementById("legalBlock");
     const searchNotice = document.getElementById("searchNotice");
