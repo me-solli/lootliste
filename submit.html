@@ -569,16 +569,17 @@ const imageInput = document.getElementById("image");
 document.querySelectorAll('input[name="kind"]').forEach(radio => {
   radio.addEventListener("change", () => {
 
-   const kindInput = document.querySelector('input[name="kind"]:checked');
+    // 🔒 Zuerst prüfen: wurde eine Season gewählt?
+    if (!selectedSeason) {
+      alert("Bitte zuerst Non-Ladder oder Ladder auswählen.");
+      document.querySelectorAll('input[name="kind"]').forEach(r => r.checked = false);
+      return;
+    }
 
-if (!kindInput) {
-  alert("Bitte zuerst 'Item anbieten' oder 'Suche erstellen' wählen.");
-  submitBtn.disabled = false;
-  submitBtn.textContent = "Item einreichen";
-  return;
-}
+    // ✅ Jetzt darf das Formular erscheinen
+    formWrapper.style.display = "block";
 
-const selectedKind = kindInput.value;
+    const selectedKind = document.querySelector('input[name="kind"]:checked').value;
 
     const legalBlock = document.getElementById("legalBlock");
     const searchNotice = document.getElementById("searchNotice");
