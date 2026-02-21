@@ -536,6 +536,31 @@ const CLOUD_NAME="dcczi93p6";
 const UPLOAD_PRESET="lootliste_unsigned";
 let selectedSeason = null;
 
+  document.querySelectorAll(".submit-mode-visual").forEach(tab => {
+  tab.addEventListener("click", () => {
+
+    document.querySelectorAll(".submit-mode-visual")
+      .forEach(t => t.classList.remove("active"));
+
+    tab.classList.add("active");
+
+    selectedSeason = tab.dataset.season;
+
+    document.body.classList.remove("submit-ladder","submit-non-ladder");
+
+    if (selectedSeason === "ladder") {
+      document.body.classList.add("submit-ladder");
+      notice.style.display = "block";
+    } else {
+      document.body.classList.add("submit-non-ladder");
+      notice.style.display = "none";
+    }
+
+    formWrapper.style.display = "block";
+
+  });
+});
+
   const formWrapper = document.getElementById("submitFormWrapper");
 const notice = document.getElementById("ladderNotice");
   const modeHint = document.getElementById("modeHint");
