@@ -575,12 +575,16 @@ document.querySelectorAll('input[name="kind"]').forEach(radio => {
 
     const selectedKind = document.querySelector('input[name="kind"]:checked').value;
 
+    const legalBlock = document.getElementById("legalBlock");
+
     if (selectedKind === "search") {
       screenshotBlock.style.display = "none";
       imageInput.removeAttribute("required");
+      legalBlock.style.display = "none";
     } else {
       screenshotBlock.style.display = "block";
       imageInput.setAttribute("required", "required");
+      legalBlock.style.display = "block";
     }
 
   });
