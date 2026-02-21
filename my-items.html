@@ -343,7 +343,7 @@ tr.innerHTML=`
           <span
             class="note-icon"
             title="${i.note_private || 'Interne Notiz bearbeiten'}"
-            onclick="editNote(${i.id}, '${(i.note_private || '').replace(/'/g,'&#39;')}')"
+            onclick="editNote(${i.id}, ${JSON.stringify(i.note_private || "")})"
           >📝</span>
         </strong>
         <small>${i.quality||""} · ${i.type||""}</small>
