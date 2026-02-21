@@ -289,6 +289,50 @@ body.submit-ladder .submit-mode-visual.active{
   margin:0 auto;
 }
 
+  /* ================================
+   ENTRY MODE – VISUAL TOGGLE
+================================ */
+
+.entry-mode{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin:18px 0 28px;
+}
+
+.entry-option{
+  position:relative;
+  cursor:pointer;
+}
+
+.entry-option input{
+  display:none;
+}
+
+.entry-option span{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:999px;
+  font-size:14px;
+  letter-spacing:.3px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.03);
+  transition:all .2s ease;
+}
+
+/* Hover */
+.entry-option:hover span{
+  border-color:rgba(245,196,81,.4);
+}
+
+/* Active */
+.entry-option input:checked + span{
+  border-color:rgba(245,196,81,.8);
+  background:rgba(245,196,81,.12);
+  color:#f5c451;
+  box-shadow:0 0 14px rgba(245,196,81,.25);
+}
+
 </style>
 </head>
 
