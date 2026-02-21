@@ -440,26 +440,42 @@ if(!accountId){
         <option value="magic">Magic</option>
       </select>
 
-      <label>Kategorie</label>
-      <select id="type" required>
-        <option value="">Bitte wählen</option>
-        <option value="waffe">Waffe</option>
-        <option value="helm">Helm</option>
-        <option value="ruestung">Rüstung</option>
-        <option value="schild">Schild</option>
-        <option value="guertel">Gürtel</option>
-        <option value="handschuhe">Handschuhe</option>
-        <option value="schuhe">Schuhe</option>
-        <option value="amulett">Amulett</option>
-        <option value="ring">Ring</option>
-        <option value="charm">Charm</option>
-        <option value="rune">Rune</option>
-        <option value="sonstiges">Sonstiges</option>
-      </select>
+<label>Kategorie</label>
+<select id="type" required>
+  <option value="">Bitte wählen</option>
+  <option value="waffe">Waffe</option>
+  <option value="helm">Helm</option>
+  <option value="ruestung">Rüstung</option>
+  <option value="schild">Schild</option>
+  <option value="guertel">Gürtel</option>
+  <option value="handschuhe">Handschuhe</option>
+  <option value="schuhe">Schuhe</option>
+  <option value="amulett">Amulett</option>
+  <option value="ring">Ring</option>
+  <option value="charm">Charm</option>
+  <option value="rune">Rune</option>
+  <option value="sonstiges">Sonstiges</option>
+</select>
 
-      <label>Interne Notiz (optional)</label>
-      <textarea id="note" maxlength="50" rows="2" placeholder="z. B. für Javazon, evtl. dupe?"></textarea>
-      <small class="hint">Nur für dich sichtbar</small>
+<label>Item-Details (optional)</label>
+<textarea 
+  id="details"
+  maxlength="160"
+  rows="3"
+  placeholder="+20-25 ias / non eth / 3os / 15ed base"
+></textarea>
+<small class="hint">
+  Kurze technische Beschreibung für andere Spieler.
+</small>
+
+<label>Interne Notiz (optional)</label>
+<textarea 
+  id="note" 
+  maxlength="50" 
+  rows="2" 
+  placeholder="z. B. für Javazon, evtl. dupe?"
+></textarea>
+<small class="hint">Nur für dich sichtbar</small>
 
 <!-- LEGAL BLOCK -->
 <div class="notice-legal">
