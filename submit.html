@@ -540,32 +540,26 @@ let selectedSeason = null;
 const notice = document.getElementById("ladderNotice");
   const modeHint = document.getElementById("modeHint");
 
-document.querySelectorAll(".submit-mode-visual").forEach(tab => {
-  tab.addEventListener("click", () => {
+document.querySelectorAll('input[name="kind"]').forEach(radio => {
+  radio.addEventListener("change", () => {
 
-    document.querySelectorAll(".submit-mode-visual")
-      .forEach(t => t.classList.remove("active"));
+    const selectedKind = document.querySelector('input[name="kind"]:checked').value;
 
-    tab.classList.add("active");
+    const legalBlock = document.getElementById("legalBlock");
+    const searchNotice = document.getElementById("searchNotice");
 
-    selectedSeason = tab.dataset.season;
+    if (selectedKind === "search") {
+      screenshotBlock.style.display = "none";
+      imageInput.removeAttribute("required");
+      legalBlock.style.display = "none";
+      searchNotice.style.display = "block";
+    } else {
+      screenshotBlock.style.display = "block";
+      imageInput.setAttribute("required", "required");
+      legalBlock.style.display = "block";
+      searchNotice.style.display = "none";
+    }
 
-    document.body.classList.remove("submit-ladder","submit-non-ladder");
-
-if (selectedSeason === "ladder") {
-  document.body.classList.add("submit-ladder");
-  notice.style.display = "block";
-} else {
-  document.body.classList.add("submit-non-ladder");
-  notice.style.display = "none";
-}
-
-formWrapper.style.display = "block";
-document.getElementById("entryMode").style.display = "flex";
-
-if (modeHint) {
-  modeHint.style.display = "none";
-}
   });
 });
 
