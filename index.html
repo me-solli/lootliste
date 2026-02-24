@@ -2619,7 +2619,7 @@ window.setDebugClass = function (cls) {
 
 let ACTIVE_SEASON = "non-ladder";
 
-function updateSeasonVisuals() {
+window.updateSeasonVisuals = function () {
   const heroModeLabel = document.getElementById("heroModeLabel");
   const heroModeIcon  = document.getElementById("heroModeIcon");
 
@@ -2627,14 +2627,14 @@ function updateSeasonVisuals() {
 
   if (ACTIVE_SEASON === "ladder") {
     heroModeLabel.textContent = "Ladder";
-    heroModeIcon.textContent  = "🩸";  // 🔥 ersetzt 🟡
+    heroModeIcon.textContent  = "🩸";
     document.body.classList.add("mode-ladder");
   } else {
     heroModeLabel.textContent = "Non-Ladder";
     heroModeIcon.textContent  = "🟡";
     document.body.classList.remove("mode-ladder");
   }
-}
+};
 
   // 🔌 API (WICHTIG: Modul-Scope!)
   const API = "https://lootliste-production.up.railway.app";
