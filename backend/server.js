@@ -494,7 +494,14 @@ app.get("/admin/accounts", (req, res) => {
 // GET ITEMS
 // ===============================
 app.get("/items", (req, res) => {
-  res.json(items);
+  const season = req.query.season;
+
+  if (!season) {
+    return res.json(items);
+  }
+
+  const filtered = items.filter(i => i.season === season);
+  res.json(filtered);
 });
 
 // ===============================
