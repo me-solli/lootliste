@@ -2672,7 +2672,7 @@ const state = {
 };
 
 async function loadItems() {
-  const res = await fetch(API + "/items", {
+  const res = await fetch(API + "/items?season=" + ACTIVE_SEASON, {
     headers: {
       "X-User-Id": localStorage.getItem("lootliste_user_id") || "",
       "X-Account-Id": localStorage.getItem("lootliste_account_id") || ""
