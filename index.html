@@ -2594,6 +2594,21 @@ window.setDebugClass = function (cls) {
   // ===============================
 let ACTIVE_SEASON = "non-ladder";
 
+  function updateSeasonVisuals(){
+  const heroModeLabel = document.getElementById("heroModeLabel");
+  const heroModeIcon  = document.getElementById("heroModeIcon");
+
+  if (!heroModeLabel || !heroModeIcon) return;
+
+  if (ACTIVE_SEASON === "ladder"){
+    heroModeLabel.textContent = "Ladder";
+    heroModeIcon.textContent  = "🩸";   // Blutstropfen
+  } else {
+    heroModeLabel.textContent = "Non-Ladder";
+    heroModeIcon.textContent  = "🟡";   // Gold-Kreis
+  }
+}
+
   // 🔌 API (WICHTIG: Modul-Scope!)
   const API = "https://lootliste-production.up.railway.app";
 
