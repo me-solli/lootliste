@@ -2968,7 +2968,7 @@ setTimeout(async () => {
 // SEASON SWITCH (VISUAL)
 // ===============================
 document.querySelectorAll(".mode-visual").forEach(el => {
-  el.addEventListener("click", () => {
+  el.addEventListener("click", async () => {   // 🔥 async fehlt sonst!
     const season = el.dataset.season;
 
     if (season === ACTIVE_SEASON) return;
@@ -2985,8 +2985,8 @@ document.querySelectorAll(".mode-visual").forEach(el => {
       season === "ladder"
     );
 
-    await loadItems();
-    updateMeta();
+    await loadItems();   // jetzt erlaubt
+    applyFilters();
   });
 });
 
