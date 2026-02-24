@@ -2870,6 +2870,13 @@ window.setUserLabel = setUserLabel;
 function updateMeta() {
   const list = state.filtered;
 
+  // 🔁 Hero-Modus aktualisieren
+  const heroMode = document.getElementById("heroModeLabel");
+  if (heroMode) {
+    heroMode.textContent =
+      ACTIVE_SEASON === "ladder" ? "Ladder" : "Non-Ladder";
+  }
+
   // Counts
   metaCount && (metaCount.textContent = list.length);
   heroCount && (heroCount.textContent = list.length);
