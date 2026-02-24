@@ -3008,29 +3008,28 @@ setTimeout(async () => {
   updateSeasonVisuals();
 }, 400);
 
-  // ===============================
+// ===============================
 // SEASON SWITCH (VISUAL)
 // ===============================
 document.querySelectorAll(".mode-visual").forEach(el => {
-  el.addEventListener("click", async () => {   // 🔥 async fehlt sonst!
+  el.addEventListener("click", async () => {
+
     const season = el.dataset.season;
 
-    if (season === ACTIVE_SEASON) return;
+    if (season === window.ACTIVE_SEASON) return;
 
-    ACTIVE_SEASON = season;
+    window.ACTIVE_SEASON = season;
 
-    document.querySelectorAll(".mode-visual").forEach(b =>
-      b.classList.remove("active")
-    );
+    document.querySelectorAll(".mode-visual")
+      .forEach(b => b.classList.remove("active"));
+
     el.classList.add("active");
 
-    document.body.classList.toggle(
-      "mode-ladder",
-      season === "ladder"
-    );
+    await loadItems();
 
-    await loadItems();   // jetzt erlaubt
     applyFilters();
+
+    updateSeasonVisuals();   // 🔥 WICHTIG: Icon & Label updaten
   });
 });
 
