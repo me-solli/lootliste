@@ -2010,23 +2010,62 @@ body.mode-ladder .mode-visual.active{
   text-decoration:underline;
 }
 
-  /* ================================
-   LADDER VISUAL MODE
+ /* ================================
+   LADDER VISUAL MODE (ENHANCED)
 ================================ */
 
+/* 🔴 Grundton für Cards */
 body.mode-ladder .card{
-  border-color: rgba(180,60,60,.35);
+  border-color: rgba(200,70,70,.45);
+  box-shadow:
+    0 0 0 1px rgba(200,70,70,.15);
 }
 
+/* 🔥 Hover subtil stärker */
 body.mode-ladder .card:hover{
-  box-shadow: 0 10px 26px rgba(180,60,60,.25);
+  box-shadow:
+    0 10px 28px rgba(200,70,70,.28),
+    0 0 18px rgba(200,70,70,.18);
 }
 
-body.mode-ladder .mode-tab.active{
-  background: rgba(180,60,60,.18);
-  border-color: rgba(220,80,80,.6);
-  color: #ffb3b3;
-  box-shadow: 0 0 14px rgba(220,80,80,.35);
+/* 🩸 Aktive (geöffnete) Card – intensiver */
+body.mode-ladder .card[data-open="true"]{
+  border-color: rgba(255,90,90,.7);
+  box-shadow:
+    0 0 0 1px rgba(255,90,90,.35),
+    0 0 24px rgba(220,80,80,.35),
+    inset 0 0 14px rgba(220,80,80,.18);
+}
+
+/* 🔴 Chevron bei geöffneter Card */
+body.mode-ladder .card[data-open="true"] .card-chevron{
+  color:#ff9b9b;
+  text-shadow:
+    0 0 6px rgba(220,80,80,.6),
+    0 0 16px rgba(220,80,80,.4);
+}
+
+/* 🩸 Hero Mode Label Glow */
+body.mode-ladder #heroModeLabel{
+  color:#ffb3b3;
+  text-shadow:
+    0 0 6px rgba(220,80,80,.6),
+    0 0 14px rgba(220,80,80,.35);
+}
+
+/* 🩸 Hero Mode Icon Glow */
+body.mode-ladder #heroModeIcon{
+  text-shadow:
+    0 0 8px rgba(220,80,80,.8),
+    0 0 18px rgba(220,80,80,.5);
+}
+
+/* 🔴 Trade Buttons in Ladder */
+body.mode-ladder .trade-btn.active{
+  background:rgba(180,60,60,.22);
+  border-color:rgba(220,80,80,.7);
+  color:#ffb3b3;
+  box-shadow:0 0 14px rgba(220,80,80,.35);
 }
 
   /* ================================
