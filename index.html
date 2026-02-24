@@ -2964,6 +2964,32 @@ setTimeout(async () => {
   applyFilters();
 }, 400);
 
+  // ===============================
+// SEASON SWITCH (VISUAL)
+// ===============================
+document.querySelectorAll(".mode-visual").forEach(el => {
+  el.addEventListener("click", () => {
+    const season = el.dataset.season;
+
+    if (season === ACTIVE_SEASON) return;
+
+    ACTIVE_SEASON = season;
+
+    document.querySelectorAll(".mode-visual").forEach(b =>
+      b.classList.remove("active")
+    );
+    el.classList.add("active");
+
+    document.body.classList.toggle(
+      "mode-ladder",
+      season === "ladder"
+    );
+
+    await loadItems();
+    updateMeta();
+  });
+});
+
   // Search
   const searchInput = document.getElementById("filterSearch");
   searchInput?.addEventListener("input", () => {
