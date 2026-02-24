@@ -2625,7 +2625,7 @@ window.updateSeasonVisuals = function () {
 
   if (!heroModeLabel || !heroModeIcon) return;
 
-  if (ACTIVE_SEASON === "ladder") {
+  if (window.ACTIVE_SEASON === "ladder") {
     heroModeLabel.textContent = "Ladder";
     heroModeIcon.textContent  = "🩸";
     document.body.classList.add("mode-ladder");
