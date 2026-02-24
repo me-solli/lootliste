@@ -576,24 +576,43 @@ document.querySelectorAll('input[name="kind"]').forEach(radio => {
       return;
     }
 
-    // ✅ Jetzt darf das Formular erscheinen
+    // ✅ Formular anzeigen
     formWrapper.style.display = "block";
 
     const selectedKind = document.querySelector('input[name="kind"]:checked').value;
 
-    const legalBlock = document.getElementById("legalBlock");
-    const searchNotice = document.getElementById("searchNotice");
+    const legalBlock     = document.getElementById("legalBlock");
+    const searchNotice   = document.getElementById("searchNotice");
+    const submitBtn      = document.getElementById("submitBtn");
 
+    // 🔄 UI je nach Typ anpassen
     if (selectedKind === "search") {
-      screenshotBlock.style.display = "none";
-      imageInput.removeAttribute("required");
-      legalBlock.style.display = "none";
-      searchNotice.style.display = "block";
+
+      // Screenshot nicht nötig
+      if (typeof screenshotBlock !== "undefined" && screenshotBlock)
+        screenshotBlock.style.display = "none";
+
+      if (typeof imageInput !== "undefined" && imageInput)
+        imageInput.removeAttribute("required");
+
+      if (legalBlock)   legalBlock.style.display = "none";
+      if (searchNotice) searchNotice.style.display = "block";
+
+      if (submitBtn) submitBtn.textContent = "Suche einreichen";
+
     } else {
-      screenshotBlock.style.display = "block";
-      imageInput.setAttribute("required", "required");
-      legalBlock.style.display = "block";
-      searchNotice.style.display = "none";
+
+      // Screenshot erforderlich
+      if (typeof screenshotBlock !== "undefined" && screenshotBlock)
+        screenshotBlock.style.display = "block";
+
+      if (typeof imageInput !== "undefined" && imageInput)
+        imageInput.setAttribute("required", "required");
+
+      if (legalBlock)   legalBlock.style.display = "block";
+      if (searchNotice) searchNotice.style.display = "none";
+
+      if (submitBtn) submitBtn.textContent = "Item einreichen";
     }
 
   });
