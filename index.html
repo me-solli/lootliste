@@ -2628,23 +2628,26 @@ window.setDebugClass = function (cls) {
   setUserLabel(); // Avatar & Name sofort neu setzen
 };
 
-  // ===============================
-  // SEASON (ZENTRAL)
-  // ===============================
+// ===============================
+// SEASON (ZENTRAL)
+// ===============================
+
 let ACTIVE_SEASON = "non-ladder";
 
-  function updateSeasonVisuals(){
+function updateSeasonVisuals() {
   const heroModeLabel = document.getElementById("heroModeLabel");
   const heroModeIcon  = document.getElementById("heroModeIcon");
 
   if (!heroModeLabel || !heroModeIcon) return;
 
-  if (ACTIVE_SEASON === "ladder"){
+  if (ACTIVE_SEASON === "ladder") {
     heroModeLabel.textContent = "Ladder";
-    heroModeIcon.textContent  = "🩸";   // Blutstropfen
+    heroModeIcon.textContent  = "🩸";
+    document.body.classList.add("mode-ladder");
   } else {
     heroModeLabel.textContent = "Non-Ladder";
-    heroModeIcon.textContent  = "🟡";   // Gold-Kreis
+    heroModeIcon.textContent  = "🟡";
+    document.body.classList.remove("mode-ladder");
   }
 }
 
