@@ -298,7 +298,7 @@ const completed = allItems.filter(i =>
   i.status === "vergeben"
 ).length;
 
-const trustLevel = calculateTrustLevel(allItems, item.donorAccountId);
+const trustLevel = item.donorStars || 1;
 const activity = relativeTime(item.donorLastActive);
 
 // ⭐ 5 feste Sterne (gefüllt + leer)
