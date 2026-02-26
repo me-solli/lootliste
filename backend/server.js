@@ -415,26 +415,30 @@ app.get("/me", (req, res) => {
     });
   }
 
-const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
+  const stats = calculateAccountStats(account.id);
 
-let battletagNextChange = null;
+  const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
 
-if (account.profileUpdatedAt) {
-  const next = new Date(
-    new Date(account.profileUpdatedAt).getTime() + THIRTY_DAYS
-  );
+  let battletagNextChange = null;
 
-  battletagNextChange = next.toISOString();
-}
+  if (account.profileUpdatedAt) {
+    const next = new Date(
+      new Date(account.profileUpdatedAt).getTime() + THIRTY_DAYS
+    );
 
-return res.json({
-  loggedIn: true,
-  accountId: account.id,
-  username: account.username,
-  email: account.email,
-  battletag: account.battletag,
-  battletagNextChange
-});
+    battletagNextChange = next.toISOString();
+  }
+
+  return res.json({
+    loggedIn: true,
+    accountId: account.id,
+    username: account.username,
+    email: account.email,
+    battletag: account.battletag,
+    battletagNextChange,
+    level: stats.level,
+    stars: stats.stars
+  });
 });
 
 // ===============================
