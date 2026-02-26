@@ -262,10 +262,19 @@ const completed = allItems.filter(i =>
   i.status === "vergeben"
 ).length;
 
+const completed = allItems.filter(i =>
+  i.donorAccountId === item.donorAccountId &&
+  i.status === "vergeben"
+).length;
+
 const trustLevel = calculateTrustLevel(allItems, item.donorAccountId);
 const activity = relativeTime(item.donorLastActive);
 
-const stars = "⭐".repeat(trustLevel);
+// ⭐ 5 feste Sterne (gefüllt + leer)
+const maxStars = 5;
+const filledStars = "★".repeat(trustLevel);
+const emptyStars = "☆".repeat(maxStars - trustLevel);
+const stars = filledStars + emptyStars;
 
   sourceLabel = `
     <div class="donor-block">
