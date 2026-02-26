@@ -298,11 +298,6 @@ const completed = allItems.filter(i =>
   i.status === "vergeben"
 ).length;
 
-const completed = allItems.filter(i =>
-  i.donorAccountId === item.donorAccountId &&
-  i.status === "vergeben"
-).length;
-
 const trustLevel = calculateTrustLevel(allItems, item.donorAccountId);
 const activity = relativeTime(item.donorLastActive);
 
