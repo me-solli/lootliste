@@ -2804,6 +2804,8 @@ if (meRes.ok) {
   }
 }
 
+  renderRecentFeed(data);
+
 state.items = data
   .filter(i => i.status === "verfügbar")
   .map(item => ({
