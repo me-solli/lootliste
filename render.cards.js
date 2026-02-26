@@ -226,24 +226,24 @@ function showClaimModal(options = {}) {
   color: #c9a441;
 }
 .donor-info {
-  margin-left: 6px;
-  font-size: 11px;
-  color: #c9a441;          /* leicht gold */
-  border: 1px solid rgba(245,196,81,.4);
+  margin-left: 8px;
+  font-size: 10px;
+  font-weight: bold;
+  color: #f5c451;
+  border: 1px solid rgba(245,196,81,.6);
   border-radius: 50%;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
   cursor: help;
-  opacity: .85;
+  transition: all .15s ease;
 }
 
 .donor-info:hover {
-  background: rgba(245,196,81,.15);
-  box-shadow: 0 0 6px rgba(245,196,81,.4);
+  background: rgba(245,196,81,.18);
+  box-shadow: 0 0 8px rgba(245,196,81,.5);
 }
   `;
 
