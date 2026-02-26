@@ -2835,10 +2835,14 @@ function renderRecentFeed(items){
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 10);
 
-  if (list.length === 0) {
-    feed.parentElement.style.display = "none";
-    return;
-  }
+if (list.length === 0) {
+  feed.innerHTML = `
+    <li class="recent-feed-item" style="opacity:.5;">
+      Keine Aktivität in diesem Modus.
+    </li>
+  `;
+  return;
+}
 
   feed.innerHTML = "";
 
