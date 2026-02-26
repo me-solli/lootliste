@@ -718,16 +718,20 @@ if (item.donorAccountId === account.id) {
 
   item.helpOffers = item.helpOffers || [];
 
-  item.helpOffers.push({
-    accountId: account.id,
-    username: account.username,
-    battletag: account.battletag,
-    createdAt: new Date().toISOString()
-  });
+item.helpOffers.push({
+  accountId: account.id,
+  username: account.username,
+  battletag: account.battletag,
+  createdAt: new Date().toISOString()
+});
 
-  saveJSON(ITEMS_FILE, items);
+// 🔥 Aktivität des Helfers aktualisieren
+account.lastActive = new Date().toISOString();
+saveAccounts();
 
-  res.json({ ok: true });
+saveJSON(ITEMS_FILE, items);
+
+res.json({ ok: true });
 });
 
 // ===============================
