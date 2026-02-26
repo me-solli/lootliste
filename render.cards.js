@@ -257,10 +257,15 @@ if (item.donor) {
       : "";
 
   // ⭐ Trust-Level berechnen
+const completed = allItems.filter(i =>
+  i.donorAccountId === item.donorAccountId &&
+  i.status === "vergeben"
+).length;
+
 const trustLevel = calculateTrustLevel(allItems, item.donorAccountId);
 const activity = relativeTime(item.donorLastActive);
 
-  const stars = "⭐".repeat(trustLevel);
+const stars = "⭐".repeat(trustLevel);
 
   sourceLabel = `
     <div class="donor-block">
