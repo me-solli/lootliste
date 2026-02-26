@@ -749,11 +749,15 @@ app.post("/items/:id/confirm-donor", (req, res) => {
     item.handover = { donorConfirmed: false, receiverConfirmed: false };
   }
 
-  item.handover.donorConfirmed = true;
-  finalizeItem(item);
+item.handover.donorConfirmed = true;
+finalizeItem(item);
 
-  saveJSON(ITEMS_FILE, items);
-  res.json(item);
+// 🔥 Aktivität des Spenders aktualisieren
+acc.lastActive = new Date().toISOString();
+saveAccounts();
+
+saveJSON(ITEMS_FILE, items);
+res.json(item);
 });
 
 app.post("/items/:id/confirm-receiver", (req, res) => {
