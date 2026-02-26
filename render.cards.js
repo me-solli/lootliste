@@ -438,11 +438,12 @@ if (item.kind === "search") {
         return;
       }
 
-      showToast?.("Item reserviert.");
+showToast?.("Item reserviert.");
 
-      card.style.opacity = "0";
-      card.style.transform = "scale(0.96)";
-      setTimeout(() => card.remove(), 200);
+// 🔥 Neu laden damit Activity & Status global synchron sind
+if (typeof window.loadItems === "function") {
+  await window.loadItems();
+}
 
     } catch {
       alert("Netzwerkfehler.");
