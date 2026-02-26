@@ -286,6 +286,7 @@ const maxStars = 5;
 const filledStars = "★".repeat(trustLevel);
 const emptyStars = "☆".repeat(maxStars - trustLevel);
 const stars = filledStars + emptyStars;
+  const donorLevel = item.donorLevel || 1;
 
   sourceLabel = `
     <div class="donor-block">
