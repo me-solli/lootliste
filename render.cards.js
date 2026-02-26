@@ -283,16 +283,17 @@ const stars = "⭐".repeat(trustLevel);
         ${donorIcon}
       </div>
 
-      <div class="donor-trust">
-        <span class="donor-stars">${stars}</span>
-        ${
-          activity
-            ? `<span class="donor-activity ${activity.level}">
-                ${activity.text}
-              </span>`
-            : ""
-        }
-      </div>
+<div class="donor-trust">
+  <span class="donor-stars">${stars}</span>
+  <span class="donor-count">${completed} Übergaben</span>
+  ${
+    activity
+      ? `<span class="donor-activity ${activity.level}">
+          ${activity.text}
+        </span>`
+      : ""
+  }
+</div>
     </div>
   `;
 }
