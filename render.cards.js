@@ -321,10 +321,10 @@ sourceLabel = `
   <div class="donor-block">
     <span class="donor-label">
       Spender
-      <span class="donor-info"
-            title="⭐ Sterne = aktuelle Aktivität | Lvl = langfristige Beteiligung">
-        ⓘ
-      </span>
+<span class="donor-info"
+      title="⭐ Sterne = aktuelle Aktivität | Lvl = langfristige Beteiligung">
+  i
+</span>
     </span>
 
     <div class="donor-line">
