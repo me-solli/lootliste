@@ -293,8 +293,7 @@ if (item.donor) {
       : "";
 
 // ⭐ Trust-Level vom Backend
-const trustLevel = item.donorStars || 1;
-  
+const trustLevel = item.donorStars || 1;  
 const activity = relativeTime(item.donorLastActive);
 
 // ⭐ 5 feste Sterne (gefüllt + leer)
