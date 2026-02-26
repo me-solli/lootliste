@@ -260,33 +260,52 @@ const seasonClass = item.season === "ladder"
 
     let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
-    if (item.donor) {
-      const donorClass =
-        item.donorClass ||
-        localStorage.getItem("lootliste_profile_class");
+if (item.donor) {
+  const donorClass =
+    item.donorClass ||
+    localStorage.getItem("lootliste_profile_class");
 
-      const donorIcon =
-        donorClass && CLASS_ICONS_MINI[donorClass]
-          ? `<img class="donor-class-icon" src="${CLASS_ICONS_MINI[donorClass]}" alt="">`
-          : "";
+  const donorIcon =
+    donorClass && CLASS_ICONS_MINI[donorClass]
+      ? `<img class="donor-class-icon" src="${CLASS_ICONS_MINI[donorClass]}" alt="">`
+      : "";
 
-      sourceLabel = `
-        <div class="donor-block">
-          <span class="donor-label">Spender</span>
-          <div class="donor-line">
-            <a
-              href="profile.html?user=${encodeURIComponent(item.donor)}"
-              class="donor-name"
-              title="Öffentliches Profil ansehen"
-              onclick="event.stopPropagation()"
-            >
-              ${item.donor}
-            </a>
-            ${donorIcon}
-          </div>
-        </div>
-      `;
-    }
+  // ⭐ Trust-Level berechnen
+  const trustLevel = calculateTrustLevel(allItems, item.donorAccountId);
+  const lastActivityDate = getLastActivity(allItems, item.donorAccountId);
+  const activity = relativeTime(lastActivityDate);
+
+  const stars = "⭐".repeat(trustLevel);
+
+  sourceLabel = `
+    <div class="donor-block">
+      <span class="donor-label">Spender</span>
+
+      <div class="donor-line">
+        <a
+          href="profile.html?user=${encodeURIComponent(item.donor)}"
+          class="donor-name"
+          title="Öffentliches Profil ansehen"
+          onclick="event.stopPropagation()"
+        >
+          ${item.donor}
+        </a>
+        ${donorIcon}
+      </div>
+
+      <div class="donor-trust">
+        <span class="donor-stars">${stars}</span>
+        ${
+          activity
+            ? `<span class="donor-activity ${activity.level}">
+                ${activity.text}
+              </span>`
+            : ""
+        }
+      </div>
+    </div>
+  `;
+}
 
     card.innerHTML = `
       <button class="card-header" type="button">
