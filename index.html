@@ -2817,6 +2817,8 @@ state.items = data
 
 state.filtered = [...state.items];
 
+  renderCards(state.filtered, container, state.items);
+
 // Username laden
 await setUserLabel();
   }
