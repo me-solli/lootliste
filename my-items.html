@@ -284,11 +284,11 @@ async function initAuth() {
 
   currentUser = d;
   document.getElementById("playerName").textContent = d.username;
-  document.getElementById("playerStars").textContent =
-  "⭐".repeat(d.stars || 1);
+document.getElementById("playerStars").textContent =
+  " ⭐".repeat(d.stars || 1);
 
 document.getElementById("playerLevel").textContent =
-  "Lvl " + (d.level || 1);
+  " Lvl " + (d.level || 1);
 
   return true;
 }
