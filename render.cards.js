@@ -322,7 +322,6 @@ const stars = filledStars + emptyStars;
 <div class="donor-trust">
   <div class="donor-stars-line">
     <span class="donor-stars">${stars}</span>
-    <span class="donor-count">(${completed})</span>
   </div>
 
   ${
