@@ -500,12 +500,22 @@ app.get("/admin/accounts", (req, res) => {
 app.get("/items", (req, res) => {
   const season = req.query.season;
 
-  if (!season) {
-    return res.json(items);
+  let result = items;
+
+  if (season) {
+    result = items.filter(i => i.season === season);
   }
 
-  const filtered = items.filter(i => i.season === season);
-  res.json(filtered);
+  const enriched = result.map(item => {
+    const donorAccount = findAccountById(item.donorAccountId);
+
+    return {
+      ...item,
+      donorLastActive: donorAccount?.lastActive || null
+    };
+  });
+
+  res.json(enriched);
 });
 
 // ===============================
