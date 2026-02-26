@@ -16,6 +16,54 @@ const VALID_TYPES = [
   "charm","rune","sonstiges"
 ];
 
+// ===============================
+// TRUST + ACTIVITY (MINIMAL)
+// ===============================
+
+function calculateTrustLevel(allItems, accountId) {
+  if (!accountId) return 1;
+
+  const completed = allItems.filter(i =>
+    i.donorAccountId === accountId &&
+    i.status === "vergeben"
+  ).length;
+
+  if (completed >= 10) return 5;
+  if (completed >= 6)  return 4;
+  if (completed >= 3)  return 3;
+  if (completed >= 1)  return 2;
+  return 1;
+}
+
+function getLastActivity(allItems, accountId) {
+  const userItems = allItems.filter(i =>
+    i.donorAccountId === accountId
+  );
+
+  if (!userItems.length) return null;
+
+  const newest = userItems
+    .map(i => new Date(i.createdAt))
+    .sort((a,b) => b - a)[0];
+
+  return newest;
+}
+
+function relativeTime(date) {
+  if (!date) return null;
+
+  const diff = Date.now() - new Date(date).getTime();
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 60) return { text: "aktiv vor wenigen Minuten", level: "green" };
+  if (hours < 24) return { text: `aktiv vor ${hours} Std.`, level: "green" };
+  if (days < 7) return { text: `aktiv vor ${days} Tagen`, level: "yellow" };
+
+  return { text: `aktiv vor ${days} Tagen`, level: "gray" };
+}
+
 /* =========================
    DIABLO STYLE MODAL
 ========================== */
