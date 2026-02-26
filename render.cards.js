@@ -216,6 +216,15 @@ function showClaimModal(options = {}) {
   color:#888;
   font-size:12px;
 }
+
+.donor-level-line {
+  margin-top: 2px;
+}
+
+.donor-level {
+  font-size: 12px;
+  color: #c9a441;
+}
   `;
 
   document.head.appendChild(style);
