@@ -257,9 +257,8 @@ if (item.donor) {
       : "";
 
   // ⭐ Trust-Level berechnen
-  const trustLevel = calculateTrustLevel(allItems, item.donorAccountId);
-  const lastActivityDate = getLastActivity(allItems, item.donorAccountId);
-  const activity = relativeTime(lastActivityDate);
+const trustLevel = calculateTrustLevel(allItems, item.donorAccountId);
+const activity = relativeTime(item.donorLastActive);
 
   const stars = "⭐".repeat(trustLevel);
 
