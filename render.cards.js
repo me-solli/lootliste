@@ -194,7 +194,43 @@ function showClaimModal(options = {}) {
   background:rgba(150,150,150,.12);
   border:1px solid rgba(150,150,150,.3);
   color:#bbb;
-}    
+} 
+
+/* === Donor Trust Stars === */
+
+.donor-stars-line {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:14px;
+  margin-top:4px;
+}
+
+.donor-stars {
+  letter-spacing:1px;
+  color:#f5c451;
+  font-size:15px;
+}
+
+.donor-count {
+  font-size:12px;
+  opacity:.6;
+}
+
+.donor-activity.green {
+  color:#6fdc6f;
+  font-size:12px;
+}
+
+.donor-activity.yellow {
+  color:#f0c35a;
+  font-size:12px;
+}
+
+.donor-activity.gray {
+  color:#888;
+  font-size:12px;
+}
   `;
 
   document.head.appendChild(style);
