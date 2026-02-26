@@ -328,6 +328,7 @@ app.post("/auth/login", async (req, res) => {
   }
 
   account.lastLoginAt = new Date().toISOString();
+  account.lastActive = new Date().toISOString();
   saveAccounts();
 
   // Session erstellen
