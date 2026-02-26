@@ -579,6 +579,8 @@ const newItem = {
   status: "verfügbar",
   createdAt: new Date().toISOString(),
 
+  details: details || "",
+
   donorAccountId: account.id,
   donor: account.username,
 
