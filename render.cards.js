@@ -225,6 +225,16 @@ function showClaimModal(options = {}) {
   font-size: 12px;
   color: #c9a441;
 }
+.donor-info {
+  margin-left: 6px;
+  font-size: 12px;
+  cursor: help;
+  opacity: .7;
+}
+
+.donor-info:hover {
+  opacity: 1;
+}
   `;
 
   document.head.appendChild(style);
