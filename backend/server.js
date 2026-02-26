@@ -542,14 +542,25 @@ app.get("/items", (req, res) => {
     result = items.filter(i => i.season === season);
   }
 
-  const enriched = result.map(item => {
-    const donorAccount = findAccountById(item.donorAccountId);
+const enriched = result.map(item => {
+  const donorAccount = findAccountById(item.donorAccountId);
 
-    return {
-      ...item,
-      donorLastActive: donorAccount?.lastActive || null
-    };
-  });
+  let donorLevel = 1;
+  let donorStars = 1;
+
+  if (donorAccount) {
+    const stats = calculateAccountStats(donorAccount.id);
+    donorLevel = stats.level;
+    donorStars = stats.stars;
+  }
+
+  return {
+    ...item,
+    donorLastActive: donorAccount?.lastActive || null,
+    donorLevel,
+    donorStars
+  };
+});
 
   res.json(enriched);
 });
