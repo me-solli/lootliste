@@ -243,6 +243,38 @@ function checkCooldown(account, seconds = 60) {
 }
 
 // ===============================
+// LEVEL + STERNE (MINIMAL V1)
+// ===============================
+function calculateAccountStats(accountId) {
+
+  const created = items.filter(i => i.donorAccountId === accountId);
+
+  const completed = created.filter(i => i.status === "vergeben");
+
+  const helped = items.filter(i =>
+    i.helpOffers?.some(h => h.accountId === accountId)
+  );
+
+  const xp =
+    (created.length * 5) +
+    (completed.length * 20) +
+    (helped.length * 10);
+
+  const level = Math.floor(Math.sqrt(xp / 10)) + 1;
+
+  let stars = 1;
+  if (completed.length >= 25) stars = 5;
+  else if (completed.length >= 10) stars = 4;
+  else if (completed.length >= 5) stars = 3;
+  else if (completed.length >= 2) stars = 2;
+
+  return {
+    level,
+    stars
+  };
+}
+
+// ===============================
 // AUTH – REGISTER (1 PRO STUNDE / DEVICE)
 // ===============================
 app.post("/auth/register", async (req, res) => {
