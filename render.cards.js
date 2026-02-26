@@ -305,6 +305,11 @@ const stars = filledStars + emptyStars;
       </div>
 
 <div class="donor-trust">
+
+  <div class="donor-level-line">
+    <span class="donor-level">Lvl ${donorLevel}</span>
+  </div>
+
   <div class="donor-stars-line">
     <span class="donor-stars">${stars}</span>
   </div>
