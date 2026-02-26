@@ -293,13 +293,16 @@ const stars = filledStars + emptyStars;
       </div>
 
 <div class="donor-trust">
-  <span class="donor-stars">${stars}</span>
-  <span class="donor-count">${completed} Übergaben</span>
+  <div class="donor-stars-line">
+    <span class="donor-stars">${stars}</span>
+    <span class="donor-count">(${completed})</span>
+  </div>
+
   ${
     activity
-      ? `<span class="donor-activity ${activity.level}">
+      ? `<div class="donor-activity ${activity.level}">
           ${activity.text}
-        </span>`
+        </div>`
       : ""
   }
 </div>
