@@ -35,20 +35,6 @@ function calculateTrustLevel(allItems, accountId) {
   return 1;
 }
 
-function getLastActivity(allItems, accountId) {
-  const userItems = allItems.filter(i =>
-    i.donorAccountId === accountId
-  );
-
-  if (!userItems.length) return null;
-
-  const newest = userItems
-    .map(i => new Date(i.createdAt))
-    .sort((a,b) => b - a)[0];
-
-  return newest;
-}
-
 function relativeTime(date) {
   if (!date) return null;
 
