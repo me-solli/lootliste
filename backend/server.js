@@ -776,10 +776,16 @@ app.post("/items/:id/confirm-donor", (req, res) => {
 });
 
 app.post("/items/:id/confirm-receiver", (req, res) => {
-  const acc = findAccountById(req.headers["x-account-id"]);
+
+  const account = getAccountFromSession(req);
+
+  if (!account) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
   const item = items.find(i => i.id == req.params.id);
 
-  if (!item || item.claimedByAccountId !== acc?.id) {
+  if (!item || item.claimedByAccountId !== account.id) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
@@ -790,8 +796,7 @@ app.post("/items/:id/confirm-receiver", (req, res) => {
   item.handover.receiverConfirmed = true;
   finalizeItem(item);
 
-  // 🔥 Aktivität des Empfängers aktualisieren
-  acc.lastActive = new Date().toISOString();
+  account.lastActive = new Date().toISOString();
   saveAccounts();
 
   saveJSON(ITEMS_FILE, items);
