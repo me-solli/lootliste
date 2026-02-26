@@ -283,6 +283,8 @@ if (findAccountByBattletag(battletag)) {
 
   const passwordHash = await bcrypt.hash(password, 10);
 
+const nowIso = new Date().toISOString();
+
 const account = {
   id: "acc_" + crypto.randomBytes(6).toString("hex"),
   username,
@@ -290,9 +292,10 @@ const account = {
   email,
   battletag,
   profileLocked: true,
-  createdAt: new Date().toISOString(),
-  lastLoginAt: new Date().toISOString(),
-  lastActionAt: 0
+  createdAt: nowIso,
+  lastLoginAt: nowIso,
+  lastActionAt: 0,
+  lastActive: nowIso   // 🔥 NEU
 };
 
   accounts.push(account);
