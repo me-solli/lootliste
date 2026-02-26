@@ -292,13 +292,9 @@ if (item.donor) {
       ? `<img class="donor-class-icon" src="${CLASS_ICONS_MINI[donorClass]}" alt="">`
       : "";
 
-  // ⭐ Trust-Level berechnen
-const completed = allItems.filter(i =>
-  i.donorAccountId === item.donorAccountId &&
-  i.status === "vergeben"
-).length;
-
+// ⭐ Trust-Level vom Backend
 const trustLevel = item.donorStars || 1;
+  
 const activity = relativeTime(item.donorLastActive);
 
 // ⭐ 5 feste Sterne (gefüllt + leer)
