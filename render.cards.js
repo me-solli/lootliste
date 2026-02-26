@@ -227,13 +227,23 @@ function showClaimModal(options = {}) {
 }
 .donor-info {
   margin-left: 6px;
-  font-size: 12px;
+  font-size: 11px;
+  color: #c9a441;          /* leicht gold */
+  border: 1px solid rgba(245,196,81,.4);
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
   cursor: help;
-  opacity: .7;
+  opacity: .85;
 }
 
 .donor-info:hover {
-  opacity: 1;
+  background: rgba(245,196,81,.15);
+  box-shadow: 0 0 6px rgba(245,196,81,.4);
 }
   `;
 
