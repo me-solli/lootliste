@@ -244,10 +244,18 @@ const seasonClass = item.season === "ladder"
       <button class="card-header" type="button">
         <span class="card-chevron">▶</span>
         <img class="item-type-icon" src="img/icons/${type}.png" alt="${type}" loading="lazy">
+        
 <div class="card-title">
   <div class="item-name ${qualityClass}">
     ${item.name || "Unbekanntes Item"}
   </div>
+
+  ${item.details ? `
+    <div class="item-details-preview">
+      ${item.details}
+    </div>
+  ` : ""}
+
   <div class="item-meta">
     <span class="item-category">${categoryLabel}</span>
     <span class="season-badge ${seasonClass}">
