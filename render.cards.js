@@ -17,23 +17,8 @@ const VALID_TYPES = [
 ];
 
 // ===============================
-// TRUST + ACTIVITY (MINIMAL)
+// ACTIVITY (MINIMAL)
 // ===============================
-
-function calculateTrustLevel(allItems, accountId) {
-  if (!accountId) return 1;
-
-  const completed = allItems.filter(i =>
-    i.donorAccountId === accountId &&
-    i.status === "vergeben"
-  ).length;
-
-  if (completed >= 10) return 5;
-  if (completed >= 6)  return 4;
-  if (completed >= 3)  return 3;
-  if (completed >= 1)  return 2;
-  return 1;
-}
 
 function relativeTime(date) {
   if (!date) return null;
