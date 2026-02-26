@@ -243,18 +243,17 @@ function checkCooldown(account, seconds = 60) {
 }
 
 // ===============================
-// LEVEL + STERNE (MINIMAL V1)
+// LEVEL + STERNE (V2 – Activity Based Stars)
 // ===============================
 function calculateAccountStats(accountId) {
 
   const created = items.filter(i => i.donorAccountId === accountId);
-
   const completed = created.filter(i => i.status === "vergeben");
-
   const helped = items.filter(i =>
     i.helpOffers?.some(h => h.accountId === accountId)
   );
 
+  // 🧭 LEVEL = langfristiger Progress
   const xp =
     (created.length * 5) +
     (completed.length * 20) +
@@ -262,11 +261,22 @@ function calculateAccountStats(accountId) {
 
   const level = Math.floor(Math.sqrt(xp / 10)) + 1;
 
+  // ⭐ STERNE = Aktivität (lastActive)
   let stars = 1;
-  if (completed.length >= 25) stars = 5;
-  else if (completed.length >= 10) stars = 4;
-  else if (completed.length >= 5) stars = 3;
-  else if (completed.length >= 2) stars = 2;
+
+  const account = findAccountById(accountId);
+
+  if (account?.lastActive) {
+    const diffDays =
+      (Date.now() - new Date(account.lastActive).getTime()) /
+      (1000 * 60 * 60 * 24);
+
+    if (diffDays <= 2) stars = 5;
+    else if (diffDays <= 5) stars = 4;
+    else if (diffDays <= 10) stars = 3;
+    else if (diffDays <= 20) stars = 2;
+    else stars = 1;
+  }
 
   return {
     level,
