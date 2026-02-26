@@ -297,21 +297,27 @@ const emptyStars = "☆".repeat(maxStars - trustLevel);
 const stars = filledStars + emptyStars;
   const donorLevel = item.donorLevel || 1;
 
-  sourceLabel = `
-    <div class="donor-block">
-      <span class="donor-label">Spender</span>
+sourceLabel = `
+  <div class="donor-block">
+    <span class="donor-label">
+      Spender
+      <span class="donor-info"
+            title="⭐ Sterne = aktuelle Aktivität | Lvl = langfristige Beteiligung">
+        ⓘ
+      </span>
+    </span>
 
-      <div class="donor-line">
-        <a
-          href="profile.html?user=${encodeURIComponent(item.donor)}"
-          class="donor-name"
-          title="Öffentliches Profil ansehen"
-          onclick="event.stopPropagation()"
-        >
-          ${item.donor}
-        </a>
-        ${donorIcon}
-      </div>
+    <div class="donor-line">
+      <a
+        href="profile.html?user=${encodeURIComponent(item.donor)}"
+        class="donor-name"
+        title="Öffentliches Profil ansehen"
+        onclick="event.stopPropagation()"
+      >
+        ${item.donor}
+      </a>
+      ${donorIcon}
+    </div>
 
 <div class="donor-trust">
 
