@@ -672,13 +672,17 @@ app.post("/items/:id/claim", (req, res) => {
     return res.status(400).json({ error: "Item not available" });
   }
 
-  item.status = "reserviert";
-  item.claimedByAccountId = accountId;
-  item.claimedAt = new Date().toISOString();
-  item.contact = account.battletag;
+item.status = "reserviert";
+item.claimedByAccountId = accountId;
+item.claimedAt = new Date().toISOString();
+item.contact = account.battletag;
 
-  saveJSON(ITEMS_FILE, items);
-  res.json(item);
+// 🔥 Aktivität des Claimers aktualisieren
+account.lastActive = new Date().toISOString();
+saveAccounts();
+
+saveJSON(ITEMS_FILE, items);
+res.json(item);
 });
 
 // ===============================
