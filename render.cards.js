@@ -214,7 +214,7 @@ function showClaimModal(options = {}) {
   document.head.appendChild(style);
 })();
 
-export function renderCards(items, container) {
+export function renderCards(items, container, allItems = items) {
   container.innerHTML = "";
 
   items.forEach(item => {
