@@ -775,6 +775,10 @@ app.post("/items/:id/confirm-receiver", (req, res) => {
   item.handover.receiverConfirmed = true;
   finalizeItem(item);
 
+  // 🔥 Aktivität des Empfängers aktualisieren
+  acc.lastActive = new Date().toISOString();
+  saveAccounts();
+
   saveJSON(ITEMS_FILE, items);
   res.json(item);
 });
