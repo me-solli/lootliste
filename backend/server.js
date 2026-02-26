@@ -602,6 +602,9 @@ const newItem = {
   helpOffers: []   // 🔥 neu für SUCHE-Helfer
 };
 
+  account.lastActive = new Date().toISOString();
+saveAccounts();
+
 items.push(newItem);
 saveJSON(ITEMS_FILE, items);
 
