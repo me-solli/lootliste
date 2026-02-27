@@ -363,7 +363,10 @@ tr.innerHTML=`
             onclick="editNote(${i.id}, ${JSON.stringify(i.note_private || "")})"
           >📝</span>
         </strong>
-        <small>${i.quality||""} · ${i.type||""}</small>
+        <small>
+  ${i.kind === "search" ? "🔍 Suche" : "🎁 Angebot"}
+  · ${i.quality||""} · ${i.type||""}
+</small>
       </div>
     </div>
   </td>
