@@ -9,4 +9,39 @@
     <loc>https://d2r-lootliste.de/pages/runen-upgrade.html</loc>
   </url>
 
+  <url>
+    <loc>https://d2r-lootliste.de/pages/cow-level.html</loc>
+  </url>
+
+  <url>
+    <loc>https://d2r-lootliste.de/pages/cube-codex.html</loc>
+  </url>
+
+  <url>
+    <loc>https://d2r-lootliste.de/pages/terror-zonen.html</loc>
+  </url>
+
+  <url>
+    <loc>https://d2r-lootliste.de/pages/guides.html</loc>
+  </url>
+
+  <url>
+    <loc>https://d2r-lootliste.de/pages/sorc-orb-fireball.html</loc>
+  </url>
+
+  <url>
+    <loc>https://d2r-lootliste.de/pages/artwork.html</loc>
+  </url>
+
+</urlset><?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://d2r-lootliste.de/</loc>
+  </url>
+
+  <url>
+    <loc>https://d2r-lootliste.de/pages/runen-upgrade.html</loc>
+  </url>
+
 </urlset>
