@@ -442,14 +442,9 @@ async function removeItem(id){
 }
 
 /* ===== Interne Notiz bearbeiten ===== */
-async function editNote(id){
+async function editNote(id, el){
 
-  const item = await fetch(API + "/items/mine", {
-    credentials: "include"
-  }).then(r => r.json())
-    .then(items => items.find(i => i.id === id));
-
-  const current = item?.note_private || "";
+  const current = el.dataset.note || "";
 
   const value = prompt(
     "Interne Notiz (max. 50 Zeichen):",
@@ -458,6 +453,8 @@ async function editNote(id){
 
   if(value === null) return;
 
+  const trimmed = value.trim().slice(0, 50);
+
   await fetch(API + "/items/" + id, {
     method: "PATCH",
     credentials:"include",
@@ -465,7 +462,7 @@ async function editNote(id){
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      note_private: value.trim().slice(0, 50)
+      note_private: trimmed
     })
   });
 
