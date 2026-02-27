@@ -441,11 +441,20 @@ async function removeItem(id){
 }
 
 /* ===== Interne Notiz bearbeiten ===== */
-async function editNote(id, current){
+async function editNote(id){
+
+  const item = await fetch(API + "/items/mine", {
+    credentials: "include"
+  }).then(r => r.json())
+    .then(items => items.find(i => i.id === id));
+
+  const current = item?.note_private || "";
+
   const value = prompt(
     "Interne Notiz (max. 50 Zeichen):",
-    current || ""
+    current
   );
+
   if(value === null) return;
 
   await fetch(API + "/items/" + id, {
