@@ -357,11 +357,12 @@ tr.innerHTML=`
       <div class="item-meta">
         <strong>
           ${i.name}
-          <span
-            class="note-icon"
-            title="${i.note_private || 'Interne Notiz bearbeiten'}"
-            onclick="editNote(${i.id})"
-          >📝</span>
+<span
+  class="note-icon"
+  data-note="${(i.note_private || "").replace(/"/g, '&quot;')}"
+  title="${i.note_private || 'Interne Notiz bearbeiten'}"
+  onclick="editNote(${i.id}, this)"
+>📝</span>
         </strong>
         <small>
   ${i.kind === "search" ? "🔍 Suche" : "🎁 Angebot"}
