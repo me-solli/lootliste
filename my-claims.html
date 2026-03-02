@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -25,7 +26,6 @@ body{
 
 .wrapper{max-width:1600px;margin:0 auto}
 
-/* ===== HERO ===== */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
@@ -40,7 +40,6 @@ body{
 .hero h1{margin:0;font-size:32px;font-weight:700}
 .hero p{margin:8px 0 0;opacity:.8}
 
-/* AUTH BOX */
 .auth-box{
   position:absolute;
   top:22px;
@@ -58,10 +57,8 @@ body{
 .auth-link{font-size:12px;color:var(--gold);text-decoration:none;opacity:.85}
 .auth-link:hover{text-decoration:underline;opacity:1}
 
-/* ===== CONTENT ===== */
 .container{padding:34px 28px 60px}
 
-/* ===== DASHBOARD ===== */
 .dashboard{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -77,46 +74,24 @@ body{
 .stat strong{font-size:22px}
 .stat small{display:block;margin-top:4px;color:#aaa;font-size:12px}
 
-/* ===== ACTION BAR ===== */
-.action-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:14px;
-}
-
-.filter-bar{display:flex;gap:10px}
-select{
-  padding:8px 10px;
-  background:#111;
-  border:1px solid #333;
-  color:#fff;
-  border-radius:10px;
-}
-
-.bulk-bar{font-size:12px;color:#aaa}
-
-/* ===== TABLE ===== */
 .table-wrap{
   background:#0f0f0f;
   border:1px solid #222;
   border-radius:18px;
   overflow:hidden;
 }
+
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{padding:12px;border-bottom:1px solid #222;vertical-align:top}
 th{color:#aaa;font-weight:500;text-align:left}
 tr:hover{background:rgba(255,255,255,.02)}
 tr.needs-action{background:rgba(255,179,71,.06)}
 
-/* ===== BADGES ===== */
 .badge{padding:4px 10px;border-radius:999px;font-size:11px;background:#111;border:1px solid #333}
 .badge.green{color:var(--green)}
 .badge.blue{color:var(--blue)}
 .badge.orange{color:var(--orange)}
 
-/* ===== ITEM CELL ===== */
 .item-cell{display:flex;align-items:center;gap:12px}
 .item-icon{
   width:42px;height:42px;border-radius:12px;
@@ -127,7 +102,6 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 .item-meta strong{display:block}
 .item-meta small{color:#888;font-size:12px}
 
-/* ===== DETAILS ===== */
 .detail-box{
   padding:8px 10px;
   border-radius:10px;
@@ -139,7 +113,6 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 .kv{display:grid;grid-template-columns:110px 1fr;gap:6px 8px}
 .kv span{color:#aaa}
 
-/* ===== ACTIONS ===== */
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .action-btn{
   padding:6px 10px;
@@ -157,6 +130,7 @@ tr.needs-action{background:rgba(255,179,71,.06)}
   border-color:#666;
 }
 </style>
+
 </head>
 <body>
 
@@ -165,15 +139,17 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 <header class="hero">
   <div class="hero-inner">
 
-    <div class="auth-box">
-      <img src="img/avatars/default.png" alt="Avatar">
-      <span id="playerName">–</span>
-      <a href="index.html" class="auth-link">Lootliste</a>
-      <a href="my-items.html" class="auth-link">Meine Items</a>
-    </div>
+```
+<div class="auth-box">
+  <img src="img/avatars/default.png" alt="Avatar">
+  <span id="playerName">–</span>
+  <a href="index.html" class="auth-link">Lootliste</a>
+  <a href="my-items.html" class="auth-link">Meine Items</a>
+</div>
 
-    <h1>Meine Claims</h1>
-    <p>Items, die du reserviert oder erhalten hast</p>
+<h1>Meine Claims</h1>
+<p>Items, die du reserviert oder erhalten hast</p>
+```
 
   </div>
 </header>
@@ -187,24 +163,14 @@ tr.needs-action{background:rgba(255,179,71,.06)}
     <div class="stat"><strong id="cDone">0</strong><small>Abgeschlossen</small></div>
   </div>
 
-  <div class="action-bar">
-    <div class="filter-bar">
-      <select id="filterStatus">
-        <option value="">Status: alle</option>
-        <option value="reserviert">reserviert</option>
-        <option value="wartet">wartet</option>
-        <option value="vergeben">abgeschlossen</option>
-      </select>
-    </div>
-    <div class="bulk-bar">Claims mit Aktion sind hervorgehoben</div>
-  </div>
-
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
           <th>ID</th>
           <th>Item</th>
+          <th>Modus</th>
+          <th>Trade</th>
           <th>Status</th>
           <th>Spender</th>
           <th>Aktionen</th>
@@ -219,26 +185,19 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 
 <script>
 const API = "https://lootliste-production.up.railway.app";
-
-// ===== AUTH (SESSION-BASED) =====
 let currentUser = null;
 
 async function initAuth() {
-  const r = await fetch(API + "/me", {
-    credentials: "include"
-  });
-
+  const r = await fetch(API + "/me", { credentials: "include" });
   const d = await r.json();
 
   if (!d.loggedIn) {
-    document.body.innerHTML =
-      "<p style='padding:40px'>Nicht eingeloggt.</p>";
+    document.body.innerHTML = "<p style='padding:40px'>Nicht eingeloggt.</p>";
     return false;
   }
 
   currentUser = d;
   document.getElementById("playerName").textContent = d.username;
-
   return true;
 }
 
@@ -258,10 +217,16 @@ async function load(){
     let label="Reserviert", cls="orange", needsAction=true, actionHtml="";
 
     if(i.status==="vergeben"){
-      label="Abgeschlossen"; cls="green"; needsAction=false; cDoneN++;
+      label="Abgeschlossen";
+      cls="green";
+      needsAction=false;
+      cDoneN++;
     }
     else if(receiverConfirmedUI){
-      label="Wartet auf Spender"; cls="blue"; needsAction=false; cWaitN++;
+      label="Wartet auf Spender";
+      cls="blue";
+      needsAction=false;
+      cWaitN++;
       actionHtml=`<button class="action-btn waiting" disabled>⏳ Wartet auf Spender</button>`;
     }
     else{
@@ -274,23 +239,56 @@ async function load(){
 
     tr.innerHTML=`
       <td>${i.id}</td>
+
       <td>
         <div class="item-cell">
-          <div class="item-icon"><img src="img/icons/${i.type||"sonstiges"}.png"></div>
-          <div class="item-meta"><strong>${i.name}</strong><small>${i.quality||""} · ${i.type||""}</small></div>
-        </div>
-      </td>
-      <td><span class="badge ${cls}">${label}</span></td>
-      <td>
-        <div class="detail-box">
-          <div class="kv">
-            <span>Spieler</span><div>${i.donor||"–"}</div>
-            <span>BattleTag</span><div>${i.contact||"–"}</div>
+          <div class="item-icon">
+            <img src="img/icons/${i.type||"sonstiges"}.png">
+          </div>
+          <div class="item-meta">
+            <strong>${i.name}</strong>
+            <small>${i.quality||""} · ${i.type||""}</small>
           </div>
         </div>
       </td>
-      <td><div class="actions">${actionHtml}</div></td>
+
+      <td>
+        ${i.kind === "search" ? "🔍 Suche" : "🎁 Angebot"}
+      </td>
+
+      <td>
+        ${
+          i.kind === "search"
+            ? "–"
+            : (
+                i.tradeType === "rune" && i.wantedRune
+                  ? `${i.wantedRune}-Rune`
+                  : "Free"
+              )
+        }
+      </td>
+
+      <td>
+        <span class="badge ${cls}">${label}</span>
+      </td>
+
+      <td>
+        <div class="detail-box">
+          <div class="kv">
+            <span>Spieler</span>
+            <div>${i.donor||"–"}</div>
+
+            <span>BattleTag</span>
+            <div>${i.contact||"–"}</div>
+          </div>
+        </div>
+      </td>
+
+      <td>
+        <div class="actions">${actionHtml}</div>
+      </td>
     `;
+
     tableBody.appendChild(tr);
   });
 
@@ -309,19 +307,10 @@ async function confirmReceive(id){
   });
 
   localStorage.setItem("receiver_confirmed_ui_"+id,"yes");
-
   load();
 }
 
-filterStatus.onchange = load;
-
 (async () => {
   const ok = await initAuth();
-  if (ok) {
-    load();
-  }
-})();
-</script>
-
-</body>
-</html>
+  if (ok) load();
+}
