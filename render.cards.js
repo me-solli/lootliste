@@ -541,7 +541,7 @@ else {
       btn.textContent = "…";
 
       try {
-        const res = await fetch(`${API}/items/${item.id}/rune-trade`, {
+await fetch(`${API}/items/${item.id}/rune-request`, {
           method: "POST",
           credentials: "include"
         });
