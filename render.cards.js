@@ -629,19 +629,6 @@ if (item.tradeType === "rune") {
   }
 }
 
-showToast?.("Item reserviert.");
-// 🔥 Neu laden damit Activity & Status global synchron sind
-if (typeof window.loadItems === "function") {
-  await window.loadItems();
-}
-
-    } catch {
-      alert("Netzwerkfehler.");
-      btn.disabled = false;
-      btn.textContent = "🖐️ Nehmen";
-    }
-  });
-
 } // Ende search / else
 
 // ===============================
