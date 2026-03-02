@@ -159,6 +159,7 @@ function showClaimModal(options = {}) {
   gap:8px;
   font-size:12px;
   opacity:.85;
+  width:100%;          /* wichtig */
 }
 
 .season-badge {
