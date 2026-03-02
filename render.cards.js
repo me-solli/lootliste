@@ -248,43 +248,28 @@ function showClaimModal(options = {}) {
 }
 
 /* ================================
-   RUNE BADGE
+   RUNE INLINE BADGE (META LEVEL)
 ================================ */
 
 .card {
   position: relative;
 }
 
-.rune-badge{
-  position:absolute;
-  top:14px;
-  right:16px;
+.rune-inline-badge{
+  margin-left:8px;
+  padding:3px 10px;
 
-  display:flex;
-  align-items:center;
-  gap:8px;
-
-  padding:7px 16px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.3px;
 
   border-radius:999px;
 
-  font-size:14px;
-  font-weight:600;
-
-  background:rgba(0,0,0,.55);
-  border:1px solid rgba(120,170,255,.45);
-
   color:#6fa8ff;
+  background:rgba(120,170,255,.08);
+  border:1px solid rgba(120,170,255,.35);
 
-  box-shadow:
-    0 0 12px rgba(120,170,255,.25);
-}
-
-.rune-badge img{
-  width:18px;
-  height:18px;
-  opacity:.95;
-  filter:drop-shadow(0 0 6px rgba(120,170,255,.6));
+  white-space:nowrap;
 }
   `;
 
