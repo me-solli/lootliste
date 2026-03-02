@@ -515,54 +515,74 @@ else {
     return;
   }
 
-  // ===============================
-  // 💎 TRADE GEGEN RUNE
-  // ===============================
-  if (item.tradeType === "rune") {
+  btn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    if (btn.disabled) return;
 
-    btn.textContent = "💎 Trade anbieten";
+    const isRuneTrade = item.tradeType === "rune";
 
-    btn.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      if (btn.disabled) return;
-
-      const confirmed = await showClaimModal({
-        title: "Rune-Trade anbieten",
-        text: `
+    const confirmed = await showClaimModal({
+      title: isRuneTrade
+        ? "Rune-Trade anbieten"
+        : "Item reservieren",
+      text: isRuneTrade
+        ? `
           Du möchtest dieses Item gegen deine Rune tauschen?<br><br>
           Dein BattleTag wird für die Übergabe verwendet.
+        `
+        : `
+          Möchtest du dieses Item verbindlich reservieren?<br><br>
+          Dein hinterlegter BattleTag wird für die Übergabe verwendet.
         `,
-        confirmText: "Trade senden"
-      });
-
-      if (!confirmed) return;
-
-      btn.disabled = true;
-      btn.textContent = "…";
-
-      try {
-await fetch(`${API}/items/${item.id}/rune-request`, {
-          method: "POST",
-          credentials: "include"
-        });
-
-        if (!res.ok) {
-          showToast?.("Trade konnte nicht gesendet werden.");
-          btn.disabled = false;
-          btn.textContent = "💎 Trade anbieten";
-          return;
-        }
-
-        showToast?.("Trade-Anfrage gesendet.");
-
-      } catch {
-        btn.disabled = false;
-        btn.textContent = "💎 Trade anbieten";
-      }
-
+      confirmText: isRuneTrade
+        ? "Trade senden"
+        : "Verbindlich reservieren"
     });
 
-  }
+    if (!confirmed) return;
+
+    btn.disabled = true;
+    btn.textContent = "…";
+
+    try {
+
+      const endpoint = isRuneTrade
+        ? "rune-request"
+        : "claim";
+
+      const res = await fetch(`${API}/items/${item.id}/${endpoint}`, {
+        method: "POST",
+        credentials: "include"
+      });
+
+      if (!res.ok) {
+        showToast?.("Aktion fehlgeschlagen.");
+        btn.disabled = false;
+        btn.textContent = isRuneTrade
+          ? "💎 Trade anbieten"
+          : "🖐️ Nehmen";
+        return;
+      }
+
+      if (isRuneTrade) {
+        showToast?.("Trade-Anfrage gesendet.");
+        btn.textContent = "Gesendet";
+      } else {
+        showToast?.("Item reserviert.");
+        if (typeof window.loadItems === "function") {
+          await window.loadItems();
+        }
+      }
+
+    } catch {
+      btn.disabled = false;
+      btn.textContent = isRuneTrade
+        ? "💎 Trade anbieten"
+        : "🖐️ Nehmen";
+    }
+  });
+
+}
 
   // ===============================
   // 🎁 FREE ITEM (CLAIM)
