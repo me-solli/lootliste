@@ -584,10 +584,6 @@ else {
 
 } // Ende OFFER-Block
 
-
-} // Ende search / else
-
-
 // ===============================
 // RUNE BADGE (GLOBAL für offers)
 // ===============================
