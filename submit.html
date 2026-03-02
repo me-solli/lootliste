@@ -748,7 +748,10 @@ try{
     screenshot = await uploadImage(fileInput.files[0]);
   }
 
-  status.textContent="💾 Speichere Eintrag…";
+status.textContent="💾 Speichere Eintrag…";
+
+const selectedTrade = document.querySelector("input[name='tradeType']:checked").value;
+const selectedRune = document.getElementById("wantedRune").value;
 
 await fetch(API_ITEMS,{
   method:"POST",
@@ -764,8 +767,11 @@ await fetch(API_ITEMS,{
     screenshot,
     season:selectedSeason,
     note_private:document.getElementById("note").value.trim(),
-      kind: selectedKind,
+    kind: selectedKind,
     details: document.getElementById("details").value.trim(),
+
+    tradeType: selectedTrade,
+    wantedRune: selectedTrade === "rune" ? selectedRune : null
   })
 });
 
