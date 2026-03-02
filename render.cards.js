@@ -410,13 +410,18 @@ sourceLabel = `
     ${seasonLabel}
   </span>
 
-  ${
-    item.kind === "offer" &&
-    item.tradeType === "rune" &&
-    item.wantedRune
-      ? `<span class="rune-inline-badge">💎 ${item.wantedRune}</span>`
-      : ""
-  }
+${
+  item.kind === "offer" &&
+  item.tradeType === "rune" &&
+  item.wantedRune
+    ? `
+      <span class="rune-inline-badge">
+        <img src="img/rune.png" alt="Rune">
+        ${item.wantedRune}
+      </span>
+    `
+    : ""
+}
 </div>
 </div>
       </button>
