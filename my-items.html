@@ -387,16 +387,22 @@ tr.innerHTML=`
  (i.kind === "search" || i.tradeType === "rune") 
 && helpers.length > 0
         )
-        ? helpers.map(h => `
-            <div class="detail-box">
-              <div class="kv">
-                <span>Spieler</span>
-                <div>${h.username}</div>
-                <span>BattleTag</span>
-                <div>${h.battletag || "–"}</div>
-              </div>
-            </div>
-          `).join("")
+? helpers.map(h => `
+    <div class="detail-box">
+      <div class="kv">
+        <span>
+          ${
+            i.tradeType === "rune"
+              ? "🔁 Trade-Interessent"
+              : "🤝 Helfer"
+          }
+        </span>
+        <div>${h.username}</div>
+        <span>BattleTag</span>
+        <div>${h.battletag || "–"}</div>
+      </div>
+    </div>
+  `).join("")
         : "–"
   }
 </td>
