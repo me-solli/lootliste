@@ -554,6 +554,23 @@ const CLOUD_NAME="dcczi93p6";
 const UPLOAD_PRESET="lootliste_unsigned";
 let selectedSeason = null;
 
+
+// ===============================
+// TRADE TYPE TOGGLE
+// ===============================
+const tradeRadios = document.querySelectorAll("input[name='tradeType']");
+const runeWrap = document.getElementById("runeSelectWrap");
+
+tradeRadios.forEach(r => {
+  r.addEventListener("change", () => {
+    if (r.value === "rune" && r.checked) {
+      runeWrap.style.display = "block";
+    } else if (r.value === "free" && r.checked) {
+      runeWrap.style.display = "none";
+    }
+  });
+});
+
   document.querySelectorAll(".submit-mode-visual").forEach(tab => {
   tab.addEventListener("click", () => {
 
