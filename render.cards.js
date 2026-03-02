@@ -512,7 +512,6 @@ else {
     btn.disabled = true;
     btn.textContent = "🔒 Dein Item";
     btn.classList.add("is-owner");
-    return;
   }
 
   btn.addEventListener("click", async (e) => {
