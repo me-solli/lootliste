@@ -257,34 +257,33 @@ function showClaimModal(options = {}) {
 }
 
 .rune-inline-badge{
-  margin-left:auto;              /* ganz nach rechts */
+  margin-left:auto;
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:6px;
 
-  padding:8px 20px;
+  padding:5px 14px;           /* kleiner */
 
-  font-size:16px;                /* größerer Text */
+  font-size:14px;
   font-weight:600;
-  letter-spacing:.4px;
+  letter-spacing:.3px;
 
   border-radius:999px;
 
   color:#6fa8ff;
-  background:rgba(120,170,255,.12);
-  border:1px solid rgba(120,170,255,.55);
+  background:rgba(120,170,255,.06);   /* dezenter */
+  border:1px solid rgba(120,170,255,.35);  /* dünner */
 
   white-space:nowrap;
 
   box-shadow:
-    0 0 18px rgba(120,170,255,.35);
+    0 0 10px rgba(120,170,255,.25);  /* softer */
 }
 
 .rune-inline-badge img{
-  width:22px;                    /* deutlich größer */
-  height:22px;
-  opacity:1;
-  filter:drop-shadow(0 0 8px rgba(120,170,255,.7));
+  width:20px;                 /* leicht reduziert */
+  height:20px;
+  filter:drop-shadow(0 0 6px rgba(120,170,255,.6));
 }
   `;
 
