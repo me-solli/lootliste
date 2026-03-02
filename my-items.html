@@ -364,9 +364,14 @@ tr.innerHTML=`
   onclick="editNote(${i.id}, this)"
 >📝</span>
         </strong>
-        <small>
+<small>
   ${i.kind === "search" ? "🔍 Suche" : "🎁 Angebot"}
   · ${i.quality||""} · ${i.type||""}
+  ${
+    i.tradeType === "rune" && i.wantedRune
+      ? ` · 🔁 gegen ${i.wantedRune}`
+      : ""
+  }
 </small>
       </div>
     </div>
