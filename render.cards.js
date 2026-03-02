@@ -262,11 +262,11 @@ function showClaimModal(options = {}) {
   align-items:center;
   gap:6px;
 
-  padding:4px 10px;        /* kleiner, ruhiger */
+  padding:5px 12px;        /* kleiner, ruhiger */
 
-  font-size:14px;
+  font-size:15px;
   font-weight:600;
-  letter-spacing:.3px;
+  letter-spacing:.4px;
 
   border-radius:999px;
 
