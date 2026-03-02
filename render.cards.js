@@ -580,12 +580,15 @@ else {
       btn.textContent = "…";
 
       try {
-        const res = await fetch(`${API}/items/${item.id}/claim`, {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        });
+const endpoint =
+  item.tradeType === "rune"
+    ? "rune-request"
+    : "claim";
+
+const res = await fetch(`${API}/items/${item.id}/${endpoint}`, {
+  method: "POST",
+  credentials: "include"
+});
 
         if (!res.ok) {
           const err = await res.json();
