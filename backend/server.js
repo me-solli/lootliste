@@ -807,6 +807,53 @@ res.json({ ok: true });
 });
 
 // ===============================
+// RUNE TRADE REQUEST
+// ===============================
+app.post("/items/:id/rune-request", (req, res) => {
+
+  const account = getAccountFromSession(req);
+
+  if (!account) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const itemId = Number(req.params.id);
+  const item = items.find(i => i.id === itemId);
+
+  if (!item) {
+    return res.status(404).json({ error: "Item not found" });
+  }
+
+  if (item.kind !== "offer" || item.tradeType !== "rune") {
+    return res.status(400).json({ error: "Not a rune trade item" });
+  }
+
+  if (item.donorAccountId === account.id) {
+    return res.status(400).json({ error: "Cannot trade with yourself" });
+  }
+
+  item.helpOffers = item.helpOffers || [];
+
+  if (item.helpOffers.some(h => h.accountId === account.id)) {
+    return res.status(400).json({ error: "Already requested trade" });
+  }
+
+  item.helpOffers.push({
+    accountId: account.id,
+    username: account.username,
+    battletag: account.battletag,
+    createdAt: new Date().toISOString(),
+    type: "rune-request"
+  });
+
+  account.lastActive = new Date().toISOString();
+  saveAccounts();
+  saveJSON(ITEMS_FILE, items);
+
+  res.json({ ok: true });
+});
+
+// ===============================
 // CONFIRM HANDOVER (FINAL & ROBUST)
 // ===============================
 app.post("/items/:id/confirm-donor", (req, res) => {
