@@ -608,11 +608,17 @@ const res = await fetch(`${API}/items/${item.id}/${endpoint}`, {
           return;
         }
 
-        showToast?.("Item reserviert.");
+if (item.tradeType === "rune") {
+  showToast?.("Trade-Anfrage gesendet.");
+  btn.textContent = "Gesendet";
+  btn.disabled = true;
+} else {
+  showToast?.("Item reserviert.");
 
-        if (typeof window.loadItems === "function") {
-          await window.loadItems();
-        }
+  if (typeof window.loadItems === "function") {
+    await window.loadItems();
+  }
+}
 
       } catch {
         btn.disabled = false;
