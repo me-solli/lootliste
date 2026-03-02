@@ -587,25 +587,6 @@ else {
 
 } // Ende OFFER-Block
 
-// ===============================
-// RUNE BADGE (GLOBAL für offers)
-// ===============================
-if (
-  item.kind === "offer" &&
-  item.tradeType === "rune" &&
-  item.wantedRune
-) {
-  const runeBadge = document.createElement("div");
-  runeBadge.className = "rune-badge";
-
-  runeBadge.innerHTML = `
-    <img src="img/rune.png" alt="Rune">
-    <span>${item.wantedRune}</span>
-  `;
-
-  card.appendChild(runeBadge);
-}
-
 // 👇 Card am Ende einfügen
 container.appendChild(card);
 
