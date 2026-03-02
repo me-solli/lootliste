@@ -225,6 +225,7 @@ function showClaimModal(options = {}) {
   font-size: 12px;
   color: #c9a441;
 }
+
 .donor-info {
   margin-left: 8px;
   font-size: 10px;
@@ -244,6 +245,42 @@ function showClaimModal(options = {}) {
 .donor-info:hover {
   background: rgba(245,196,81,.18);
   box-shadow: 0 0 8px rgba(245,196,81,.5);
+}
+
+/* ================================
+   RUNE BADGE
+================================ */
+
+.card {
+  position: relative;
+}
+
+.rune-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 4px 8px;
+  border-radius: 999px;
+
+  background: rgba(0,0,0,.65);
+  border: 1px solid rgba(245,196,81,.45);
+
+  font-size: 12px;
+  font-weight: 600;
+  color: #f5c451;
+
+  backdrop-filter: blur(3px);
+}
+
+.rune-badge img {
+  width: 16px;
+  height: 16px;
+  opacity: .9;
 }
   `;
 
