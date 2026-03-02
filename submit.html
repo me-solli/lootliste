@@ -619,6 +619,9 @@ document.querySelectorAll('input[name="kind"]').forEach(radio => {
     // ✅ Formular anzeigen
     formWrapper.style.display = "block";
 
+    if (tradeBlock)
+  tradeBlock.style.display = selectedKind === "offer" ? "block" : "none";
+
     const selectedKind = document.querySelector('input[name="kind"]:checked').value;
 
     const legalBlock     = document.getElementById("legalBlock");
