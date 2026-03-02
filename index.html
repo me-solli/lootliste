@@ -3077,10 +3077,22 @@ if (state.type) {
 }
 
 // Trade Filter
-if (state.trade !== "all") {
-  list = list.filter(i => {
-    return (i.kind || "offer") === state.trade;
-  });
+if (state.trade === "free") {
+  list = list.filter(i =>
+    i.kind === "offer" && i.tradeType === "free"
+  );
+}
+
+else if (state.trade === "rune") {
+  list = list.filter(i =>
+    i.kind === "offer" && i.tradeType === "rune"
+  );
+}
+
+else if (state.trade === "search") {
+  list = list.filter(i =>
+    i.kind === "search"
+  );
 }
   
   // Search
