@@ -466,26 +466,7 @@ if (item.kind === "search") {
       ownBtn.disabled = true;
       row.appendChild(ownBtn);
     }
-
-    // ===============================
-// RUNE BADGE (nach innerHTML setzen)
-// ===============================
-if (
-  item.kind === "offer" &&
-  item.tradeType === "rune" &&
-  item.wantedRune
-) {
-  const runeBadge = document.createElement("div");
-  runeBadge.className = "rune-badge";
-
-  runeBadge.innerHTML = `
-    <img src="img/rune.png" alt="Rune">
-    <span>${item.wantedRune}</span>
-  `;
-
-  card.appendChild(runeBadge);
-}
-    
+   
     container.appendChild(card);
     return;
   }
