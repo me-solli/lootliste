@@ -546,7 +546,6 @@ if (item.kind === "search") {
       }
 
 showToast?.("Item reserviert.");
-
 // 🔥 Neu laden damit Activity & Status global synchron sind
 if (typeof window.loadItems === "function") {
   await window.loadItems();
@@ -559,9 +558,29 @@ if (typeof window.loadItems === "function") {
     }
   });
 
-} // ← DIESE Klammer hat gefehlt oder war falsch platziert
+} // Ende search / else
 
-// 👇 append MUSS außerhalb vom if/else stehen
+// ===============================
+// RUNE BADGE (GLOBAL für offers)
+// ===============================
+if (
+  item.kind === "offer" &&
+  item.tradeType === "rune" &&
+  item.wantedRune
+) {
+  const runeBadge = document.createElement("div");
+  runeBadge.className = "rune-badge";
+
+  runeBadge.innerHTML = `
+    <img src="img/rune.png" alt="Rune">
+    <span>${item.wantedRune}</span>
+  `;
+
+  card.appendChild(runeBadge);
+}
+
+// 👇 Card am Ende einfügen
 container.appendChild(card);
-      }); // forEach
+
+}); // forEach
 }
