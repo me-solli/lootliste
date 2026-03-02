@@ -418,12 +418,21 @@ sourceLabel = `
     </div>
   ` : ""}
 
-  <div class="item-meta">
-    <span class="item-category">${categoryLabel}</span>
-    <span class="season-badge ${seasonClass}">
-      ${seasonLabel}
-    </span>
-  </div>
+<div class="item-meta">
+  <span class="item-category">${categoryLabel}</span>
+
+  <span class="season-badge ${seasonClass}">
+    ${seasonLabel}
+  </span>
+
+  ${
+    item.kind === "offer" &&
+    item.tradeType === "rune" &&
+    item.wantedRune
+      ? `<span class="rune-inline-badge">💎 ${item.wantedRune}</span>`
+      : ""
+  }
+</div>
 </div>
       </button>
 
