@@ -384,7 +384,8 @@ tr.innerHTML=`
         </div>
       `
       : (
-          i.kind === "search" && helpers.length > 0
+ (i.kind === "search" || i.tradeType === "rune") 
+&& helpers.length > 0
         )
         ? helpers.map(h => `
             <div class="detail-box">
