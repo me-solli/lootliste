@@ -501,49 +501,124 @@ if (item.kind === "search") {
     });
   });
 
-} else {
+} 
+// ===============================
+// OFFER LOGIK (FREE / RUNE)
+// ===============================
+else {
 
+  // 🔒 Eigenes Item
   if (item.isOwner) {
     btn.disabled = true;
     btn.textContent = "🔒 Dein Item";
     btn.classList.add("is-owner");
+    return;
   }
 
-  btn.addEventListener("click", async (e) => {
-    e.stopPropagation();
-    if (btn.disabled) return;
+  // ===============================
+  // 💎 TRADE GEGEN RUNE
+  // ===============================
+  if (item.tradeType === "rune") {
 
-    const confirmed = await showClaimModal();
-    if (!confirmed) return;
+    btn.textContent = "💎 Trade anbieten";
 
-    btn.disabled = true;
-    btn.textContent = "…";
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      if (btn.disabled) return;
 
-    try {
-      const res = await fetch(`${API}/items/${item.id}/claim`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
+      const confirmed = await showClaimModal({
+        title: "Rune-Trade anbieten",
+        text: `
+          Du möchtest dieses Item gegen deine Rune tauschen?<br><br>
+          Dein BattleTag wird für die Übergabe verwendet.
+        `,
+        confirmText: "Trade senden"
       });
 
-      if (!res.ok) {
-        const err = await res.json();
+      if (!confirmed) return;
 
-        if (res.status === 400 && err.error === "Cannot claim own item") {
-          showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
-        } else if (res.status === 401) {
-          showToast?.("Bitte zuerst einloggen.");
-        } else if (res.status === 429) {
-          showToast?.("Bitte kurz warten.");
-        } else {
-          showToast?.(err.error || "Item konnte nicht reserviert werden.");
+      btn.disabled = true;
+      btn.textContent = "…";
+
+      try {
+        const res = await fetch(`${API}/items/${item.id}/rune-trade`, {
+          method: "POST",
+          credentials: "include"
+        });
+
+        if (!res.ok) {
+          showToast?.("Trade konnte nicht gesendet werden.");
+          btn.disabled = false;
+          btn.textContent = "💎 Trade anbieten";
+          return;
         }
 
+        showToast?.("Trade-Anfrage gesendet.");
+
+      } catch {
+        btn.disabled = false;
+        btn.textContent = "💎 Trade anbieten";
+      }
+
+    });
+
+  }
+
+  // ===============================
+  // 🎁 FREE ITEM (CLAIM)
+  // ===============================
+  else {
+
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      if (btn.disabled) return;
+
+      const confirmed = await showClaimModal();
+      if (!confirmed) return;
+
+      btn.disabled = true;
+      btn.textContent = "…";
+
+      try {
+        const res = await fetch(`${API}/items/${item.id}/claim`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({})
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+
+          if (res.status === 400 && err.error === "Cannot claim own item") {
+            showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
+          } else if (res.status === 401) {
+            showToast?.("Bitte zuerst einloggen.");
+          } else if (res.status === 429) {
+            showToast?.("Bitte kurz warten.");
+          } else {
+            showToast?.(err.error || "Item konnte nicht reserviert werden.");
+          }
+
+          btn.disabled = false;
+          btn.textContent = "🖐️ Nehmen";
+          return;
+        }
+
+        showToast?.("Item reserviert.");
+
+        if (typeof window.loadItems === "function") {
+          await window.loadItems();
+        }
+
+      } catch {
         btn.disabled = false;
         btn.textContent = "🖐️ Nehmen";
-        return;
       }
+    });
+
+  }
+}
 
 showToast?.("Item reserviert.");
 // 🔥 Neu laden damit Activity & Status global synchron sind
