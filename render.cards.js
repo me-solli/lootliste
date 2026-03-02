@@ -255,32 +255,36 @@ function showClaimModal(options = {}) {
   position: relative;
 }
 
-.rune-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+.rune-badge{
+  position:absolute;
+  top:14px;
+  right:16px;
 
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display:flex;
+  align-items:center;
+  gap:8px;
 
-  padding: 4px 8px;
-  border-radius: 999px;
+  padding:6px 14px;
 
-  background: rgba(0,0,0,.65);
-  border: 1px solid rgba(245,196,81,.45);
+  border-radius:999px;
 
-  font-size: 12px;
-  font-weight: 600;
-  color: #f5c451;
+  font-size:13px;
+  font-weight:600;
 
-  backdrop-filter: blur(3px);
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(120,170,255,.45);
+
+  color:#6fa8ff;
+
+  box-shadow:
+    0 0 12px rgba(120,170,255,.25);
 }
 
-.rune-badge img {
-  width: 16px;
-  height: 16px;
-  opacity: .9;
+.rune-badge img{
+  width:18px;
+  height:18px;
+  opacity:.95;
+  filter:drop-shadow(0 0 6px rgba(120,170,255,.6));
 }
   `;
 
