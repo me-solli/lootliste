@@ -275,6 +275,25 @@ if (item.kind === "search") {
 
 card.appendChild(badge);
 
+    // ===============================
+// RUNE BADGE (für Trade-Items)
+// ===============================
+if (
+  item.kind === "offer" &&
+  item.tradeType === "rune" &&
+  item.wantedRune
+) {
+  const runeBadge = document.createElement("div");
+  runeBadge.className = "rune-badge";
+
+  runeBadge.innerHTML = `
+    <img src="img/rune.png" alt="Rune">
+    <span>${item.wantedRune}</span>
+  `;
+
+  card.appendChild(runeBadge);
+}
+
     const type = VALID_TYPES.includes(item.type) ? item.type : "sonstiges";
     card.dataset.type = type;
 
