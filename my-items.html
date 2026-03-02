@@ -387,9 +387,9 @@ tr.innerHTML=`
     i.kind === "search"
       ? "–"
       : (
-          i.tradeType === "rune" && i.wantedRune
-            ? `🔁 ${i.wantedRune}`
-            : "Free"
+i.tradeType === "rune" && i.wantedRune
+  ? `${i.wantedRune}-Rune`
+  : "Free"
         )
   }
 </td>
