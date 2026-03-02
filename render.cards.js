@@ -582,18 +582,11 @@ else {
     }
   });
 
-}
+} // Ende OFFER-Block
 
-      } catch {
-        btn.disabled = false;
-        btn.textContent = "🖐️ Nehmen";
-      }
-    });
-
-  }
-}
 
 } // Ende search / else
+
 
 // ===============================
 // RUNE BADGE (GLOBAL für offers)
