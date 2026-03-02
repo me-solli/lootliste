@@ -466,9 +466,100 @@ if (item.kind === "search") {
       ownBtn.disabled = true;
       row.appendChild(ownBtn);
     }
+  } else {
 
-    // ===============================
-// RUNE BADGE (nach innerHTML setzen)
+    const helpBtn = document.createElement("button");
+    helpBtn.className = "help-btn";
+    helpBtn.textContent = "🤝 Helfen";
+
+    if (row) row.appendChild(helpBtn);
+
+    helpBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+
+      const confirmed = await showClaimModal({
+        title: "Hilfe anbieten",
+        text: `
+          Möchtest du dem Suchenden helfen?<br><br>
+          Dein hinterlegter BattleTag wird übermittelt,
+          damit er dich ingame kontaktieren kann.
+        `,
+        confirmText: "Hilfe senden"
+      });
+
+      if (!confirmed) return;
+
+      helpBtn.disabled = true;
+      helpBtn.textContent = "Gesendet";
+
+      await fetch(`${API}/items/${item.id}/help`, {
+        method: "POST",
+        credentials: "include"
+      });
+    });
+  }
+
+} else {
+
+  if (item.isOwner) {
+    btn.disabled = true;
+    btn.textContent = "🔒 Dein Item";
+    btn.classList.add("is-owner");
+  }
+
+  btn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    if (btn.disabled) return;
+
+    const confirmed = await showClaimModal();
+    if (!confirmed) return;
+
+    btn.disabled = true;
+    btn.textContent = "…";
+
+    try {
+      const res = await fetch(`${API}/items/${item.id}/claim`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+
+        if (res.status === 400 && err.error === "Cannot claim own item") {
+          showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
+        } else if (res.status === 401) {
+          showToast?.("Bitte zuerst einloggen.");
+        } else if (res.status === 429) {
+          showToast?.("Bitte kurz warten.");
+        } else {
+          showToast?.(err.error || "Item konnte nicht reserviert werden.");
+        }
+
+        btn.disabled = false;
+        btn.textContent = "🖐️ Nehmen";
+        return;
+      }
+
+      showToast?.("Item reserviert.");
+
+      if (typeof window.loadItems === "function") {
+        await window.loadItems();
+      }
+
+    } catch {
+      alert("Netzwerkfehler.");
+      btn.disabled = false;
+      btn.textContent = "🖐️ Nehmen";
+    }
+  });
+
+}
+
+// ===============================
+// RUNE BADGE (GLOBAL für offers)
 // ===============================
 if (
   item.kind === "offer" &&
@@ -485,29 +576,9 @@ if (
 
   card.appendChild(runeBadge);
 }
-    
-    container.appendChild(card);
-    return;
-  }
 
-  const helpBtn = document.createElement("button");
-  helpBtn.className = "help-btn";
-  helpBtn.textContent = "🤝 Helfen";
-
-  if (row) row.appendChild(helpBtn);
-
-  helpBtn.addEventListener("click", async (e) => {
-    e.stopPropagation();
-
-    const confirmed = await showClaimModal({
-      title: "Hilfe anbieten",
-      text: `
-        Möchtest du dem Suchenden helfen?<br><br>
-        Dein hinterlegter BattleTag wird übermittelt,
-        damit er dich ingame kontaktieren kann.
-      `,
-      confirmText: "Hilfe senden"
-    });
+// 👇 IMMER am Ende append
+container.appendChild(card);
 
     if (!confirmed) return;
 
