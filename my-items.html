@@ -350,34 +350,49 @@ tr.id = `item-${i.id}`;
 if (needsAction) tr.classList.add("needs-action");
 
 tr.innerHTML=`
-  <td>${i.id}</td>
-  <td>
-    <div class="item-cell">
-      <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
-        <img src="img/icons/${i.type||"sonstiges"}.png">
-      </div>
-      <div class="item-meta">
-        <strong>
-          ${i.name}
+ <td>${i.id}</td>
+
+<td>
+  <div class="item-cell">
+    <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
+      <img src="img/icons/${i.type||"sonstiges"}.png">
+    </div>
+    <div class="item-meta">
+      <strong>
+        ${i.name}
 <span
   class="note-icon"
   data-note="${(i.note_private || "").replace(/"/g, '&quot;')}"
   title="${i.note_private || 'Interne Notiz bearbeiten'}"
   onclick="editNote(${i.id}, this)"
 >📝</span>
-        </strong>
-<small>
-  ${i.kind === "search" ? "🔍 Suche" : "🎁 Angebot"}
-  · ${i.quality||""} · ${i.type||""}
-  ${
-    i.tradeType === "rune" && i.wantedRune
-      ? ` · 🔁 gegen ${i.wantedRune}`
-      : ""
-  }
-</small>
-      </div>
+      </strong>
+      <small>
+        ${i.quality||""} · ${i.type||""}
+      </small>
     </div>
-  </td>
+  </div>
+</td>
+
+<td>
+  ${
+    i.kind === "search"
+      ? "🔍 Suche"
+      : "🎁 Angebot"
+  }
+</td>
+
+<td>
+  ${
+    i.kind === "search"
+      ? "–"
+      : (
+          i.tradeType === "rune" && i.wantedRune
+            ? `🔁 ${i.wantedRune}`
+            : "Free"
+        )
+  }
+</td>
   <td><span class="badge ${cls}">${label}</span></td>
 <td>
   ${
