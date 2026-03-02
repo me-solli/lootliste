@@ -280,9 +280,9 @@ function showClaimModal(options = {}) {
 }
 
 .rune-inline-badge img{
-  width:20px;
-  height:20px;
-  filter:drop-shadow(0 0 8px rgba(120,170,255,.6));
+  width:28px;
+  height:28px;
+  filter:drop-shadow(0 0 10px rgba(120,170,255,.7));
 }
   `;
 
