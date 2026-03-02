@@ -205,6 +205,144 @@ async function load(){
   const response = await fetch(API+"/items", { credentials:"include" });
   const items = await response.json();
 
+  const claimed = items.filter(i =>
+    i.claimedByAccountId === currentUser.accountId
+  );
+
+  const requested = items.filter(i =>
+    (i.helpOffers || []).some(h => h.accountId === currentUser.accountId)
+  );
+
+  // Zusammenführen (keine Duplikate falls etwas bereits claimed ist)
+  const mineMap = new Map();
+  [...claimed, ...requested].forEach(i => mineMap.set(i.id, i));
+  const mine = Array.from(mineMap.values());
+
+  let cResN=0,cWaitN=0,cDoneN=0;
+  tableBody.innerHTML="";
+
+  mine.forEach(i=>{
+    const isClaim = i.claimedByAccountId === currentUser.accountId;
+    const hasRequested = (i.helpOffers || []).some(h => h.accountId === currentUser.accountId);
+
+    let label="", cls="orange", needsAction=false, actionHtml="";
+
+    if(isClaim){
+      const receiverConfirmedUI =
+        localStorage.getItem("receiver_confirmed_ui_"+i.id)==="yes";
+
+      if(i.status==="vergeben"){
+        label="Abgeschlossen";
+        cls="green";
+        cDoneN++;
+      }
+      else if(receiverConfirmedUI){
+        label="Wartet auf Spender";
+        cls="blue";
+        cWaitN++;
+        actionHtml=`<button class="action-btn waiting" disabled>⏳ Wartet auf Spender</button>`;
+      }
+      else{
+        label="Reserviert";
+        cls="orange";
+        needsAction=true;
+        cResN++;
+        actionHtml=`<button class="action-btn green" onclick="confirmReceive(${i.id})">✔ Item erhalten</button>`;
+      }
+    }
+    else if(hasRequested){
+      // Nur angefragt (Rune oder Help)
+      if(i.status === "vergeben"){
+        label = "Nicht ausgewählt";
+        cls = "blue";
+      } else {
+        label = "Angefragt";
+        cls = "orange";
+      }
+    }
+
+    const tr=document.createElement("tr");
+    if(needsAction) tr.classList.add("needs-action");
+
+    tr.innerHTML=`
+      <td>${i.id}</td>
+
+      <td>
+        <div class="item-cell">
+          <div class="item-icon">
+            <img src="img/icons/${i.type||"sonstiges"}.png">
+          </div>
+          <div class="item-meta">
+            <strong>${i.name}</strong>
+            <small>${i.quality||""} · ${i.type||""}</small>
+          </div>
+        </div>
+      </td>
+
+      <td>
+        ${i.kind === "search" ? "🔍 Suche" : "🎁 Angebot"}
+      </td>
+
+      <td>
+        ${
+          i.kind === "search"
+            ? "–"
+            : (
+                i.tradeType === "rune" && i.wantedRune
+                  ? `${i.wantedRune}-Rune`
+                  : "Free"
+              )
+        }
+      </td>
+
+      <td>
+        ${label ? `<span class="badge ${cls}">${label}</span>` : "–"}
+      </td>
+
+      <td>
+        <div class="detail-box">
+          <div class="kv">
+            <span>Spender</span>
+            <div>${i.donor||"–"}</div>
+
+            <span>BattleTag</span>
+            <div>${i.contact||"–"}</div>
+          </div>
+        </div>
+      </td>
+
+      <td>
+        <div class="actions">${actionHtml}</div>
+      </td>
+    `;
+
+    tableBody.appendChild(tr);
+  });
+
+  cAll.textContent=mine.length;
+  cRes.textContent=cResN;
+  cWait.textContent=cWaitN;
+  cDone.textContent=cDoneN;
+}
+
+async function confirmReceive(id){
+  if(!confirm("Hast du das Item ingame erhalten?")) return;
+
+  await fetch(API + "/items/" + id + "/confirm-receiver", {
+    method: "POST",
+    credentials:"include"
+  });
+
+  localStorage.setItem("receiver_confirmed_ui_"+id,"yes");
+  load();
+}
+
+(async () => {
+  const ok = await initAuth();
+  if (ok) load();
+})();
+  const items = await response.json();
+
   const mine = items.filter(i=>i.claimedByAccountId===currentUser.accountId);
 
   let cResN=0,cWaitN=0,cDoneN=0;
@@ -313,4 +451,8 @@ async function confirmReceive(id){
 (async () => {
   const ok = await initAuth();
   if (ok) load();
-}
+})();
+</script>
+
+</body>
+</html>
