@@ -262,7 +262,7 @@ function showClaimModal(options = {}) {
   align-items:center;
   gap:6px;
 
-  padding:5px 14px;           /* kleiner */
+  padding:4px 10px;        /* kleiner, ruhiger */
 
   font-size:14px;
   font-weight:600;
@@ -271,19 +271,18 @@ function showClaimModal(options = {}) {
   border-radius:999px;
 
   color:#6fa8ff;
-  background:rgba(120,170,255,.06);   /* dezenter */
-  border:1px solid rgba(120,170,255,.35);  /* dünner */
+  background:rgba(120,170,255,.05);   /* ganz leicht */
 
   white-space:nowrap;
 
   box-shadow:
-    0 0 10px rgba(120,170,255,.25);  /* softer */
+    0 0 14px rgba(120,170,255,.25);   /* nur Glow */
 }
 
 .rune-inline-badge img{
-  width:20px;                 /* leicht reduziert */
+  width:20px;
   height:20px;
-  filter:drop-shadow(0 0 6px rgba(120,170,255,.6));
+  filter:drop-shadow(0 0 8px rgba(120,170,255,.6));
 }
   `;
 
