@@ -750,8 +750,19 @@ try{
 
 status.textContent="💾 Speichere Eintrag…";
 
+// 🔁 Trade-Auswahl auslesen
 const selectedTrade = document.querySelector("input[name='tradeType']:checked").value;
 const selectedRune = document.getElementById("wantedRune").value;
+
+// 🔒 Validierung: Wenn Rune gewählt, muss auch Rune gesetzt sein
+if (selectedTrade === "rune" && !selectedRune) {
+  alert("Bitte eine Rune auswählen.");
+  submitBtn.disabled = false;
+  submitBtn.textContent = selectedKind === "search" 
+    ? "Suche einreichen" 
+    : "Item einreichen";
+  return;
+}
 
 await fetch(API_ITEMS,{
   method:"POST",
