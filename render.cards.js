@@ -584,62 +584,6 @@ else {
 
 }
 
-  // ===============================
-  // 🎁 FREE ITEM (CLAIM)
-  // ===============================
-  else {
-
-    btn.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      if (btn.disabled) return;
-
-      const confirmed = await showClaimModal();
-      if (!confirmed) return;
-
-      btn.disabled = true;
-      btn.textContent = "…";
-
-      try {
-const endpoint =
-  item.tradeType === "rune"
-    ? "rune-request"
-    : "claim";
-
-const res = await fetch(`${API}/items/${item.id}/${endpoint}`, {
-  method: "POST",
-  credentials: "include"
-});
-
-        if (!res.ok) {
-          const err = await res.json();
-
-          if (res.status === 400 && err.error === "Cannot claim own item") {
-            showToast?.("🔒 Du kannst dein eigenes Item nicht nehmen.");
-          } else if (res.status === 401) {
-            showToast?.("Bitte zuerst einloggen.");
-          } else if (res.status === 429) {
-            showToast?.("Bitte kurz warten.");
-          } else {
-            showToast?.(err.error || "Item konnte nicht reserviert werden.");
-          }
-
-          btn.disabled = false;
-          btn.textContent = "🖐️ Nehmen";
-          return;
-        }
-
-if (item.tradeType === "rune") {
-  showToast?.("Trade-Anfrage gesendet.");
-  btn.textContent = "Gesendet";
-  btn.disabled = true;
-} else {
-  showToast?.("Item reserviert.");
-
-  if (typeof window.loadItems === "function") {
-    await window.loadItems();
-  }
-}
-
       } catch {
         btn.disabled = false;
         btn.textContent = "🖐️ Nehmen";
