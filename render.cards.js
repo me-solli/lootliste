@@ -264,11 +264,11 @@ function showClaimModal(options = {}) {
   align-items:center;
   gap:8px;
 
-  padding:6px 14px;
+  padding:7px 16px;
 
   border-radius:999px;
 
-  font-size:13px;
+  font-size:14px;
   font-weight:600;
 
   background:rgba(0,0,0,.55);
