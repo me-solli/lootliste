@@ -466,6 +466,40 @@ body.submit-ladder .submit-mode-visual.active{
   Missbrauch oder rechtswidrige Beiträge können zu
   rechtlichen Schritten führen.
 </div>
+
+      <!-- TRADE OPTION -->
+<label>Vergabe-Art</label>
+
+<div style="display:flex; gap:16px; margin-bottom:8px;">
+  <label style="display:flex; align-items:center; gap:6px;">
+    <input type="radio" name="tradeType" value="free" checked>
+    🎁 Free
+  </label>
+
+  <label style="display:flex; align-items:center; gap:6px;">
+    <input type="radio" name="tradeType" value="rune">
+    🔁 Trade gegen Rune
+  </label>
+</div>
+
+<div id="runeSelectWrap" style="display:none; margin-bottom:12px;">
+  <select id="wantedRune">
+    <option value="">Rune wählen</option>
+    <option value="Pul">Pul</option>
+    <option value="Um">Um</option>
+    <option value="Mal">Mal</option>
+    <option value="Ist">Ist</option>
+    <option value="Gul">Gul</option>
+    <option value="Vex">Vex</option>
+    <option value="Ohm">Ohm</option>
+    <option value="Lo">Lo</option>
+    <option value="Sur">Sur</option>
+    <option value="Ber">Ber</option>
+    <option value="Jah">Jah</option>
+    <option value="Cham">Cham</option>
+    <option value="Zod">Zod</option>
+  </select>
+</div>
       
 <label>Interne Notiz (optional)</label>
 <textarea 
