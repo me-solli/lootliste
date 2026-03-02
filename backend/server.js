@@ -616,7 +616,7 @@ app.get("/api/items/latest", (req, res) => {
 // POST ITEM (SESSION + 60s COOLDOWN)
 // ===============================
 app.post("/items", (req, res) => {
-  const { name, quality, type, screenshot, season, note_private, kind, details } = req.body;
+  const { name, quality, type, screenshot, season, note_private, kind, details, tradeType, wantedRune } = req.body;
 
   const account = getAccountFromSession(req);
 
