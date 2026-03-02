@@ -647,6 +647,11 @@ const newItem = {
   screenshot: screenshot || null,
   season,
   kind: kind || "offer",
+
+  // 🔥 NEU – TRADE LOGIK
+  tradeType: tradeType || "free",
+  wantedRune: tradeType === "rune" ? wantedRune || null : null,
+
   status: "verfügbar",
   createdAt: new Date().toISOString(),
 
@@ -666,7 +671,7 @@ const newItem = {
     receiverConfirmed: false
   },
 
-  helpOffers: []   // 🔥 neu für SUCHE-Helfer
+  helpOffers: []
 };
 
 account.lastActive = new Date().toISOString();
