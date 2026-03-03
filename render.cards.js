@@ -353,6 +353,17 @@ function showClaimModal(options = {}) {
 .player {
   margin-bottom: 6px;
 }
+
+/* Compact spacing between roll and donor */
+
+.item-roll {
+  margin-bottom: 4px;
+}
+
+.player {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
   `;
 
   document.head.appendChild(style);
