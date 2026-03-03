@@ -377,6 +377,35 @@ function showClaimModal(options = {}) {
   flex-direction: column;
   gap: 6px;
 }
+
+/* =========================
+   CARD LAYOUT UPGRADE
+========================= */
+
+@media (min-width: 768px) {
+
+  .card-details {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+
+  .card-image {
+    flex: 0 0 220px;
+  }
+
+  .card-image img {
+    width: 100%;
+  }
+
+  .card-body {
+    flex: 1;
+  }
+
+  .claim-row {
+    justify-content: flex-start;
+  }
+}
   `;
 
   document.head.appendChild(style);
