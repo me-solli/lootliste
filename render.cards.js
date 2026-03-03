@@ -188,6 +188,9 @@ function showClaimModal(options = {}) {
 
 .donor-block {
   margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.05);
+
   display: flex;
   flex-direction: column;
   gap: 4px;
