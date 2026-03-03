@@ -449,7 +449,13 @@ ${
           ${item.roll ? `<div class="item-roll">${item.roll}</div>` : ""}
           <div class="player">${sourceLabel}</div>
           <div class="claim-row">
-            <button class="claim-btn">🖐️ Nehmen</button>
+           <button class="claim-btn">
+  ${
+    item.tradeType === "rune"
+      ? "💎 Rune anbieten"
+      : "🖐️ Nehmen"
+  }
+</button>
           </div>
         </div>
       </div>
