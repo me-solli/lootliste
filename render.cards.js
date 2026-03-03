@@ -357,8 +357,8 @@ function showClaimModal(options = {}) {
 }
 
 .player {
-  margin-top: 4px;
-  margin-bottom: 8px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 /* Screenshot spacing adjustment */
