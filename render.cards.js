@@ -404,6 +404,33 @@ function showClaimModal(options = {}) {
     margin-top: 12px;
   }
 }
+
+/* =========================
+   COMPACT DONOR LINE
+========================= */
+
+.donor-compact {
+  font-size: 13px;
+  margin-top: 6px;
+  opacity: .9;
+}
+
+.donor-name-compact {
+  color: #f5c451;
+  font-weight: 600;
+}
+
+.donor-compact .donor-activity.green {
+  color: #6fdc6f;
+}
+
+.donor-compact .donor-activity.yellow {
+  color: #f0c35a;
+}
+
+.donor-compact .donor-activity.gray {
+  color: #888;
+}
   `;
 
   document.head.appendChild(style);
