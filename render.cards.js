@@ -480,45 +480,34 @@ sourceLabel = `
   <div class="donor-block">
     <span class="donor-label">
       Spender
-<span class="donor-info"
-      title="⭐ Sterne = aktuelle Aktivität | Lvl = langfristige Beteiligung">
-  i
-</span>
+      <span class="donor-info"
+        title="⭐ Sterne = aktuelle Aktivität | Lvl = langfristige Beteiligung">
+        i
+      </span>
     </span>
 
-    <div class="donor-line">
+    <div class="donor-compact">
       <a
         href="profile.html?user=${encodeURIComponent(item.donor)}"
-        class="donor-name"
+        class="donor-name-compact"
         title="Öffentliches Profil ansehen"
         onclick="event.stopPropagation()"
       >
         ${item.donor}
       </a>
-      ${donorIcon}
+      ${donorIcon ? ` ${donorIcon}` : ""}
+      · Lvl ${donorLevel}
+      · ${stars}
+      ${
+        activity
+          ? `· <span class="donor-activity ${activity.level}">
+              ${activity.text}
+            </span>`
+          : ""
+      }
     </div>
-
-<div class="donor-trust">
-
-  <div class="donor-level-line">
-    <span class="donor-level">Lvl ${donorLevel}</span>
   </div>
-
-  <div class="donor-stars-line">
-    <span class="donor-stars">${stars}</span>
-  </div>
-
-  ${
-    activity
-      ? `<div class="donor-activity ${activity.level}">
-          ${activity.text}
-        </div>`
-      : ""
-  }
-</div>
-    </div>
-  `;
-}
+`;
 
     card.innerHTML = `
       <button class="card-header" type="button">
