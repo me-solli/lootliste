@@ -289,10 +289,6 @@ function showClaimModal(options = {}) {
    CLAIM BUTTONS
 ========================= */
 
-.claim-row {
-  margin-top: 14px;
-}
-
 .claim-btn,
 .help-btn {
   padding: 9px 16px;
