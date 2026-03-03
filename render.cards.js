@@ -579,9 +579,9 @@ else {
       if (!res.ok) {
         showToast?.("Aktion fehlgeschlagen.");
         btn.disabled = false;
-        btn.textContent = isRuneTrade
-          ? "💎 Trade anbieten"
-          : "🖐️ Nehmen";
+btn.textContent = isRuneTrade
+  ? `💎 ${item.wantedRune} anbieten`
+  : "🖐️ Nehmen";
         return;
       }
 
