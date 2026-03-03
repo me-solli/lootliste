@@ -535,6 +535,7 @@ sourceLabel = `
     </div>
   </div>
 `;
+   }
 
     card.innerHTML = `
       <button class="card-header" type="button">
