@@ -689,11 +689,11 @@ btn.textContent = isRuneTrade
       }
 
     } catch {
-      btn.disabled = false;
-      btn.textContent = isRuneTrade
-        ? "💎 Trade anbieten"
-        : "🖐️ Nehmen";
-    }
+  btn.disabled = false;
+  btn.textContent = isRuneTrade
+    ? `💎 ${item.wantedRune} anbieten`
+    : "🖐️ Nehmen";
+}
   });
 
 } // Ende OFFER-Block
