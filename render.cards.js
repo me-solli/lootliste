@@ -264,7 +264,7 @@ function showClaimModal(options = {}) {
 
   padding:5px 12px;        /* kleiner, ruhiger */
 
-  font-size:15px;
+  font-size:14px;
   font-weight:600;
   letter-spacing:.4px;
 
@@ -280,8 +280,8 @@ function showClaimModal(options = {}) {
 }
 
 .rune-inline-badge img{
-  width:26px;
-  height:26px;
+  width:24px;
+  height:24px;
   filter:drop-shadow(0 0 10px rgba(120,170,255,.7));
 }
   `;
