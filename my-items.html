@@ -396,7 +396,10 @@ tr.innerHTML=`
                     !i.claimedByAccountId &&
                     (!i.helpOffers || i.helpOffers.length === 0)
                       ? ` <button class="action-btn" style="margin-left:6px;font-size:11px;padding:3px 8px;" onclick="editRune(${i.id}, '${i.wantedRune}')">✏</button>`
-                      : ` <span style="margin-left:6px;opacity:.5;">🔒</span>`
+                      : ` <span 
+      style="margin-left:6px;opacity:.5;cursor:help;" 
+      title="Rune kann nicht geändert werden, solange Trade-Anfragen existieren"
+    >🔒</span>`
                   )
                 )
               : "Rune"
