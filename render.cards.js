@@ -385,25 +385,23 @@ function showClaimModal(options = {}) {
 @media (min-width: 768px) {
 
   .card-details {
-    display: flex;
-    gap: 18px;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    align-items: start;
   }
 
   .card-image {
-    flex: 0 0 220px;
+    grid-row: span 3;
+    margin-top: 6px;
   }
 
   .card-image img {
     width: 100%;
   }
 
-  .card-body {
-    flex: 1;
-  }
-
   .claim-row {
-    justify-content: flex-start;
+    margin-top: 12px;
   }
 }
   `;
