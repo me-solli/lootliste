@@ -472,17 +472,19 @@ body.submit-ladder .submit-mode-visual.active{
 
   <label>Vergabe-Art</label>
 
-  <div style="display:flex; gap:16px; margin-bottom:8px;">
-    <label style="display:flex; align-items:center; gap:6px;">
-      <input type="radio" name="tradeType" value="free" checked>
-      🎁 Free
-    </label>
+<div class="entry-mode" id="tradeMode">
 
-    <label style="display:flex; align-items:center; gap:6px;">
-      <input type="radio" name="tradeType" value="rune">
-      🔁 Trade gegen Rune
-    </label>
-  </div>
+  <label class="entry-option">
+    <input type="radio" name="tradeType" value="free" checked>
+    <span>🎁 Free</span>
+  </label>
+
+  <label class="entry-option">
+    <input type="radio" name="tradeType" value="rune">
+    <span>🔁 Gegen Rune</span>
+  </label>
+
+</div>
 
   <div id="runeSelectWrap" style="display:none; margin-bottom:12px;">
     <select id="wantedRune">
