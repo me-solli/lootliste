@@ -378,6 +378,14 @@ function showClaimModal(options = {}) {
   border: 1px solid rgba(255,255,255,.08);
   box-shadow: 0 6px 18px rgba(0,0,0,.6);
 }
+
+/* Even spacing inside card body */
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
   `;
 
   document.head.appendChild(style);
