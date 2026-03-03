@@ -284,6 +284,54 @@ function showClaimModal(options = {}) {
   height:24px;
   filter:drop-shadow(0 0 10px rgba(120,170,255,.7));
 }
+
+/* =========================
+   CLAIM BUTTONS
+========================= */
+
+.claim-row {
+  margin-top: 14px;
+}
+
+.claim-btn,
+.help-btn {
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(245,196,81,.35);
+  background: linear-gradient(180deg,#151515,#0f0f0f);
+  color: #eaeaea;
+  transition: all .15s ease;
+}
+
+/* Hover (Free) */
+.claim-btn:hover,
+.help-btn:hover {
+  background: rgba(245,196,81,.08);
+  box-shadow: 0 0 10px rgba(245,196,81,.25);
+}
+
+/* Rune-Version */
+.claim-btn.rune {
+  border-color: rgba(120,170,255,.5);
+  color: #6fa8ff;
+  box-shadow: 0 0 12px rgba(120,170,255,.25);
+}
+
+.claim-btn.rune:hover {
+  background: rgba(120,170,255,.08);
+  box-shadow: 0 0 14px rgba(120,170,255,.4);
+}
+
+/* Disabled */
+.claim-btn:disabled,
+.claim-btn.is-owner {
+  opacity: .5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
   `;
 
   document.head.appendChild(style);
