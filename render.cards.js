@@ -584,26 +584,28 @@ ${
 </div>
       </button>
 
-      <div class="card-details">
-        ${item.screenshot ? `
-          <div class="card-image">
-            <img src="${item.screenshot}" alt="Screenshot" loading="lazy">
-          </div>` : ""}
+<div class="card-details">
 
-        <div class="card-body">
-          ${item.roll ? `<div class="item-roll">${item.roll}</div>` : ""}
-          <div class="player">${sourceLabel}</div>
-          <div class="claim-row">
-<button class="claim-btn ${item.tradeType === "rune" ? "rune" : ""}">
-  ${
-item.tradeType === "rune"
-  ? `💎 ${item.wantedRune} anbieten`
-  : "🖐️ Nehmen"
-  }
-</button>
-          </div>
-        </div>
-      </div>
+  <div class="card-body">
+    ${item.roll ? `<div class="item-roll">${item.roll}</div>` : ""}
+    <div class="player">${sourceLabel}</div>
+  </div>
+
+  ${item.screenshot ? `
+    <div class="card-image">
+      <img src="${item.screenshot}" alt="Screenshot">
+    </div>` : ""}
+
+  <div class="claim-row">
+    <button class="claim-btn ${item.tradeType === "rune" ? "rune" : ""}">
+      ${
+        item.tradeType === "rune"
+          ? `💎 ${item.wantedRune} anbieten`
+          : "🖐️ Nehmen"
+      }
+    </button>
+  </div>
+</div>
     `;
 
     const header = card.querySelector(".card-header");
