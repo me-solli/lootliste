@@ -289,7 +289,7 @@ body.submit-ladder .submit-mode-visual.active{
   margin:0 auto;
 }
 
-  /* ================================
+/* ================================
    ENTRY MODE – VISUAL TOGGLE
 ================================ */
 
@@ -317,12 +317,18 @@ body.submit-ladder .submit-mode-visual.active{
   letter-spacing:.3px;
   border:1px solid rgba(255,255,255,.15);
   background:rgba(255,255,255,.03);
-  transition:all .2s ease;
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    color .2s ease,
+    box-shadow .2s ease,
+    transform .15s ease;
 }
 
 /* Hover */
 .entry-option:hover span{
   border-color:rgba(245,196,81,.4);
+  transform:translateY(-1px);
 }
 
 /* Active */
@@ -333,7 +339,26 @@ body.submit-ladder .submit-mode-visual.active{
   box-shadow:0 0 14px rgba(245,196,81,.25);
 }
 
-  .notice-search{
+/* ================================
+   TRADE MODE – KOMPAKTER STIL
+================================ */
+
+#tradeMode{
+  gap:12px;
+  margin-top:6px;
+  margin-bottom:14px;
+}
+
+#tradeMode .entry-option span{
+  padding:8px 16px;
+  font-size:13px;
+}
+
+/* ================================
+   SEARCH NOTICE
+================================ */
+
+.notice-search{
   margin-top:12px;
   padding:12px 14px;
   border-radius:12px;
