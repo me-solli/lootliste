@@ -332,6 +332,27 @@ function showClaimModal(options = {}) {
   cursor: not-allowed;
   box-shadow: none;
 }
+
+/* =========================
+   CARD ACTION AREA UPGRADE
+========================= */
+
+.claim-row {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  display: flex;
+  justify-content: center;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.player {
+  margin-bottom: 6px;
+}
   `;
 
   document.head.appendChild(style);
