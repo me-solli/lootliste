@@ -341,11 +341,6 @@ function showClaimModal(options = {}) {
   justify-content: center;
 }
 
-.card-body {
-  display: flex;
-  flex-direction: column;
-}
-
 .player {
   margin-bottom: 6px;
 }
