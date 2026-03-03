@@ -509,6 +509,33 @@ async function editNote(id, el){
   load();
 }
 
+  async function editNote(id, el){
+
+  const current = el.dataset.note || "";
+
+  const value = prompt(
+    "Interne Notiz (max. 50 Zeichen):",
+    current
+  );
+
+  if(value === null) return;
+
+  const trimmed = value.trim().slice(0, 50);
+
+  await fetch(API + "/items/" + id, {
+    method: "PATCH",
+    credentials:"include",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      note_private: trimmed
+    })
+  });
+
+  load();
+}
+
 function showShot(src){
   if(!src) return;
   overlayImg.src = src;
