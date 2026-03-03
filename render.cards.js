@@ -183,27 +183,28 @@ function showClaimModal(options = {}) {
 } 
 
 /* =========================
-   DONOR TRUST (COMPACT CLEAN)
+   DONOR BLOCK – STRUCTURED
 ========================= */
 
 .donor-block {
-  margin-top: 4px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.donor-label {
+.donor-label-line {
   font-size: 11px;
   opacity: .55;
   letter-spacing: .4px;
   text-transform: uppercase;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 2px;
 }
 
 .donor-info {
   font-size: 9px;
-  font-weight: bold;
   color: #f5c451;
   border: 1px solid rgba(245,196,81,.5);
   border-radius: 50%;
@@ -212,16 +213,13 @@ function showClaimModal(options = {}) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: help;
 }
 
-.donor-compact {
-  font-size: 13px;
-  opacity: .9;
+.donor-main-line {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  font-size: 13px;
 }
 
 .donor-name-compact {
@@ -234,23 +232,26 @@ function showClaimModal(options = {}) {
   text-decoration: underline;
 }
 
-.donor-stars {
-  color: #f5c451;
-  letter-spacing: 1px;
+.donor-level {
+  opacity: .75;
+  font-size: 12px;
+}
+
+.donor-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 13px;
 }
 
-.donor-activity.green {
-  color: #6fdc6f;
+.donor-stars {
+  color: #f5c451;
+  letter-spacing: 1px;
 }
 
-.donor-activity.yellow {
-  color: #f0c35a;
-}
-
-.donor-activity.gray {
-  color: #888;
-}
+.donor-activity.green { color:#6fdc6f; }
+.donor-activity.yellow { color:#f0c35a; }
+.donor-activity.gray { color:#888; }
 
 /* ================================
    RUNE INLINE BADGE (META LEVEL)
