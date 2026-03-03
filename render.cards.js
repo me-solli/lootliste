@@ -338,25 +338,15 @@ function showClaimModal(options = {}) {
 }
 
 /* =========================
-   CARD ACTION AREA UPGRADE
+   CARD ACTION AREA UPGRADE (REFINED)
 ========================= */
 
 .claim-row {
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255,255,255,.06);
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.04);
   display: flex;
   justify-content: center;
-}
-
-.player {
-  margin-bottom: 6px;
-}
-
-/* Compact spacing between roll and donor */
-
-.item-roll {
-  margin-bottom: 4px;
 }
 
 .player {
@@ -364,10 +354,17 @@ function showClaimModal(options = {}) {
   margin-bottom: 4px;
 }
 
+/* Compact spacing between roll and donor */
+
+.item-roll {
+  margin-bottom: 3px;
+}
+
 /* Screenshot spacing adjustment */
 
 .card-image {
-  margin-bottom: 6px;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .card-image img {
@@ -383,7 +380,7 @@ function showClaimModal(options = {}) {
 .card-body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 /* =========================
@@ -395,7 +392,7 @@ function showClaimModal(options = {}) {
   .card-details {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .card-image {
@@ -407,7 +404,7 @@ function showClaimModal(options = {}) {
   }
 
   .claim-row {
-    margin-top: 10px;
+    margin-top: 8px;
   }
 }
 
