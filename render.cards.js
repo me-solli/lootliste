@@ -364,6 +364,20 @@ function showClaimModal(options = {}) {
   margin-top: 4px;
   margin-bottom: 8px;
 }
+
+/* Screenshot spacing adjustment */
+
+.card-image {
+  margin-bottom: 6px;
+}
+
+.card-image img {
+  display: block;
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,.6);
+}
   `;
 
   document.head.appendChild(style);
