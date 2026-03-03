@@ -684,11 +684,11 @@ res.status(201).json(newItem);
 });
 
 // ===============================
-// PATCH ITEM (PRIVATE NOTE ONLY)
+// PATCH ITEM (NOTE + RUNE UPDATE)
 // ===============================
 app.patch("/items/:id", (req, res) => {
   const account = getAccountFromSession(req);
-  const { note_private } = req.body;
+  const { note_private, wantedRune } = req.body;
   const itemId = Number(req.params.id);
 
   if (!account) {
@@ -700,12 +700,31 @@ app.patch("/items/:id", (req, res) => {
     return res.status(404).json({ error: "Item not found" });
   }
 
-  // 🔒 nur der Einreicher darf die interne Notiz ändern
   if (item.donorAccountId !== account.id) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
-  item.note_private = (note_private || "").slice(0, 50);
+  // 🔹 Private Notiz ändern
+  if (note_private !== undefined) {
+    item.note_private = (note_private || "").slice(0, 50);
+  }
+
+  // 🔹 Rune ändern (nur wenn erlaubt)
+  if (wantedRune !== undefined) {
+
+    if (
+      item.tradeType !== "rune" ||
+      item.status !== "verfügbar" ||
+      item.claimedByAccountId ||
+      (item.helpOffers && item.helpOffers.length > 0)
+    ) {
+      return res.status(400).json({
+        error: "Rune cannot be changed while requests exist"
+      });
+    }
+
+    item.wantedRune = wantedRune || null;
+  }
 
   saveJSON(ITEMS_FILE, items);
   res.json({ ok: true });
