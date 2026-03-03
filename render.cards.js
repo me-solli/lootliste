@@ -384,21 +384,19 @@ function showClaimModal(options = {}) {
 }
 
 /* =========================
-   CARD LAYOUT UPGRADE
+   CARD LAYOUT UPGRADE (CLEAN STACK)
 ========================= */
 
 @media (min-width: 768px) {
 
   .card-details {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 16px;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .card-image {
-    grid-row: span 3;
-    margin-top: 6px;
+    margin-top: 4px;
   }
 
   .card-image img {
@@ -406,7 +404,7 @@ function showClaimModal(options = {}) {
   }
 
   .claim-row {
-    margin-top: 12px;
+    margin-top: 10px;
   }
 }
 
