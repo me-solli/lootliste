@@ -451,9 +451,9 @@ ${
           <div class="claim-row">
            <button class="claim-btn">
   ${
-    item.tradeType === "rune"
-      ? "💎 Rune anbieten"
-      : "🖐️ Nehmen"
+item.tradeType === "rune"
+  ? `💎 ${item.wantedRune} anbieten`
+  : "🖐️ Nehmen"
   }
 </button>
           </div>
