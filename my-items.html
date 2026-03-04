@@ -512,27 +512,27 @@ async function editNote(id, el){
   load();
 }
 
-  async function editNote(id, el){
 
-  const current = el.dataset.note || "";
+/* ===== Rune bearbeiten ===== */
+async function editRune(id, current){
 
   const value = prompt(
-    "Interne Notiz (max. 50 Zeichen):",
+    "Gewünschte Rune ändern:",
     current
   );
 
   if(value === null) return;
 
-  const trimmed = value.trim().slice(0, 50);
+  const rune = value.trim().replace("rune","").trim();
 
   await fetch(API + "/items/" + id, {
     method: "PATCH",
     credentials:"include",
-    headers: {
-      "Content-Type": "application/json"
+    headers:{
+      "Content-Type":"application/json"
     },
     body: JSON.stringify({
-      note_private: trimmed
+      wantedRune: rune
     })
   });
 
