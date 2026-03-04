@@ -627,7 +627,7 @@ async function changeRune(id, current, direction){
 
 /* ===== Rune Edit aktivieren ===== */
 function enableRuneEdit(id){
-  localStorage.setItem("rune_edit_enabled_" + id, "yes");
+  sessionStorage.setItem("rune_edit_enabled_" + id, "yes");
   load();
 }
 
