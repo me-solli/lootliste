@@ -3117,7 +3117,7 @@ if (state.type) {
 // Trade Filter
 if (state.trade === "free") {
   list = list.filter(i =>
-    i.kind === "offer" && i.tradeType === "free"
+    i.kind === "offer" && (!i.tradeType || i.tradeType === "free")
   );
 }
 
