@@ -393,7 +393,8 @@ tr.innerHTML=`
           `${i.wantedRune}-Rune` +
           (
             i.status === "verfügbar" &&
-            !i.claimedByAccountId
+            !i.claimedByAccountId &&
+            (!i.helpOffers || i.helpOffers.length === 0)
                       ? ` <button class="action-btn" style="margin-left:6px;font-size:11px;padding:3px 8px;" onclick="editRune(${i.id}, '${i.wantedRune}')">✏</button>`
                       : ` <span 
       style="margin-left:6px;opacity:.5;cursor:help;" 
