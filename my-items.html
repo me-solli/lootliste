@@ -396,22 +396,38 @@ tr.innerHTML=`
         ? (
             i.wantedRune
               ? (
-                  `${i.wantedRune}-Rune` +
-                  (
-                    i.status === "verfügbar" &&
-                    !i.claimedByAccountId &&
-                    (!i.helpOffers || i.helpOffers.length === 0)
-                      ? `
-                        <button class="action-btn" style="margin-left:6px;font-size:11px;padding:3px 8px;"
-                          onclick="changeRune(${i.id}, '${i.wantedRune}', 'down')">−</button>
-                        <button class="action-btn" style="font-size:11px;padding:3px 8px;"
-                          onclick="changeRune(${i.id}, '${i.wantedRune}', 'up')">+</button>
-                        `
-                      : ` <span 
-                          style="margin-left:6px;opacity:.5;cursor:help;" 
-                          title="Rune kann nicht geändert werden, solange Trade-Anfragen existieren"
-                        >🔒</span>`
-                  )
+                  (() => {
+
+                    const enabled =
+                      localStorage.getItem("rune_edit_enabled_" + i.id) === "yes";
+
+                    const canEdit =
+                      i.status === "verfügbar" &&
+                      !i.claimedByAccountId &&
+                      (!i.helpOffers || i.helpOffers.length === 0);
+
+                    if(!canEdit){
+                      return `${i.wantedRune}-Rune 
+                        <span style="margin-left:6px;opacity:.5;cursor:help;"
+                        title="Rune kann nicht geändert werden, solange Trade-Anfragen existieren">🔒</span>`;
+                    }
+
+                    if(!enabled){
+                      return `${i.wantedRune}-Rune 
+                        <button class="action-btn"
+                        style="margin-left:6px;font-size:11px;padding:3px 8px;"
+                        onclick="enableRuneEdit(${i.id})">Rune ändern</button>`;
+                    }
+
+                    return `${i.wantedRune}-Rune
+                      <button class="action-btn"
+                        style="margin-left:6px;font-size:11px;padding:3px 8px;"
+                        onclick="changeRune(${i.id}, '${i.wantedRune}', 'down')">−</button>
+                      <button class="action-btn"
+                        style="font-size:11px;padding:3px 8px;"
+                        onclick="changeRune(${i.id}, '${i.wantedRune}', 'up')">+</button>`;
+
+                  })()
                 )
               : "Rune"
           )
