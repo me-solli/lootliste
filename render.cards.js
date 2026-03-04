@@ -260,8 +260,28 @@ function showClaimModal(options = {}) {
    RUNE INLINE BADGE (META LEVEL)
 ================================ */
 
-.card {
-  position: relative;
+.card{
+  position:relative;
+
+  background:
+    radial-gradient(1200px 400px at 50% -200px,
+    rgba(245,196,81,.08), transparent 60%),
+    linear-gradient(180deg,#141414,#0d0d0d);
+
+  border-radius:16px;
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.6),
+    0 0 18px rgba(245,196,81,.15);
 }
 
 .rune-inline-badge{
