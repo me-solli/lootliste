@@ -404,9 +404,9 @@ function showClaimModal(options = {}) {
 /* Even spacing inside card body */
 
 .card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
 }
 
 /* =========================
