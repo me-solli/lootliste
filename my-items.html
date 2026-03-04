@@ -516,14 +516,27 @@ async function editNote(id, el){
 /* ===== Rune bearbeiten ===== */
 async function editRune(id, current){
 
+  const runes = [
+    "Pul","Um","Mal","Ist","Gul",
+    "Vex","Ohm","Lo","Sur","Ber",
+    "Jah","Cham","Zod"
+  ];
+
   const value = prompt(
-    "Gewünschte Rune ändern:",
+    "Rune wählen:\n\n" + runes.join(", "),
     current
   );
 
   if(value === null) return;
 
-  const rune = value.trim().replace("rune","").trim();
+  const rune =
+    value.charAt(0).toUpperCase() +
+    value.slice(1).toLowerCase();
+
+  if(!runes.includes(rune)){
+    alert("Nur Runen von Pul bis Zod erlaubt.");
+    return;
+  }
 
   await fetch(API + "/items/" + id, {
     method: "PATCH",
