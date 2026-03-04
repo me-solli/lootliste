@@ -519,10 +519,11 @@ const seasonClass = item.season === "ladder"
 
     let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
 
-if (item.donor) {
-  const donorClass =
-    item.donorClass ||
-    localStorage.getItem("lootliste_profile_class");
+const donorClass =
+  item.donorClass ||
+  item.class ||
+  item.profileClass ||
+  localStorage.getItem("lootliste_profile_class");
 
   const donorIcon =
     donorClass && CLASS_ICONS_MINI[donorClass]
