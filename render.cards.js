@@ -345,6 +345,9 @@ function showClaimModal(options = {}) {
   margin-top:8px;
   padding-top:8px;
   border-top:1px solid rgba(255,255,255,.04);
+
+  display:flex;
+  justify-content:center;
 }
 
 .player {
