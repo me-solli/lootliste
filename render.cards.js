@@ -187,13 +187,13 @@ function showClaimModal(options = {}) {
 ========================= */
 
 .donor-block {
-  margin-top: 4px;
-  padding-top: 4px;
-  border-top: 1px solid rgba(255,255,255,.05);
+  margin-top:3px;
+  padding-top:3px;
+  border-top:1px solid rgba(255,255,255,.05);
 
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
 }
 
 .donor-label-line {
