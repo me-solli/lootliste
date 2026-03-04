@@ -368,11 +368,15 @@ function showClaimModal(options = {}) {
 }
 
 .card-image img {
-  display: block;
-  max-width: 100%;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 6px 18px rgba(0,0,0,.6);
+  display:block;
+  max-width:420px;
+  width:100%;
+  margin:auto;
+
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.08);
+
+  box-shadow:0 6px 18px rgba(0,0,0,.6);
 }
 
 /* Even spacing inside card body */
