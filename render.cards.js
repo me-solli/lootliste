@@ -341,12 +341,10 @@ function showClaimModal(options = {}) {
    CARD ACTION AREA UPGRADE (REFINED)
 ========================= */
 
-.claim-row {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,.04);
-  display: flex;
-  justify-content: center;
+.claim-row{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid rgba(255,255,255,.04);
 }
 
 .player {
