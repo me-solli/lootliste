@@ -336,7 +336,6 @@ function showClaimModal(options = {}) {
   cursor: not-allowed;
   box-shadow: none;
 }
-
 /* =========================
    CARD ACTION AREA UPGRADE (REFINED)
 ========================= */
@@ -373,9 +372,8 @@ function showClaimModal(options = {}) {
 
 .card-image img {
   display:block;
-  max-width:420px;
+  max-width:400px;
   width:100%;
-  margin:auto;
 
   border-radius:8px;
   border:1px solid rgba(255,255,255,.08);
