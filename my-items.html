@@ -573,6 +573,20 @@ function showShot(src){
 /* ===== Rune ändern ===== */
 async function changeRune(id, current, direction){
 
+  const key = "rune_edit_confirmed_" + id;
+
+  if(!localStorage.getItem(key)){
+    const ok = confirm(
+      "Rune wirklich ändern?\n\n" +
+      "Danach kannst du sie mit + / − frei anpassen,\n" +
+      "solange kein Trade-Angebot existiert."
+    );
+
+    if(!ok) return;
+
+    localStorage.setItem(key, "yes");
+  }
+
   let index = RUNES.indexOf(current);
 
   if(index === -1) return;
