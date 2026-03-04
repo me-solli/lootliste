@@ -552,19 +552,19 @@ sourceLabel = `
       </span>
     </div>
 
-<div class="donor-main-line">
-  ${donorIcon}
+    <div class="donor-main-line">
+      ${donorIcon}
 
-  <a
-    href="profile.html?user=${encodeURIComponent(item.donor)}"
-    class="donor-name-compact"
-    onclick="event.stopPropagation()"
-  >
-    ${item.donor}
-  </a>
+      <a
+        href="profile.html?user=${encodeURIComponent(item.donor)}"
+        class="donor-name-compact"
+        onclick="event.stopPropagation()"
+      >
+        ${item.donor}
+      </a>
 
-  <span class="donor-level">Lvl ${donorLevel}</span>
-</div>
+      <span class="donor-level">Lvl ${donorLevel}</span>
+    </div>
 
     <div class="donor-meta-line">
       <span class="donor-stars">${stars}</span>
