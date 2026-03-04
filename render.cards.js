@@ -366,6 +366,9 @@ function showClaimModal(options = {}) {
 .card-image {
   margin-top: 4px;
   margin-bottom: 4px;
+
+  display:flex;
+  justify-content:center;
 }
 
 .card-image img {
