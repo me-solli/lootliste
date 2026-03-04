@@ -392,7 +392,7 @@ function showClaimModal(options = {}) {
 
 .card-image img {
   display:block;
-  max-width:400px;
+  max-width:260px;
   width:100%;
 
   border-radius:8px;
