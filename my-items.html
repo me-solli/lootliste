@@ -624,6 +624,13 @@ async function changeRune(id, current, direction){
   load();
 }
 
+
+/* ===== Rune Edit aktivieren ===== */
+function enableRuneEdit(id){
+  localStorage.setItem("rune_edit_enabled_" + id, "yes");
+  load();
+}
+
 filterStatus.onchange = load;
 filterSeason.onchange = load;
 
