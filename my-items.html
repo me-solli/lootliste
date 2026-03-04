@@ -564,6 +564,38 @@ function showShot(src){
   overlay.style.display = "flex";
 }
 
+
+/* ===== Rune ändern ===== */
+async function changeRune(id, current, direction){
+
+  let index = RUNES.indexOf(current);
+
+  if(index === -1) return;
+
+  if(direction === "up" && index < RUNES.length - 1){
+    index++;
+  }
+
+  if(direction === "down" && index > 0){
+    index--;
+  }
+
+  const rune = RUNES[index];
+
+  await fetch(API + "/items/" + id, {
+    method: "PATCH",
+    credentials:"include",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+      wantedRune: rune
+    })
+  });
+
+  load();
+}
+
 filterStatus.onchange = load;
 filterSeason.onchange = load;
 
