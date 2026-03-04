@@ -579,8 +579,7 @@ sourceLabel = `
 
   </div>
 `;
-   }
-
+    
     card.innerHTML = `
       <button class="card-header" type="button">
         <span class="card-chevron">▶</span>
