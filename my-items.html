@@ -399,7 +399,7 @@ tr.innerHTML=`
                   (() => {
 
                     const enabled =
-                      localStorage.getItem("rune_edit_enabled_" + i.id) === "yes";
+                      sessionStorage.getItem("rune_edit_enabled_" + i.id) === "yes";
 
                     const canEdit =
                       i.status === "verfügbar" &&
