@@ -434,6 +434,14 @@ function showClaimModal(options = {}) {
 .donor-compact .donor-activity.gray {
   color: #888;
 }
+
+.donor-class-icon{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  object-fit:cover;
+  box-shadow:0 0 6px rgba(0,0,0,.6);
+}
   `;
 
   document.head.appendChild(style);
