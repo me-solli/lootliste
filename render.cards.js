@@ -160,6 +160,7 @@ function showClaimModal(options = {}) {
   font-size:12px;
   opacity:.85;
   width:100%;          /* wichtig */
+  margin-top:6px;      /* Abstand zur Stats-Zeile */
 }
 
 .season-badge {
