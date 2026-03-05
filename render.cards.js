@@ -313,6 +313,36 @@ function showClaimModal(options = {}) {
   filter:drop-shadow(0 0 10px rgba(120,170,255,.7));
 }
 
+.free-inline-badge{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+
+  padding:5px 12px;
+
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.4px;
+
+  border-radius:999px;
+
+  color:#f5c451;
+
+  background:rgba(245,196,81,.06);
+
+  white-space:nowrap;
+
+  box-shadow:
+    0 0 14px rgba(245,196,81,.35);
+}
+
+.free-inline-badge img{
+  width:24px;
+  height:24px;
+  filter:drop-shadow(0 0 8px rgba(245,196,81,.7));
+}
+
 /* =========================
    CLAIM BUTTONS
 ========================= */
