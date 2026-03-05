@@ -3141,8 +3141,11 @@ else if (state.trade === "search") {
     list = list.filter(i => (i.name || "").toLowerCase().includes(q));
   }
 
-  state.filtered = list;
-  renderCards(state.filtered, container);
+// 🔥 Neu → Alt sortieren
+list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+state.filtered = list;
+renderCards(state.filtered, container);
   renderRecentFeed(state.filtered);
   updateMeta();
   updateResultsUI();
