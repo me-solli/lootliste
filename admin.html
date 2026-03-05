@@ -568,6 +568,27 @@ async function deleteItem(id){
   }
 }
 
+  /* ===== MARK ITEM FREE ===== */
+async function markFree(id){
+
+  const res = await fetch(API + "/items/" + id, {
+    method:"PATCH",
+    credentials:"include",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      trade:"free"
+    })
+  });
+
+  if(res.ok){
+    loadItems();
+  }else{
+    alert("Free setzen fehlgeschlagen");
+  }
+}
+
 function showShot(src){
   if(!src) return;
   overlayImg.src=src;
