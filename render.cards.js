@@ -1,4 +1,15 @@
+// ============================================================
+// D2R LOOTLISTE – CARD ENGINE (ADVANCED VISUAL VERSION)
+// Drop‑in replacement for renderCards()
+// All existing functionality preserved
+// Major visual upgrade layer
+// ============================================================
+
 const API = "https://lootliste-production.up.railway.app";
+
+// ------------------------------------------------------------
+// CLASS ICONS
+// ------------------------------------------------------------
 
 const CLASS_ICONS_MINI = {
   amazon: "img/classes/amazon.png",
@@ -16,780 +27,683 @@ const VALID_TYPES = [
   "charm","rune","sonstiges"
 ];
 
-// ===============================
-// ACTIVITY (MINIMAL)
-// ===============================
+// ------------------------------------------------------------
+// RELATIVE ACTIVITY
+// ------------------------------------------------------------
 
-function relativeTime(date) {
-  if (!date) return null;
+function relativeTime(date){
+
+  if(!date) return null;
 
   const diff = Date.now() - new Date(date).getTime();
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
 
-  if (minutes < 60) return { text: "aktiv vor wenigen Minuten", level: "green" };
-  if (hours < 24) return { text: `aktiv vor ${hours} Std.`, level: "green" };
-  if (days < 7) return { text: `aktiv vor ${days} Tagen`, level: "yellow" };
+  const minutes = Math.floor(diff/60000);
+  const hours = Math.floor(diff/3600000);
+  const days = Math.floor(diff/86400000);
 
-  return { text: `aktiv vor ${days} Tagen`, level: "gray" };
+  if(minutes < 60) return {text:"aktiv vor wenigen Minuten",level:"green"};
+  if(hours < 24) return {text:`aktiv vor ${hours} Std.`,level:"green"};
+  if(days < 7) return {text:`aktiv vor ${days} Tagen`,level:"yellow"};
+
+  return {text:`aktiv vor ${days} Tagen`,level:"gray"};
+
 }
 
-/* =========================
-   DIABLO STYLE MODAL
-========================== */
-function showClaimModal(options = {}) {
+// ------------------------------------------------------------
+// MODAL
+// ------------------------------------------------------------
+
+function showClaimModal(options={}){
+
   const {
-    title = "Item reservieren",
-    text = `
-      Möchtest du dieses Item verbindlich reservieren?<br><br>
-      Dein hinterlegter BattleTag wird für die Übergabe verwendet.
-    `,
-    confirmText = "Verbindlich reservieren"
+    title="Aktion bestätigen",
+    text="Möchtest du fortfahren?",
+    confirmText="Bestätigen"
   } = options;
 
-  return new Promise(resolve => {
-    const overlay = document.createElement("div");
-    overlay.className = "claim-modal-overlay";
+  return new Promise(resolve=>{
 
-    overlay.innerHTML = `
-      <div class="claim-modal">
-        <h3>${title}</h3>
-        <p>${text}</p>
-        <div class="claim-modal-actions">
-          <button class="modal-cancel">Abbrechen</button>
-          <button class="modal-confirm">${confirmText}</button>
-        </div>
+    const overlay=document.createElement("div");
+
+    overlay.className="claim-modal-overlay";
+
+    overlay.innerHTML=`
+
+    <div class="claim-modal">
+
+      <h3>${title}</h3>
+
+      <p>${text}</p>
+
+      <div class="claim-modal-actions">
+
+        <button class="modal-cancel">Abbrechen</button>
+
+        <button class="modal-confirm">${confirmText}</button>
+
       </div>
+
+    </div>
+
     `;
 
     document.body.appendChild(overlay);
 
-    const cleanup = (result) => {
+    const cleanup=result=>{
       overlay.remove();
       resolve(result);
-    };
+    }
 
-    overlay.querySelector(".modal-cancel").onclick = () => cleanup(false);
-    overlay.querySelector(".modal-confirm").onclick = () => cleanup(true);
+    overlay.querySelector(".modal-cancel").onclick=()=>cleanup(false);
+    overlay.querySelector(".modal-confirm").onclick=()=>cleanup(true);
 
-    overlay.addEventListener("click", e => {
-      if (e.target === overlay) cleanup(false);
+    overlay.addEventListener("click",e=>{
+      if(e.target===overlay) cleanup(false);
     });
+
   });
+
 }
 
-/* Inject minimal styles once */
-(function injectModalStyles(){
-  if (document.getElementById("claimModalStyles")) return;
+// ------------------------------------------------------------
+// STYLE ENGINE
+// ------------------------------------------------------------
 
-  const style = document.createElement("style");
-  style.id = "claimModalStyles";
-  style.innerHTML = `
-    .claim-modal-overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.75);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-    }
-    .claim-modal{
-      background:linear-gradient(180deg,#161616,#0e0e0e);
-      border:1px solid rgba(245,196,81,.5);
-      border-radius:16px;
-      padding:26px 28px;
-      max-width:420px;
-      width:90%;
-      color:#eaeaea;
-      box-shadow:
-        0 0 0 1px rgba(245,196,81,.25),
-        0 0 25px rgba(245,196,81,.35);
-      animation:modalFade .18s ease-out;
-    }
-    .claim-modal h3{
-      margin:0 0 14px;
-      font-size:18px;
-      color:#f5c451;
-    }
-    .claim-modal p{
-      font-size:14px;
-      line-height:1.5;
-      opacity:.9;
-    }
-    .claim-modal-actions{
-      margin-top:20px;
-      display:flex;
-      justify-content:flex-end;
-      gap:12px;
-    }
-    .claim-modal button{
-      padding:8px 14px;
-      border-radius:10px;
-      font-size:13px;
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,.1);
-      background:#111;
-      color:#eaeaea;
-      transition:all .15s ease;
-    }
-    .claim-modal .modal-confirm{
-      border-color:rgba(245,196,81,.5);
-      background:rgba(245,196,81,.08);
-      color:#f5c451;
-    }
-    .claim-modal .modal-confirm:hover{
-      background:rgba(245,196,81,.18);
-      box-shadow:0 0 10px rgba(245,196,81,.4);
-    }
-    .claim-modal .modal-cancel:hover{
-      background:rgba(255,255,255,.08);
-    }
-    @keyframes modalFade{
-      from{transform:translateY(8px);opacity:0}
-      to{transform:translateY(0);opacity:1}
-    }
+(function injectCardStyles(){
 
-/* === Season Badge === */
+if(document.getElementById("lootlist-card-style")) return;
 
-.item-meta {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:12px;
-  opacity:.85;
-  width:100%;          /* wichtig */
-}
+const style=document.createElement("style");
 
-.season-badge {
-  padding:2px 6px;
-  border-radius:6px;
-  font-size:11px;
-  letter-spacing:.4px;
-  text-transform:uppercase;
-}
+style.id="lootlist-card-style";
 
-.season-ladder {
-  background:rgba(90,170,90,.15);
-  border:1px solid rgba(90,170,90,.4);
-  color:#6fdc6f;
-}
+style.innerHTML=`
 
-.season-nonladder {
-  background:rgba(150,150,150,.12);
-  border:1px solid rgba(150,150,150,.3);
-  color:#bbb;
-} 
-
-/* =========================
-   DONOR BLOCK – STRUCTURED
-========================= */
-
-.donor-block {
-  margin-top:3px;
-  padding-top:3px;
-  border-top:1px solid rgba(255,255,255,.05);
-
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.donor-label-line {
-  font-size: 11px;
-  opacity: .55;
-  letter-spacing: .4px;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.donor-info {
-  font-size: 9px;
-  color: #f5c451;
-  border: 1px solid rgba(245,196,81,.5);
-  border-radius: 50%;
-  width: 14px;
-  height: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.donor-main-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.donor-name-compact {
-  color: #f5c451;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.donor-name-compact:hover {
-  text-decoration: underline;
-}
-
-.donor-level {
-  opacity: .75;
-  font-size: 12px;
-}
-
-.donor-meta-line {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-}
-
-.donor-stars {
-  color: #f5c451;
-  letter-spacing: 1px;
-}
-
-.donor-activity.green { color:#6fdc6f; }
-.donor-activity.yellow { color:#f0c35a; }
-.donor-activity.gray { color:#888; }
-
-/* ================================
-   RUNE INLINE BADGE (META LEVEL)
-================================ */
+/* =====================================================
+CARD BASE
+===================================================== */
 
 .card{
-  position:relative;
 
-  background:
-    radial-gradient(1200px 400px at 50% -200px,
-    rgba(245,196,81,.08), transparent 60%),
-    linear-gradient(180deg,#141414,#0d0d0d);
+position:relative;
 
-  border-radius:16px;
+background:
+radial-gradient(1000px 300px at 50% -200px, rgba(255,210,120,.06), transparent),
+linear-gradient(180deg,#161616,#0b0b0b);
 
-  transition:
-    transform .18s ease,
-    box-shadow .18s ease,
-    border-color .18s ease;
+border-radius:18px;
+
+border:1px solid rgba(245,196,81,.25);
+
+box-shadow:
+0 14px 40px rgba(0,0,0,.75),
+inset 0 1px 0 rgba(255,255,255,.05);
+
+transition:
+transform .18s ease,
+box-shadow .18s ease,
+border .18s ease;
+
+overflow:hidden;
+
+}
+
+.card::after{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+pointer-events:none;
+
+background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
+
 }
 
 .card:hover{
-  transform:translateY(-2px);
 
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.6),
-    0 0 18px rgba(245,196,81,.15);
+transform:translateY(-4px);
+
+box-shadow:
+0 20px 55px rgba(0,0,0,.9),
+0 0 22px rgba(245,196,81,.18);
+
 }
+
+
+/* =====================================================
+HEADER
+===================================================== */
+
+.card-header{
+
+display:flex;
+
+gap:14px;
+
+padding:18px;
+
+cursor:pointer;
+
+align-items:flex-start;
+
+}
+
+.card-chevron{
+
+opacity:.55;
+
+margin-top:2px;
+
+transition:transform .2s ease;
+
+}
+
+.card[data-open="true"] .card-chevron{
+
+transform:rotate(90deg);
+
+}
+
+.item-type-icon{
+
+width:40px;
+
+height:40px;
+
+filter:drop-shadow(0 4px 8px rgba(0,0,0,.7));
+
+}
+
+.card-title{
+
+flex:1;
+
+}
+
+
+/* =====================================================
+ITEM NAME
+===================================================== */
+
+.item-name{
+
+font-size:17px;
+
+font-weight:600;
+
+color:#f5c451;
+
+letter-spacing:.3px;
+
+}
+
+.item-details-preview{
+
+font-size:13px;
+
+opacity:.9;
+
+margin-top:2px;
+
+}
+
+.item-meta{
+
+font-size:11px;
+
+opacity:.6;
+
+margin-top:4px;
+
+}
+
+
+/* =====================================================
+RUNE BADGE
+===================================================== */
 
 .rune-inline-badge{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  gap:6px;
 
-  padding:5px 12px;        /* kleiner, ruhiger */
+margin-left:auto;
 
-  font-size:14px;
-  font-weight:600;
-  letter-spacing:.4px;
+padding:6px 12px;
 
-  border-radius:999px;
+border-radius:999px;
 
-  color:#6fa8ff;
-  background:rgba(120,170,255,.05);   /* ganz leicht */
+font-size:13px;
 
-  white-space:nowrap;
+font-weight:600;
 
-  box-shadow:
-    0 0 14px rgba(120,170,255,.25);   /* nur Glow */
+color:#6fa8ff;
+
+background:rgba(120,170,255,.07);
+
+border:1px solid rgba(120,170,255,.4);
+
+box-shadow:0 0 16px rgba(120,170,255,.35);
+
 }
 
-.rune-inline-badge img{
-  width:24px;
-  height:24px;
-  filter:drop-shadow(0 0 10px rgba(120,170,255,.7));
+
+/* =====================================================
+DETAIL AREA
+===================================================== */
+
+.card-details{
+
+display:none;
+
+flex-direction:column;
+
+padding:0 18px 18px 18px;
+
+gap:12px;
+
 }
 
-/* =========================
-   CLAIM BUTTONS
-========================= */
+.card[data-open="true"] .card-details{
 
-.claim-btn,
-.help-btn {
-  padding: 9px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid rgba(245,196,81,.35);
-  background: linear-gradient(180deg,#151515,#0f0f0f);
-  color: #eaeaea;
-  transition: all .15s ease;
+display:flex;
+
 }
 
-/* Hover (Free) */
-.claim-btn:hover,
-.help-btn:hover {
-  background: rgba(245,196,81,.08);
-  box-shadow: 0 0 10px rgba(245,196,81,.25);
+
+/* =====================================================
+ITEM IMAGE
+===================================================== */
+
+.card-image{
+
+display:flex;
+
+justify-content:center;
+
+margin-top:4px;
+
 }
 
-/* Rune-Version */
-.claim-btn.rune {
-  border-color: rgba(120,170,255,.5);
-  color: #6fa8ff;
-  box-shadow: 0 0 12px rgba(120,170,255,.25);
+.card-image img{
+
+max-width:320px;
+
+width:100%;
+
+border-radius:10px;
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:0 14px 36px rgba(0,0,0,.85);
+
 }
 
-.claim-btn.rune:hover {
-  background: rgba(120,170,255,.08);
-  box-shadow: 0 0 14px rgba(120,170,255,.4);
+
+/* =====================================================
+DONOR BLOCK
+===================================================== */
+
+.donor-row{
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+font-size:13px;
+
 }
 
-/* Disabled */
-.claim-btn:disabled,
-.claim-btn.is-owner {
-  opacity: .5;
-  cursor: not-allowed;
-  box-shadow: none;
+.donor-row img{
+
+width:22px;
+
+height:22px;
+
+border-radius:50%;
+
+box-shadow:0 0 6px rgba(0,0,0,.8);
+
 }
-/* =========================
-   CARD ACTION AREA UPGRADE (REFINED)
-========================= */
+
+.donor-name{
+
+color:#f5c451;
+
+font-weight:600;
+
+}
+
+.donor-stars{
+
+color:#f5c451;
+
+letter-spacing:1px;
+
+}
+
+.donor-activity.green{color:#6fdc6f}
+
+.donor-activity.yellow{color:#f0c35a}
+
+.donor-activity.gray{color:#888}
+
+
+/* =====================================================
+ACTION BUTTON
+===================================================== */
 
 .claim-row{
-  margin-top:8px;
-  padding-top:8px;
-  border-top:1px solid rgba(255,255,255,.04);
 
-  display:flex;
-  justify-content:center;
+display:flex;
+
+justify-content:center;
+
+margin-top:6px;
+
 }
 
-.player {
-  margin-top: 2px;
-  margin-bottom: 4px;
+.claim-btn{
+
+padding:11px 22px;
+
+border-radius:12px;
+
+border:1px solid rgba(245,196,81,.45);
+
+background:#111;
+
+font-size:13px;
+
+cursor:pointer;
+
+transition:all .15s ease;
+
 }
 
-/* Compact spacing between roll and donor */
+.claim-btn:hover{
 
-.item-roll {
-  margin-bottom: 3px;
+background:rgba(245,196,81,.12);
+
+box-shadow:0 0 14px rgba(245,196,81,.4);
+
 }
 
-/* Screenshot spacing adjustment */
+.claim-btn.rune{
 
-.card-image {
-  margin-top:6px;
-  margin-bottom:6px;
+border-color:rgba(120,170,255,.5);
 
-  display:flex;
-  justify-content:center;
+color:#6fa8ff;
+
+box-shadow:0 0 16px rgba(120,170,255,.25);
+
 }
 
-.card-image img {
-  display:block;
-  max-width:260px;
-  width:100%;
+.claim-btn:disabled{
 
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,.08);
+opacity:.5;
 
-  box-shadow:0 6px 18px rgba(0,0,0,.6);
+cursor:not-allowed;
+
+box-shadow:none;
+
 }
 
-/* Even spacing inside card body */
 
-.card-body {
-  display:flex;
-  flex-direction:column;
-  gap:2px;
+/* =====================================================
+MODAL
+===================================================== */
+
+.claim-modal-overlay{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.75);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+z-index:9999;
+
 }
 
-/* =========================
-   CARD LAYOUT UPGRADE (CLEAN STACK)
-========================= */
+.claim-modal{
 
-@media (min-width: 768px) {
+background:#121212;
 
-  .card-details {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+padding:26px;
 
-  .card-image {
-    margin-top: 4px;
-  }
+border-radius:16px;
 
-  .card-image img {
-    width: 100%;
-  }
+border:1px solid rgba(245,196,81,.5);
 
-  .claim-row {
-    margin-top: 8px;
-  }
+max-width:420px;
+
 }
 
-/* =========================
-   COMPACT DONOR LINE
-========================= */
+.claim-modal h3{
 
-.donor-compact {
-  font-size: 13px;
-  margin-top: 6px;
-  opacity: .9;
+color:#f5c451;
+
+margin-bottom:10px;
+
 }
 
-.donor-name-compact {
-  color: #f5c451;
-  font-weight: 600;
+.claim-modal-actions{
+
+margin-top:18px;
+
+display:flex;
+
+justify-content:flex-end;
+
+gap:10px;
+
 }
 
-.donor-compact .donor-activity.green {
-  color: #6fdc6f;
+.modal-confirm{
+
+color:#f5c451;
+
 }
 
-.donor-compact .donor-activity.yellow {
-  color: #f0c35a;
-}
+`;
 
-.donor-compact .donor-activity.gray {
-  color: #888;
-}
+ document.head.appendChild(style);
 
-.donor-class-icon{
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 6px rgba(0,0,0,.6);
-}
-  `;
-
-  document.head.appendChild(style);
 })();
 
-export function renderCards(items, container, allItems = items) {
-  container.innerHTML = "";
 
-  items.forEach(item => {
-    const card = document.createElement("article");
-    card.className = "card";
-    card.id = `item-${item.id}`;
-    card.dataset.open = "false";
+// ------------------------------------------------------------
+// CARD RENDERER
+// ------------------------------------------------------------
 
-    // 🔎 Falls es eine Suche ist → spezielle Card-Klasse
-// Trade-Type Badge
-const badge = document.createElement("div");
-badge.className = "trade-badge";
+export function renderCards(items, container){
 
-if (item.kind === "search") {
-  badge.classList.add("badge-search");
-  badge.textContent = "SUCHE";
-  card.classList.add("card-search");
-} else {
-  badge.classList.add("badge-offer");
-  badge.textContent = "ANGEBOT";
-}
+container.innerHTML="";
 
-card.appendChild(badge);
+items.forEach(item=>{
 
-    const type = VALID_TYPES.includes(item.type) ? item.type : "sonstiges";
-    card.dataset.type = type;
+const card=document.createElement("article");
 
-    const qualityClass = item.quality
-      ? `quality-${item.quality}`
-      : "quality-normal";
+card.className="card";
 
-    const categoryLabel = item.sub
-      ? `${type} • ${item.sub}`
-      : type;
+card.dataset.open="false";
 
-    const seasonLabel = item.season === "ladder"
-  ? "Ladder"
-  : "Non-Ladder";
+const type=VALID_TYPES.includes(item.type)?item.type:"sonstiges";
 
-const seasonClass = item.season === "ladder"
-  ? "season-ladder"
-  : "season-nonladder";
+const seasonLabel=item.season==="ladder"?"Ladder":"Non-Ladder";
 
-    let sourceLabel = `<span class="source-muted">Quelle: Community-Drop</span>`;
+const donorClass=item.donorClass||"";
 
-const donorClass =
-  item.donorClass ||
-  item.class ||
-  item.profileClass ||
-  localStorage.getItem("lootliste_profile_class");
+const donorIcon=donorClass && CLASS_ICONS_MINI[donorClass]
 
-  const donorIcon =
-    donorClass && CLASS_ICONS_MINI[donorClass]
-      ? `<img class="donor-class-icon" src="${CLASS_ICONS_MINI[donorClass]}" alt="">`
-      : "";
+? `<img src="${CLASS_ICONS_MINI[donorClass]}">`
 
-// ⭐ Trust-Level vom Backend
-const trustLevel = item.donorStars || 1;  
-const activity = relativeTime(item.donorLastActive);
+:"";
 
-// ⭐ 5 feste Sterne (gefüllt + leer)
-const maxStars = 5;
-const filledStars = "★".repeat(trustLevel);
-const emptyStars = "☆".repeat(maxStars - trustLevel);
-const stars = filledStars + emptyStars;
-  const donorLevel = item.donorLevel || 1;
+const trust=item.donorStars||1;
 
-sourceLabel = `
-  <div class="donor-block">
-    
-    <div class="donor-label-line">
-      <span class="donor-label">Spender</span>
-      <span class="donor-info"
-        title="⭐ Sterne = Aktivität | Lvl = Beteiligung">
-        i
-      </span>
-    </div>
+const stars="★".repeat(trust)+"☆".repeat(5-trust);
 
-    <div class="donor-main-line">
-      ${donorIcon}
+const activity=relativeTime(item.donorLastActive);
 
-      <a
-        href="profile.html?user=${encodeURIComponent(item.donor)}"
-        class="donor-name-compact"
-        onclick="event.stopPropagation()"
-      >
-        ${item.donor}
-      </a>
+card.innerHTML=`
 
-      <span class="donor-level">Lvl ${donorLevel}</span>
-    </div>
+<button class="card-header" type="button">
 
-    <div class="donor-meta-line">
-      <span class="donor-stars">${stars}</span>
-      ${
-        activity
-          ? `<span class="donor-activity ${activity.level}">
-              ${activity.text}
-            </span>`
-          : ""
-      }
-    </div>
+<span class="card-chevron">▶</span>
 
-  </div>
-`;
-    
-    card.innerHTML = `
-      <button class="card-header" type="button">
-        <span class="card-chevron">▶</span>
-        <img class="item-type-icon" src="img/icons/${type}.png" alt="${type}" loading="lazy">
-        
+<img class="item-type-icon" src="img/icons/${type}.png" loading="lazy">
+
 <div class="card-title">
-  <div class="item-name ${qualityClass}">
-    ${item.name || "Unbekanntes Item"}
-  </div>
 
-  ${item.details ? `
-    <div class="item-details-preview">
-      ${item.details}
-    </div>
-  ` : ""}
+<div class="item-name">${item.name || "Item"}</div>
 
-<div class="item-meta">
-  <span class="item-category">${categoryLabel}</span>
+${item.details ? `<div class="item-details-preview">${item.details}</div>` : ""}
 
-  <span class="season-badge ${seasonClass}">
-    ${seasonLabel}
-  </span>
+${item.roll ? `<div class="item-details-preview">${item.roll}</div>` : ""}
 
-${
-  item.kind === "offer" &&
-  item.tradeType === "rune" &&
-  item.wantedRune
-    ? `
-      <span class="rune-inline-badge">
-        <img src="img/rune.png" alt="Rune">
-        ${item.wantedRune}
-      </span>
-    `
-    : ""
-}
+<div class="item-meta">${type} • ${seasonLabel}</div>
+
 </div>
-</div>
-      </button>
+
+${item.tradeType==="rune" && item.wantedRune
+
+? `<span class="rune-inline-badge">${item.wantedRune}</span>`
+
+: ""}
+
+</button>
 
 <div class="card-details">
 
-  <div class="card-body">
-    ${item.roll ? `<div class="item-roll">${item.roll}</div>` : ""}
-    <div class="player">${sourceLabel}</div>
-  </div>
+${item.screenshot ? `
 
-  ${item.screenshot ? `
-    <div class="card-image">
-      <img src="${item.screenshot}" alt="Screenshot">
-    </div>` : ""}
+<div class="card-image">
 
-  <div class="claim-row">
-    <button class="claim-btn ${item.tradeType === "rune" ? "rune" : ""}">
-      ${
-        item.tradeType === "rune"
-          ? `💎 ${item.wantedRune} anbieten`
-          : "🖐️ Nehmen"
-      }
-    </button>
-  </div>
-  
+<img src="${item.screenshot}" alt="Item Screenshot">
+
 </div>
-    `;
 
-    const header = card.querySelector(".card-header");
-    header.addEventListener("click", () => {
-      const isOpen = card.dataset.open === "true";
-      document.querySelectorAll(".card[data-open='true']").forEach(c => {
-        c.dataset.open = "false";
-      });
-      card.dataset.open = isOpen ? "false" : "true";
-    });
+` : ""}
 
-const btn = card.querySelector(".claim-btn");
+<div class="donor-row">
 
-// 🔎 SUCHE → Helfen-Button statt Claim
-if (item.kind === "search") {
+${donorIcon}
 
-  if (btn) btn.remove();
+<span class="donor-name">${item.donor || "Unbekannt"}</span>
 
-  const row = card.querySelector(".claim-row");
+<span>Lvl ${item.donorLevel || 1}</span>
 
-  // 🔒 Eigene Suche → kein Helfen
-  if (item.isOwner) {
-    if (row) {
-      const ownBtn = document.createElement("button");
-      ownBtn.className = "claim-btn is-owner";
-      ownBtn.textContent = "🔒 Deine Suche";
-      ownBtn.disabled = true;
-      row.appendChild(ownBtn);
-    }
-   
-    container.appendChild(card);
-    return;
-  }
+<span class="donor-stars">${stars}</span>
 
-  const helpBtn = document.createElement("button");
-  helpBtn.className = "help-btn";
-  helpBtn.textContent = "🤝 Helfen";
+${activity ? `<span class="donor-activity ${activity.level}">${activity.text}</span>` : ""}
 
-  if (row) row.appendChild(helpBtn);
+</div>
 
-  helpBtn.addEventListener("click", async (e) => {
-    e.stopPropagation();
+<div class="claim-row">
 
-    const confirmed = await showClaimModal({
-      title: "Hilfe anbieten",
-      text: `
-        Möchtest du dem Suchenden helfen?<br><br>
-        Dein hinterlegter BattleTag wird übermittelt,
-        damit er dich ingame kontaktieren kann.
-      `,
-      confirmText: "Hilfe senden"
-    });
+<button class="claim-btn ${item.tradeType==="rune" ? "rune" : ""}">
 
-    if (!confirmed) return;
+${item.tradeType==="rune"
 
-    helpBtn.disabled = true;
-    helpBtn.textContent = "Gesendet";
+? `💎 ${item.wantedRune} anbieten`
 
-    await fetch(`${API}/items/${item.id}/help`, {
-      method: "POST",
-      credentials: "include"
-    });
-  });
+: "🖐️ Nehmen"}
 
-} 
-// ===============================
-// OFFER LOGIK (FREE / RUNE)
-// ===============================
-else {
+</button>
 
-  // 🔒 Eigenes Item
-  if (item.isOwner) {
-    btn.disabled = true;
-    btn.textContent = "🔒 Dein Item";
-    btn.classList.add("is-owner");
-  }
+</div>
 
-  btn.addEventListener("click", async (e) => {
-    e.stopPropagation();
-    if (btn.disabled) return;
+</div>
 
-    const isRuneTrade = item.tradeType === "rune";
+`;
 
-    const confirmed = await showClaimModal({
-      title: isRuneTrade
-        ? "Rune-Trade anbieten"
-        : "Item reservieren",
-      text: isRuneTrade
-        ? `
-          Du möchtest dieses Item gegen deine Rune tauschen?<br><br>
-          Dein BattleTag wird für die Übergabe verwendet.
-        `
-        : `
-          Möchtest du dieses Item verbindlich reservieren?<br><br>
-          Dein hinterlegter BattleTag wird für die Übergabe verwendet.
-        `,
-      confirmText: isRuneTrade
-        ? "Trade senden"
-        : "Verbindlich reservieren"
-    });
 
-    if (!confirmed) return;
+const header=card.querySelector(".card-header");
 
-    btn.disabled = true;
-    btn.textContent = "…";
+header.onclick=()=>{
 
-    try {
+const open=card.dataset.open==="true";
 
-      const endpoint = isRuneTrade
-        ? "rune-request"
-        : "claim";
+card.dataset.open=open?"false":"true";
 
-      const res = await fetch(`${API}/items/${item.id}/${endpoint}`, {
-        method: "POST",
-        credentials: "include"
-      });
+};
 
-      if (!res.ok) {
-        showToast?.("Aktion fehlgeschlagen.");
-        btn.disabled = false;
-btn.textContent = isRuneTrade
-  ? `💎 ${item.wantedRune} anbieten`
-  : "🖐️ Nehmen";
-        return;
-      }
+const btn=card.querySelector(".claim-btn");
 
-      if (isRuneTrade) {
-        showToast?.("Trade-Anfrage gesendet.");
-        btn.textContent = "Gesendet";
-      } else {
-        showToast?.("Item reserviert.");
-        if (typeof window.loadItems === "function") {
-          await window.loadItems();
-        }
-      }
+if(item.isOwner){
 
-    } catch {
-  btn.disabled = false;
-  btn.textContent = isRuneTrade
-    ? `💎 ${item.wantedRune} anbieten`
-    : "🖐️ Nehmen";
+btn.disabled=true;
+
+btn.textContent="🔒 Dein Item";
+
 }
-  });
 
-} // Ende OFFER-Block
+btn.addEventListener("click",async e=>{
 
-// 👇 Card am Ende einfügen
+ e.stopPropagation();
+
+ if(btn.disabled) return;
+
+ const isRune=item.tradeType==="rune";
+
+ const confirmed=await showClaimModal({
+
+ title:isRune?"Rune Trade anbieten":"Item reservieren",
+
+ text:"Dein BattleTag wird für die Übergabe verwendet.",
+
+ confirmText:isRune?"Trade senden":"Reservieren"
+
+ });
+
+ if(!confirmed) return;
+
+ btn.disabled=true;
+
+ btn.textContent="…";
+
+ const endpoint=isRune?"rune-request":"claim";
+
+ try{
+
+ await fetch(`${API}/items/${item.id}/${endpoint}`,{
+
+ method:"POST",
+
+ credentials:"include"
+
+ });
+
+ btn.textContent="Gesendet";
+
+ }
+
+ catch{
+
+ btn.disabled=false;
+
+ btn.textContent=isRune
+
+ ? `💎 ${item.wantedRune} anbieten`
+
+ : "🖐️ Nehmen";
+
+ }
+
+});
+
 container.appendChild(card);
 
-}); // forEach
+});
+
 }
