@@ -2928,20 +2928,12 @@ if (meRes.ok) {
 
 state.items = data
   .filter(i => i.status === "verfügbar")
-  .map(item => {
-
-    /* 🔧 alte Items automatisch als Free interpretieren */
-    if (!item.trade && !item.rune) {
-      item.trade = "free";
-    }
-
-    return {
-      ...item,
-      isOwner:
-        accountId &&
-        item.donorAccountId === accountId
-    };
-  });
+  .map(item => ({
+    ...item,
+    isOwner:
+      accountId &&
+      item.donorAccountId === accountId
+  }));
 
 state.filtered = [...state.items];
 
