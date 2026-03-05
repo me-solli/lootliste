@@ -2167,24 +2167,33 @@ body.mode-ladder .trade-btn.active{
     0 0 12px rgba(245,196,81,.35);
 }
 
-  /* 🔹 ICONS IN BUTTONS */
+/* ================================
+   TRADE ICONS (FILTER BUTTONS)
+================================ */
+
 .trade-icon{
   width:20px;
   height:20px;
-  margin-right:6px;
-  vertical-align:middle;
+  flex-shrink:0;
+  opacity:.95;
 
-  filter:drop-shadow(0 0 4px rgba(255,255,255,.15));
+  filter:drop-shadow(0 0 3px rgba(0,0,0,.6));
 }
 
-/* optional farbiger glow */
+/* Rune Glow */
 .trade-btn[data-trade="rune"] .trade-icon{
-  filter:drop-shadow(0 0 5px rgba(120,170,255,.45));
+  filter:drop-shadow(0 0 4px rgba(120,170,255,.45));
 }
 
+/* Free Glow */
 .trade-btn[data-trade="free"] .trade-icon{
-  filter:drop-shadow(0 0 5px rgba(245,196,81,.45));
+  filter:drop-shadow(0 0 4px rgba(245,196,81,.45));
 }
+
+
+/* ================================
+   SLOGAN IMAGE
+================================ */
 
 .loot-slogan{
   text-align:center;
@@ -2192,27 +2201,38 @@ body.mode-ladder .trade-btn.active{
 }
 
 .loot-slogan img{
-  max-width:490px;   /* Breite anpassbar */
+  max-width:490px;
   width:100%;
   height:auto;
   display:block;
   margin:0 auto;
-}  
+}
 
-  .trade-badge{
+
+/* ================================
+   TRADE BADGE (CARD CORNER)
+================================ */
+
+.trade-badge{
   position:absolute;
   top:12px;
   right:14px;
+
   padding:4px 10px;
+
   font-size:10px;
   letter-spacing:.6px;
   text-transform:uppercase;
+
   border-radius:999px;
+
   border:1px solid rgba(255,255,255,.15);
   background:rgba(0,0,0,.35);
 }
 
+
 /* Non-Ladder */
+
 .badge-offer{
   color:#f5c451;
   border-color:rgba(245,196,81,.5);
@@ -2222,17 +2242,25 @@ body.mode-ladder .trade-btn.active{
   color:#cfcfcf;
 }
 
+
 /* Ladder Override */
+
 body.mode-ladder .badge-offer{
   color:#ffb3b3;
   border-color:rgba(220,80,80,.5);
 }
 
-  .item-details-preview{
+/* ================================
+   ITEM DETAILS PREVIEW
+================================ */
+
+.item-details-preview{
   font-size:12px;
   color:#cfcfcf;
   opacity:.85;
+
   margin-top:3px;
+
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
