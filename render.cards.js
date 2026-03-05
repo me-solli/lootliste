@@ -258,7 +258,7 @@ function showClaimModal(options = {}) {
 .donor-activity.gray { color:#888; }
 
 /* ================================
-   RUNE INLINE BADGE (META LEVEL)
+   RUNE / FREE INLINE BADGES
 ================================ */
 
 .card{
@@ -285,13 +285,15 @@ function showClaimModal(options = {}) {
     0 0 18px rgba(245,196,81,.15);
 }
 
+/* Rune Badge */
+
 .rune-inline-badge{
   margin-left:auto;
   display:flex;
   align-items:center;
   gap:6px;
 
-  padding:5px 12px;        /* kleiner, ruhiger */
+  padding:5px 12px;
 
   font-size:14px;
   font-weight:600;
@@ -300,12 +302,9 @@ function showClaimModal(options = {}) {
   border-radius:999px;
 
   color:#6fa8ff;
-  background:rgba(120,170,255,.05);   /* ganz leicht */
+  background:rgba(120,170,255,.05);
 
   white-space:nowrap;
-
-  box-shadow:
-    0 0 14px rgba(120,170,255,.25);   /* nur Glow */
 }
 
 .rune-inline-badge img{
@@ -313,6 +312,8 @@ function showClaimModal(options = {}) {
   height:24px;
   filter:drop-shadow(0 0 10px rgba(120,170,255,.7));
 }
+
+/* Free Badge */
 
 .free-inline-badge{
   margin-left:auto;
@@ -329,13 +330,9 @@ function showClaimModal(options = {}) {
   border-radius:999px;
 
   color:#f5c451;
-
   background:rgba(245,196,81,.06);
 
   white-space:nowrap;
-
-  box-shadow:
-    0 0 14px rgba(245,196,81,.35);
 }
 
 .free-inline-badge img{
