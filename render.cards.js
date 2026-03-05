@@ -310,7 +310,7 @@ function showClaimModal(options = {}) {
 .rune-inline-badge img{
   width:24px;
   height:24px;
-  filter:drop-shadow(0 0 10px rgba(120,170,255,.7));
+  filter:drop-shadow(0 0 6px rgba(120,170,255,.6));
 }
 
 /* Free Badge */
@@ -338,7 +338,7 @@ function showClaimModal(options = {}) {
 .free-inline-badge img{
   width:24px;
   height:24px;
-  filter:drop-shadow(0 0 8px rgba(245,196,81,.7));
+  filter:drop-shadow(0 0 5px rgba(245,196,81,.6));
 }
 
 /* =========================
