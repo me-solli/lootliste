@@ -441,10 +441,10 @@ function showClaimModal(options = {}) {
 .donor-compact{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:6px;
 
   font-size:13px;
-  margin-top:6px;
+  margin-top:2px;
   opacity:.9;
 
   flex-wrap:wrap;
