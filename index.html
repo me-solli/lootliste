@@ -2162,6 +2162,25 @@ body.mode-ladder .trade-btn.active{
     0 0 12px rgba(245,196,81,.35);
 }
 
+  /* 🔹 ICONS IN BUTTONS */
+.trade-icon{
+  width:18px;
+  height:18px;
+  margin-right:6px;
+  vertical-align:middle;
+
+  filter:drop-shadow(0 0 4px rgba(255,255,255,.15));
+}
+
+/* optional farbiger glow */
+.trade-btn[data-trade="rune"] .trade-icon{
+  filter:drop-shadow(0 0 5px rgba(120,170,255,.45));
+}
+
+.trade-btn[data-trade="free"] .trade-icon{
+  filter:drop-shadow(0 0 5px rgba(245,196,81,.45));
+}
+
 .loot-slogan{
   text-align:center;
   margin-bottom:14px;
