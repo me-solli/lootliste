@@ -406,7 +406,7 @@ function showClaimModal(options = {}) {
 .card-body {
   display:flex;
   flex-direction:column;
-  gap:2px;
+  gap:1px;
 }
 
 /* =========================
