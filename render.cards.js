@@ -542,40 +542,29 @@ const stars = filledStars + emptyStars;
   const donorLevel = item.donorLevel || 1;
 
 sourceLabel = `
-  <div class="donor-block">
-    
-    <div class="donor-label-line">
-      <span class="donor-label">Spender</span>
-      <span class="donor-info"
-        title="⭐ Sterne = Aktivität | Lvl = Beteiligung">
-        i
-      </span>
-    </div>
+  <div class="donor-compact">
 
-    <div class="donor-main-line">
-      ${donorIcon}
+    ${donorIcon}
 
-      <a
-        href="profile.html?user=${encodeURIComponent(item.donor)}"
-        class="donor-name-compact"
-        onclick="event.stopPropagation()"
-      >
-        ${item.donor}
-      </a>
+    <a
+      href="profile.html?user=${encodeURIComponent(item.donor)}"
+      class="donor-name-compact"
+      onclick="event.stopPropagation()"
+    >
+      ${item.donor}
+    </a>
 
-      <span class="donor-level">Lvl ${donorLevel}</span>
-    </div>
+    <span class="donor-level">Lvl ${donorLevel}</span>
 
-    <div class="donor-meta-line">
-      <span class="donor-stars">${stars}</span>
-      ${
-        activity
-          ? `<span class="donor-activity ${activity.level}">
-              ${activity.text}
-            </span>`
-          : ""
-      }
-    </div>
+    <span class="donor-stars">${stars}</span>
+
+    ${
+      activity
+        ? `<span class="donor-activity ${activity.level}">
+            ${activity.text}
+          </span>`
+        : ""
+    }
 
   </div>
 `;
