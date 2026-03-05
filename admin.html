@@ -512,36 +512,20 @@ function render(items){
         </td>
         <td>${i.donor || "–"}</td>
         <td>${i.season || "–"}</td>
-<td>
-
-  <button onclick="markFree(${i.id})"
-    style="
-      padding:4px 8px;
-      border-radius:8px;
-      border:1px solid #4cff4c;
-      background:#111;
-      color:#4cff4c;
-      cursor:pointer;
-      font-size:12px;
-      margin-right:6px;
-    ">
-    🎁 Free
-  </button>
-
-  <button onclick="deleteItem(${i.id})"
-    style="
-      padding:4px 8px;
-      border-radius:8px;
-      border:1px solid #ff6b6b;
-      background:#111;
-      color:#ff6b6b;
-      cursor:pointer;
-      font-size:12px;
-    ">
-    🗑 Löschen
-  </button>
-
-</td>
+        <td>
+          <button onclick="deleteItem(${i.id})"
+            style="
+              padding:4px 8px;
+              border-radius:8px;
+              border:1px solid #ff6b6b;
+              background:#111;
+              color:#ff6b6b;
+              cursor:pointer;
+              font-size:12px;
+            ">
+            🗑 Löschen
+          </button>
+        </td>
       `;
 
       tableBody.appendChild(tr);
@@ -565,27 +549,6 @@ async function deleteItem(id){
     loadItems();
   }else{
     alert("Fehler: " + (data.error || "Unbekannt"));
-  }
-}
-
-  /* ===== MARK ITEM FREE ===== */
-async function markFree(id){
-
-  const res = await fetch(API + "/items/" + id, {
-    method:"PATCH",
-    credentials:"include",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify({
-      trade:"free"
-    })
-  });
-
-  if(res.ok){
-    loadItems();
-  }else{
-    alert("Free setzen fehlgeschlagen");
   }
 }
 
