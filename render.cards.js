@@ -653,10 +653,10 @@ ${
     `
     : item.kind === "offer" && item.tradeType === "free"
     ? `
-      <span class="rune-inline-badge">
-        <img src="img/free.png" alt="Free">
-        Free
-      </span>
+<span class="free-inline-badge">
+  <img src="img/free.png" alt="Free">
+  Free
+</span>
     `
     : ""
 }
