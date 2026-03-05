@@ -438,27 +438,48 @@ function showClaimModal(options = {}) {
    COMPACT DONOR LINE
 ========================= */
 
-.donor-compact {
-  font-size: 13px;
-  margin-top: 6px;
-  opacity: .9;
+.donor-compact{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  font-size:13px;
+  margin-top:6px;
+  opacity:.9;
+
+  flex-wrap:wrap;
 }
 
-.donor-name-compact {
-  color: #f5c451;
-  font-weight: 600;
+.donor-name-compact{
+  color:#f5c451;
+  font-weight:600;
+  text-decoration:none;
 }
 
-.donor-compact .donor-activity.green {
-  color: #6fdc6f;
+.donor-name-compact:hover{
+  text-decoration:underline;
 }
 
-.donor-compact .donor-activity.yellow {
-  color: #f0c35a;
+.donor-level{
+  opacity:.75;
+  font-size:12px;
 }
 
-.donor-compact .donor-activity.gray {
-  color: #888;
+.donor-stars{
+  color:#f5c451;
+  letter-spacing:1px;
+}
+
+.donor-compact .donor-activity.green{
+  color:#6fdc6f;
+}
+
+.donor-compact .donor-activity.yellow{
+  color:#f0c35a;
+}
+
+.donor-compact .donor-activity.gray{
+  color:#888;
 }
 
 .donor-class-icon{
