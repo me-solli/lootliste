@@ -614,13 +614,18 @@ sourceLabel = `
   </span>
 
 ${
-  item.kind === "offer" &&
-  item.tradeType === "rune" &&
-  item.wantedRune
+  item.kind === "offer" && item.tradeType === "rune" && item.wantedRune
     ? `
       <span class="rune-inline-badge">
         <img src="img/rune.png" alt="Rune">
         ${item.wantedRune}
+      </span>
+    `
+    : item.kind === "offer" && item.tradeType === "free"
+    ? `
+      <span class="rune-inline-badge">
+        <img src="img/free.png" alt="Free">
+        Free
       </span>
     `
     : ""
