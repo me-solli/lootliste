@@ -361,8 +361,8 @@ function showClaimModal(options = {}) {
 ========================= */
 
 .claim-row{
-  margin-top:8px;
-  padding-top:8px;
+  margin-top:4px;
+  padding-top:6px;
   border-top:1px solid rgba(255,255,255,.04);
 
   display:flex;
