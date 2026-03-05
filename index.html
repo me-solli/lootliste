@@ -1488,14 +1488,12 @@ body.mode-ladder .mode-visual.active{
 
 /* Grid ruhiger */
 .cards{
-  column-count:3;
-  column-gap:18px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:16px;
   margin:14px 28px 40px;
-}
 
-.card{
-  break-inside:avoid;
-  margin-bottom:18px;
+  align-items:start; /* verhindert Mit-Strecken */
 }
 
 /* Card-Grundstil */
