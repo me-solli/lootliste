@@ -394,14 +394,15 @@ async function init(){
 /* ===== LOGIN ===== */
 loginBtn.onclick = async ()=>{
   loginError.textContent="";
-  const res = await fetch(API+"/auth/login",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      username:loginUser.value.trim(),
-      password:loginPass.value
-    })
-  });
+const res = await fetch(API+"/auth/login",{
+  method:"POST",
+  credentials:"include",
+  headers:{ "Content-Type":"application/json" },
+  body:JSON.stringify({
+    username:loginUser.value.trim(),
+    password:loginPass.value
+  })
+});
   if(!res.ok) return loginError.textContent="Login fehlgeschlagen";
   const data = await res.json();
     if(data.username !== ADMIN) return loginError.textContent="Kein Admin-Zugriff";
