@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Runen aufwerten in D2R – Tabelle & Horadrim Würfel Rezepte (El bis Zod)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Alle Runen Upgrade Rezepte in Diablo 2 Resurrected (D2R): Von El bis Zod – inklusive Edelstein-Anforderungen für Ladder & Non-Ladder.">
+  <meta name="description" content="Alle Runen Upgrade Rezepte in Diablo 2 Resurrected (D2R): Von El bis Zod – inklusive Edelstein-Anforderungen für Ladder & Non-Ladder. Übersichtliche Tabelle zum schnellen Nachschlagen.">
 
 <style>
 :root{ --gold:#f5c451; }
@@ -20,14 +20,16 @@ body{
 
 .wrapper{max-width:1100px;margin:0 auto;}
 
+/* ================= HERO (ruhiger + mehr Luft) ================= */
 .hero{
   position:relative;
-  background:url("../img/runen-upgrade-banner.png") 58% 48% / cover no-repeat;
+  background:url("../img/runen-upgrade-banner.png") 58% 48% / cover no-repeat; /* leicht nach rechts verschoben */ /* Bildausschnitt höher – mehr Würfel sichtbar */ /* noch etwas tiefer für mehr Würfel */ /* Bild etwas tiefer gezogen */
   border-radius:0 0 28px 28px;
   overflow:hidden;
-  min-height:270px;
+  min-height:270px; /* wieder etwas mehr Präsenz */
 }
 
+/* leichter, gleichmäßiger Overlay */
 .hero::before{
   content:"";
   position:absolute;
@@ -43,7 +45,7 @@ body{
 .hero-inner{
   position:relative;
   z-index:1;
-  padding:95px 40px 45px;
+  padding:95px 40px 45px; /* Text optisch zentriert */ /* Text etwas tiefer, weniger unten Luft */ /* weniger Höhe */
 }
 
 .hero-nav{
@@ -64,7 +66,7 @@ body{
 .hero-link.active{color:var(--gold)}
 
 h1{
-  font-size:26px;
+  font-size:26px; /* dezenter */
   margin:0 0 14px;
   letter-spacing:.3px;
   font-weight:600;
@@ -73,16 +75,18 @@ h1{
 .hero p{
   max-width:620px;
   line-height:1.6;
-  opacity:.75;
+  opacity:.75; /* weniger dominant */
   font-size:15px;
   margin:0;
 }
 
+/* ================= SECTION NAV (nur einmal, klar) ================= */
 .section-nav{
   margin:40px auto 20px;
   display:flex;
   gap:14px;
   flex-wrap:wrap;
+  justify-content:flex-start;
 }
 
 .section-nav a{
@@ -93,13 +97,21 @@ h1{
   font-size:13px;
   text-decoration:none;
   color:#ddd;
+  transition:.15s;
 }
 
+.section-nav a:hover{
+  border-color:rgba(245,196,81,.4);
+  color:var(--gold);
+}
+
+/* ================= CONTENT ================= */
 .container{padding:25px 28px 90px}
 .section{max-width:950px;margin-bottom:80px}
 .section h2{color:var(--gold);margin-bottom:18px;font-size:21px}
 .section p{line-height:1.65;opacity:.9;font-size:15px}
 
+/* ================= TABLE ================= */
 table{
   width:100%;
   border-collapse:collapse;
@@ -123,6 +135,18 @@ th{
 
 tr:nth-child(even){background:rgba(255,255,255,.02)}
 tr:hover{background:rgba(245,196,81,.05)}
+
+.gem-smaragd{color:#3ddc84;font-weight:600}
+.gem-topas{color:#ffd54a;font-weight:600}
+.gem-amethyst{color:#b388ff;font-weight:600}
+.gem-saphir{color:#64b5f6;font-weight:600}
+.gem-rubin{color:#ff5252;font-weight:600}
+.gem-diamant{color:#e0f7fa;font-weight:600}
+
+.section-high td:nth-child(2){
+  color:var(--gold);
+  font-weight:600;
+}
 
 .footer-nav{
   margin-top:80px;
@@ -151,17 +175,16 @@ tr:hover{background:rgba(245,196,81,.05)}
     </nav>
 
     <h1>D2R Runen Upgrade Tabelle – El bis Zod</h1>
-
     <p>
       In Diablo II: Resurrected (D2R) lassen sich Runen im Horadrim-Würfel aufwerten.
-      Diese Tabelle zeigt alle korrekten Cube-Rezepte inklusive der benötigten Edelsteine.
+      Diese Runen-Upgrade-Tabelle zeigt alle Rezepte von El bis Zod inklusive Edelstein-Anforderungen
+      für RotWL und Non-Ladder – klar strukturiert und schnell erfassbar.
     </p>
-
 <p style="margin-top:14px; font-size:14px; opacity:.85;">
-<strong>Grundregeln:</strong><br>
-• 3 gleiche Runen → nächste Rune<br>
-• Ab Hel wird zusätzlich ein Edelstein benötigt<br>
-• Ab Pul benötigt man 2 Runen + Edelstein
+  <strong>Wie wertet man Runen in Diablo 2 Resurrected (D2R) auf?</strong><br>
+  • 3 gleiche Low-Runen → nächste Rune<br>
+  • Ab Hel → zusätzlich ein Edelstein erforderlich<br>
+  • Ab Pul → 2 Runen + perfekter Edelstein nötig
 </p>
 
   </div>
@@ -169,132 +192,78 @@ tr:hover{background:rgba(245,196,81,.05)}
 
 <div class="container">
 
-<div class="section-nav">
-<a href="#low">Low</a>
-<a href="#mid">Mid</a>
-<a href="#high">High</a>
-</div>
+  <div class="section-nav">
+    <a href="#low">Low</a>
+    <a href="#mid">Mid</a>
+    <a href="#high">High</a>
+    <a href="#lohnt">Wann upgraden?</a>
+  </div>
 
-<section class="section" id="low">
-<h2>Low-Runen (El – Thul)</h2>
-<table>
-<tr><th>Rezept</th><th>Ergebnis</th></tr>
-<tr><td>3x El</td><td>Eld</td></tr>
-<tr><td>3x Eld</td><td>Tir</td></tr>
-<tr><td>3x Tir</td><td>Nef</td></tr>
-<tr><td>3x Nef</td><td>Eth</td></tr>
-<tr><td>3x Eth</td><td>Ith</td></tr>
-<tr><td>3x Ith</td><td>Tal</td></tr>
-<tr><td>3x Tal</td><td>Ral</td></tr>
-<tr><td>3x Ral</td><td>Ort</td></tr>
-<tr><td>3x Ort</td><td>Thul</td></tr>
-</table>
-</section>
+  <section class="section" id="low">
+    <h2>Low-Runen (El – Thul)</h2>
+    <table>
+      <tr><th>Rezept</th><th>Ergebnis</th></tr>
+      <tr><td>3x El</td><td>Eld</td></tr>
+      <tr><td>3x Eld</td><td>Tir</td></tr>
+      <tr><td>3x Tir</td><td>Nef</td></tr>
+      <tr><td>3x Nef</td><td>Eth</td></tr>
+      <tr><td>3x Eth</td><td>Ith</td></tr>
+      <tr><td>3x Ith</td><td>Tal</td></tr>
+      <tr><td>3x Tal</td><td>Ral</td></tr>
+      <tr><td>3x Ral</td><td>Ort</td></tr>
+      <tr><td>3x Ort</td><td>Thul</td></tr>
+    </table>
+  </section>
 
-<section class="section" id="mid">
-<h2>Mid-Runen (Amn – Gul)</h2>
-<table>
-<tr><th>Rezept</th><th>Ergebnis</th></tr>
-<tr><td>3x Thul</td><td>Amn</td></tr>
-<tr><td>3x Amn</td><td>Sol</td></tr>
-<tr><td>3x Sol</td><td>Shael</td></tr>
-<tr><td>3x Shael</td><td>Dol</td></tr>
-<tr><td>3x Dol</td><td>Hel</td></tr>
-<tr><td>3x Hel + Gesplitterter Diamant</td><td>Io</td></tr>
-<tr><td>3x Io + Fehlerhafter Topas</td><td>Lum</td></tr>
-<tr><td>3x Lum + Fehlerhafter Amethyst</td><td>Ko</td></tr>
-<tr><td>3x Ko + Fehlerhafter Saphir</td><td>Fal</td></tr>
-<tr><td>3x Fal + Fehlerhafter Rubin</td><td>Lem</td></tr>
-<tr><td>3x Lem + Fehlerhafter Smaragd</td><td>Pul</td></tr>
-<tr><td>2x Pul + Fehlerhafter Diamant</td><td>Um</td></tr>
-<tr><td>2x Um + Topas</td><td>Mal</td></tr>
-<tr><td>2x Mal + Amethyst</td><td>Ist</td></tr>
-<tr><td>2x Ist + Saphir</td><td>Gul</td></tr>
-</table>
-</section>
+  <section class="section" id="mid">
+    <h2>Mid-Runen (Amn – Gul)</h2>
+    <table>
+      <tr><th>Rezept</th><th>Ergebnis</th></tr>
+      <tr><td>3x Thul</td><td>Amn</td></tr>
+      <tr><td>3x Amn</td><td>Sol</td></tr>
+      <tr><td>3x Sol</td><td>Shael</td></tr>
+      <tr><td>3x Shael</td><td>Dol</td></tr>
+      <tr><td>3x Dol</td><td>Hel</td></tr>
+      <tr><td>3x Hel + Angeschlagener Edelstein</td><td>Io</td></tr>
+      <tr><td>3x Io + Fehlerhafter Edelstein</td><td>Lum</td></tr>
+      <tr><td>3x Lum + Fehlerhafter Edelstein</td><td>Ko</td></tr>
+      <tr><td>3x Ko + Fehlerhafter Edelstein</td><td>Fal</td></tr>
+      <tr><td>3x Fal + Fehlerhafter Edelstein</td><td>Lem</td></tr>
+      <tr><td>3x Lem + Fehlerhafter Edelstein</td><td>Pul</td></tr>
+      <tr><td>2x Pul + <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Um</td></tr>
+      <tr><td>2x Um + <span class="gem-topas">Perfekter Topas</span></td><td>Mal</td></tr>
+      <tr><td>2x Mal + <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ist</td></tr>
+      <tr><td>2x Ist + <span class="gem-saphir">Perfekter Saphir</span></td><td>Gul</td></tr>
+    </table>
+  </section>
 
-<section class="section" id="high">
-<h2>High-Runen (Vex – Zod)</h2>
-<table>
-<tr><th>Rezept</th><th>Ergebnis</th></tr>
-<tr><td>2x Gul + Rubin</td><td>Vex</td></tr>
-<tr><td>2x Vex + Smaragd</td><td>Ohm</td></tr>
-<tr><td>2x Ohm + Diamant</td><td>Lo</td></tr>
-<tr><td>2x Lo + Makelloser Topas</td><td>Sur</td></tr>
-<tr><td>2x Sur + Makelloser Amethyst</td><td>Ber</td></tr>
-<tr><td>2x Ber + Makelloser Saphir</td><td>Jah</td></tr>
-<tr><td>2x Jah + Makelloser Rubin</td><td>Cham</td></tr>
-<tr><td>2x Cham + Makelloser Smaragd</td><td>Zod</td></tr>
-</table>
-</section>
+  <section class="section section-high" id="high">
+    <h2>High-Runen (Vex – Zod)</h2>
+    <table>
+      <tr><th>Rezept</th><th>Ergebnis</th></tr>
+      <tr><td>2x Gul + <span class="gem-rubin">Perfekter Rubin</span></td><td>Vex</td></tr>
+      <tr><td>2x Vex + <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Ohm</td></tr>
+      <tr><td>2x Ohm + <span class="gem-diamant">Perfekter Diamant</span></td><td>Lo</td></tr>
+      <tr><td>2x Lo + <span class="gem-topas">Perfekter Topas</span></td><td>Sur</td></tr>
+      <tr><td>2x Sur + <span class="gem-amethyst">Perfekter Amethyst</span></td><td>Ber</td></tr>
+      <tr><td>2x Ber + <span class="gem-saphir">Perfekter Saphir</span></td><td>Jah</td></tr>
+      <tr><td>2x Jah + <span class="gem-rubin">Perfekter Rubin</span></td><td>Cham</td></tr>
+      <tr><td>2x Cham + <span class="gem-smaragd">Perfekter Smaragd</span></td><td>Zod</td></tr>
+    </table>
+  </section>
 
-</section>
+  <section class="section" id="lohnt">
+    <h2>Wann upgraden?</h2>
+<p>
+  Upgrades lohnen sich vor allem im High-Rune-Bereich, wenn gezielt auf
+  Endgame-Runenwörter hingearbeitet wird.
+  Besonders bei Runen wie Ber, Jah oder Lo sollte der Marktwert berücksichtigt werden.
+</p>
+  </section>
 
-<section class="section" id="rechner">
-<h2>Rune‑Upgrade Rechner</h2>
-<p>Wähle eine Zielrune und sieh, wie viele niedrigere Runen theoretisch benötigt werden, wenn man alles hochcubt.</p>
-
-<select id="targetRune" style="padding:8px 10px;margin-top:10px;">
-<option value="Vex">Vex</option>
-<option value="Ohm">Ohm</option>
-<option value="Lo">Lo</option>
-<option value="Sur">Sur</option>
-<option value="Ber">Ber</option>
-<option value="Jah">Jah</option>
-<option value="Cham">Cham</option>
-<option value="Zod">Zod</option>
-</select>
-
-<button onclick="calcRunes()" style="margin-left:10px;padding:8px 12px;cursor:pointer;">Berechnen</button>
-
-<div id="calcResult" style="margin-top:20px;font-size:14px;line-height:1.6"></div>
-
-<script>
-const runeOrder=[
-"El","Eld","Tir","Nef","Eth","Ith","Tal","Ral","Ort","Thul",
-"Amn","Sol","Shael","Dol","Hel","Io","Lum","Ko","Fal","Lem",
-"Pul","Um","Mal","Ist","Gul","Vex","Ohm","Lo","Sur","Ber",
-"Jah","Cham","Zod"
-];
-
-function calcRunes(){
-
-const target=document.getElementById("targetRune").value;
-
-let index=runeOrder.indexOf(target);
-
-let multiplier=1;
-
-let result="";
-
-for(let i=index;i>0;i--){
-
-let prev=runeOrder[i-1];
-
-let amount;
-
-if(i<=21){
-amount=multiplier*3;
-multiplier*=3;
-}else{
-amount=multiplier*2;
-multiplier*=2;
-}
-
-result+=amount+" × "+prev+" → "+runeOrder[i]+"<br>";
-}
-
-result+="<br><strong>Hinweis:</strong> Ab Hel werden zusätzlich Edelsteine benötigt.";
-
-document.getElementById("calcResult").innerHTML=result;
-}
-</script>
-
-</section>
-
-<div class="footer-nav">
-<a href="../index.html">← Zurück zur Lootliste</a>
-</div>
+  <div class="footer-nav">
+    <a href="../index.html">← Zurück zur Lootliste</a>
+  </div>
 
 </div>
 </div>
