@@ -2845,10 +2845,21 @@ async function checkOwnerReservedItems() {
 
     const items = await res.json();
 
-    // Aktivität prüfen
+    // Aktivität prüfen (nur bei MEINEN Items)
     const activityItems = items.filter(i =>
-      (i.status === "reserviert" && i.donorAccountId === accountId) ||
-      (i.helpOffers && i.helpOffers.length > 0)
+
+      // Free Item reserviert
+      (i.status === "reserviert" && i.donorAccountId === accountId)
+
+      ||
+
+      // Rune Trade oder Hilfe bei meinen Items
+      (
+        i.donorAccountId === accountId &&
+        i.helpOffers &&
+        i.helpOffers.length > 0
+      )
+
     );
 
     if (activityItems.length > 0) {
