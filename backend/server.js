@@ -1017,6 +1017,34 @@ app.get("/admin/feedback", (req, res) => {
 });
 
 // ===============================
+// MY ITEMS ACTIVITY (MINIMAL)
+// ===============================
+app.get("/my-items-activity", (req, res) => {
+
+  const account = getAccountFromSession(req);
+
+  if (!account) {
+    return res.json({ hasActivity:false });
+  }
+
+  const hasActivity = items.some(item => {
+
+    if (item.donorAccountId !== account.id) return false;
+
+    // Free Item reserviert
+    if (item.status === "reserviert") return true;
+
+    // Rune Anfrage oder Search Hilfe
+    if (item.helpOffers && item.helpOffers.length > 0) return true;
+
+    return false;
+  });
+
+  res.json({ hasActivity });
+
+});
+
+// ===============================
 // START SERVER
 // ===============================
 app.listen(PORT, () => {
