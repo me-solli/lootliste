@@ -2819,11 +2819,12 @@ window.updateSeasonVisuals = function () {
   // 🔌 API (WICHTIG: Modul-Scope!)
   const API = "https://lootliste-production.up.railway.app";
 
-// 🔔 Check: Wurde eines meiner Items reserviert?
+// 🔔 Check: Aktivität bei meinen Items (reserviert / rune / help)
 async function checkOwnerReservedItems() {
 
   try {
-    // 1️⃣ Session-Account holen
+
+    // Session Account holen
     const meRes = await fetch(API + "/me", {
       credentials: "include"
     });
@@ -2835,7 +2836,7 @@ async function checkOwnerReservedItems() {
 
     const accountId = me.accountId;
 
-    // 2️⃣ Meine Items laden (Session-basiert)
+    // meine Items laden
     const res = await fetch(API + "/items?mine=1", {
       credentials: "include"
     });
@@ -2844,28 +2845,39 @@ async function checkOwnerReservedItems() {
 
     const items = await res.json();
 
-    const reserved = items.filter(i =>
-      i.status === "reserviert" &&
-      i.donorAccountId === accountId
+    // Aktivität prüfen
+    const activityItems = items.filter(i =>
+      (i.status === "reserviert" && i.donorAccountId === accountId) ||
+      (i.helpOffers && i.helpOffers.length > 0)
     );
 
-    if (reserved.length > 0) {
+    if (activityItems.length > 0) {
+
       const info = document.getElementById("ownerReservedInfo");
-      if (info) {
-        if (reserved.length === 1) {
-          info.href = `my-items.html#item-${reserved[0].id}`;
-          info.textContent = "🔔 Ein Item von dir ist reserviert";
-        } else {
-          info.href = "my-items.html";
-          info.textContent = "🔔 Items von dir sind reserviert";
-        }
-        info.style.display = "block";
+      if (!info) return;
+
+      if (activityItems.length === 1) {
+
+        const item = activityItems[0];
+
+        info.href = `my-items.html#item-${item.id}`;
+        info.textContent = "🔔 Aktivität bei einem deiner Items";
+
+      } else {
+
+        info.href = "my-items.html";
+        info.textContent = `🔔 ${activityItems.length} Aktivitäten bei deinen Items`;
+
       }
+
+      info.style.display = "block";
+
     }
 
   } catch {
     // still & leise scheitern
   }
+
 }
 
 // DOM
