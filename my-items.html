@@ -480,12 +480,26 @@ tableBody.appendChild(tr);
   cRes.textContent  = cResN;
   cDone.textContent = cDoneN;
 
-  if (location.hash) {
-    const el = document.querySelector(location.hash);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+if (location.hash) {
+
+  const el = document.querySelector(location.hash);
+
+  if (el) {
+
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    el.classList.add("feed-highlight");
+
+    setTimeout(() => {
+      el.classList.remove("feed-highlight");
+    }, 2400);
+
   }
+
+}
 }
 
 async function confirmDone(id){
