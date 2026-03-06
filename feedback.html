@@ -21,7 +21,7 @@ body{
 
 .wrapper{max-width:1200px;margin:0 auto}
 
-/* ===== HERO ===== */
+/* HERO */
 .hero{
   background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
@@ -34,14 +34,14 @@ body{
 .hero h1{margin:0;font-size:30px;font-weight:700}
 .hero p{margin:8px 0 0;opacity:.8}
 
-/* ===== CONTENT ===== */
+/* CONTENT */
 .container{
   padding:36px 28px 60px;
   display:flex;
   justify-content:center;
 }
 
-/* ===== PANEL ===== */
+/* PANEL */
 .panel{
   width:100%;
   max-width:720px;
@@ -55,38 +55,73 @@ body{
   padding:22px 22px 24px;
 }
 
-/* ===== TEXT ===== */
+/* TEXT */
 .hint{
   font-size:13px;
   color:#b5b5b5;
   margin-bottom:16px;
-  line-height:1.4;
+  line-height:1.45;
 }
 .hint strong{
   color:#f0e68c;
   font-weight:600;
 }
 
-/* ===== FORM ===== */
-textarea{
+/* INPUTS */
+select,textarea,input[type="file"]{
   width:100%;
-  min-height:150px;
-  padding:12px 14px;
-  resize:vertical;
+  margin-bottom:12px;
+  padding:10px 12px;
   background:#0f0f0f;
   color:#fff;
   border:1px solid #333;
-  border-radius:14px;
+  border-radius:12px;
   font-size:14px;
 }
 
+textarea{
+  min-height:160px;
+  resize:vertical;
+}
+
+select:focus,
 textarea:focus{
   outline:none;
   border-color:var(--gold);
   box-shadow:0 0 0 1px rgba(245,196,81,.35);
 }
 
-/* ===== ACTIONS ===== */
+/* PREVIEW */
+.preview{
+  margin-top:10px;
+  display:none;
+}
+
+.preview img{
+  max-width:70%;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);
+  cursor:zoom-in;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.overlay img{
+  max-width:90vw;
+  max-height:90vh;
+  border-radius:14px;
+  cursor:zoom-out;
+}
+
+/* ACTIONS */
 .actions{
   display:flex;
   gap:12px;
@@ -115,7 +150,7 @@ button:hover{
   transform:translateY(-1px);
 }
 
-/* ===== FEEDBACK ===== */
+/* FEEDBACK BOX */
 .success,
 .error{
   margin-top:16px;
@@ -162,70 +197,156 @@ button:hover{
 
 <div class="container">
 
-  <div class="panel">
+<div class="panel">
 
-    <div class="hint">
-      Beschreibe kurz, was passiert ist und auf welcher Seite.<br>
-      <strong>Screenshot-Unterstützung folgt in einer späteren Phase.</strong>
-    </div>
+<div class="hint">
+Beschreibe kurz, was passiert ist.<br>
+<strong>Hilfreich sind z. B.:</strong><br>
+• Auf welcher Seite das Problem auftritt<br>
+• Welches Item oder Feature betroffen ist<br>
+• Was du erwartet hast
+</div>
 
-    <form id="feedbackForm">
-      <textarea
-        name="description"
-        placeholder="Was ist passiert? Auf welcher Seite?"
-        required
-        minlength="10"
-      ></textarea>
+<form id="feedbackForm">
 
-      <input type="hidden" name="page" id="pageField" />
+<select name="type" required>
+<option value="bug">Bug melden</option>
+<option value="idea">Idee / Verbesserung</option>
+<option value="ui">UI Problem</option>
+<option value="other">Sonstiges</option>
+</select>
 
-      <div class="actions">
-        <button type="submit">Senden</button>
-      </div>
-    </form>
+<textarea
+name="description"
+placeholder="Was ist passiert?
 
-    <!-- DATENSCHUTZ-HINWEIS (MINIMAL) -->
-    <div class="hint" style="margin-top:14px;font-size:12px;opacity:.65">
-      Hinweis: Das Feedback wird ausschließlich zur Verbesserung der Lootliste verwendet
-      und serverseitig gespeichert. Eine öffentliche Anzeige erfolgt nicht.
-    </div>
+Seite / Feature:
+Item betroffen:
+Was hast du erwartet?"
+required
+minlength="20"
+maxlength="800"
+></textarea>
 
-    <div class="success" id="successBox">
-      ✅ Danke! Dein Feedback wurde gespeichert.
-    </div>
+<label>Screenshot (optional)</label>
+<input type="file" id="screenshot" accept="image/*">
 
-    <div class="error" id="errorBox">
-      ❌ Fehler beim Senden. Bitte später erneut versuchen.
-    </div>
+<small class="hint">Optionaler Screenshot hilft bei der Fehlersuche</small>
 
-    <a href="index.html" class="back-link">← zurück zur Lootliste</a>
+<div class="preview" id="preview">
+<img id="previewImg">
+</div>
 
-  </div>
+<input type="hidden" name="page" id="pageField" />
+
+<div class="actions">
+<button type="submit">Feedback senden</button>
+</div>
+
+</form>
+
+<div class="hint" style="margin-top:14px;font-size:12px;opacity:.65">
+Hinweis: Das Feedback wird ausschließlich zur Verbesserung der Lootliste verwendet
+und serverseitig gespeichert. Eine öffentliche Anzeige erfolgt nicht.
+</div>
+
+<div class="success" id="successBox">
+✅ Danke! Dein Feedback wurde gespeichert.
+</div>
+
+<div class="error" id="errorBox">
+❌ Fehler beim Senden. Bitte später erneut versuchen.
+</div>
+
+<a href="index.html" class="back-link">← zurück zur Lootliste</a>
 
 </div>
+
+</div>
+</div>
+
+<div class="overlay" id="overlay">
+<img id="overlayImg">
 </div>
 
 <script>
+
 const API = "https://lootliste-production.up.railway.app";
+
+/* CLOUDINARY SETTINGS */
+const CLOUD_NAME="dcczi93p6";
+const UPLOAD_PRESET="lootliste_unsigned";
 
 const form = document.getElementById("feedbackForm");
 const successBox = document.getElementById("successBox");
 const errorBox = document.getElementById("errorBox");
 
-document.getElementById("pageField").value = window.location.pathname;
+const pagePath = window.location.pathname;
+document.getElementById("pageField").value = pagePath;
 
+/* PREVIEW */
+const fileInput = document.getElementById("screenshot");
+const preview = document.getElementById("preview");
+const previewImg = document.getElementById("previewImg");
+const overlay = document.getElementById("overlay");
+const overlayImg = document.getElementById("overlayImg");
+
+fileInput.onchange = () => {
+  const f = fileInput.files[0];
+  if(!f) return;
+
+  const url = URL.createObjectURL(f);
+  previewImg.src = url;
+  overlayImg.src = url;
+  preview.style.display = "block";
+};
+
+previewImg.onclick = () => overlay.style.display="flex";
+overlay.onclick = () => overlay.style.display="none";
+
+/* IMAGE UPLOAD */
+async function uploadImage(file){
+  const fd=new FormData();
+  fd.append("file",file);
+  fd.append("upload_preset",UPLOAD_PRESET);
+
+  const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{
+    method:"POST",
+    body:fd
+  });
+
+  const data=await res.json();
+
+  if(!data.secure_url) throw new Error("Upload fehlgeschlagen");
+
+  return data.secure_url;
+}
+
+/* SUBMIT */
 form.addEventListener("submit", async (e) => {
+
   e.preventDefault();
 
   successBox.style.display = "none";
   errorBox.style.display = "none";
 
-  const payload = {
-    description: form.description.value,
-    page: document.getElementById("pageField").value
-  };
+  try{
 
-  try {
+    let screenshotUrl=null;
+
+    if(fileInput.files[0]){
+      screenshotUrl = await uploadImage(fileInput.files[0]);
+    }
+
+    const payload = {
+      type: form.type.value,
+      description: form.description.value,
+      screenshot: screenshotUrl,
+      page: pagePath,
+      userAgent: navigator.userAgent,
+      viewport: window.innerWidth + "x" + window.innerHeight
+    };
+
     const res = await fetch(API + "/feedback", {
       method: "POST",
       headers: {
@@ -237,11 +358,15 @@ form.addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error();
 
     form.reset();
-    successBox.style.display = "block";
-  } catch {
-    errorBox.style.display = "block";
+    preview.style.display="none";
+    successBox.style.display="block";
+
+  }catch{
+    errorBox.style.display="block";
   }
+
 });
+
 </script>
 
 </body>
