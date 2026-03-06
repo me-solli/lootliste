@@ -985,6 +985,7 @@ app.post("/feedback", (req, res) => {
       id: Date.now(),
       text,
       page: req.body.page || null,
+      screenshot: req.body.screenshot || null,
       createdAt: new Date().toISOString()
     };
 
@@ -992,6 +993,7 @@ app.post("/feedback", (req, res) => {
     saveJSON(FEEDBACK_FILE, feedback);
 
     res.json({ ok: true });
+
   } catch (err) {
     console.error("Feedback error:", err);
     res.status(500).json({ error: "failed" });
