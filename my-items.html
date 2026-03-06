@@ -191,6 +191,22 @@ tr.needs-action{background:rgba(255,179,71,.06)}
   opacity:.7;
   margin-left:4px;
 }
+
+  @keyframes feedPulse {
+  0% {
+    box-shadow:0 0 0 1px rgba(245,196,81,.15);
+  }
+  50% {
+    box-shadow:0 0 22px rgba(245,196,81,.45);
+  }
+  100% {
+    box-shadow:0 0 0 1px rgba(245,196,81,.15);
+  }
+}
+
+tr.feed-highlight{
+  animation: feedPulse 0.8s ease-in-out 3;
+}
   
 </style>
 </head>
