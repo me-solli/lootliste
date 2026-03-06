@@ -588,11 +588,16 @@ async function loadFeedback(){
   feedbackTable.innerHTML="";
   list.forEach(f=>{
     const tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${new Date(f.createdAt).toLocaleString()}</td>
-      <td>${f.page||"–"}</td>
-      <td>${f.text}</td>
-    `;
+tr.innerHTML=`
+  <td>${new Date(f.createdAt).toLocaleString()}</td>
+  <td>${f.page || "–"}</td>
+
+  <td>
+    ${f.screenshot ? `<span onclick="showShot('${f.screenshot}')" style="cursor:pointer">📸</span>` : "–"}
+  </td>
+
+  <td>${f.description || f.text}</td>
+`;
     feedbackTable.appendChild(tr);
   });
 }
