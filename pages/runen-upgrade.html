@@ -228,6 +228,70 @@ tr:hover{background:rgba(245,196,81,.05)}
 </table>
 </section>
 
+</section>
+
+<section class="section" id="rechner">
+<h2>Rune‑Upgrade Rechner</h2>
+<p>Wähle eine Zielrune und sieh, wie viele niedrigere Runen theoretisch benötigt werden, wenn man alles hochcubt.</p>
+
+<select id="targetRune" style="padding:8px 10px;margin-top:10px;">
+<option value="Vex">Vex</option>
+<option value="Ohm">Ohm</option>
+<option value="Lo">Lo</option>
+<option value="Sur">Sur</option>
+<option value="Ber">Ber</option>
+<option value="Jah">Jah</option>
+<option value="Cham">Cham</option>
+<option value="Zod">Zod</option>
+</select>
+
+<button onclick="calcRunes()" style="margin-left:10px;padding:8px 12px;cursor:pointer;">Berechnen</button>
+
+<div id="calcResult" style="margin-top:20px;font-size:14px;line-height:1.6"></div>
+
+<script>
+const runeOrder=[
+"El","Eld","Tir","Nef","Eth","Ith","Tal","Ral","Ort","Thul",
+"Amn","Sol","Shael","Dol","Hel","Io","Lum","Ko","Fal","Lem",
+"Pul","Um","Mal","Ist","Gul","Vex","Ohm","Lo","Sur","Ber",
+"Jah","Cham","Zod"
+];
+
+function calcRunes(){
+
+const target=document.getElementById("targetRune").value;
+
+let index=runeOrder.indexOf(target);
+
+let multiplier=1;
+
+let result="";
+
+for(let i=index;i>0;i--){
+
+let prev=runeOrder[i-1];
+
+let amount;
+
+if(i<=21){
+amount=multiplier*3;
+multiplier*=3;
+}else{
+amount=multiplier*2;
+multiplier*=2;
+}
+
+result+=amount+" × "+prev+" → "+runeOrder[i]+"<br>";
+}
+
+result+="<br><strong>Hinweis:</strong> Ab Hel werden zusätzlich Edelsteine benötigt.";
+
+document.getElementById("calcResult").innerHTML=result;
+}
+</script>
+
+</section>
+
 <div class="footer-nav">
 <a href="../index.html">← Zurück zur Lootliste</a>
 </div>
