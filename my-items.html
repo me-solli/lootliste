@@ -619,7 +619,7 @@ function showShot(src){
 /* ===== Rune ändern ===== */
 async function changeRune(id, current, direction){
 
-  const enabled = localStorage.getItem("rune_edit_enabled_" + id);
+const enabled = sessionStorage.getItem("rune_edit_enabled_" + id);
 
   if(enabled !== "yes"){
     alert("Bitte zuerst 'Rune ändern' aktivieren.");
