@@ -176,8 +176,12 @@ function findAccountByEmail(email) {
 }
 
 function findAccountByBattletag(battletag) {
+  if (!battletag) return null;
+
   return accounts.find(
-    a => a.battletag.toLowerCase() === battletag.toLowerCase()
+    a =>
+      a.battletag &&
+      a.battletag.toLowerCase() === battletag.toLowerCase()
   );
 }
 
