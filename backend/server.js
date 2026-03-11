@@ -180,7 +180,7 @@ function findAccountByBattletag(battletag) {
 }
 
 function isValidBattletag(tag) {
-  const regex = /^[A-Za-z0-9]{3,12}#[0-9]{4}$/;
+  const regex = /^[A-Za-z0-9]{3,12}#[0-9]{4,10}$/;
   return regex.test(tag);
 }
 
