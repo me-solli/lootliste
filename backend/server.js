@@ -297,7 +297,7 @@ if (!username || !password || !email || !battletag) {
 }
 
 if (!isValidBattletag(battletag)) {
-  return res.status(400).json({ error: "Ungültiges Battletag-Format (Name#1234)" });
+return res.status(400).json({ error: "Ungültiges Battletag-Format (z.B. Name#1234)" });
 }
 
   if (!isValidEmail(email)) {
