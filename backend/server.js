@@ -176,7 +176,9 @@ function findAccountByEmail(email) {
 }
 
 function findAccountByBattletag(battletag) {
-  return accounts.find(a => a.battletag === battletag);
+  return accounts.find(
+    a => a.battletag.toLowerCase() === battletag.toLowerCase()
+  );
 }
 
 function isValidBattletag(tag) {
