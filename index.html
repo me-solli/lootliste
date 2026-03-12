@@ -1772,7 +1772,9 @@ body.mode-ladder .mode-visual.active{
 
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:14px;
+
+  align-items:center;   /* Screenshot sauber zentriert */
 
   transition:
     max-height .35s ease,
@@ -1783,9 +1785,9 @@ body.mode-ladder .mode-visual.active{
 
 /* OFFEN */
 .card[data-open="true"] .card-details{
-  max-height:1200px;
+  max-height:1400px;   /* mehr Platz für große Tooltips */
   opacity:1;
-  padding:16px;
+  padding:18px 16px;
 }
 
 /* Pfeil drehen */
