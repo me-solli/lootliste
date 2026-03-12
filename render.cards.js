@@ -420,15 +420,22 @@ function showClaimModal(options = {}) {
 }
 
 .card-image img{
+  display:block;
+
   width:auto;
   height:auto;
 
-  max-width:90%;
-  max-height:180px;
+  max-width:100%;
+  max-height:320px;
 
-  border-radius:10px;
+  border-radius:12px;
   border:1px solid rgba(255,255,255,.08);
+
+  object-fit:contain;
+
   box-shadow:0 6px 18px rgba(0,0,0,.6);
+
+  filter: brightness(1.2) contrast(1.2);
 }
 
 .card-image img {
