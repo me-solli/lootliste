@@ -411,11 +411,24 @@ function showClaimModal(options = {}) {
 /* Screenshot spacing adjustment */
 
 .card-image{
-  margin-top:3px;
-  margin-bottom:3px;
+  margin-top:6px;
+  margin-bottom:6px;
 
   display:flex;
   justify-content:center;
+  align-items:center;
+}
+
+.card-image img{
+  width:auto;
+  height:auto;
+
+  max-width:90%;
+  max-height:180px;
+
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 6px 18px rgba(0,0,0,.6);
 }
 
 .card-image img {
