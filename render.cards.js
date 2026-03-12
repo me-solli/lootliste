@@ -433,7 +433,8 @@ function showClaimModal(options = {}) {
   border-radius:12px;
   border:1px solid rgba(255,255,255,.08);
 
-  object-fit:contain;
+  object-fit:cover;
+  object-position:top;
 
   box-shadow:0 8px 22px rgba(0,0,0,.65);
 
