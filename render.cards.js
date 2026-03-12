@@ -678,13 +678,16 @@ ${
 
   <div class="card-body">
     ${item.roll ? `<div class="item-roll">${item.roll}</div>` : ""}
-    <div class="player">${sourceLabel}</div>
   </div>
 
   ${item.screenshot ? `
     <div class="card-image">
       <img src="${item.screenshot}" alt="Screenshot">
     </div>` : ""}
+
+  <div class="player">
+    ${sourceLabel}
+  </div>
 
   <div class="claim-row">
     <button class="claim-btn ${item.tradeType === "rune" ? "rune" : ""}">
