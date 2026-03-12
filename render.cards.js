@@ -411,8 +411,8 @@ function showClaimModal(options = {}) {
 /* Screenshot spacing adjustment */
 
 .card-image{
-  margin-top:18px;
-  margin-bottom:14px;
+  margin-top:8px;
+  margin-bottom:8px;
 
   display:flex;
   justify-content:center;
