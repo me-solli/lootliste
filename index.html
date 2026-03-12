@@ -1800,16 +1800,27 @@ body.mode-ladder .mode-visual.active{
 
 .card-details .card-image{
   grid-column:1;
-  align-self:end;
+  align-self:center;
   margin-top:12px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 .card-details .card-image img{
-  width:100%;
-  max-width:420px;
+  width:auto;
+  height:auto;
+
+  max-width:100%;
+  max-height:320px;
+
   border-radius:12px;
   border:1px solid rgba(255,255,255,.08);
-filter: brightness(1.25) contrast(1.2);
+
+  object-fit:contain;
+
+  filter: brightness(1.25) contrast(1.2);
 }
 
 /* Rechter Detailbereich */
