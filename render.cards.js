@@ -438,18 +438,6 @@ function showClaimModal(options = {}) {
   filter: brightness(1.2) contrast(1.2);
 }
 
-.card-image img {
-  display:block;
-  max-width:420px;
-  width:100%;
-
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,.08);
-
-  box-shadow:0 6px 18px rgba(0,0,0,.6);
-   filter: brightness(1.2) contrast(1.2);
-}
-
 /* Even spacing inside card body */
 
 .card-body {
