@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 :root{
   --gold:#f5c451;
 }
@@ -102,7 +103,7 @@ body{
   );
 }
 
-/* FOOTER NAV */
+/* FOOTER */
 
 .footer-nav{
   margin-top:60px;
@@ -122,6 +123,27 @@ body{
   text-decoration:underline;
 }
 
+/* PIXEL CHARACTER */
+
+.pixel-dev{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:90px;
+  opacity:.95;
+  z-index:999;
+  transition:transform .25s ease;
+}
+
+.pixel-dev:hover{
+  transform:scale(1.08);
+}
+
+.pixel-dev img{
+  width:100%;
+  image-rendering:pixelated;
+}
+
 </style>
 </head>
 
@@ -138,133 +160,148 @@ body{
 
 <div class="container">
 
-  <div class="section">
-    <h2>Persönlicher Hintergrund</h2>
-    <p>
-      Diablo II begleitet mich seit vielen Jahren.
-      Nicht nur als Spiel,
-      sondern als System aus Mechaniken,
-      Drops, Builds und kleinen Entscheidungen,
-      die langfristig Wirkung zeigen.
-    </p>
+<div class="section">
+<h2>Persönlicher Hintergrund</h2>
 
-    <p>
-      Mit der Zeit entstand der Wunsch,
-      eine eigene, klar strukturierte Umgebung zu schaffen,
-      die genau dieses Gefühl von Übersicht
-      und nachvollziehbarer Struktur widerspiegelt.
-    </p>
-  </div>
+<p>
+Diablo II begleitet mich seit vielen Jahren.
+Nicht nur als Spiel,
+sondern als System aus Mechaniken,
+Drops, Builds und kleinen Entscheidungen,
+die langfristig Wirkung zeigen.
+</p>
 
-  <div class="section">
-    <h2>Warum diese Lootliste?</h2>
+<p>
+Mit der Zeit entstand der Wunsch,
+eine eigene, klar strukturierte Umgebung zu schaffen,
+die genau dieses Gefühl von Übersicht
+und nachvollziehbarer Struktur widerspiegelt.
+</p>
+</div>
 
-    <p>
-      Viele Handelslösungen wirken entweder chaotisch
-      oder überladen.
-      Entweder fehlt Struktur —
-      oder das System wird unnötig kompliziert.
-    </p>
 
-    <p>
-      Die D2R Lootliste ist der Versuch,
-      einen Mittelweg zu gehen:
-      technisch sauber,
-      visuell ruhig,
-      funktional klar.
-    </p>
+<div class="section">
+<h2>Warum diese Lootliste?</h2>
 
-    <p>
-      Kein Echtgeld.  
-      Keine künstliche Verknappung.  
-      Keine versteckten Mechaniken.
-    </p>
-  </div>
+<p>
+Viele Handelslösungen wirken entweder chaotisch
+oder überladen.
+Entweder fehlt Struktur —
+oder das System wird unnötig kompliziert.
+</p>
 
-  <div class="section">
-    <h2>Der Kern des Systems</h2>
+<p>
+Die D2R Lootliste ist der Versuch,
+einen Mittelweg zu gehen:
+technisch sauber,
+visuell ruhig,
+funktional klar.
+</p>
 
-    <p>
-      Die Plattform konzentriert sich bewusst auf drei einfache Funktionen:
-    </p>
+<p>
+Kein Echtgeld.  
+Keine künstliche Verknappung.  
+Keine versteckten Mechaniken.
+</p>
+</div>
 
-    <ul>
-      <li>Items kostenlos teilen</li>
-      <li>Items gegen eine gewünschte Rune tauschen</li>
-      <li>Gezielte Suchaufträge erstellen</li>
-    </ul>
 
-    <p>
-      Alles Weitere dient lediglich dazu,
-      diese Abläufe transparent und nachvollziehbar zu gestalten.
-    </p>
-  </div>
+<div class="section">
+<h2>Der Kern des Systems</h2>
 
-  <div class="section">
-    <h2>Gedanke hinter der Struktur</h2>
+<p>
+Die Plattform konzentriert sich bewusst auf drei einfache Funktionen:
+</p>
 
-    <p>
-      Zustände sollen sichtbar sein.  
-      Entscheidungen nachvollziehbar.  
-      Übergaben klar bestätigt.
-    </p>
+<ul>
+<li>Items kostenlos teilen</li>
+<li>Items gegen eine gewünschte Rune tauschen</li>
+<li>Gezielte Suchaufträge erstellen</li>
+</ul>
 
-    <p>
-      Die Plattform entscheidet nicht,
-      wer ein Item erhält.
-      Sie bildet nur ab,
-      was zwischen zwei Spielern geschieht.
-    </p>
+<p>
+Alles Weitere dient lediglich dazu,
+diese Abläufe transparent und nachvollziehbar zu gestalten.
+</p>
+</div>
 
-    <p>
-      Vertrauen entsteht hier nicht durch Rangsysteme
-      oder künstliche Effekte,
-      sondern durch klare Statusanzeigen
-      und eine saubere Darstellung der Abläufe.
-    </p>
-  </div>
 
-  <div class="section">
-    <h2>Langfristige Perspektive</h2>
+<div class="section">
+<h2>Gedanke hinter der Struktur</h2>
 
-    <p>
-      Dieses Projekt ist bewusst unabhängig
-      und nicht kommerziell.
-      Es soll wachsen können,
-      ohne an Klarheit zu verlieren.
-    </p>
+<p>
+Zustände sollen sichtbar sein.  
+Entscheidungen nachvollziehbar.  
+Übergaben klar bestätigt.
+</p>
 
-    <p>
-      Neue Funktionen werden nur dann integriert,
-      wenn sie die Struktur verbessern —
-      nicht, wenn sie sie komplizierter machen.
-    </p>
+<p>
+Die Plattform entscheidet nicht,
+wer ein Item erhält.
+Sie bildet nur ab,
+was zwischen zwei Spielern geschieht.
+</p>
 
-    <p>
-      Am Ende soll die Plattform genau das tun,
-      was sie verspricht:
-      Items teilen, tauschen und suchen —
-      ohne unnötigen Ballast.
-    </p>
-  </div>
+<p>
+Vertrauen entsteht hier nicht durch Rangsysteme
+oder künstliche Effekte,
+sondern durch klare Statusanzeigen
+und eine saubere Darstellung der Abläufe.
+</p>
+</div>
 
-  <div class="section note">
-    <p>
-      Dieses Projekt steht in keiner Verbindung
-      zu Blizzard Entertainment.
-      Diablo II: Resurrected ist ein eingetragenes Markenzeichen
-      von Blizzard Entertainment.
-    </p>
-  </div>
 
-  <div class="footer-nav">
-    <a href="index.html">← Zurück zur Lootliste</a>
-    <a href="ueber-das-projekt.html">Über das Projekt</a>
-    <a href="impressum.html">Impressum</a>
-    <a href="datenschutz.html">Datenschutz</a>
-  </div>
+<div class="section">
+<h2>Langfristige Perspektive</h2>
+
+<p>
+Dieses Projekt ist bewusst unabhängig
+und nicht kommerziell.
+Es soll wachsen können,
+ohne an Klarheit zu verlieren.
+</p>
+
+<p>
+Neue Funktionen werden nur dann integriert,
+wenn sie die Struktur verbessern —
+nicht, wenn sie sie komplizierter machen.
+</p>
+
+<p>
+Am Ende soll die Plattform genau das tun,
+was sie verspricht:
+Items teilen, tauschen und suchen —
+ohne unnötigen Ballast.
+</p>
 
 </div>
+
+
+<div class="section note">
+<p>
+Dieses Projekt steht in keiner Verbindung
+zu Blizzard Entertainment.
+Diablo II: Resurrected ist ein eingetragenes Markenzeichen
+von Blizzard Entertainment.
+</p>
+</div>
+
+
+<div class="footer-nav">
+<a href="index.html">← Zurück zur Lootliste</a>
+<a href="ueber-das-projekt.html">Über das Projekt</a>
+<a href="impressum.html">Impressum</a>
+<a href="datenschutz.html">Datenschutz</a>
+</div>
+
+</div>
+</div>
+
+
+<!-- Pixel Easter Egg -->
+
+<div class="pixel-dev">
+<img src="img/pixel-char.png" alt="Developer Pixel Character">
 </div>
 
 </body>
