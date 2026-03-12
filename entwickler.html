@@ -123,25 +123,47 @@ body{
   text-decoration:underline;
 }
 
-/* PIXEL CHARACTER */
+/* PIXEL DEV */
 
 .pixel-dev{
   position:fixed;
   bottom:20px;
   right:20px;
   width:90px;
-  opacity:.95;
   z-index:999;
-  transition:transform .25s ease;
-}
-
-.pixel-dev:hover{
-  transform:scale(1.08);
 }
 
 .pixel-dev img{
   width:100%;
   image-rendering:pixelated;
+}
+
+/* COW KING CROWN */
+
+.cow-crown{
+  position:absolute;
+  top:-8px;
+  left:36px;
+  font-size:18px;
+}
+
+.cow-tooltip{
+  position:absolute;
+  bottom:26px;
+  left:-60px;
+  background:#111;
+  border:1px solid #444;
+  padding:6px 10px;
+  border-radius:6px;
+  font-size:12px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s;
+}
+
+.cow-crown:hover .cow-tooltip{
+  opacity:1;
 }
 
 </style>
@@ -179,7 +201,6 @@ und nachvollziehbarer Struktur widerspiegelt.
 </p>
 </div>
 
-
 <div class="section">
 <h2>Warum diese Lootliste?</h2>
 
@@ -205,7 +226,6 @@ Keine versteckten Mechaniken.
 </p>
 </div>
 
-
 <div class="section">
 <h2>Der Kern des Systems</h2>
 
@@ -224,7 +244,6 @@ Alles Weitere dient lediglich dazu,
 diese Abläufe transparent und nachvollziehbar zu gestalten.
 </p>
 </div>
-
 
 <div class="section">
 <h2>Gedanke hinter der Struktur</h2>
@@ -249,7 +268,6 @@ sondern durch klare Statusanzeigen
 und eine saubere Darstellung der Abläufe.
 </p>
 </div>
-
 
 <div class="section">
 <h2>Langfristige Perspektive</h2>
@@ -276,7 +294,6 @@ ohne unnötigen Ballast.
 
 </div>
 
-
 <div class="section note">
 <p>
 Dieses Projekt steht in keiner Verbindung
@@ -285,7 +302,6 @@ Diablo II: Resurrected ist ein eingetragenes Markenzeichen
 von Blizzard Entertainment.
 </p>
 </div>
-
 
 <div class="footer-nav">
 <a href="index.html">← Zurück zur Lootliste</a>
@@ -298,10 +314,20 @@ von Blizzard Entertainment.
 </div>
 
 
-<!-- Pixel Easter Egg -->
+<!-- PIXEL DEV + COW KING EASTER EGG -->
 
 <div class="pixel-dev">
+
 <img src="img/pixel-char.png" alt="Developer Pixel Character">
+
+<div class="cow-crown">
+👑
+<span class="cow-tooltip">
+Cow King approved developer<br>
+Moo.
+</span>
+</div>
+
 </div>
 
 </body>
