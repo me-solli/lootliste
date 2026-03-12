@@ -412,30 +412,32 @@ function showClaimModal(options = {}) {
 
 .card-image{
   margin-top:18px;
-  margin-bottom:10px;
+  margin-bottom:14px;
 
   display:flex;
   justify-content:center;
   align-items:center;
+
+  width:100%;
 }
 
 .card-image img{
   display:block;
 
-  width:auto;
+  width:100%;
   height:auto;
 
   max-width:100%;
-  max-height:320px;
+  max-height:420px;
 
   border-radius:12px;
   border:1px solid rgba(255,255,255,.08);
 
   object-fit:contain;
 
-  box-shadow:0 6px 18px rgba(0,0,0,.6);
+  box-shadow:0 8px 22px rgba(0,0,0,.65);
 
-  filter: brightness(1.2) contrast(1.2);
+  filter:brightness(1.25) contrast(1.2);
 }
 
 /* Even spacing inside card body */
