@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Identify the Item</title>
+<title>Identifiziere das Diablo Item</title>
 
 <style>
 
@@ -18,43 +18,26 @@ color:#d4af37;
 }
 
 #tooltip{
-width:320px;
+width:340px;
 margin:25px auto;
 padding:20px;
 background:#000;
 border:2px solid #666;
 text-align:left;
 font-size:15px;
-box-shadow:0 0 20px black;
+box-shadow:0 0 25px black;
 }
 
-.stat{
-color:#7fa6ff;
-}
-
-.unique{
-color:#c7b377;
-font-weight:bold;
-}
-
-.set{
-color:#00ff00;
-}
-
-.rare{
-color:#ffff66;
-}
-
-.gray{
-color:#999;
-}
+.stat{color:#7fa6ff;}
+.gray{color:#888;}
+.unique{color:#c7b377;font-weight:bold;}
 
 input{
 background:#111;
 border:1px solid #555;
 color:white;
 padding:6px;
-width:220px;
+width:240px;
 }
 
 button{
@@ -66,44 +49,57 @@ color:white;
 cursor:pointer;
 }
 
+#suggestions{
+width:240px;
+margin:auto;
+background:#111;
+border:1px solid #444;
+text-align:left;
+}
+
+.suggestion{
+padding:4px;
+cursor:pointer;
+}
+
+.suggestion:hover{
+background:#333;
+}
+
 #stats{
 margin-top:12px;
 }
 
-#result{
-margin-top:10px;
-font-size:18px;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<h2>🧙 Identify the Diablo Item</h2>
+<h2>🧙 Identifiziere das Diablo-Item</h2>
 
 <div id="tooltip"></div>
 
-<input id="guess" placeholder="Type item name">
+<input id="guess" placeholder="Itemname eingeben">
+<div id="suggestions"></div>
 
 <br>
 
-<button onclick="checkAnswer()">Identify</button>
-<button onclick="nextItem()">Skip</button>
+<button onclick="checkAnswer()">Identifizieren</button>
+<button onclick="nextItem()">Überspringen</button>
 
 <div id="result"></div>
 
 <div id="stats">
-Score: <span id="score">0</span> |
-Correct: <span id="correct">0</span> |
-Wrong: <span id="wrong">0</span> |
-Streak: <span id="streak">0</span> |
-Time: <span id="time">90</span>
+Punkte: <span id="score">0</span> |
+Richtig: <span id="correct">0</span> |
+Falsch: <span id="wrong">0</span> |
+Serie: <span id="streak">0</span> |
+Zeit: <span id="time">120</span>
 </div>
 
 <div>
-Highscore: <span id="highscore">0</span>
+Highscore: <span id="highscore">0</span> |
+Daily Score: <span id="daily">0</span>
 </div>
 
 <script>
@@ -111,82 +107,156 @@ Highscore: <span id="highscore">0</span>
 const items=[
 
 {
-name:"Raven Frost",
-type:"unique",
+name:"Rabenfrost",
+aliases:["raven frost","raven"],
 base:"Ring",
 stats:[
-"+150 Attack Rating",
-"+20 Dexterity",
-"Cannot Be Frozen"
+"+150 Angriffswert",
+"+20 Geschicklichkeit",
+"Einfrieren nicht möglich"
 ]
 },
 
 {
 name:"Nagelring",
-type:"unique",
+aliases:["nagel"],
 base:"Ring",
 stats:[
 "+30% Magic Find",
-"+75 Attack Rating",
-"+15 Defense"
+"+75 Angriffswert"
 ]
 },
 
 {
-name:"Stone of Jordan",
-type:"unique",
+name:"Stein von Jordan",
+aliases:["soj","stone of jordan"],
 base:"Ring",
 stats:[
-"+1 All Skills",
-"+25% Max Mana",
-"+20 Mana"
+"+1 zu allen Fertigkeiten",
+"+25% maximale Mana"
 ]
 },
 
 {
-name:"Harlequin Crest",
-type:"unique",
+name:"Harlekinskrone",
+aliases:["harle","shako"],
 base:"Shako",
 stats:[
-"+2 All Skills",
-"+2 Life per Level",
-"+2 Mana per Level",
-"10% Damage Reduction"
+"+2 zu allen Fertigkeiten",
+"10% Schadensreduzierung"
 ]
 },
 
 {
 name:"Arachnid Mesh",
-type:"unique",
-base:"Spiderweb Sash",
+aliases:["arach"],
+base:"Spinnennetz-Schärpe",
 stats:[
-"+1 All Skills",
-"20% Faster Cast Rate",
-"Slow Target 10%"
+"+1 zu allen Fertigkeiten",
+"20% schnellere Zauberrate"
 ]
 },
 
 {
-name:"War Traveler",
-type:"unique",
-base:"Battle Boots",
+name:"Kriegsreisender",
+aliases:["wt","war traveler"],
+base:"Kampfstiefel",
 stats:[
-"+10 Strength",
-"+10 Vitality",
+"+10 Stärke",
 "+30% Magic Find"
+]
+},
+
+{
+name:"Windforce",
+aliases:["wf"],
+base:"Hydrabogen",
+stats:[
+"+250% erhöhter Schaden",
+"Knockback"
+]
+},
+
+{
+name:"Greifenauge",
+aliases:["griffon","griffons"],
+base:"Diadem",
+stats:[
+"+1 Fertigkeiten",
+"-20% Blitzresistenz Gegner"
+]
+},
+
+{
+name:"Herold von Zakarum",
+aliases:["hoz"],
+base:"Gildenschild",
+stats:[
+"+2 Paladin Fertigkeiten",
+"+50% Blockchance"
+]
+},
+
+{
+name:"Todesfathom",
+aliases:["df","deaths fathom"],
+base:"Dimensionalstab",
+stats:[
+"+3 Zauberinnen Fertigkeiten",
+"+30% Kälteschaden"
 ]
 }
 
 ]
 
+let dailyItems=[]
 let current
 
 let score=0
 let correct=0
 let wrong=0
 let streak=0
+let time=120
 
-let time=90
+const allNames=[]
+
+items.forEach(i=>{
+allNames.push(i.name)
+if(i.aliases) i.aliases.forEach(a=>allNames.push(a))
+})
+
+function getDailyItems(){
+
+let today=new Date().toDateString()
+
+let stored=localStorage.getItem("d2DailyDate")
+
+if(stored===today){
+
+dailyItems=JSON.parse(localStorage.getItem("d2DailyItems"))
+
+}
+else{
+
+dailyItems=[]
+
+while(dailyItems.length<10){
+
+let item=items[Math.floor(Math.random()*items.length)]
+
+if(!dailyItems.includes(item))
+dailyItems.push(item)
+
+}
+
+localStorage.setItem("d2DailyDate",today)
+localStorage.setItem("d2DailyItems",JSON.stringify(dailyItems))
+
+}
+
+}
+
+getDailyItems()
 
 const timer=setInterval(()=>{
 
@@ -197,37 +267,43 @@ if(time<=0) endGame()
 
 },1000)
 
+function normalize(t){
+
+return t.toLowerCase().replace(/[^a-zäöüß]/g,"")
+
+}
+
 function nextItem(){
 
 document.getElementById("result").innerText=""
 document.getElementById("guess").value=""
+document.getElementById("suggestions").innerHTML=""
 
-current=items[Math.floor(Math.random()*items.length)]
+current=dailyItems[Math.floor(Math.random()*dailyItems.length)]
 
-let html="<div class='gray'>Unidentified "+current.base+"</div><br>"
+let html="<div class='gray'>Unidentifiziertes "+current.base+"</div><br>"
 
 current.stats.forEach(stat=>{
-
 html+="<div class='stat'>"+stat+"</div>"
-
 })
 
 document.getElementById("tooltip").innerHTML=html
 
 }
 
-function normalize(t){
-
-return t.toLowerCase().replace(/[^a-z]/g,"")
-
-}
-
 function checkAnswer(){
 
 let guess=normalize(document.getElementById("guess").value)
-let answer=normalize(current.name)
 
-if(guess===answer){
+let answers=[normalize(current.name)]
+
+if(current.aliases){
+current.aliases.forEach(a=>{
+answers.push(normalize(a))
+})
+}
+
+if(answers.includes(guess)){
 
 score+=10+(streak*2)
 correct++
@@ -241,13 +317,13 @@ else{
 wrong++
 streak=0
 
-document.getElementById("result").innerHTML="❌ "+current.name
+document.getElementById("result").innerHTML="❌ Es war: "+current.name
 
 }
 
 updateStats()
 
-setTimeout(nextItem,700)
+setTimeout(nextItem,800)
 
 }
 
@@ -264,22 +340,60 @@ function endGame(){
 
 clearInterval(timer)
 
-let high=localStorage.getItem("d2IdentifyHighscore")||0
+let high=localStorage.getItem("d2Highscore")||0
 
 if(score>high){
-
-localStorage.setItem("d2IdentifyHighscore",score)
+localStorage.setItem("d2Highscore",score)
 high=score
+}
 
+let daily=localStorage.getItem("d2DailyScore")||0
+
+if(score>daily){
+localStorage.setItem("d2DailyScore",score)
+daily=score
 }
 
 document.getElementById("highscore").innerText=high
+document.getElementById("daily").innerText=daily
 
-alert("Game Over! Score: "+score)
+alert("Spiel vorbei! Punkte: "+score)
 
 location.reload()
 
 }
+
+document.getElementById("guess").addEventListener("input",function(){
+
+let val=this.value.toLowerCase()
+
+let sug=document.getElementById("suggestions")
+sug.innerHTML=""
+
+if(val.length<2) return
+
+allNames.forEach(name=>{
+
+if(name.toLowerCase().includes(val)){
+
+let div=document.createElement("div")
+div.className="suggestion"
+div.innerText=name
+
+div.onclick=function(){
+
+document.getElementById("guess").value=name
+sug.innerHTML=""
+
+}
+
+sug.appendChild(div)
+
+}
+
+})
+
+})
 
 document.getElementById("guess").addEventListener("keypress",function(e){
 
@@ -287,7 +401,8 @@ if(e.key==="Enter") checkAnswer()
 
 })
 
-document.getElementById("highscore").innerText=localStorage.getItem("d2IdentifyHighscore")||0
+document.getElementById("highscore").innerText=localStorage.getItem("d2Highscore")||0
+document.getElementById("daily").innerText=localStorage.getItem("d2DailyScore")||0
 
 nextItem()
 
