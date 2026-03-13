@@ -1,106 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Dungeon Chest Run</title>
-
-<style>
-
-body{
-background:#0c0c0c;
-color:#d6c8a5;
-font-family:Arial;
-text-align:center;
-}
-
-#game{
-width:600px;
-margin:auto;
-}
-
-#room{
-height:200px;
-border:2px solid #444;
-background:#111;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:60px;
-margin-top:10px;
-}
-
-button{
-padding:8px 14px;
-margin:5px;
-background:#333;
-color:white;
-border:1px solid #777;
-cursor:pointer;
-}
-
-#log{
-height:120px;
-overflow:auto;
-border:1px solid #444;
-background:#111;
-padding:8px;
-text-align:left;
-margin-top:10px;
-}
-
-#inventory{
-margin-top:10px;
-border:1px solid #444;
-background:#111;
-padding:8px;
-}
-
-.item{
-display:inline-block;
-border:1px solid #555;
-padding:4px;
-margin:3px;
-}
-
-</style>
-</head>
-
-<body>
-
-<h2>⚔ Dungeon Chest Run</h2>
-
-<div id="game">
-
-<div>
-HP: <span id="hp"></span> |
-Gold: <span id="gold"></span> |
-Rooms: <span id="rooms"></span>
-</div>
-
-<div id="room">🚪</div>
-
-<div>
-
-<button onclick="nextRoom()">Enter Room</button>
-<button onclick="attack()">Attack</button>
-<button onclick="openChest()">Open Chest</button>
-
-</div>
-
-<div id="log"></div>
-
-<div id="inventory">
-<strong>Loot</strong>
-<div id="items"></div>
-</div>
-
-</div>
-
 <script>
 
 let player={
 hp:30,
-gold:0
+maxHP:30,
+gold:0,
+damage:4,
+defense:0
 }
 
 let rooms=0
@@ -124,7 +29,7 @@ logUI.scrollTop=logUI.scrollHeight
 
 function updateUI(){
 
-hpUI.innerText=player.hp
+hpUI.innerText=player.hp+"/"+player.maxHP
 goldUI.innerText=player.gold
 roomsUI.innerText=rooms
 
@@ -166,7 +71,10 @@ updateUI()
 
 function spawnMonster(){
 
-monster={hp:12,dmg:3}
+monster={
+hp:12,
+dmg:3
+}
 
 roomUI.innerText="👹"
 
@@ -193,9 +101,9 @@ return
 
 }
 
-monster.hp-=4
+monster.hp-=player.damage
 
-log("You hit monster.")
+log("You hit monster for "+player.damage)
 
 if(monster.hp<=0){
 
@@ -212,15 +120,17 @@ return
 
 }
 
-player.hp-=monster.dmg
+let dmg=Math.max(0,monster.dmg-player.defense)
 
-log("Monster hits you.")
+player.hp-=dmg
+
+log("Monster hits you for "+dmg)
 
 if(player.hp<=0){
 
 log("You died. Restart.")
 
-player.hp=30
+player.hp=player.maxHP
 player.gold=0
 rooms=0
 inventory=[]
@@ -246,7 +156,7 @@ let item=rollItem()
 
 inventory.push(item)
 
-log("Found: "+item)
+log("Found: "+item.name)
 
 updateInventory()
 
@@ -259,11 +169,10 @@ function rollItem(){
 
 const items=[
 
-"El Rune",
-"Tir Rune",
-"Magic Ring",
-"Rare Gloves",
-"Magic Sword"
+{name:"Magic Ring (+2 Life)",type:"life",value:2},
+{name:"Iron Sword (+2 Damage)",type:"damage",value:2},
+{name:"Leather Armor (+1 Defense)",type:"defense",value:1},
+{name:"Potion (+10 Life)",type:"heal",value:10}
 
 ]
 
@@ -277,13 +186,19 @@ let div=document.getElementById("items")
 
 div.innerHTML=""
 
-inventory.forEach(i=>{
+inventory.forEach((item,index)=>{
 
 let e=document.createElement("div")
 
 e.className="item"
 
-e.innerText=i
+e.innerText=item.name
+
+e.onclick=function(){
+
+useItem(index)
+
+}
 
 div.appendChild(e)
 
@@ -291,9 +206,50 @@ div.appendChild(e)
 
 }
 
+function useItem(i){
+
+let item=inventory[i]
+
+if(item.type=="life"){
+
+player.maxHP+=item.value
+player.hp+=item.value
+
+log("Max HP increased!")
+
+}
+
+if(item.type=="damage"){
+
+player.damage+=item.value
+
+log("Damage increased!")
+
+}
+
+if(item.type=="defense"){
+
+player.defense+=item.value
+
+log("Defense increased!")
+
+}
+
+if(item.type=="heal"){
+
+player.hp=Math.min(player.maxHP,player.hp+item.value)
+
+log("Healed!")
+
+}
+
+inventory.splice(i,1)
+
+updateInventory()
+updateUI()
+
+}
+
 updateUI()
 
 </script>
-
-</body>
-</html>
