@@ -2,42 +2,64 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Mini Diablo</title>
+<title>Dungeon Chest Run</title>
 
 <style>
 
 body{
-background:#0a0a0a;
+background:#0c0c0c;
 color:#d6c8a5;
-text-align:center;
 font-family:Arial;
+text-align:center;
 }
 
-canvas{
-background:#111;
+#game{
+width:600px;
+margin:auto;
+}
+
+#room{
+height:200px;
 border:2px solid #444;
+background:#111;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:60px;
 margin-top:10px;
 }
 
-#ui{
+button{
+padding:8px 14px;
+margin:5px;
+background:#333;
+color:white;
+border:1px solid #777;
+cursor:pointer;
+}
+
+#log{
+height:120px;
+overflow:auto;
+border:1px solid #444;
+background:#111;
+padding:8px;
+text-align:left;
 margin-top:10px;
 }
 
 #inventory{
 margin-top:10px;
 border:1px solid #444;
-padding:8px;
-width:300px;
-margin-left:auto;
-margin-right:auto;
 background:#111;
+padding:8px;
 }
 
 .item{
-border:1px solid #555;
-margin:3px;
-padding:3px;
 display:inline-block;
+border:1px solid #555;
+padding:4px;
+margin:3px;
 }
 
 </style>
@@ -45,164 +67,207 @@ display:inline-block;
 
 <body>
 
-<h2>⚔ Mini Diablo</h2>
+<h2>⚔ Dungeon Chest Run</h2>
 
-<canvas id="game" width="640" height="640"></canvas>
+<div id="game">
 
-<div id="ui">
-
+<div>
 HP: <span id="hp"></span> |
-Gold: <span id="gold"></span>
+Gold: <span id="gold"></span> |
+Rooms: <span id="rooms"></span>
+</div>
+
+<div id="room">🚪</div>
+
+<div>
+
+<button onclick="nextRoom()">Enter Room</button>
+<button onclick="attack()">Attack</button>
+<button onclick="openChest()">Open Chest</button>
 
 </div>
 
-<div id="inventory">
+<div id="log"></div>
 
-<strong>Inventory</strong>
+<div id="inventory">
+<strong>Loot</strong>
 <div id="items"></div>
+</div>
 
 </div>
 
 <script>
 
-const canvas=document.getElementById("game")
-const ctx=canvas.getContext("2d")
-
-const TILE=32
-const SIZE=20
-
-let map=[]
-
-for(let y=0;y<SIZE;y++){
-
-map[y]=[]
-
-for(let x=0;x<SIZE;x++){
-
-map[y][x]=Math.random()<0.15?1:0
-
-}
-
-}
-
 let player={
-
-x:2,
-y:2,
 hp:30,
 gold:0
+}
+
+let rooms=0
+let monster=null
+let chest=false
+
+let inventory=[]
+
+const hpUI=document.getElementById("hp")
+const goldUI=document.getElementById("gold")
+const roomsUI=document.getElementById("rooms")
+const roomUI=document.getElementById("room")
+const logUI=document.getElementById("log")
+
+function log(t){
+
+logUI.innerHTML+="<div>"+t+"</div>"
+logUI.scrollTop=logUI.scrollHeight
 
 }
 
-let monsters=[]
-let inventory=[]
+function updateUI(){
+
+hpUI.innerText=player.hp
+goldUI.innerText=player.gold
+roomsUI.innerText=rooms
+
+}
+
+function nextRoom(){
+
+rooms++
+
+monster=null
+chest=false
+
+let roll=Math.random()
+
+if(roll<0.4){
+
+spawnMonster()
+
+}
+else if(roll<0.7){
+
+spawnChest()
+
+}
+else{
+
+roomUI.innerText="💰"
+
+let g=5+Math.floor(Math.random()*10)
+player.gold+=g
+
+log("Found "+g+" gold")
+
+}
+
+updateUI()
+
+}
 
 function spawnMonster(){
 
-monsters.push({
+monster={hp:12,dmg:3}
 
-x:Math.floor(Math.random()*SIZE),
-y:Math.floor(Math.random()*SIZE),
-hp:8
+roomUI.innerText="👹"
 
-})
+log("A monster appears!")
 
 }
 
-for(let i=0;i<6;i++)spawnMonster()
+function spawnChest(){
 
-function draw(){
+chest=true
 
-ctx.clearRect(0,0,640,640)
+roomUI.innerText="📦"
 
-for(let y=0;y<SIZE;y++){
-
-for(let x=0;x<SIZE;x++){
-
-if(map[y][x]==1){
-
-ctx.fillStyle="#333"
-
-}else{
-
-ctx.fillStyle="#1a1a1a"
+log("A treasure chest!")
 
 }
 
-ctx.fillRect(x*TILE,y*TILE,TILE,TILE)
+function attack(){
+
+if(!monster){
+
+log("Nothing to attack.")
+return
 
 }
 
-}
+monster.hp-=4
 
-ctx.fillStyle="blue"
-ctx.fillRect(player.x*TILE,player.y*TILE,TILE,TILE)
-
-ctx.fillStyle="red"
-
-monsters.forEach(m=>{
-
-ctx.fillRect(m.x*TILE,m.y*TILE,TILE,TILE)
-
-})
-
-}
-
-function update(){
-
-monsters.forEach(m=>{
-
-let dx=player.x-m.x
-let dy=player.y-m.y
-
-if(Math.abs(dx)+Math.abs(dy)<6){
-
-if(dx!=0)m.x+=dx>0?1:-1
-else if(dy!=0)m.y+=dy>0?1:-1
-
-}
-
-if(m.x==player.x && m.y==player.y){
-
-fight(m)
-
-}
-
-})
-
-}
-
-function fight(monster){
-
-monster.hp-=3
-player.hp-=2
+log("You hit monster.")
 
 if(monster.hp<=0){
 
+log("Monster defeated!")
+
 player.gold+=10
 
-if(Math.random()<0.4){
+monster=null
+roomUI.innerText="☠"
 
-inventory.push("Rune")
+updateUI()
+
+return
+
+}
+
+player.hp-=monster.dmg
+
+log("Monster hits you.")
+
+if(player.hp<=0){
+
+log("You died. Restart.")
+
+player.hp=30
+player.gold=0
+rooms=0
+inventory=[]
 
 updateInventory()
 
 }
 
-monsters.splice(monsters.indexOf(monster),1)
-
-spawnMonster()
+updateUI()
 
 }
 
-if(player.hp<=0){
+function openChest(){
 
-player.hp=30
-player.gold=Math.max(0,player.gold-20)
-player.x=2
-player.y=2
+if(!chest){
+
+log("No chest here.")
+return
 
 }
+
+let item=rollItem()
+
+inventory.push(item)
+
+log("Found: "+item)
+
+updateInventory()
+
+chest=false
+roomUI.innerText="🪙"
+
+}
+
+function rollItem(){
+
+const items=[
+
+"El Rune",
+"Tir Rune",
+"Magic Ring",
+"Rare Gloves",
+"Magic Sword"
+
+]
+
+return items[Math.floor(Math.random()*items.length)]
 
 }
 
@@ -217,6 +282,7 @@ inventory.forEach(i=>{
 let e=document.createElement("div")
 
 e.className="item"
+
 e.innerText=i
 
 div.appendChild(e)
@@ -225,41 +291,7 @@ div.appendChild(e)
 
 }
 
-function move(dx,dy){
-
-let nx=player.x+dx
-let ny=player.y+dy
-
-if(nx<0||ny<0||nx>=SIZE||ny>=SIZE)return
-if(map[ny][nx]==1)return
-
-player.x=nx
-player.y=ny
-
-}
-
-document.addEventListener("keydown",e=>{
-
-if(e.key=="w")move(0,-1)
-if(e.key=="s")move(0,1)
-if(e.key=="a")move(-1,0)
-if(e.key=="d")move(1,0)
-
-})
-
-function loop(){
-
-update()
-draw()
-
-document.getElementById("hp").innerText=player.hp
-document.getElementById("gold").innerText=player.gold
-
-requestAnimationFrame(loop)
-
-}
-
-loop()
+updateUI()
 
 </script>
 
