@@ -19,7 +19,7 @@ margin-top:30px;
 }
 
 #tooltip{
-width:360px;
+width:380px;
 margin:30px auto;
 padding:20px;
 background:#000;
@@ -37,21 +37,25 @@ margin-bottom:12px;
 }
 
 .item-icon{
-width:42px;
-height:42px;
-}
-
-.item-base{
-color:#777;
-}
-
-.stat{
-color:#7fa6ff;
+width:48px;
+height:48px;
 }
 
 .unique{
-color:#c7b377;
+color:#d4af37;
 font-weight:bold;
+font-size:18px;
+text-shadow:0 0 6px #000;
+}
+
+.item-base{
+color:#888;
+font-size:14px;
+}
+
+.stat{
+color:#6da9ff;
+margin-left:4px;
 }
 
 input{
@@ -84,7 +88,7 @@ z-index:1000;
 }
 
 .suggestion{
-padding:4px;
+padding:6px;
 cursor:pointer;
 }
 
@@ -106,7 +110,6 @@ margin-top:20px;
 <div id="tooltip"></div>
 
 <input id="guess" placeholder="Itemname eingeben">
-
 <div id="suggestions"></div>
 
 <br>
@@ -145,17 +148,6 @@ stats:[
 },
 
 {
-name:"Nagelring",
-aliases:["nagel"],
-base:"Ring",
-icon:"ring",
-stats:[
-"+30% Magic Find",
-"+75 Angriffswert"
-]
-},
-
-{
 name:"Stein von Jordan",
 aliases:["soj","stone of jordan"],
 base:"Ring",
@@ -178,17 +170,6 @@ stats:[
 },
 
 {
-name:"Arachnid Mesh",
-aliases:["arach"],
-base:"Spinnennetz-Schärpe",
-icon:"guertel",
-stats:[
-"+1 zu allen Fertigkeiten",
-"20% schnellere Zauberrate"
-]
-},
-
-{
 name:"Kriegsreisender",
 aliases:["wt","war traveler"],
 base:"Kampfstiefel",
@@ -201,7 +182,7 @@ stats:[
 
 {
 name:"Windforce",
-aliases:["wf"],
+aliases:["wf","windmacht"],
 base:"Hydrabogen",
 icon:"bogen",
 stats:[
@@ -211,30 +192,8 @@ stats:[
 },
 
 {
-name:"Greifenauge",
-aliases:["griffon"],
-base:"Diadem",
-icon:"helm",
-stats:[
-"+1 Fertigkeiten",
-"-20% Blitzresistenz Gegner"
-]
-},
-
-{
-name:"Herold von Zakarum",
-aliases:["hoz"],
-base:"Gildenschild",
-icon:"schild",
-stats:[
-"+2 Paladin Fertigkeiten",
-"+50% Blockchance"
-]
-},
-
-{
 name:"Der Oculus",
-aliases:["oculus","occ"],
+aliases:["oculus","occ","okulus"],
 base:"Schleierstab",
 icon:"zauberstab",
 stats:[
@@ -246,12 +205,13 @@ stats:[
 ]
 
 let current
-
 let score=0
 let correct=0
 let wrong=0
 let streak=0
 let time=120
+
+let suggestionIndex=-1
 
 const allNames=[]
 
@@ -269,6 +229,8 @@ function nextItem(){
 document.getElementById("guess").value=""
 document.getElementById("result").innerText=""
 document.getElementById("suggestions").innerHTML=""
+
+suggestionIndex=-1
 
 current=items[Math.floor(Math.random()*items.length)]
 
@@ -334,19 +296,64 @@ document.getElementById("streak").innerText=streak
 
 }
 
-const timer=setInterval(()=>{
+function highlightSuggestion(items){
 
-time--
-document.getElementById("time").innerText=time
+for(let i=0;i<items.length;i++){
+items[i].style.background=""
+}
 
-if(time<=0){
-
-alert("Spiel vorbei! Punkte: "+score)
-location.reload()
+if(items[suggestionIndex]){
+items[suggestionIndex].style.background="#444"
+}
 
 }
 
-},1000)
+document.getElementById("guess").addEventListener("keydown",function(e){
+
+let sug=document.getElementById("suggestions")
+let items=sug.getElementsByClassName("suggestion")
+
+if(e.key==="ArrowDown"){
+
+e.preventDefault()
+
+suggestionIndex++
+
+if(suggestionIndex>=items.length) suggestionIndex=0
+
+highlightSuggestion(items)
+
+}
+
+else if(e.key==="ArrowUp"){
+
+e.preventDefault()
+
+suggestionIndex--
+
+if(suggestionIndex<0) suggestionIndex=items.length-1
+
+highlightSuggestion(items)
+
+}
+
+else if(e.key==="Enter"){
+
+if(suggestionIndex>=0 && items[suggestionIndex]){
+
+this.value=items[suggestionIndex].innerText
+sug.innerHTML=""
+suggestionIndex=-1
+
+}else{
+
+checkAnswer()
+
+}
+
+}
+
+})
 
 document.getElementById("guess").addEventListener("input",function(){
 
@@ -378,9 +385,19 @@ sug.appendChild(div)
 
 })
 
-document.getElementById("guess").addEventListener("keypress",function(e){
-if(e.key==="Enter") checkAnswer()
-})
+const timer=setInterval(()=>{
+
+time--
+document.getElementById("time").innerText=time
+
+if(time<=0){
+
+alert("Spiel vorbei! Punkte: "+score)
+location.reload()
+
+}
+
+},1000)
 
 document.getElementById("highscore").innerText=localStorage.getItem("d2Highscore")||0
 
