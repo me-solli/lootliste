@@ -18,15 +18,9 @@ color:#d4af37;
 margin-top:30px;
 }
 
-#game{
-display:flex;
-justify-content:center;
-margin-top:20px;
-gap:40px;
-}
-
 #tooltip{
 width:360px;
+margin:30px auto;
 padding:20px;
 background:#000;
 border:2px solid #666;
@@ -39,12 +33,12 @@ box-shadow:0 0 25px black;
 display:flex;
 gap:12px;
 align-items:center;
-margin-bottom:10px;
+margin-bottom:12px;
 }
 
 .item-icon{
-width:40px;
-height:40px;
+width:42px;
+height:42px;
 }
 
 .item-base{
@@ -104,13 +98,9 @@ margin-top:20px;
 
 <body>
 
-<h2>🧙 Identifiziere das Diablo-Item</h2>
-
-<div id="game">
+<h2>🧙 Identifiziere das Diablo Item</h2>
 
 <div id="tooltip"></div>
-
-</div>
 
 <input id="guess" placeholder="Itemname eingeben">
 
@@ -248,28 +238,6 @@ stats:[
 "+3 Zauberinnen Fertigkeiten",
 "30% schnellere Zauberrate"
 ]
-},
-
-{
-name:"Titanen Rache",
-aliases:["titans"],
-base:"Zeremonielle Wurfspeere",
-icon:"wurfwaffe",
-stats:[
-"+2 Amazonen Fertigkeiten",
-"Lebensentzug"
-]
-},
-
-{
-name:"Maras Kaleidoskop",
-aliases:["maras"],
-base:"Amulett",
-icon:"amulett",
-stats:[
-"+2 zu allen Fertigkeiten",
-"+30 Widerstände"
-]
 }
 
 ]
@@ -301,11 +269,11 @@ document.getElementById("suggestions").innerHTML=""
 
 current=items[Math.floor(Math.random()*items.length)]
 
-let icon=`icons/${current.icon}.png`
+let iconPath=`img/icons/${current.icon}.png`
 
 let html=`
 <div class="item-header">
-<img class="item-icon" src="${icon}" onerror="this.src='icons/default.png'">
+<img class="item-icon" src="${iconPath}" onerror="this.src='img/icons/default.png'">
 <div>
 <div class="unique">Unidentifiziert</div>
 <div class="item-base">${current.base}</div>
@@ -339,8 +307,7 @@ streak++
 
 document.getElementById("result").innerHTML="✅ "+current.name
 
-}
-else{
+}else{
 
 wrong++
 streak=0
