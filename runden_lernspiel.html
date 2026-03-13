@@ -2,81 +2,94 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mathe Lernspiel – Runden</title>
 
 <style>
+
 body{
 font-family:Arial,Helvetica,sans-serif;
 text-align:center;
 background:linear-gradient(180deg,#eef2ff,#ffffff);
 margin:0;
-padding:30px;
+padding:20px;
 }
 
 h1{margin-bottom:5px}
 
 #menu button{
 font-size:18px;
-padding:10px 20px;
-margin:6px;
+padding:12px 18px;
+margin:8px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
 background:#4c6ef5;
 color:white;
+width:220px;
+max-width:90%;
 }
 
 #game{display:none}
 
-#number{
-font-size:110px;
+#levelDisplay{
 font-weight:bold;
-margin:20px;
+margin-bottom:10px;
+font-size:18px;
+}
+
+#number{
+font-size:clamp(60px,18vw,120px);
+font-weight:bold;
+margin:20px 0;
 }
 
 .answers{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+max-width:420px;
+margin:auto;
 }
 
 .answerBtn{
-font-size:32px;
-padding:18px 36px;
-margin:12px;
+font-size:28px;
+padding:18px 10px;
 border:none;
-border-radius:12px;
+border-radius:14px;
 background:#4c6ef5;
 color:white;
 cursor:pointer;
-min-width:120px;
+width:100%;
 }
 
 .answerBtn:hover{background:#364fc7}
 
 #result{
-font-size:28px;
-min-height:40px;
-margin-top:10px;
+font-size:26px;
+min-height:36px;
+margin-top:12px;
 }
 
 #explain{
-font-size:18px;
+font-size:16px;
 color:#333;
-margin-top:8px;
-min-height:22px;
+margin-top:6px;
+min-height:20px;
+padding:0 10px;
 }
 
 #hud{
 margin-top:10px;
-font-size:18px;
+font-size:16px;
 }
 
 #progressContainer{
-width:360px;
-height:20px;
+width:90%;
+max-width:420px;
+height:18px;
 background:#ddd;
-margin:20px auto;
+margin:18px auto;
 border-radius:10px;
 overflow:hidden;
 }
@@ -88,8 +101,9 @@ background:#4c6ef5;
 }
 
 #numberline{
-width:420px;
-margin:25px auto;
+width:90%;
+max-width:420px;
+margin:20px auto;
 }
 
 #line{
@@ -116,13 +130,14 @@ font-size:14px;
 #final{display:none}
 
 button.restart{
-font-size:20px;
-padding:10px 20px;
+font-size:18px;
+padding:12px 18px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 background:#4c6ef5;
 color:white;
 cursor:pointer;
+margin-top:10px;
 }
 
 #stars{
@@ -130,9 +145,30 @@ font-size:26px;
 margin-top:10px;
 }
 
-#levelDisplay{
-font-weight:bold;
-margin-bottom:10px;
+/* Mobile Optimierung */
+@media (max-width:600px){
+
+body{
+padding:16px;
+}
+
+#number{
+margin:10px 0 16px 0;
+}
+
+.answers{
+grid-template-columns:1fr;
+}
+
+.answerBtn{
+font-size:30px;
+padding:20px;
+}
+
+#hud{
+font-size:15px;
+}
+
 }
 
 </style>
@@ -140,8 +176,8 @@ margin-bottom:10px;
 
 <body>
 
-<h1>🎯 Mathe Lernspiel: Runden</h1>
-<p>Finde das richtige gerundete Ergebnis.</p>
+<h1>🎯 Mathe Lernspiel</h1>
+<p>Runde die Zahl richtig.</p>
 
 <div id="menu">
 
@@ -321,7 +357,7 @@ function check(val,base,upper){
  updateProgress()
  updateHUD()
 
- setTimeout(newTask,1300)
+ setTimeout(newTask,1200)
 
 }
 
