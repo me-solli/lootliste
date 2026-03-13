@@ -41,22 +41,13 @@ width:48px;
 height:48px;
 }
 
-.unique{
-color:#d4af37;
-font-weight:bold;
-font-size:18px;
-text-shadow:0 0 6px #000;
-}
+.unique{color:#d4af37;font-weight:bold;font-size:18px;}
+.set{color:#00ff00;font-weight:bold;font-size:18px;}
+.rare{color:#ffff66;font-weight:bold;font-size:18px;}
 
-.item-base{
-color:#888;
-font-size:14px;
-}
+.item-base{color:#888;font-size:14px;}
 
-.stat{
-color:#6da9ff;
-margin-left:4px;
-}
+.stat{color:#6da9ff;margin-left:4px;}
 
 input{
 background:#111;
@@ -87,18 +78,10 @@ transform:translateX(-50%);
 z-index:1000;
 }
 
-.suggestion{
-padding:6px;
-cursor:pointer;
-}
+.suggestion{padding:6px;cursor:pointer;}
+.suggestion:hover{background:#333;}
 
-.suggestion:hover{
-background:#333;
-}
-
-#stats{
-margin-top:20px;
-}
+#stats{margin-top:20px;}
 
 </style>
 </head>
@@ -135,27 +118,15 @@ Highscore: <span id="highscore">0</span>
 
 const items=[
 
-{
-name:"Rabenfrost",
-aliases:["raven frost","raven"],
-base:"Ring",
-icon:"ring",
-stats:[
-"+150 Angriffswert",
-"+20 Geschicklichkeit",
-"Einfrieren nicht möglich"
-]
-},
+// UNIQUE
 
 {
-name:"Stein von Jordan",
-aliases:["soj","stone of jordan"],
-base:"Ring",
-icon:"ring",
-stats:[
-"+1 zu allen Fertigkeiten",
-"+25% maximale Mana"
-]
+name:"Windforce",
+aliases:["wf","windmacht"],
+base:"Hydrabogen",
+icon:"bogen",
+rarity:"unique",
+stats:["+250% Schaden","Knockback"]
 },
 
 {
@@ -163,43 +134,75 @@ name:"Harlekinskrone",
 aliases:["harle","shako"],
 base:"Shako",
 icon:"helm",
-stats:[
-"+2 zu allen Fertigkeiten",
-"10% Schadensreduzierung"
-]
+rarity:"unique",
+stats:["+2 Fertigkeiten","10% Damage Reduce"]
 },
 
 {
-name:"Kriegsreisender",
-aliases:["wt","war traveler"],
-base:"Kampfstiefel",
-icon:"schuhe",
-stats:[
-"+10 Stärke",
-"+30% Magic Find"
-]
+name:"Stein von Jordan",
+aliases:["soj"],
+base:"Ring",
+icon:"ring",
+rarity:"unique",
+stats:["+1 Fertigkeiten","+25% Mana"]
 },
 
 {
-name:"Windforce",
-aliases:["wf","windmacht"],
-base:"Hydrabogen",
-icon:"bogen",
-stats:[
-"+250% erhöhter Schaden",
-"Knockback"
-]
+name:"Rabenfrost",
+aliases:["raven frost"],
+base:"Ring",
+icon:"ring",
+rarity:"unique",
+stats:["+150 AR","+20 Dex","Cannot be Frozen"]
+},
+
+{
+name:"Herold von Zakarum",
+aliases:["hoz"],
+base:"Gildenschild",
+icon:"schild",
+rarity:"unique",
+stats:["+2 Paladin Skills","50% Block"]
 },
 
 {
 name:"Der Oculus",
-aliases:["oculus","occ","okulus"],
+aliases:["occ","oculus"],
 base:"Schleierstab",
 icon:"zauberstab",
-stats:[
-"+3 Zauberinnen Fertigkeiten",
-"30% schnellere Zauberrate"
-]
+rarity:"unique",
+stats:["+3 Sorc Skills","30% FCR"]
+},
+
+// SET ITEMS
+
+{
+name:"Tal Rashas Horadrimwappen",
+aliases:["tal helm"],
+base:"Maske",
+icon:"helm",
+rarity:"set",
+stats:["+10% Life","All Resist"]
+},
+
+{
+name:"Tal Rashas Wächterschaft",
+aliases:["tal armor"],
+base:"Lackierte Rüstung",
+icon:"ruestung",
+rarity:"set",
+stats:["+400 Defense","+88 Magic Find"]
+},
+
+// RARE EXAMPLE
+
+{
+name:"Seltene Handschuhe",
+aliases:["rare gloves"],
+base:"Handschuhe",
+icon:"handschuhe",
+rarity:"rare",
+stats:["20% IAS","+2 Skills"]
 }
 
 ]
@@ -210,7 +213,6 @@ let correct=0
 let wrong=0
 let streak=0
 let time=120
-
 let suggestionIndex=-1
 
 const allNames=[]
@@ -224,23 +226,28 @@ function normalize(t){
 return t.toLowerCase().replace(/[^a-zäöüß]/g,"")
 }
 
+function rarityClass(r){
+if(r==="set") return "set"
+if(r==="rare") return "rare"
+return "unique"
+}
+
 function nextItem(){
 
 document.getElementById("guess").value=""
-document.getElementById("result").innerText=""
 document.getElementById("suggestions").innerHTML=""
-
+document.getElementById("result").innerHTML=""
 suggestionIndex=-1
 
 current=items[Math.floor(Math.random()*items.length)]
 
-let iconPath=`img/icons/${current.icon}.png`
+let icon=`img/icons/${current.icon}.png`
 
 let html=`
 <div class="item-header">
-<img class="item-icon" src="${iconPath}" onerror="this.src='img/icons/default.png'">
+<img class="item-icon" src="${icon}" onerror="this.src='img/icons/default.png'">
 <div>
-<div class="unique">Unidentifiziert</div>
+<div class="${rarityClass(current.rarity)}">Unidentifiziert</div>
 <div class="item-base">${current.base}</div>
 </div>
 </div>
@@ -283,77 +290,16 @@ document.getElementById("result").innerHTML="❌ "+current.name
 
 updateStats()
 
-setTimeout(nextItem,900)
+setTimeout(nextItem,800)
 
 }
 
 function updateStats(){
-
-document.getElementById("score").innerText=score
-document.getElementById("correct").innerText=correct
-document.getElementById("wrong").innerText=wrong
-document.getElementById("streak").innerText=streak
-
+scoreUI.innerText=score
+correctUI.innerText=correct
+wrongUI.innerText=wrong
+streakUI.innerText=streak
 }
-
-function highlightSuggestion(items){
-
-for(let i=0;i<items.length;i++){
-items[i].style.background=""
-}
-
-if(items[suggestionIndex]){
-items[suggestionIndex].style.background="#444"
-}
-
-}
-
-document.getElementById("guess").addEventListener("keydown",function(e){
-
-let sug=document.getElementById("suggestions")
-let items=sug.getElementsByClassName("suggestion")
-
-if(e.key==="ArrowDown"){
-
-e.preventDefault()
-
-suggestionIndex++
-
-if(suggestionIndex>=items.length) suggestionIndex=0
-
-highlightSuggestion(items)
-
-}
-
-else if(e.key==="ArrowUp"){
-
-e.preventDefault()
-
-suggestionIndex--
-
-if(suggestionIndex<0) suggestionIndex=items.length-1
-
-highlightSuggestion(items)
-
-}
-
-else if(e.key==="Enter"){
-
-if(suggestionIndex>=0 && items[suggestionIndex]){
-
-this.value=items[suggestionIndex].innerText
-sug.innerHTML=""
-suggestionIndex=-1
-
-}else{
-
-checkAnswer()
-
-}
-
-}
-
-})
 
 document.getElementById("guess").addEventListener("input",function(){
 
@@ -362,7 +308,7 @@ let val=this.value.toLowerCase()
 let sug=document.getElementById("suggestions")
 sug.innerHTML=""
 
-if(val.length<2) return
+if(val.length<2)return
 
 allNames.forEach(name=>{
 
@@ -373,7 +319,7 @@ div.className="suggestion"
 div.innerText=name
 
 div.onclick=function(){
-document.getElementById("guess").value=name
+guess.value=name
 sug.innerHTML=""
 }
 
@@ -385,21 +331,62 @@ sug.appendChild(div)
 
 })
 
+document.getElementById("guess").addEventListener("keydown",function(e){
+
+let sug=document.getElementById("suggestions")
+let items=sug.getElementsByClassName("suggestion")
+
+if(e.key==="ArrowDown"){
+suggestionIndex++
+if(suggestionIndex>=items.length)suggestionIndex=0
+highlight(items)
+}
+
+if(e.key==="ArrowUp"){
+suggestionIndex--
+if(suggestionIndex<0)suggestionIndex=items.length-1
+highlight(items)
+}
+
+if(e.key==="Enter"){
+
+if(items[suggestionIndex]){
+this.value=items[suggestionIndex].innerText
+sug.innerHTML=""
+}else{
+checkAnswer()
+}
+
+}
+
+})
+
+function highlight(items){
+
+for(let i=0;i<items.length;i++){
+items[i].style.background=""
+}
+
+if(items[suggestionIndex]){
+items[suggestionIndex].style.background="#444"
+}
+
+}
+
 const timer=setInterval(()=>{
 
 time--
 document.getElementById("time").innerText=time
 
 if(time<=0){
-
 alert("Spiel vorbei! Punkte: "+score)
 location.reload()
-
 }
 
 },1000)
 
-document.getElementById("highscore").innerText=localStorage.getItem("d2Highscore")||0
+document.getElementById("highscore").innerText=
+localStorage.getItem("d2Highscore")||0
 
 nextItem()
 
