@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Identify the Item</title>
+
+<style>
+
+body{
+background:#0b0b0b;
+color:#c7b377;
+font-family:Arial;
+text-align:center;
+}
+
+h2{
+color:#d4af37;
+}
+
+#tooltip{
+margin:20px auto;
+padding:20px;
+width:300px;
+background:#111;
+border:2px solid #444;
+text-align:left;
+font-size:16px;
+}
+
+.stat{
+color:#7fa6ff;
+}
+
+input{
+padding:6px;
+width:220px;
+background:#222;
+color:white;
+border:1px solid #555;
+}
+
+button{
+margin-top:8px;
+padding:6px 12px;
+background:#333;
+color:white;
+border:1px solid #666;
+cursor:pointer;
+}
+
+#result{
+margin-top:10px;
+font-size:18px;
+}
+
+#stats{
+margin-top:10px;
+}
+
+#difficulty{
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>🧙 Identify the Item</h2>
+
+<div id="tooltip"></div>
+
+<input id="guess" placeholder="Type item name...">
+
+<br>
+
+<button onclick="checkAnswer()">Identify</button>
+<button onclick="nextItem()">Skip</button>
+
+<div id="result"></div>
+
+<div id="stats">
+Score: <span id="score">0</span> |
+Correct: <span id="correct">0</span> |
+Wrong: <span id="wrong">0</span> |
+Time: <span id="time">60</span>
+</div>
+
+<div id="difficulty">
+Difficulty:
+<select id="mode" onchange="nextItem()">
+<option value="easy">Easy</option>
+<option value="medium">Medium</option>
+<option value="hard">Hard</option>
+</select>
+</div>
+
+<div>
+Highscore: <span id="highscore">0</span>
+</div>
+
+<script>
+
+const items=[
+
+{
+name:"Raven Frost",
+stats:[
+"+150 Attack Rating",
+"+20 Dexterity",
+"Cannot Be Frozen"
+]
+},
+
+{
+name:"Nagelring",
+stats:[
+"+30% Magic Find",
+"+75 Attack Rating",
+"+15 Defense"
+]
+},
+
+{
+name:"Stone of Jordan",
+stats:[
+"+1 All Skills",
+"+25% Max Mana",
+"+20 Mana"
+]
+},
+
+{
+name:"Harlequin Crest",
+stats:[
+"+2 All Skills",
+"+2 Life per Level",
+"+2 Mana per Level",
+"10% Damage Reduction"
+]
+},
+
+{
+name:"Arachnid Mesh",
+stats:[
+"+1 All Skills",
+"20% Faster Cast Rate",
+"Slow Target 10%"
+]
+},
+
+{
+name:"War Traveler",
+stats:[
+"+10 Strength",
+"+10 Vitality",
+"+30% Magic Find"
+]
+}
+
+]
+
+let current
+let score=0
+let correct=0
+let wrong=0
+let time=60
+
+let timer=setInterval(()=>{
+
+time--
+document.getElementById("time").innerText=time
+
+if(time<=0){
+endGame()
+}
+
+},1000)
+
+function nextItem(){
+
+document.getElementById("result").innerText=""
+document.getElementById("guess").value=""
+
+current=items[Math.floor(Math.random()*items.length)]
+
+let stats=current.stats.slice()
+
+let mode=document.getElementById("mode").value
+
+if(mode==="medium") stats=stats.slice(0,2)
+if(mode==="hard") stats=stats.slice(0,1)
+
+let html="<div style='color:#aaa'>Unidentified Item</div><br>"
+
+stats.forEach(s=>{
+
+html+="<div class='stat'>"+s+"</div>"
+
+})
+
+document.getElementById("tooltip").innerHTML=html
+
+}
+
+function checkAnswer(){
+
+let guess=document.getElementById("guess").value.toLowerCase()
+
+if(!current)return
+
+if(guess===current.name.toLowerCase()){
+
+score+=10
+correct++
+
+document.getElementById("result").innerText="✅ Correct!"
+
+}
+else{
+
+wrong++
+document.getElementById("result").innerText="❌ "+current.name
+
+}
+
+updateStats()
+nextItem()
+
+}
+
+function updateStats(){
+
+document.getElementById("score").innerText=score
+document.getElementById("correct").innerText=correct
+document.getElementById("wrong").innerText=wrong
+
+}
+
+function endGame(){
+
+clearInterval(timer)
+
+let high=localStorage.getItem("identifyHighscore")||0
+
+if(score>high){
+
+localStorage.setItem("identifyHighscore",score)
+high=score
+
+}
+
+document.getElementById("highscore").innerText=high
+
+alert("Game Over! Score: "+score)
+
+location.reload()
+
+}
+
+document.getElementById("guess").addEventListener("keypress",function(e){
+
+if(e.key==="Enter") checkAnswer()
+
+})
+
+document.getElementById("highscore").innerText=localStorage.getItem("identifyHighscore")||0
+
+nextItem()
+
+</script>
+
+</body>
+</html>
