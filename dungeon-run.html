@@ -1,11 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dungeon Loot</title>
+
+<style>
+
+body{
+background:#0c0c0c;
+color:#d6c8a5;
+font-family:Arial;
+text-align:center;
+}
+
+#game{
+width:600px;
+margin:auto;
+}
+
+#room{
+height:200px;
+border:2px solid #444;
+background:#111;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:60px;
+margin-top:10px;
+}
+
+button{
+padding:8px 14px;
+margin:5px;
+background:#333;
+color:white;
+border:1px solid #777;
+cursor:pointer;
+}
+
+#log{
+height:120px;
+overflow:auto;
+border:1px solid #444;
+background:#111;
+padding:8px;
+text-align:left;
+margin-top:10px;
+}
+
+#inventory{
+margin-top:10px;
+border:1px solid #444;
+background:#111;
+padding:8px;
+}
+
+.item{
+display:inline-block;
+border:1px solid #555;
+padding:4px;
+margin:3px;
+cursor:pointer;
+background:#222;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>⚔ Dungeon Loot</h2>
+
+<div id="game">
+
+<div>
+HP: <span id="hp"></span> |
+Damage: <span id="damage"></span> |
+Defense: <span id="defense"></span> |
+Gold: <span id="gold"></span> |
+Rooms: <span id="rooms"></span>
+</div>
+
+<div id="room">🚪</div>
+
+<div>
+
+<button onclick="enterRoom()">Enter Room</button>
+<button onclick="attack()">Attack</button>
+<button onclick="openChest()">Open Chest</button>
+
+</div>
+
+<div id="log"></div>
+
+<div id="inventory">
+<strong>Inventory (click item to use)</strong>
+<div id="items"></div>
+</div>
+
+</div>
+
 <script>
 
 let player={
 hp:30,
 maxHP:30,
-gold:0,
 damage:4,
-defense:0
+defense:0,
+gold:0
 }
 
 let rooms=0
@@ -15,14 +118,17 @@ let chest=false
 let inventory=[]
 
 const hpUI=document.getElementById("hp")
+const dmgUI=document.getElementById("damage")
+const defUI=document.getElementById("defense")
 const goldUI=document.getElementById("gold")
 const roomsUI=document.getElementById("rooms")
+
 const roomUI=document.getElementById("room")
 const logUI=document.getElementById("log")
 
-function log(t){
+function log(text){
 
-logUI.innerHTML+="<div>"+t+"</div>"
+logUI.innerHTML+="<div>"+text+"</div>"
 logUI.scrollTop=logUI.scrollHeight
 
 }
@@ -30,12 +136,14 @@ logUI.scrollTop=logUI.scrollHeight
 function updateUI(){
 
 hpUI.innerText=player.hp+"/"+player.maxHP
+dmgUI.innerText=player.damage
+defUI.innerText=player.defense
 goldUI.innerText=player.gold
 roomsUI.innerText=rooms
 
 }
 
-function nextRoom(){
+function enterRoom(){
 
 rooms++
 
@@ -61,7 +169,7 @@ roomUI.innerText="💰"
 let g=5+Math.floor(Math.random()*10)
 player.gold+=g
 
-log("Found "+g+" gold")
+log("You found "+g+" gold.")
 
 }
 
@@ -96,14 +204,14 @@ function attack(){
 
 if(!monster){
 
-log("Nothing to attack.")
+log("No monster here.")
 return
 
 }
 
 monster.hp-=player.damage
 
-log("You hit monster for "+player.damage)
+log("You hit the monster for "+player.damage)
 
 if(monster.hp<=0){
 
@@ -128,14 +236,9 @@ log("Monster hits you for "+dmg)
 
 if(player.hp<=0){
 
-log("You died. Restart.")
+log("You died. Game reset.")
 
-player.hp=player.maxHP
-player.gold=0
-rooms=0
-inventory=[]
-
-updateInventory()
+resetGame()
 
 }
 
@@ -156,7 +259,7 @@ let item=rollItem()
 
 inventory.push(item)
 
-log("Found: "+item.name)
+log("Found item: "+item.name)
 
 updateInventory()
 
@@ -169,10 +272,10 @@ function rollItem(){
 
 const items=[
 
-{name:"Magic Ring (+2 Life)",type:"life",value:2},
+{name:"Magic Ring (+3 Life)",type:"life",value:3},
 {name:"Iron Sword (+2 Damage)",type:"damage",value:2},
 {name:"Leather Armor (+1 Defense)",type:"defense",value:1},
-{name:"Potion (+10 Life)",type:"heal",value:10}
+{name:"Potion (+10 HP)",type:"heal",value:10}
 
 ]
 
@@ -188,19 +291,19 @@ div.innerHTML=""
 
 inventory.forEach((item,index)=>{
 
-let e=document.createElement("div")
+let el=document.createElement("div")
 
-e.className="item"
+el.className="item"
 
-e.innerText=item.name
+el.innerText=item.name
 
-e.onclick=function(){
+el.onclick=function(){
 
 useItem(index)
 
 }
 
-div.appendChild(e)
+div.appendChild(el)
 
 })
 
@@ -210,7 +313,7 @@ function useItem(i){
 
 let item=inventory[i]
 
-if(item.type=="life"){
+if(item.type==="life"){
 
 player.maxHP+=item.value
 player.hp+=item.value
@@ -219,7 +322,7 @@ log("Max HP increased!")
 
 }
 
-if(item.type=="damage"){
+if(item.type==="damage"){
 
 player.damage+=item.value
 
@@ -227,7 +330,7 @@ log("Damage increased!")
 
 }
 
-if(item.type=="defense"){
+if(item.type==="defense"){
 
 player.defense+=item.value
 
@@ -235,11 +338,11 @@ log("Defense increased!")
 
 }
 
-if(item.type=="heal"){
+if(item.type==="heal"){
 
 player.hp=Math.min(player.maxHP,player.hp+item.value)
 
-log("Healed!")
+log("You healed.")
 
 }
 
@@ -250,6 +353,25 @@ updateUI()
 
 }
 
+function resetGame(){
+
+player.hp=30
+player.maxHP=30
+player.damage=4
+player.defense=0
+player.gold=0
+
+rooms=0
+inventory=[]
+
+updateInventory()
+updateUI()
+
+}
+
 updateUI()
 
 </script>
+
+</body>
+</html>
