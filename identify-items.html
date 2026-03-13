@@ -41,13 +41,33 @@ width:48px;
 height:48px;
 }
 
-.unique{color:#d4af37;font-weight:bold;font-size:18px;}
-.set{color:#00ff00;font-weight:bold;font-size:18px;}
-.rare{color:#ffff66;font-weight:bold;font-size:18px;}
+.unique{
+color:#d4af37;
+font-weight:bold;
+font-size:18px;
+}
 
-.item-base{color:#888;font-size:14px;}
+.set{
+color:#00ff00;
+font-weight:bold;
+font-size:18px;
+}
 
-.stat{color:#6da9ff;margin-left:4px;}
+.rare{
+color:#ffff66;
+font-weight:bold;
+font-size:18px;
+}
+
+.item-base{
+color:#888;
+font-size:14px;
+}
+
+.stat{
+color:#6da9ff;
+margin-left:4px;
+}
 
 input{
 background:#111;
@@ -78,10 +98,18 @@ transform:translateX(-50%);
 z-index:1000;
 }
 
-.suggestion{padding:6px;cursor:pointer;}
-.suggestion:hover{background:#333;}
+.suggestion{
+padding:6px;
+cursor:pointer;
+}
 
-#stats{margin-top:20px;}
+.suggestion:hover{
+background:#333;
+}
+
+#stats{
+margin-top:20px;
+}
 
 </style>
 </head>
@@ -118,8 +146,6 @@ Highscore: <span id="highscore">0</span>
 
 const items=[
 
-// UNIQUE
-
 {
 name:"Windforce",
 aliases:["wf","windmacht"],
@@ -135,7 +161,7 @@ aliases:["harle","shako"],
 base:"Shako",
 icon:"helm",
 rarity:"unique",
-stats:["+2 Fertigkeiten","10% Damage Reduce"]
+stats:["+2 Fertigkeiten","10% Schadensreduzierung"]
 },
 
 {
@@ -153,7 +179,7 @@ aliases:["raven frost"],
 base:"Ring",
 icon:"ring",
 rarity:"unique",
-stats:["+150 AR","+20 Dex","Cannot be Frozen"]
+stats:["+150 Angriffswert","+20 Geschicklichkeit","Cannot be Frozen"]
 },
 
 {
@@ -167,14 +193,12 @@ stats:["+2 Paladin Skills","50% Block"]
 
 {
 name:"Der Oculus",
-aliases:["occ","oculus"],
+aliases:["occ","oculus","okulus"],
 base:"Schleierstab",
 icon:"zauberstab",
 rarity:"unique",
 stats:["+3 Sorc Skills","30% FCR"]
 },
-
-// SET ITEMS
 
 {
 name:"Tal Rashas Horadrimwappen",
@@ -182,19 +206,8 @@ aliases:["tal helm"],
 base:"Maske",
 icon:"helm",
 rarity:"set",
-stats:["+10% Life","All Resist"]
+stats:["Life","Resistenzen"]
 },
-
-{
-name:"Tal Rashas Wächterschaft",
-aliases:["tal armor"],
-base:"Lackierte Rüstung",
-icon:"ruestung",
-rarity:"set",
-stats:["+400 Defense","+88 Magic Find"]
-},
-
-// RARE EXAMPLE
 
 {
 name:"Seltene Handschuhe",
@@ -235,8 +248,9 @@ return "unique"
 function nextItem(){
 
 document.getElementById("guess").value=""
-document.getElementById("suggestions").innerHTML=""
 document.getElementById("result").innerHTML=""
+document.getElementById("suggestions").innerHTML=""
+
 suggestionIndex=-1
 
 current=items[Math.floor(Math.random()*items.length)]
@@ -295,16 +309,17 @@ setTimeout(nextItem,800)
 }
 
 function updateStats(){
-scoreUI.innerText=score
-correctUI.innerText=correct
-wrongUI.innerText=wrong
-streakUI.innerText=streak
+
+document.getElementById("score").innerText=score
+document.getElementById("correct").innerText=correct
+document.getElementById("wrong").innerText=wrong
+document.getElementById("streak").innerText=streak
+
 }
 
 document.getElementById("guess").addEventListener("input",function(){
 
 let val=this.value.toLowerCase()
-
 let sug=document.getElementById("suggestions")
 sug.innerHTML=""
 
@@ -319,7 +334,7 @@ div.className="suggestion"
 div.innerText=name
 
 div.onclick=function(){
-guess.value=name
+document.getElementById("guess").value=name
 sug.innerHTML=""
 }
 
@@ -379,8 +394,10 @@ time--
 document.getElementById("time").innerText=time
 
 if(time<=0){
+
 alert("Spiel vorbei! Punkte: "+score)
 location.reload()
+
 }
 
 },1000)
