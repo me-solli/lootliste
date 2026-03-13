@@ -15,11 +15,18 @@ text-align:center;
 
 h2{
 color:#d4af37;
+margin-top:30px;
+}
+
+#game{
+display:flex;
+justify-content:center;
+margin-top:20px;
+gap:40px;
 }
 
 #tooltip{
-width:340px;
-margin:25px auto;
+width:360px;
 padding:20px;
 background:#000;
 border:2px solid #666;
@@ -28,21 +35,43 @@ font-size:15px;
 box-shadow:0 0 25px black;
 }
 
-.stat{color:#7fa6ff;}
-.gray{color:#888;}
-.unique{color:#c7b377;font-weight:bold;}
+.item-header{
+display:flex;
+gap:12px;
+align-items:center;
+margin-bottom:10px;
+}
+
+.item-icon{
+width:40px;
+height:40px;
+}
+
+.item-base{
+color:#777;
+}
+
+.stat{
+color:#7fa6ff;
+}
+
+.unique{
+color:#c7b377;
+font-weight:bold;
+}
 
 input{
 background:#111;
 border:1px solid #555;
 color:white;
-padding:6px;
-width:240px;
+padding:8px;
+width:260px;
+margin-top:20px;
 }
 
 button{
 margin-top:8px;
-padding:6px 12px;
+padding:6px 14px;
 background:#333;
 border:1px solid #777;
 color:white;
@@ -50,7 +79,7 @@ cursor:pointer;
 }
 
 #suggestions{
-width:240px;
+width:260px;
 margin:auto;
 background:#111;
 border:1px solid #444;
@@ -67,7 +96,7 @@ background:#333;
 }
 
 #stats{
-margin-top:12px;
+margin-top:20px;
 }
 
 </style>
@@ -77,9 +106,14 @@ margin-top:12px;
 
 <h2>🧙 Identifiziere das Diablo-Item</h2>
 
+<div id="game">
+
 <div id="tooltip"></div>
 
+</div>
+
 <input id="guess" placeholder="Itemname eingeben">
+
 <div id="suggestions"></div>
 
 <br>
@@ -98,8 +132,7 @@ Zeit: <span id="time">120</span>
 </div>
 
 <div>
-Highscore: <span id="highscore">0</span> |
-Daily Score: <span id="daily">0</span>
+Highscore: <span id="highscore">0</span>
 </div>
 
 <script>
@@ -110,6 +143,7 @@ const items=[
 name:"Rabenfrost",
 aliases:["raven frost","raven"],
 base:"Ring",
+icon:"ring",
 stats:[
 "+150 Angriffswert",
 "+20 Geschicklichkeit",
@@ -121,6 +155,7 @@ stats:[
 name:"Nagelring",
 aliases:["nagel"],
 base:"Ring",
+icon:"ring",
 stats:[
 "+30% Magic Find",
 "+75 Angriffswert"
@@ -131,6 +166,7 @@ stats:[
 name:"Stein von Jordan",
 aliases:["soj","stone of jordan"],
 base:"Ring",
+icon:"ring",
 stats:[
 "+1 zu allen Fertigkeiten",
 "+25% maximale Mana"
@@ -141,6 +177,7 @@ stats:[
 name:"Harlekinskrone",
 aliases:["harle","shako"],
 base:"Shako",
+icon:"helm",
 stats:[
 "+2 zu allen Fertigkeiten",
 "10% Schadensreduzierung"
@@ -151,6 +188,7 @@ stats:[
 name:"Arachnid Mesh",
 aliases:["arach"],
 base:"Spinnennetz-Schärpe",
+icon:"guertel",
 stats:[
 "+1 zu allen Fertigkeiten",
 "20% schnellere Zauberrate"
@@ -161,6 +199,7 @@ stats:[
 name:"Kriegsreisender",
 aliases:["wt","war traveler"],
 base:"Kampfstiefel",
+icon:"schuhe",
 stats:[
 "+10 Stärke",
 "+30% Magic Find"
@@ -171,6 +210,7 @@ stats:[
 name:"Windforce",
 aliases:["wf"],
 base:"Hydrabogen",
+icon:"bogen",
 stats:[
 "+250% erhöhter Schaden",
 "Knockback"
@@ -179,8 +219,9 @@ stats:[
 
 {
 name:"Greifenauge",
-aliases:["griffon","griffons"],
+aliases:["griffon"],
 base:"Diadem",
+icon:"helm",
 stats:[
 "+1 Fertigkeiten",
 "-20% Blitzresistenz Gegner"
@@ -191,6 +232,7 @@ stats:[
 name:"Herold von Zakarum",
 aliases:["hoz"],
 base:"Gildenschild",
+icon:"schild",
 stats:[
 "+2 Paladin Fertigkeiten",
 "+50% Blockchance"
@@ -198,79 +240,10 @@ stats:[
 },
 
 {
-name:"Todesfathom",
-aliases:["df","deaths fathom"],
-base:"Dimensionalstab",
-stats:[
-"+3 Zauberinnen Fertigkeiten",
-"+30% Kälteschaden"
-]
-},
-
-{
-name:"Maras Kaleidoskop",
-aliases:["maras"],
-base:"Amulett",
-stats:[
-"+2 zu allen Fertigkeiten",
-"+30 Widerstände"
-]
-},
-
-{
-name:"Bul Kathos Hochzeitsring",
-aliases:["bk","bk ring"],
-base:"Ring",
-stats:[
-"+1 zu allen Fertigkeiten",
-"Leben pro Level"
-]
-},
-
-{
-name:"Verdungos Hearty Cord",
-aliases:["dungo"],
-base:"Mithrilgürtel",
-stats:[
-"+40 Vitalität",
-"Schadensreduzierung"
-]
-},
-
-{
-name:"Draculs Griff",
-aliases:["dracs"],
-base:"Vampirknochenhandschuhe",
-stats:[
-"Lebensentzug",
-"Chance auf Life Tap"
-]
-},
-
-{
-name:"Sturmschild",
-aliases:["stormshield"],
-base:"Monarch",
-stats:[
-"35% Schadensreduzierung",
-"Hohe Blockchance"
-]
-},
-
-{
-name:"Eschutas Temperament",
-aliases:["eschuta"],
-base:"Eldritchstab",
-stats:[
-"+3 Zauberinnen Fertigkeiten",
-"+20% Elementarschaden"
-]
-},
-
-{
 name:"Der Oculus",
 aliases:["oculus","occ"],
 base:"Schleierstab",
+icon:"zauberstab",
 stats:[
 "+3 Zauberinnen Fertigkeiten",
 "30% schnellere Zauberrate"
@@ -281,6 +254,7 @@ stats:[
 name:"Titanen Rache",
 aliases:["titans"],
 base:"Zeremonielle Wurfspeere",
+icon:"wurfwaffe",
 stats:[
 "+2 Amazonen Fertigkeiten",
 "Lebensentzug"
@@ -288,100 +262,18 @@ stats:[
 },
 
 {
-name:"Andariels Antlitz",
-aliases:["andy","andy face"],
-base:"Dämonenhaupt",
+name:"Maras Kaleidoskop",
+aliases:["maras"],
+base:"Amulett",
+icon:"amulett",
 stats:[
-"+2 Fertigkeiten",
-"20% IAS"
-]
-},
-
-{
-name:"Giftschleier",
-aliases:["venom grip"],
-base:"Dämonenhandschuhe",
-stats:[
-"Giftresistenz",
-"Life Leech"
-]
-},
-
-{
-name:"Chance Guards",
-aliases:["chance","chancies"],
-base:"Kettenhandschuhe",
-stats:[
-"+40% Magic Find"
-]
-},
-
-{
-name:"Goldträger",
-aliases:["goldwrap"],
-base:"Schwere Gürtel",
-stats:[
-"+30% Magic Find"
-]
-},
-
-{
-name:"Gull",
-aliases:["gull dagger"],
-base:"Dolch",
-stats:[
-"+100% Magic Find"
-]
-},
-
-{
-name:"Riphaken",
-aliases:["riphook"],
-base:"Langbogen",
-stats:[
-"Verlangsamt Ziel"
-]
-},
-
-{
-name:"Knochenflamme",
-aliases:["boneflame"],
-base:"Totenbeschwörerschild",
-stats:[
-"+3 Necromancer Fertigkeiten"
-]
-},
-
-{
-name:"Schatten Tänzer",
-aliases:["shadow dancer"],
-base:"Mythische Stiefel",
-stats:[
-"+2 Assassinen Fertigkeiten"
-]
-},
-
-{
-name:"Bartucs Schnitt",
-aliases:["bartuc","bartucs"],
-base:"Klaue",
-stats:[
-"+2 Assassinen Fertigkeiten"
-]
-},
-
-{
-name:"Lidlose Wand",
-aliases:["lidless"],
-base:"Grimmschild",
-stats:[
-"+1 zu allen Fertigkeiten"
+"+2 zu allen Fertigkeiten",
+"+30 Widerstände"
 ]
 }
 
 ]
 
-let dailyItems=[]
 let current
 
 let score=0
@@ -397,66 +289,32 @@ allNames.push(i.name)
 if(i.aliases) i.aliases.forEach(a=>allNames.push(a))
 })
 
-function getDailyItems(){
-
-let today=new Date().toDateString()
-
-let stored=localStorage.getItem("d2DailyDate")
-
-if(stored===today){
-
-dailyItems=JSON.parse(localStorage.getItem("d2DailyItems"))
-
-}
-else{
-
-dailyItems=[]
-
-while(dailyItems.length<10){
-
-let item=items[Math.floor(Math.random()*items.length)]
-
-if(!dailyItems.includes(item))
-dailyItems.push(item)
-
-}
-
-localStorage.setItem("d2DailyDate",today)
-localStorage.setItem("d2DailyItems",JSON.stringify(dailyItems))
-
-}
-
-}
-
-getDailyItems()
-
-const timer=setInterval(()=>{
-
-time--
-document.getElementById("time").innerText=time
-
-if(time<=0) endGame()
-
-},1000)
-
 function normalize(t){
-
 return t.toLowerCase().replace(/[^a-zäöüß]/g,"")
-
 }
 
 function nextItem(){
 
-document.getElementById("result").innerText=""
 document.getElementById("guess").value=""
+document.getElementById("result").innerText=""
 document.getElementById("suggestions").innerHTML=""
 
-current=dailyItems[Math.floor(Math.random()*dailyItems.length)]
+current=items[Math.floor(Math.random()*items.length)]
 
-let html="<div class='gray'>Unidentifiziertes "+current.base+"</div><br>"
+let icon=`icons/${current.icon}.png`
+
+let html=`
+<div class="item-header">
+<img class="item-icon" src="${icon}" onerror="this.src='icons/default.png'">
+<div>
+<div class="unique">Unidentifiziert</div>
+<div class="item-base">${current.base}</div>
+</div>
+</div>
+`
 
 current.stats.forEach(stat=>{
-html+="<div class='stat'>"+stat+"</div>"
+html+=`<div class="stat">${stat}</div>`
 })
 
 document.getElementById("tooltip").innerHTML=html
@@ -470,9 +328,7 @@ let guess=normalize(document.getElementById("guess").value)
 let answers=[normalize(current.name)]
 
 if(current.aliases){
-current.aliases.forEach(a=>{
-answers.push(normalize(a))
-})
+current.aliases.forEach(a=>answers.push(normalize(a)))
 }
 
 if(answers.includes(guess)){
@@ -481,7 +337,7 @@ score+=10+(streak*2)
 correct++
 streak++
 
-document.getElementById("result").innerHTML="✅ <span class='unique'>"+current.name+"</span>"
+document.getElementById("result").innerHTML="✅ "+current.name
 
 }
 else{
@@ -489,13 +345,13 @@ else{
 wrong++
 streak=0
 
-document.getElementById("result").innerHTML="❌ Es war: "+current.name
+document.getElementById("result").innerHTML="❌ "+current.name
 
 }
 
 updateStats()
 
-setTimeout(nextItem,800)
+setTimeout(nextItem,900)
 
 }
 
@@ -508,32 +364,19 @@ document.getElementById("streak").innerText=streak
 
 }
 
-function endGame(){
+const timer=setInterval(()=>{
 
-clearInterval(timer)
+time--
+document.getElementById("time").innerText=time
 
-let high=localStorage.getItem("d2Highscore")||0
-
-if(score>high){
-localStorage.setItem("d2Highscore",score)
-high=score
-}
-
-let daily=localStorage.getItem("d2DailyScore")||0
-
-if(score>daily){
-localStorage.setItem("d2DailyScore",score)
-daily=score
-}
-
-document.getElementById("highscore").innerText=high
-document.getElementById("daily").innerText=daily
+if(time<=0){
 
 alert("Spiel vorbei! Punkte: "+score)
-
 location.reload()
 
 }
+
+},1000)
 
 document.getElementById("guess").addEventListener("input",function(){
 
@@ -553,10 +396,8 @@ div.className="suggestion"
 div.innerText=name
 
 div.onclick=function(){
-
 document.getElementById("guess").value=name
 sug.innerHTML=""
-
 }
 
 sug.appendChild(div)
@@ -568,13 +409,10 @@ sug.appendChild(div)
 })
 
 document.getElementById("guess").addEventListener("keypress",function(e){
-
 if(e.key==="Enter") checkAnswer()
-
 })
 
 document.getElementById("highscore").innerText=localStorage.getItem("d2Highscore")||0
-document.getElementById("daily").innerText=localStorage.getItem("d2DailyScore")||0
 
 nextItem()
 
