@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Match Tracker – Spiel & Torschützen</title>
+
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#0f0f0f;color:#eee;margin:0;padding:30px;max-width:1200px;margin:auto}
+h1,h2{margin-top:30px}
+.panel{background:#1a1a1a;padding:16px;border-radius:10px;margin-bottom:20px}
+input,select,button{padding:8px;margin:4px;border-radius:6px;border:none;font-size:14px}
+button{background:#3a7cff;color:white;cursor:pointer}
+button.secondary{background:#444}
+button.goal{background:#2f9e44}
+button.yellow{background:#d4a017}
+button.red{background:#c92a2a}
+button.sub{background:#6c63ff}
+
+.matches-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px}
+
+.match{background:#1b1b1b;padding:14px;border-radius:10px}
+.match-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;border-bottom:1px solid #333;padding-bottom:6px}
+
+.player-chip{display:inline-flex;align-items:center;background:#2b2b2b;padding:4px 8px;border-radius:6px;margin:3px;font-size:12px;cursor:pointer}
+.player-chip.pos-TW{background:#1e88e5}
+.player-chip.pos-IV,.player-chip.pos-AV{background:#6d4c41}
+.player-chip.pos-ZM,.player-chip.pos-LM,.player-chip.pos-RM{background:#8e24aa}
+.player-chip.pos-ST{background:#e53935}
+.player-chip.selected{outline:2px solid #ffd54f;box-shadow:0 0 0 2px #000 inset,0 0 6px rgba(255,213,79,.6);transform:scale(1.05)}
+.player-chip button{margin-left:6px;background:#c92a2a;padding:1px 5px;font-size:10px}
+
+.pos{opacity:.7;font-size:10px;margin-right:4px}
+
+.section-title{margin-top:10px;font-size:12px;color:#aaa}
+
+.event{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin:2px 0}
+
+.stat-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #333}
+
+.hidden{display:none}
+
+.team-chip{background:#2a2a2a;padding:6px 10px;border-radius:6px;margin:4px;display:inline-block}
+.team-chip.active{background:#3a7cff}
+
+.pitch-wrap{display:flex;gap:20px;align-items:flex-start;justify-content:center;margin-top:14px}
+
+.pitch{background:#1f4d2b;border:2px solid #2d7c44;border-radius:10px;padding:14px;width:340px}
+
+.pitch-row{display:flex;justify-content:center;margin:6px 0}
+.pitch-player{background:#222;padding:4px 6px;border-radius:6px;margin:2px;font-size:11px}
+
+.bench{border-left:2px dashed #666;padding-left:8px;min-width:90px}
+
+.bench h4{margin:0 0 6px 0;font-size:11px;color:#aaa}
+
+.bench-player{background:#2b2b2b;padding:4px 6px;border-radius:5px;margin:3px 0;font-size:11px}
+
+</style>
+</head>
+<body>
+
+<h1>⚽ Match Tracker – Spiel & Torschützen</h1>
+
+<div class="panel">
+<h2>Teams</h2>
+<input id="teamName" placeholder="Neues Team">
+<button onclick="addTeam()">Team hinzufügen</button>
+<div id="teamList"></div>
+</div>
+
+<div class="panel">
+<h2>Spieler</h2>
+<input id="playerName" placeholder="Spielername">
+<select id="playerPosition">
+<option value="">Position</option>
+<option>TW</option>
+<option>IV</option>
+<option>AV</option>
+<option>ZM</option>
+<option>LM</option>
+<option>RM</option>
+<option>ST</option>
+</select>
+<button onclick="addPlayer()">Spieler hinzufügen</button>
+<div id="playerList"></div>
+</div>
+
+<div class="panel">
+<h2>Neues Spiel</h2>
+<input id="date" type="date">
+<input id="opponent" placeholder="Gegner">
+
+<select id="mode">
+<option value="7">7 gegen 7</option>
+<option value="11">11 gegen 11</option>
+</select>
+
+<button onclick="createMatch()">Spiel anlegen</button>
+</div>
+
+<div class="panel">
+<h2>Spiele</h2>
+<div id="matches" class="matches-grid"></div>
+</div>
+
+<div class="panel">
+<h2>Top Scorer</h2>
+<div id="scorerRanking"></div>
+</div>
+
+<script>
+
+let teams = JSON.parse(localStorage.getItem("teams")) || []
+let activeTeam = localStorage.getItem("activeTeam") || null
+let players = JSON.parse(localStorage.getItem("players")) || []
+let matches = JSON.parse(localStorage.getItem("matches")) || []
+
+function save(){
+localStorage.setItem("teams",JSON.stringify(teams))
+localStorage.setItem("players",JSON.stringify(players))
+localStorage.setItem("matches",JSON.stringify(matches))
+localStorage.setItem("activeTeam",activeTeam)
+}
+
+/* TEAMS */
+
+function addTeam(){
+let name=teamName.value
+if(!name) return
+teams.push(name)
+activeTeam=name
+save()
+renderAll()
+}
+
+function deleteTeam(name){
+if(!confirm("Team löschen?")) return
+teams=teams.filter(t=>t!==name)
+players=players.filter(p=>p.team!==name)
+matches=matches.filter(m=>m.team!==name)
+activeTeam=teams[0]||null
+save()
+renderAll()
+}
+
+function selectTeam(name){
+activeTeam=name
+save()
+renderAll()
+}
+
+function renderTeams(){
+let html=""
+teams.forEach(t=>{
+let cls=t===activeTeam?"team-chip active":"team-chip"
+html+=`<span class="${cls}" onclick="selectTeam('${t}')">${t}</span>
+<button class="secondary" onclick="deleteTeam('${t}')">🗑</button>`
+})
+document.getElementById("teamList").innerHTML=html
+}
+
+/* PLAYERS */
+
+function addPlayer(){
+if(!activeTeam) return
+
+players.push({
+team:activeTeam,
+name:playerName.value,
+pos:playerPosition.value,
+goals:0
+})
+
+playerName.value=""
+save()
+renderAll()
+}
+
+function deletePlayer(i){
+players.splice(i,1)
+save()
+renderAll()
+}
+
+function renderPlayers(){
+let html=""
+players.filter(p=>p.team===activeTeam).forEach((p,i)=>{
+html+=`<span class="player-chip pos-${p.pos}"><span class="pos">${p.pos}</span>${p.name}<button onclick="deletePlayer(${i})">x</button></span>`
+})
+document.getElementById("playerList").innerHTML=html
+}
+
+/* MATCHES */
+
+function formatDate(d){
+if(!d) return ""
+let parts=d.split("-")
+return parts[2]+"-"+parts[1]+"-"+parts[0]
+}
+
+function createMatch(){
+if(!activeTeam) return
+
+matches.push({
+id:Date.now(),
+team:activeTeam,
+date:date.value,
+opponent:opponent.value,
+mode:mode.value,
+lineup:[],
+bench:[],
+events:[],
+open:false
+})
+
+save()
+renderAll()
+}
+
+function toggleMatch(id){
+let m=matches.find(x=>x.id===id)
+m.open=!m.open
+renderMatches()
+}
+
+function deleteMatch(matchId){
+if(!confirm("Spiel wirklich löschen?")) return
+
+let match = matches.find(m=>m.id===matchId)
+
+if(match){
+match.events.forEach(ev=>{
+ if(ev.type==="goal"){
+  let p = players.find(pl=>pl.name===ev.player && pl.team===activeTeam)
+  if(p && p.goals>0) p.goals--
+ }
+})
+}
+
+matches = matches.filter(m=>m.id!==matchId)
+
+save()
+renderAll()
+}
+
+function toggleLineup(matchId,name){
+let match=matches.find(m=>m.id===matchId)
+let max=match.mode=="7"?7:11
+
+let i=match.lineup.indexOf(name)
+
+if(i>-1){
+match.lineup.splice(i,1)
+}else{
+if(match.lineup.length>=max){alert("Startelf voll");return}
+match.lineup.push(name)
+}
+
+save()
+renderMatches()
+}
+
+function toggleBench(matchId,name){
+let match=matches.find(m=>m.id===matchId)
+let i=match.bench.indexOf(name)
+
+if(i>-1){
+match.bench.splice(i,1)
+}else{
+if(match.bench.length>=3){alert("Maximal 3 Bankspieler");return}
+match.bench.push(name)
+}
+
+save()
+renderMatches()
+}
+
+/* EVENTS */
+
+function chooseFrom(list,title){
+if(list.length===0){alert("Keine Spieler verfügbar");return null}
+let text=title+"\n"
+list.forEach((p,i)=>{text+=(i+1)+": "+p+"\n"})
+let choice=prompt(text)
+let index=Number(choice)-1
+if(isNaN(index)||index<0||index>=list.length) return null
+return list[index]
+}
+
+function addEvent(matchId,type){
+let minute=prompt("Minute?")
+if(minute===null) return
+
+let teamPlayers = players.filter(p=>p.team===activeTeam).map(p=>p.name)
+let player = chooseFrom(teamPlayers,"Spieler auswählen")
+if(!player) return
+
+let match=matches.find(m=>m.id==matchId)
+
+match.events.push({type:type,player:player,minute:Number(minute)})
+
+let p=players.find(pl=>pl.name==player && pl.team===activeTeam)
+if(p && type==="goal") p.goals++
+
+save()
+renderMatches()
+renderRankings()
+}
+
+function deleteEvent(matchId,index){
+let match=matches.find(m=>m.id===matchId)
+let ev = match.events[index]
+
+if(ev && ev.type==="goal"){
+let p = players.find(pl=>pl.name===ev.player && pl.team===activeTeam)
+if(p && p.goals>0) p.goals--
+}
+
+match.events.splice(index,1)
+
+save()
+renderMatches()
+renderRankings()
+}
+
+function addSubstitution(matchId){
+let match=matches.find(m=>m.id==matchId)
+
+let minute=Number(prompt("Minute"))
+if(isNaN(minute)) return
+
+let out=chooseFrom(match.lineup,"Wer geht raus?")
+if(!out) return
+
+let inp=chooseFrom(match.bench,"Wer kommt rein?")
+if(!inp) return
+
+match.lineup=match.lineup.filter(p=>p!==out)
+match.lineup.push(inp)
+
+match.bench=match.bench.filter(p=>p!==inp)
+match.bench.push(out)
+
+match.events.push({type:"sub",player:out,in:inp,minute:minute})
+
+save()
+renderMatches()
+}
+
+/* PITCH */
+
+function renderPitch(match){
+let list=match.lineup
+let bench=match.bench
+
+let teamPlayers = players.filter(p=>list.includes(p.name))
+
+let gk = teamPlayers.find(p=>p.pos==='TW')
+let iv = teamPlayers.find(p=>p.pos==='IV')
+let av = teamPlayers.filter(p=>p.pos==='AV')
+let lm = teamPlayers.find(p=>p.pos==='LM')
+let rm = teamPlayers.find(p=>p.pos==='RM')
+let zm = teamPlayers.find(p=>p.pos==='ZM')
+let st = teamPlayers.find(p=>p.pos==='ST')
+
+function cell(p){
+ return p ? `<div class='pitch-player'><span class="pos">${p.pos}</span>${p.name}</div>` : `<div class='pitch-player' style='opacity:.25'>·</div>`
+}
+
+let html="<div class='pitch-wrap'>"
+
+html+="<div class='pitch'>"
+html+=`<div class='pitch-row'>${cell(st)}</div>`
+html+=`<div class='pitch-row'>${cell(lm)}${cell(zm)}${cell(rm)}</div>`
+html+=`<div class='pitch-row'>${cell(av[0])}${cell(iv)}${cell(av[1])}</div>`
+html+=`<div class='pitch-row'>${cell(gk)}</div>`
+html+="</div>"
+
+html+="<div class='bench'><h4>Bank</h4>"
+bench.forEach(n=>{
+let p=players.find(pl=>pl.name===n)
+html+=`<div class='bench-player'><span class="pos">${p.pos}</span>${n}</div>`
+})
+html+="</div>"
+
+html+="</div>"
+return html
+}
+
+/* RENDER */
+
+function renderMatches(){
+let html=""
+
+matches.filter(m=>m.team===activeTeam).forEach(match=>{
+
+let arrow=match.open?"▼":"▶"
+let goals = match.events.filter(e=>e.type==="goal").length
+
+html+=`<div class="match">
+
+<div class="match-header" onclick="toggleMatch(${match.id})">
+<div>${arrow} ${formatDate(match.date)}<br>${match.opponent}</div>
+<div style="display:flex;gap:10px;align-items:center">
+<span>${goals}⚽</span>
+<span>${match.lineup.length}/${match.mode}</span>
+<button class="secondary" onclick="event.stopPropagation();deleteMatch(${match.id})">🗑</button>
+</div>
+</div>
+
+<div class="${match.open?"":"hidden"}">
+
+<div class="section-title">Startelf</div>`
+
+players.filter(p=>p.team===activeTeam).forEach(p=>{
+let active=match.lineup.includes(p.name)?"selected":""
+html+=`<span class="player-chip pos-${p.pos} ${active}" onclick="toggleLineup(${match.id},'${p.name}')"><span class="pos">${p.pos}</span>${p.name}</span>`
+})
+
+html+=`<div class="section-title">Bank wählen</div>`
+
+players.filter(p=>p.team===activeTeam).forEach(p=>{
+let active=match.bench.includes(p.name)?"selected":""
+html+=`<span class="player-chip pos-${p.pos} ${active}" onclick="toggleBench(${match.id},'${p.name}')"><span class="pos">${p.pos}</span>${p.name}</span>`
+})
+
+html+=renderPitch(match)
+
+html+=`<div class="section-title">Events</div>
+<button class="goal" onclick="addEvent(${match.id},'goal')">⚽ Tor</button>
+<button class="yellow" onclick="addEvent(${match.id},'yellow')">🟨 Gelb</button>
+<button class="red" onclick="addEvent(${match.id},'red')">🟥 Rot</button>
+<button class="secondary" onclick="addEvent(${match.id},'penalty')">⏱ Zeitstrafe</button>
+<button class="sub" onclick="addSubstitution(${match.id})">🔁 Wechsel</button>`
+
+match.events.sort((a,b)=>a.minute-b.minute)
+
+match.events.forEach((e,i)=>{
+let txt
+if(e.type==="sub") txt=`${e.minute}' 🔁 ${e.player} → ${e.in}`
+else if(e.type==="goal") txt=`${e.minute}' ⚽ ${e.player}`
+else if(e.type==="yellow") txt=`${e.minute}' 🟨 ${e.player}`
+else if(e.type==="red") txt=`${e.minute}' 🟥 ${e.player}`
+else if(e.type==="penalty") txt=`${e.minute}' ⏱ Zeitstrafe ${e.player}`
+
+html+=`<div class="event"><span>${txt}</span>
+<button class="secondary" onclick="deleteEvent(${match.id},${i})">❌</button></div>`
+})
+
+html+="</div></div>"
+
+})
+
+document.getElementById("matches").innerHTML = html
+}
+
+/* SCORER */
+
+function renderRankings(){
+
+// Tore dynamisch aus allen Spielen berechnen
+let goalMap = {}
+
+matches
+  .filter(m=>m.team===activeTeam)
+  .forEach(m=>{
+    m.events.forEach(ev=>{
+      if(ev.type==="goal"){
+        goalMap[ev.player] = (goalMap[ev.player]||0)+1
+      }
+    })
+  })
+
+let list = Object.entries(goalMap)
+  .sort((a,b)=>b[1]-a[1])
+
+let html=""
+
+list.forEach(([name,goals])=>{
+  let p = players.find(pl=>pl.name===name && pl.team===activeTeam)
+  if(!p) return
+
+  html+=`<div class="stat-row"><span><span class="pos">${p.pos}</span>${name}</span><span>${goals}</span></div>`
+})
+
+document.getElementById("scorerRanking").innerHTML = html || "Keine Tore"
+
+})
+
+document.getElementById("scorerRanking").innerHTML = html || "Keine Tore"
+}
+
+function renderAll(){
+renderTeams()
+renderPlayers()
+renderMatches()
+renderRankings()
+}
+
+renderAll()
+
+</script>
+</body>
+</html>
