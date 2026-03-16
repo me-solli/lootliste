@@ -754,7 +754,7 @@ onclick="event.stopPropagation();deleteMatch(${match.id})">
 `
 
 players
-.filter(p=>p.team===activeTeam)
+.filter(p=>p.team===activeTeam && !match.bench.includes(p.name))
 .forEach(p=>{
 
 let active = match.lineup.includes(p.name)?"selected":""
