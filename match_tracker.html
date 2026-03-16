@@ -582,6 +582,24 @@ function addEvent(matchId,type){
 let minute=prompt("Minute?")
 if(minute===null) return
 
+let match=matches.find(m=>m.id==matchId)
+
+/* Gegentor braucht keinen Spieler */
+if(type==="goalAgainst"){
+
+match.events.push({
+type:type,
+minute:Number(minute)
+})
+
+save()
+renderMatches()
+return
+
+}
+
+/* normale Events mit Spieler */
+
 let teamPlayers = players
 .filter(p=>p.team===activeTeam)
 .map(p=>p.name)
@@ -589,8 +607,6 @@ let teamPlayers = players
 let player = chooseFrom(teamPlayers,"Spieler auswählen")
 
 if(!player) return
-
-let match=matches.find(m=>m.id==matchId)
 
 match.events.push({
 type:type,
