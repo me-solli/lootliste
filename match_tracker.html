@@ -937,7 +937,7 @@ let text=""
 let against = match.events.filter(e=>e.type==="goalAgainst").length
 
 text += activeTeam + " " + goals + " : " + against + " " + match.opponent + "\n"
-text += formatDate(match.date) + "\n\n"
+text += formatDate(match.date) + "\n\nSpielverlauf\n"
 
 match.events
 .sort((a,b)=>a.minute-b.minute)
