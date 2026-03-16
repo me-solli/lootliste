@@ -917,6 +917,9 @@ let match = matches.find(m=>m.id===matchId)
 
 let text=""
 
+  let goals = match.events.filter(e=>e.type==="goal").length
+let against = match.events.filter(e=>e.type==="goalAgainst").length
+
 text += activeTeam + " vs " + match.opponent + "\n"
 text += formatDate(match.date) + "\n\n"
 
