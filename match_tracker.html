@@ -901,6 +901,44 @@ html || "Keine Tore"
 
 }
 
+/* SPIELBERICHT KOPIEREN */
+
+function copyReport(matchId){
+
+let match = matches.find(m=>m.id===matchId)
+
+let text=""
+
+text += activeTeam + " vs " + match.opponent + "\n"
+text += formatDate(match.date) + "\n\n"
+
+match.events
+.sort((a,b)=>a.minute-b.minute)
+.forEach(e=>{
+
+if(e.type==="goal")
+text += "⚽ " + e.minute + "' " + e.player + "\n"
+
+else if(e.type==="yellow")
+text += "🟨 " + e.minute + "' " + e.player + "\n"
+
+else if(e.type==="red")
+text += "🟥 " + e.minute + "' " + e.player + "\n"
+
+else if(e.type==="penalty")
+text += "⏱ " + e.minute + "' Zeitstrafe " + e.player + "\n"
+
+else if(e.type==="sub")
+text += "🔁 " + e.minute + "' " + e.player + " → " + e.in + "\n"
+
+})
+
+navigator.clipboard.writeText(text)
+
+alert("Spielbericht kopiert")
+
+}
+
 /* ========================= */
 
 function renderAll(){
