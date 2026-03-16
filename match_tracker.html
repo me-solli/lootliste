@@ -809,6 +809,9 @@ onclick="addEvent(${match.id},'penalty')">⏱ Zeitstrafe</button>
 
 <button class="sub"
 onclick="addSubstitution(${match.id})">🔁 Wechsel</button>
+
+<button class="secondary"
+onclick="copyReport(${match.id})">📋 Bericht kopieren</button>
 `
 
 match.events.sort((a,b)=>a.minute-b.minute)
