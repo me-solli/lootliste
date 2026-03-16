@@ -24,7 +24,7 @@ button.sub{background:#6c63ff}
 
 .player-chip{display:inline-flex;align-items:center;background:#2b2b2b;padding:4px 8px;border-radius:6px;margin:3px;font-size:12px;cursor:pointer}
 .player-chip.pos-TW{background:#1e88e5}
-.player-chip.pos-IV,.player-chip.pos-AV{background:#6d4c41}
+.player-chip.pos-IV,.player-chip.pos-LV,.player-chip.pos-RV{background:#6d4c41}
 .player-chip.pos-ZM,.player-chip.pos-LM,.player-chip.pos-RM{background:#8e24aa}
 .player-chip.pos-ST{background:#e53935}
 .player-chip.selected{outline:2px solid #ffd54f;box-shadow:0 0 0 2px #000 inset,0 0 6px rgba(255,213,79,.6);transform:scale(1.05)}
@@ -76,7 +76,8 @@ button.sub{background:#6c63ff}
 <option value="">Position</option>
 <option>TW</option>
 <option>IV</option>
-<option>AV</option>
+<option>LV</option>
+<option>RV</option>
 <option>ZM</option>
 <option>LM</option>
 <option>RM</option>
@@ -140,11 +141,26 @@ renderAll()
 }
 
 function deleteTeam(name){
-if(!confirm("Team löschen?")) return
-teams=teams.filter(t=>t!==name)
-players=players.filter(p=>p.team!==name)
-matches=matches.filter(m=>m.team!==name)
-activeTeam=teams[0]||null
+
+let playerCount = players.filter(p=>p.team===name).length
+let matchCount = matches.filter(m=>m.team===name).length
+
+let msg = `Team wirklich löschen?
+
+${name}
+
+Das löscht auch:
+• ${playerCount} Spieler
+• ${matchCount} Spiele`
+
+if(!confirm(msg)) return
+
+teams = teams.filter(t=>t!==name)
+players = players.filter(p=>p.team!==name)
+matches = matches.filter(m=>m.team!==name)
+
+activeTeam = teams[0] || null
+
 save()
 renderAll()
 }
@@ -363,7 +379,8 @@ let teamPlayers = players.filter(p=>list.includes(p.name))
 
 let gk = teamPlayers.find(p=>p.pos==='TW')
 let iv = teamPlayers.find(p=>p.pos==='IV')
-let av = teamPlayers.filter(p=>p.pos==='AV')
+let lv = teamPlayers.find(p=>p.pos==='LV')
+let rv = teamPlayers.find(p=>p.pos==='RV')
 let lm = teamPlayers.find(p=>p.pos==='LM')
 let rm = teamPlayers.find(p=>p.pos==='RM')
 let zm = teamPlayers.find(p=>p.pos==='ZM')
@@ -378,7 +395,7 @@ let html="<div class='pitch-wrap'>"
 html+="<div class='pitch'>"
 html+=`<div class='pitch-row'>${cell(st)}</div>`
 html+=`<div class='pitch-row'>${cell(lm)}${cell(zm)}${cell(rm)}</div>`
-html+=`<div class='pitch-row'>${cell(av[0])}${cell(iv)}${cell(av[1])}</div>`
+html+=`<div class='pitch-row'>${cell(lv)}${cell(iv)}${cell(rv)}</div>`
 html+=`<div class='pitch-row'>${cell(gk)}</div>`
 html+="</div>"
 
@@ -487,10 +504,6 @@ list.forEach(([name,goals])=>{
   if(!p) return
 
   html+=`<div class="stat-row"><span><span class="pos">${p.pos}</span>${name}</span><span>${goals}</span></div>`
-})
-
-document.getElementById("scorerRanking").innerHTML = html || "Keine Tore"
-
 })
 
 document.getElementById("scorerRanking").innerHTML = html || "Keine Tore"
