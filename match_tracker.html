@@ -920,7 +920,7 @@ let text=""
   let goals = match.events.filter(e=>e.type==="goal").length
 let against = match.events.filter(e=>e.type==="goalAgainst").length
 
-text += activeTeam + " vs " + match.opponent + "\n"
+text += activeTeam + " " + goals + " : " + against + " " + match.opponent + "\n"
 text += formatDate(match.date) + "\n\n"
 
 match.events
