@@ -723,6 +723,8 @@ let arrow = match.open ? "▼" : "▶"
 
 let goals = match.events.filter(e=>e.type==="goal").length
 
+  let against = match.events.filter(e=>e.type==="goalAgainst").length
+
 html+=`
 
 <div class="match">
