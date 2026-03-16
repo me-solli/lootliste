@@ -925,6 +925,9 @@ match.events
 if(e.type==="goal")
 text += "⚽ " + e.minute + "' " + e.player + "\n"
 
+  else if(e.type==="goalAgainst")
+text += "🥅 " + e.minute + "' Gegner\n"
+
 else if(e.type==="yellow")
 text += "🟨 " + e.minute + "' " + e.player + "\n"
 
