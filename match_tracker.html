@@ -148,7 +148,41 @@ background:#1f4d2b;
 border:2px solid #2d7c44;
 border-radius:10px;
 padding:14px;
-width:340px
+width:340px;
+position:relative;
+overflow:hidden;
+}
+
+  /* Mittellinie */
+.pitch::before{
+content:"";
+position:absolute;
+left:0;
+right:0;
+top:50%;
+height:2px;
+background:rgba(255,255,255,0.15);
+}
+
+/* Mittelkreis */
+.pitch::after{
+content:"";
+position:absolute;
+width:80px;
+height:80px;
+border:2px solid rgba(255,255,255,0.15);
+border-radius:50%;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+  /* Strafraum oben */
+.pitch{
+background:
+linear-gradient(rgba(255,255,255,0.12),rgba(255,255,255,0.12)) top center / 140px 60px no-repeat,
+linear-gradient(rgba(255,255,255,0.12),rgba(255,255,255,0.12)) bottom center / 140px 60px no-repeat,
+#1f4d2b;
 }
 
 .pitch-row{
