@@ -970,6 +970,12 @@ text += "🔁 " + e.minute + "' " + e.player + " → " + e.in + "\n"
 
 })
 
+  text += "\nTore\n"
+
+Object.entries(scorers).forEach(([name,count])=>{
+text += name + " (" + count + ")\n"
+})
+
 navigator.clipboard.writeText(text)
 
 alert("Spielbericht kopiert")
