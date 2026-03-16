@@ -773,7 +773,7 @@ onclick="toggleLineup(${match.id},'${p.name}')">
 html+=`<div class="section-title">Bank wählen</div>`
 
 players
-.filter(p=>p.team===activeTeam)
+.filter(p=>p.team===activeTeam && !match.lineup.includes(p.name))
 .forEach(p=>{
 
 let active = match.bench.includes(p.name)?"selected":""
