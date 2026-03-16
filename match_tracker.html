@@ -126,10 +126,15 @@ localStorage.setItem("activeTeam",activeTeam)
 /* TEAMS */
 
 function addTeam(){
-let name=teamName.value
+let input = document.getElementById("teamName")
+let name = input.value.trim()
 if(!name) return
+
 teams.push(name)
 activeTeam=name
+
+input.value=""
+
 save()
 renderAll()
 }
@@ -488,7 +493,17 @@ document.getElementById("scorerRanking").innerHTML = html || "Keine Tore"
 
 })
 
-document.getElement
+document.getElementById("scorerRanking").innerHTML = html || "Keine Tore"
+}
+
+function renderAll(){
+renderTeams()
+renderPlayers()
+renderMatches()
+renderRankings()
+}
+
+renderAll()
 
 </script>
 </body>
