@@ -824,11 +824,23 @@ let strs = teamPlayers.filter(p => p.pos === "ST")
 let st1 = strs[0]
 let st2 = strs[1]
 
-function cell(p){
+function row(players){
 
-return p
-? `<div class='pitch-player'><span class="pos">${p.pos}</span>${p.name}</div>`
-: `<div class='pitch-player' style='opacity:.25'>·</div>`
+let filled = players.filter(Boolean).length
+
+// 1 Spieler → Mitte
+if(filled === 1){
+return `<div class='pitch-row'>${cell(null)}${cell(players.find(Boolean))}${cell(null)}</div>`
+}
+
+// 2 Spieler → links + rechts
+if(filled === 2){
+let p = players.filter(Boolean)
+return `<div class='pitch-row'>${cell(p[0])}${cell(null)}${cell(p[1])}</div>`
+}
+
+// 3 Spieler → normal
+return `<div class='pitch-row'>${players.map(p=>cell(p)).join("")}</div>`
 
 }
 
