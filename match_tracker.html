@@ -890,11 +890,29 @@ let match=matches.find(m=>m.id==matchId)
 let minute=Number(prompt("Minute"))
 if(isNaN(minute)) return
 
-let out=chooseFrom(match.lineup,"Wer geht raus?")
-if(!out) return
+chooseFrom(match.lineup,"Wer geht raus?",(out)=>{
 
-let inp=chooseFrom(match.bench,"Wer kommt rein?")
-if(!inp) return
+chooseFrom(match.bench,"Wer kommt rein?",(inp)=>{
+
+match.lineup = match.lineup.filter(p=>p!==out)
+match.lineup.push(inp)
+
+match.bench = match.bench.filter(p=>p!==inp)
+match.bench.push(out)
+
+match.events.push({
+type:"sub",
+player:out,
+in:inp,
+minute:minute
+})
+
+save()
+renderMatches()
+
+})
+
+})
 
 match.lineup = match.lineup.filter(p=>p!==out)
 match.lineup.push(inp)
