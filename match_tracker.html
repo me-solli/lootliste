@@ -808,6 +808,16 @@ let remainingDefs = teamPlayers.filter(p => ["LV","IV","RV"].includes(p.pos) && 
 let def1 = lv || remainingDefs.shift()
 let def2 = iv || remainingDefs.shift()
 let def3 = rv || remainingDefs.shift()
+
+  let lm = teamPlayers.find(p=>p.pos==="LM")
+let zm = teamPlayers.find(p=>p.pos==="ZM")
+let rm = teamPlayers.find(p=>p.pos==="RM")
+
+let remainingMids = teamPlayers.filter(p => ["LM","ZM","RM"].includes(p.pos) && ![lm,zm,rm].includes(p))
+
+let mid1 = lm || remainingMids.shift()
+let mid2 = zm || remainingMids.shift()
+let mid3 = rm || remainingMids.shift()
   
 let strs = teamPlayers.filter(p => p.pos === "ST")
 
