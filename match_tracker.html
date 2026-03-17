@@ -809,7 +809,6 @@ let def1 = lv || remainingDefs.shift()
 let def2 = iv || remainingDefs.shift()
 let def3 = rv || remainingDefs.shift()
   
-let mids = teamPlayers.filter(p => ["LM","ZM","RM"].includes(p.pos))
 let strs = teamPlayers.filter(p => p.pos === "ST")
 
 let st1 = strs[0]
@@ -828,9 +827,6 @@ let html="<div class='pitch-wrap'>"
 html+="<div class='pitch'>"
 
 html+=`<div class='pitch-row'>${cell(st1)}${cell(st2)}</div>`
-let mid1 = mids[0]
-let mid2 = mids[1]
-let mid3 = mids[2]
 
 html+=`<div class='pitch-row'>${cell(mid1)}${cell(mid2)}${cell(mid3)}</div>`
 html+=`<div class='pitch-row'>${cell(def1)}${cell(def2)}${cell(def3)}</div>`
