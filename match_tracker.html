@@ -1055,11 +1055,13 @@ let st1 = strs[0]
 let st2 = strs[1]
 
 function row(players){
-return `<div class='pitch-row'>
-${cell(players[0])}
-${cell(players[1])}
-${cell(players[2])}
-</div>`
+
+// nur echte Spieler behalten (kein null)
+let filtered = players.filter(p => p)
+
+let html = filtered.map(p => cell(p)).join("")
+
+return `<div class='pitch-row'>${html}</div>`
 }
 
 let html="<div class='pitch-wrap'>"
