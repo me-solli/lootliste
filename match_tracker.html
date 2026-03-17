@@ -89,20 +89,23 @@ background:#222;
 }
 
 .player-chip{
-display:inline-flex;
+display:flex;
 align-items:center;
+justify-content:space-between;
+
 background:#2b2b2b;
-padding:4px 8px;
+padding:6px 8px;
 border-radius:6px;
-margin:3px;
+margin:4px 0;
 font-size:12px;
 cursor:pointer;
 
-/* 🔥 FIX */
+width:100%;
+
+/* Text bleibt in 1 Zeile */
 white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
-max-width:140px;
 }
 
 .player-chip.pos-TW{background:#1e88e5}
