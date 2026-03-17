@@ -1356,8 +1356,17 @@ let text=""
   let goals = match.events.filter(e=>e.type==="goal").length
 let against = match.events.filter(e=>e.type==="goalAgainst").length
 
-text += activeTeam + " " + goals + " : " + against + " " + match.opponent + "\n"
-text += formatDate(match.date) + "\n\nSpielverlauf\n"
+text += "⚽ U10 Spielbericht\n\n"
+
+text += activeTeam + " – " + match.opponent + "\n"
+text += "🗓 " + formatDate(match.date)
+
+if(match.time){
+text += "  🕒 " + match.time
+}
+
+text += "\n\nEndstand\n"
+text += goals + " : " + against + "\n\nSpielverlauf\n"
 
   let scorers={}
   
