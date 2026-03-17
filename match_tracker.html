@@ -806,7 +806,10 @@ let def2 = defs[1]
 let def3 = defs[2]
   
 let mids = teamPlayers.filter(p => ["LM","ZM","RM"].includes(p.pos))
-let st = teamPlayers.find(p=>p.pos==='ST')
+let strs = teamPlayers.filter(p => p.pos === "ST")
+
+let st1 = strs[0]
+let st2 = strs[1]
 
 function cell(p){
 
