@@ -331,6 +331,12 @@ localStorage.setItem("matchTracker",JSON.stringify(data))
 
 }
 
+  function cell(p){
+return p
+? `<div class='pitch-player'><span class="pos">${p.pos}</span>${p.name}</div>`
+: `<div class='pitch-player' style='opacity:.25'>·</div>`
+}
+
 /* =========================
 BACKUP
 ========================= */
