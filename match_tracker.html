@@ -1273,6 +1273,43 @@ html || "Keine Tore"
 
 }
 
+  function togglePlayerStats(name){
+
+let box = document.getElementById("player-"+name)
+
+// toggle schließen
+if(!box.classList.contains("hidden")){
+box.classList.add("hidden")
+return
+}
+
+// Daten sammeln
+let html=""
+
+matches
+.filter(m=>m.team===activeTeam)
+.forEach(m=>{
+
+let goals = m.events.filter(e=>e.type==="goal" && e.player===name)
+
+if(goals.length){
+
+html+=`
+<div style="padding:4px 0;border-bottom:1px solid #333;font-size:12px">
+${formatDate(m.date)} vs ${m.opponent}<br>
+⚽ ${goals.length} Tor(e)
+</div>
+`
+
+}
+
+})
+
+box.innerHTML = html || "Keine Tore"
+box.classList.remove("hidden")
+
+}
+
 /* SPIELBERICHT KOPIEREN */
 
 function copyReport(matchId){
