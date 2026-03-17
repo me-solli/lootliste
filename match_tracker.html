@@ -938,14 +938,14 @@ function setGoalkeeper(matchId){
 let match = matches.find(m=>m.id===matchId)
 
 // nur Spieler aus Startelf wählen
-let player = chooseFrom(match.lineup,"Wer ist TW?")
-
-if(!player) return
+chooseFrom(match.lineup,"Wer ist TW?",(player)=>{
 
 match.twOverride = player
 
 save()
 renderMatches()
+
+})
 
 }
 
