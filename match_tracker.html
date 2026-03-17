@@ -286,7 +286,34 @@ font-weight:bold;
 <body>
 <div class="app">
 
-<h1>⚽ Match Tracker – Spiel & Torschützen</h1>
+<div class="sidebar">
+
+<h1>⚽ Tracker</h1>
+
+<div class="sidebar-section">
+<h3>Teams</h3>
+<input id="teamName" placeholder="Neues Team">
+<button onclick="addTeam()">+</button>
+<div id="teamList"></div>
+</div>
+
+<div class="sidebar-section">
+<h3>Spieler</h3>
+<input id="playerName" placeholder="Name">
+<select id="playerPosition">
+<option value="">Pos</option>
+<option>TW</option><option>IV</option><option>LV</option>
+<option>RV</option><option>ZM</option><option>LM</option>
+<option>RM</option><option>ST</option>
+</select>
+<button onclick="addPlayer()">+</button>
+<div id="playerList"></div>
+</div>
+
+</div>
+
+<div class="main">
+<h1>⚽ Match Tracker</h1>
 
 <div class="panel">
 
