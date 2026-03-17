@@ -1293,8 +1293,8 @@ scorers[e.player]=(scorers[e.player]||0)+1
 
 }
 
-  else if(e.type==="goalAgainst")
-text += "🥅 " + e.minute + "' Gegner\n"
+else if(e.type==="goalAgainst")
+text += "🥅 " + e.minute + "' Tor durch " + match.opponent + "\n"
 
 else if(e.type==="yellow")
 text += "🟨 " + e.minute + "' " + e.player + "\n"
