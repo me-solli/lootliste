@@ -332,11 +332,14 @@ z-index:999;
 .modal-box{
 background:#1a1a1a;
 padding:20px;
-border-radius:10px;
-width:260px;
-display:flex;
-flex-direction:column;
-gap:10px;
+border-radius:12px;
+width:300px;
+max-height:70vh;
+overflow-y:auto;
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
 }
 
 .hidden{display:none}
