@@ -802,9 +802,8 @@ gk = teamPlayers.find(p=>p.pos==='TW')
 let iv = teamPlayers.find(p=>p.pos==='IV')
 let lv = teamPlayers.find(p=>p.pos==='LV')
 let rv = teamPlayers.find(p=>p.pos==='RV')
-let lm = teamPlayers.find(p=>p.pos==='LM')
-let rm = teamPlayers.find(p=>p.pos==='RM')
-let zm = teamPlayers.find(p=>p.pos==='ZM')
+  
+let mids = teamPlayers.filter(p => ["LM","ZM","RM"].includes(p.pos))
 let st = teamPlayers.find(p=>p.pos==='ST')
 
 function cell(p){
