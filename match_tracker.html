@@ -484,9 +484,10 @@ renderAll()
 
 }
 
-function deletePlayer(i){
+function deletePlayer(name){
 
-players.splice(i,1)
+players = players.filter(p=>p.name!==name)
+
 save()
 renderAll()
 
