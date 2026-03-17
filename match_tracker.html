@@ -906,7 +906,7 @@ let goals = match.events.filter(e=>e.type==="goal").length
 
 html+=`
 
-<div class="match">
+<div class="match ${match.open ? "open" : ""}">
 
 <div class="match-header" onclick="toggleMatch(${match.id})">
 
