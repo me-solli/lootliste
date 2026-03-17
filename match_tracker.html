@@ -461,6 +461,24 @@ renderAll()
 
 }
 
+  function editPlayer(i){
+
+let p = players[i]
+
+let newName = prompt("Neuer Name:", p.name)
+if(newName===null || newName.trim()==="") return
+
+let newPos = prompt("Neue Position (TW, IV, LV, RV, ZM, LM, RM, ST):", p.pos)
+if(newPos===null || newPos.trim()==="") return
+
+p.name = newName.trim()
+p.pos = newPos.trim()
+
+save()
+renderAll()
+
+}
+
 function renderPlayers(){
 
 let html=""
