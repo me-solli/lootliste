@@ -854,9 +854,7 @@ let teamPlayers = players
 .filter(p=>p.team===activeTeam)
 .map(p=>p.name)
 
-let player = chooseFrom(teamPlayers,"Spieler auswählen")
-
-if(!player) return
+chooseFrom(teamPlayers,"Spieler auswählen",(player)=>{
 
 match.events.push({
 type:type,
@@ -867,6 +865,8 @@ minute:Number(minute)
 save()
 renderMatches()
 renderRankings()
+
+})
   })
 
 }
