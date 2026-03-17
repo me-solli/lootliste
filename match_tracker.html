@@ -819,8 +819,11 @@ return list[index]
 
 function addEvent(matchId,type){
 
-let minute=prompt("Minute?")
-if(minute===null) return
+openModal("Minute eingeben","z.B. 23",(minute)=>{
+
+if(!minute) return
+
+minute = Number(minute)
 
 let match=matches.find(m=>m.id==matchId)
 
