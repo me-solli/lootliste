@@ -547,7 +547,7 @@ players
 html+=`
 <span class="player-chip pos-${p.pos}">
 <span class="pos">${p.pos}</span>${p.name}
-<button onclick="editPlayer(${i})">✏️</button>
+<button onclick="editPlayer('${p.name}')">✏️</button>
 <button onclick="deletePlayer(${i})">x</button>
 </span>
 `
