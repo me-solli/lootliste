@@ -492,9 +492,10 @@ renderAll()
 
 }
 
- function editPlayer(i){
+function editPlayer(name){
 
-let p = players[i]
+let p = players.find(x=>x.name===name)
+if(!p) return
 
 let oldName = p.name
 
