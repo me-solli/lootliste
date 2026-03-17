@@ -799,9 +799,11 @@ gk = players.find(p=>p.name===match.twOverride)
 gk = teamPlayers.find(p=>p.pos==='TW')
 }
   
-let iv = teamPlayers.find(p=>p.pos==='IV')
-let lv = teamPlayers.find(p=>p.pos==='LV')
-let rv = teamPlayers.find(p=>p.pos==='RV')
+let defs = teamPlayers.filter(p => ["LV","IV","RV"].includes(p.pos))
+
+let def1 = defs[0]
+let def2 = defs[1]
+let def3 = defs[2]
   
 let mids = teamPlayers.filter(p => ["LM","ZM","RM"].includes(p.pos))
 let st = teamPlayers.find(p=>p.pos==='ST')
