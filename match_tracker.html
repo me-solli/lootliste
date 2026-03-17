@@ -887,8 +887,11 @@ function addSubstitution(matchId){
 
 let match=matches.find(m=>m.id==matchId)
 
-let minute=Number(prompt("Minute"))
-if(isNaN(minute)) return
+openModal("Minute eingeben","z.B. 45",(minute)=>{
+
+if(!minute) return
+
+minute = Number(minute)
 
 chooseFrom(match.lineup,"Wer geht raus?",(out)=>{
 
