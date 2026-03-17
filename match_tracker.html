@@ -791,7 +791,14 @@ let bench=match.bench
 
 let teamPlayers = players.filter(p=>list.includes(p.name))
 
-let gk = teamPlayers.find(p=>p.pos==='TW')
+let gk
+
+if(match.twOverride){
+gk = players.find(p=>p.name===match.twOverride)
+}else{
+gk = teamPlayers.find(p=>p.pos==='TW')
+}
+  
 let iv = teamPlayers.find(p=>p.pos==='IV')
 let lv = teamPlayers.find(p=>p.pos==='LV')
 let rv = teamPlayers.find(p=>p.pos==='RV')
