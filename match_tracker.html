@@ -1258,10 +1258,12 @@ list.forEach(([name,goals])=>{
 let p = players.find(pl=>pl.name===name)
 
 html+=`
-<div class="stat-row">
+<div class="stat-row" onclick="togglePlayerStats('${name}')">
 <span><span class="pos">${p.pos}</span>${name}</span>
 <span>${goals}</span>
 </div>
+
+<div id="player-${name}" class="player-stats hidden"></div>
 `
 
 })
