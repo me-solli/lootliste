@@ -794,27 +794,34 @@ renderMatches()
 EVENTS
 ========================= */
 
-function chooseFrom(list,title){
+function chooseFrom(list,title,callback){
 
 if(list.length===0){
 alert("Keine Spieler verfügbar")
-return null
+return
 }
 
-let text = title+"\n"
+let modal = document.getElementById("modal")
+let box = modal.querySelector(".modal-box")
 
-list.forEach((p,i)=>{
-text+=(i+1)+": "+p+"\n"
+box.innerHTML = `<h3>${title}</h3>`
+
+list.forEach(name=>{
+let btn = document.createElement("button")
+btn.innerText = name
+btn.onclick = ()=>{
+closeModal()
+callback(name)
+}
+box.appendChild(btn)
 })
 
-let choice = prompt(text)
+let cancel = document.createElement("button")
+cancel.innerText = "Abbrechen"
+cancel.onclick = closeModal
+box.appendChild(cancel)
 
-let index = Number(choice)-1
-
-if(isNaN(index)||index<0||index>=list.length) return null
-
-return list[index]
-
+modal.classList.remove("hidden")
 }
 
 function addEvent(matchId,type){
