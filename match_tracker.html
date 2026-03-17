@@ -914,22 +914,6 @@ renderMatches()
 
 })
 
-match.lineup = match.lineup.filter(p=>p!==out)
-match.lineup.push(inp)
-
-match.bench = match.bench.filter(p=>p!==inp)
-match.bench.push(out)
-
-match.events.push({
-type:"sub",
-player:out,
-in:inp,
-minute:minute
-})
-
-save()
-renderMatches()
-
 }
 
 /* 🔥 NEU: TW setzen */
