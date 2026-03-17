@@ -1135,7 +1135,7 @@ players
 let active = match.lineup.includes(p.name)?"selected":""
 
 html+=`
-<span class="player-chip pos-${p.pos} ${active}"
+<span class="player-chip small pos-${p.pos} ${active}"
 onclick="toggleLineup(${match.id},'${p.name}')">
 
 <span class="pos">${p.pos}</span>${p.name}
