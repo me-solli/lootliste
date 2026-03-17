@@ -415,6 +415,31 @@ gap:10px;
 DATA
 ========================= */
 
+  /* 🔥 MODAL SYSTEM */
+let modalCallback = null
+
+function openModal(title, placeholder, callback){
+document.getElementById("modalTitle").innerText = title
+document.getElementById("modalInput").value = ""
+document.getElementById("modalInput").placeholder = placeholder
+
+modalCallback = callback
+
+document.getElementById("modal").classList.remove("hidden")
+}
+
+function closeModal(){
+document.getElementById("modal").classList.add("hidden")
+}
+
+function confirmModal(){
+let value = document.getElementById("modalInput").value
+if(modalCallback) modalCallback(value)
+closeModal()
+}
+
+/* ========================= */
+
 let data = JSON.parse(localStorage.getItem("matchTracker")) || {
 teams:[],
 players:[],
