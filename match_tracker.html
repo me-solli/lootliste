@@ -793,7 +793,7 @@ html+=`
 <div class="match-header" onclick="toggleMatch(${match.id})">
 
 <div>
-${arrow} ${formatDate(match.date)}<br>
+${arrow} ${formatDate(match.date)} ${match.time || ""}<br>
 ${match.opponent}
 </div>
 
