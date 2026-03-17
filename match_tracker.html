@@ -811,7 +811,12 @@ box.innerHTML = `<h3>${title}</h3>`
 
 list.forEach(name=>{
 let btn = document.createElement("button")
-btn.innerText = name
+
+let p = players.find(pl=>pl.name===name)
+
+btn.innerHTML = `<span class="pos">${p.pos}</span> ${name}`
+
+btn.classList.add("pos-"+p.pos)
 btn.onclick = ()=>{
 closeModal()
 callback(name)
