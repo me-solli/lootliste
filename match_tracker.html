@@ -461,9 +461,11 @@ renderAll()
 
 }
 
-  function editPlayer(i){
+ function editPlayer(i){
 
 let p = players[i]
+
+let oldName = p.name
 
 let newName = prompt("Neuer Name:", p.name)
 if(newName===null || newName.trim()==="") return
@@ -471,8 +473,29 @@ if(newName===null || newName.trim()==="") return
 let newPos = prompt("Neue Position (TW, IV, LV, RV, ZM, LM, RM, ST):", p.pos)
 if(newPos===null || newPos.trim()==="") return
 
-p.name = newName.trim()
-p.pos = newPos.trim()
+newName = newName.trim()
+newPos = newPos.trim()
+
+// Spieler aktualisieren
+p.name = newName
+p.pos = newPos
+
+// 🔥 ALLE MATCHES UPDATEN
+matches.forEach(match=>{
+
+// Startelf
+match.lineup = match.lineup.map(n => n===oldName ? newName : n)
+
+// Bank
+match.bench = match.bench.map(n => n===oldName ? newName : n)
+
+// Events
+match.events.forEach(ev=>{
+if(ev.player===oldName) ev.player = newName
+if(ev.in===oldName) ev.in = newName
+})
+
+})
 
 save()
 renderAll()
