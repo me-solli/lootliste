@@ -89,26 +89,22 @@ background:#222;
 }
 
 .player-chip{
+display:flex;
 align-items:center;
 justify-content:space-between;
 
 background:#2b2b2b;
-padding:4px 6px;            /* 🔥 weniger Padding */
+padding:4px 6px;
 border-radius:5px;
-margin:2px 0;               /* 🔥 weniger Abstand */
-font-size:11px;             /* 🔥 kleiner */
+margin:3px 0;
+font-size:11px;
 cursor:pointer;
 
-width:auto;
-display:inline-flex;
+width:100%;
 
-  flex-wrap:wrap;
-gap:4px;
-
-/* kein Umbruch */
+/* 🔥 verhindert Umbruch */
 white-space:nowrap;
 overflow:hidden;
-text-overflow:ellipsis;
 }
 
 .player-chip.pos-TW{background:#1e88e5}
