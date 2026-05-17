@@ -3190,12 +3190,12 @@ function updateMeta() {
   }
 
   // Registrierte Spieler
-  if (heroPlayer) {
+  if (heroDonor) {
 
     fetch(API + "/stats")
       .then(res => res.json())
       .then(stats => {
-        heroPlayer.textContent = stats.playerCount;
+        heroDonor.textContent = stats.playerCount;
       })
       .catch(() => {});
 
