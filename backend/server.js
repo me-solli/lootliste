@@ -1053,6 +1053,39 @@ app.get("/my-items-activity", (req, res) => {
 });
 
 // ===============================
+// ADMIN – MIGRATE LADDER → NONLADDER
+// ===============================
+app.post("/admin/migrate-ladder", (req, res) => {
+
+  const adminToken = req.headers["x-admin-token"];
+
+  if (adminToken !== "lootliste-admin-2025") {
+    return res.status(403).json({
+      error: "Unauthorized"
+    });
+  }
+
+  let migrated = 0;
+
+  items.forEach(item => {
+
+    if (item.season === "ladder") {
+      item.season = "nonladder";
+      migrated++;
+    }
+
+  });
+
+  saveJSON(ITEMS_FILE, items);
+
+  res.json({
+    ok: true,
+    migrated
+  });
+
+});
+
+// ===============================
 // START SERVER
 // ===============================
 app.listen(PORT, () => {
