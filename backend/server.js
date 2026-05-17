@@ -547,6 +547,24 @@ app.get("/admin/accounts", (req, res) => {
 });
 
 // ===============================
+// HERO STATS
+// ===============================
+app.get("/stats", (req, res) => {
+
+  // nur echte registrierte Accounts zählen
+  const playerCount = accounts.length;
+
+  // alle Items zählen
+  const itemCount = items.length;
+
+  res.json({
+    playerCount,
+    itemCount
+  });
+
+});
+
+// ===============================
 // GET ITEMS
 // ===============================
 app.get("/items", (req, res) => {
