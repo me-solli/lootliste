@@ -3159,20 +3159,26 @@ function updateMeta() {
       : "–";
   }
 
-  // Unique donors
-  if (heroDonor) {
-    const donors = new Set(list.map(i => i.donor).filter(Boolean));
-    heroDonor.textContent = donors.size;
+  // Registrierte Spieler
+  if (heroPlayer) {
+
+    fetch(API + "/stats")
+      .then(res => res.json())
+      .then(stats => {
+        heroPlayer.textContent = stats.playerCount;
+      })
+      .catch(() => {});
+
   }
 
   // Date
-metaDate && (metaDate.textContent =
-  new Date().toLocaleDateString("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  })
-);
+  metaDate && (metaDate.textContent =
+    new Date().toLocaleDateString("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    })
+  );
 }
 
   function updateResultsUI() {
