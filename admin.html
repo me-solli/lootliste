@@ -234,7 +234,6 @@ th{
   border-radius:14px;
 }
 </style>
-  <link rel="stylesheet" href="assets/css/lootliste-redesign.css">
 </head>
 
 <body>
@@ -355,6 +354,7 @@ th{
 <script>
 const API = "https://lootliste-production.up.railway.app";
 const ADMIN = "me_solli";
+const ADMIN_TOKEN = "lootliste-admin-2025";
 
 const pageLogin = document.getElementById("page-login");
 const pageAdmin = document.getElementById("page-admin");
@@ -498,7 +498,7 @@ function render(items){
         <td>
           <div class="item-cell">
             <div class="item-icon" onclick="showShot('${i.screenshot || ""}')">
-              <img src="img/icons/${i.type || "sonstiges"}.webp" onerror="this.onerror=null;this.src='img/icons/sonstiges.webp'">
+              <img src="img/icons/${i.type || "sonstiges"}.png">
             </div>
             <strong>${i.name}</strong>
           </div>
@@ -565,9 +565,7 @@ filterSeason.onchange=loadItems;
 
 /* ===== USERS ===== */
 async function loadUsers(){
-  const usersResponse = await fetch(API+"/admin/accounts", { credentials: "include" });
-  if (!usersResponse.ok) throw new Error("Admin-Zugriff erforderlich");
-  const users = await usersResponse.json();
+  const users = await fetch(API+"/admin/accounts").then(r=>r.json());
   userTable.innerHTML="";
   users.forEach(u=>{
     const tr=document.createElement("tr");
@@ -584,9 +582,9 @@ async function loadUsers(){
 
 /* ===== FEEDBACK ===== */
 async function loadFeedback(){
-  const feedbackResponse = await fetch(API+"/admin/feedback", { credentials: "include" });
-  if (!feedbackResponse.ok) throw new Error("Admin-Zugriff erforderlich");
-  const list = await feedbackResponse.json();
+  const list = await fetch(API+"/admin/feedback",{
+    headers:{ "X-Admin-Token": ADMIN_TOKEN }
+  }).then(r=>r.json());
 
   feedbackTable.innerHTML="";
   list.forEach(f=>{
@@ -608,6 +606,5 @@ tr.innerHTML=`
 init();
 </script>
 
-  <script src="assets/js/lootliste-enhancements.js" defer></script>
 </body>
 </html>

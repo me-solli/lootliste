@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<!-- D2R Lootliste – zentrale Itemübersicht -->
+<!--
+  ================================
+  LOOTLISTE – BLANCO V2 (CLEAN BASE)
+  Basis: alte index.html (OPTIK)
+  Ziel: saubere Struktur + FAKE-Blöcke
+  Keine aktive Logik
+  ================================
+-->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <title>D2R Items teilen & finden | d2r-lootliste.de</title>
+<meta name="description" content="Diablo II: Resurrected Items kostenlos teilen, gegen Rune tauschen oder gezielt suchen – für Ladder & Non-Ladder.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090b10">
-<meta name="description" content="Die D2R Lootliste: Diablo II: Resurrected Items kostenlos anbieten, suchen und fair an andere Spieler weitergeben – für Ladder und Non-Ladder.">
 
 <!-- FAVICON -->
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -32,6 +38,16 @@ body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 
+  background:
+linear-gradient(
+  to bottom,
+  rgba(0,0,0,.72) 0px,
+  rgba(0,0,0,.48) 90px,
+  rgba(0,0,0,.22) 180px,
+  rgba(0,0,0,.38) 100%
+),
+url("img/background.png") center top / cover fixed no-repeat;
+
   background-color:#050505;
 
   color:#eaeaea;
@@ -47,7 +63,7 @@ body{
 ================================ */
 
 .hero{
-  background:url("img/banner_diablo.webp") center top / cover no-repeat;
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
   position:relative;
@@ -1369,16 +1385,16 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
 
 /* feste Loot-Typen */
 .loot-weapon{
-  background-image:url("img/icons/waffe.webp");
+  background-image:url("img/icons/waffe.png");
 }
 .loot-armor{
-  background-image:url("img/icons/ruestung.webp");
+  background-image:url("img/icons/ruestung.png");
 }
 .loot-jewelry{
-  background-image:url("img/icons/ring.webp");
+  background-image:url("img/icons/ring.png");
 }
 .loot-special{
-  background-image:url("img/icons/charm.webp");
+  background-image:url("img/icons/charm.png");
 }
 
 /* ================================
@@ -2348,7 +2364,6 @@ body.mode-ladder .badge-offer{
 }
   
 </style>
-  <link rel="stylesheet" href="assets/css/lootliste-redesign.css">
 </head>
 
 <body>
@@ -2362,12 +2377,13 @@ body.mode-ladder .badge-offer{
 
 <nav class="hero-nav">
   <a href="index.html" class="hero-link active">Lootliste</a>
+  <a href="pages/artwork.html" class="hero-link">Visuals</a>
 </nav>
 
     <div class="auth-box auth-box--stacked">
       <img
         id="playerAvatar"
-        src="img/avatars/default.webp"
+        src="img/avatars/default.png"
         alt="Avatar"
         width="32"
         height="32"
@@ -2427,7 +2443,7 @@ body.mode-ladder .badge-offer{
     </div>
 
 <div class="hero-logo">
-  <img src="img/logo_d2r.webp" alt="D2R Lootliste Logo">
+  <img src="img/logo_d2r.png" alt="D2R Lootliste Logo">
 </div>
 
 <h1 class="hero-title">
@@ -2536,62 +2552,62 @@ body.mode-ladder .badge-offer{
 <nav class="icon-bar">
 
   <div class="icon-btn" data-type="waffe">
-    <img src="img/icons/waffe.webp" alt="Waffe">
+    <img src="img/icons/waffe.png" alt="Waffe">
     <span>Waffe</span>
   </div>
 
   <div class="icon-btn" data-type="helm">
-    <img src="img/icons/helm.webp" alt="Helm">
+    <img src="img/icons/helm.png" alt="Helm">
     <span>Helm</span>
   </div>
 
   <div class="icon-btn" data-type="ruestung">
-    <img src="img/icons/ruestung.webp" alt="Rüstung">
+    <img src="img/icons/ruestung.png" alt="Rüstung">
     <span>Rüstung</span>
   </div>
 
   <div class="icon-btn" data-type="schild">
-    <img src="img/icons/schild.webp" alt="Schild">
+    <img src="img/icons/schild.png" alt="Schild">
     <span>Schild</span>
   </div>
 
   <div class="icon-btn" data-type="guertel">
-    <img src="img/icons/guertel.webp" alt="Gürtel">
+    <img src="img/icons/guertel.png" alt="Gürtel">
     <span>Gürtel</span>
   </div>
 
   <div class="icon-btn" data-type="handschuhe">
-    <img src="img/icons/handschuhe.webp" alt="Handschuhe">
+    <img src="img/icons/handschuhe.png" alt="Handschuhe">
     <span>Handschuhe</span>
   </div>
 
   <div class="icon-btn" data-type="schuhe">
-    <img src="img/icons/schuhe.webp" alt="Schuhe">
+    <img src="img/icons/schuhe.png" alt="Schuhe">
     <span>Schuhe</span>
   </div>
 
   <div class="icon-btn" data-type="amulett">
-    <img src="img/icons/amulett.webp" alt="Amulett">
+    <img src="img/icons/amulett.png" alt="Amulett">
     <span>Amulett</span>
   </div>
 
   <div class="icon-btn" data-type="ring">
-    <img src="img/icons/ring.webp" alt="Ring">
+    <img src="img/icons/ring.png" alt="Ring">
     <span>Ring</span>
   </div>
 
   <div class="icon-btn" data-type="charm">
-    <img src="img/icons/charm.webp" alt="Charm">
+    <img src="img/icons/charm.png" alt="Charm">
     <span>Charm</span>
   </div>
 
   <div class="icon-btn" data-type="rune">
-    <img src="img/icons/rune.webp" alt="Rune">
+    <img src="img/icons/rune.png" alt="Rune">
     <span>Rune</span>
   </div>
 
   <div class="icon-btn" data-type="sonstiges">
-    <img src="img/icons/sonstiges.webp" alt="Sonstiges">
+    <img src="img/icons/sonstiges.png" alt="Sonstiges">
     <span>Sonstiges</span>
   </div>
 
@@ -2603,7 +2619,7 @@ body.mode-ladder .badge-offer{
 <div class="filter-slogan-wrap">
 
 <div class="loot-slogan">
-  <img src="img/select_button.webp" alt="Wähle deinen Modus">
+  <img src="img/select_button.png" alt="Wähle deinen Modus">
 </div>
 
      <div class="mode-date">
@@ -2615,11 +2631,11 @@ body.mode-ladder .badge-offer{
 <div class="mode-switch mode-switch-visual">
 
   <div class="mode-visual active" data-season="non-ladder">
-    <img src="img/modes/non-ladder.webp" alt="Non-Ladder">
+    <img src="img/modes/non-ladder.png" alt="Non-Ladder">
   </div>
 
   <div class="mode-visual" data-season="ladder">
-    <img src="img/modes/ladder.webp" alt="Ladder">
+    <img src="img/modes/ladder.png" alt="Ladder">
   </div>
 
 </div>
@@ -2643,11 +2659,11 @@ body.mode-ladder .badge-offer{
   </button>
 
 <button class="trade-btn" data-trade="free">
-  <img src="img/free.webp" class="trade-icon"> Free
+  <img src="img/free.png" class="trade-icon"> Free
 </button>
 
 <button class="trade-btn" data-trade="rune">
-  <img src="img/rune.webp" class="trade-icon"> Rune
+  <img src="img/rune.png" class="trade-icon"> Rune
 </button>
 
   <button class="trade-btn" data-trade="search">
@@ -2670,20 +2686,9 @@ body.mode-ladder .badge-offer{
 </div>
 
 <!-- ================================
-     ITEM RESULTS
-================================ -->
-<section class="results-toolbar" id="resultsInfo" aria-live="polite">
-  <div>
-    <h2 class="results-toolbar-title">Die Lootliste</h2>
-    <p class="results-toolbar-copy">Finde dein nächstes Upgrade oder gib einem Item ein neues Zuhause.</p>
-  </div>
-  <span class="results-count-pill"><span id="resultsCount">0</span> Einträge</span>
-</section>
-
-<!-- ================================
      CARDS
 ================================ -->
-<section class="cards" aria-label="Verfügbare Items">
+<section class="cards">
 
   <!-- SKELETON LOADING -->
   <div id="skeletons" class="skeletons">
@@ -2707,6 +2712,10 @@ body.mode-ladder .badge-offer{
 <footer class="footer">
 
   <div class="footer-links">
+    <a href="ueber-das-projekt.html">Über das Projekt</a>
+    <span>·</span>
+    <a href="entwickler.html">Über den Entwickler</a>
+    <span>·</span>
     <a href="impressum.html">Impressum</a>
     <span>·</span>
     <a href="datenschutz.html">Datenschutz</a>
@@ -2797,14 +2806,14 @@ body.mode-ladder .badge-offer{
      STEP 3 – Klassen → Avatar-Bilder
   =============================== */
   const CLASS_AVATARS = {
-    amazon: "img/classes/amazon.webp",
-    assassin: "img/classes/assassin.webp",
-    barbarian: "img/classes/barbarian.webp",
-    druid: "img/classes/druid.webp",
-    necromancer: "img/classes/necromancer.webp",
-    paladin: "img/classes/paladin.webp",
-    sorceress: "img/classes/sorceress.webp",
-      hexenmeister: "img/classes/hexenmeister.webp"
+    amazon: "img/classes/amazon.png",
+    assassin: "img/classes/assassin.png",
+    barbarian: "img/classes/barbarian.png",
+    druid: "img/classes/druid.png",
+    necromancer: "img/classes/necromancer.png",
+    paladin: "img/classes/paladin.png",
+    sorceress: "img/classes/sorceress.png",
+      hexenmeister: "img/classes/hexenmeister.png"
   };
 
   /* ===============================
@@ -3041,7 +3050,7 @@ if (list.length === 0) {
     }
 
     const type = (item.type || item.category || "sonstiges").toLowerCase();
-    const iconUrl = `img/icons/${type}.webp`;
+    const iconUrl = `img/icons/${type}.png`;
 
     li.innerHTML = `
       <span class="recent-feed-icon" style="background-image:url('${iconUrl}')"></span>
@@ -3102,7 +3111,7 @@ async function setUserLabel() {
 
   // Default Avatar
   if (avatar) {
-    avatar.src = "img/avatars/default.webp";
+    avatar.src = "img/avatars/default.png";
     avatar.style.objectPosition = "50% 50%";
   }
 
@@ -3485,6 +3494,5 @@ function toggleHelp(){
 }
 </script>
   
-  <script src="assets/js/lootliste-enhancements.js" defer></script>
 </body>
 </html>

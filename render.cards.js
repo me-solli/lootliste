@@ -1,13 +1,13 @@
 const API = "https://lootliste-production.up.railway.app";
 
 const CLASS_ICONS_MINI = {
-  amazon: "img/classes/amazon.webp",
-  assassin: "img/classes/assassin.webp",
-  barbarian: "img/classes/barbarian.webp",
-  druid: "img/classes/druid.webp",
-  necromancer: "img/classes/necromancer.webp",
-  paladin: "img/classes/paladin.webp",
-  sorceress: "img/classes/sorceress.webp"
+  amazon: "img/classes/amazon.png",
+  assassin: "img/classes/assassin.png",
+  barbarian: "img/classes/barbarian.png",
+  druid: "img/classes/druid.png",
+  necromancer: "img/classes/necromancer.png",
+  paladin: "img/classes/paladin.png",
+  sorceress: "img/classes/sorceress.png"
 };
 
 const VALID_TYPES = [
@@ -633,7 +633,7 @@ sourceLabel = `
     card.innerHTML = `
       <button class="card-header" type="button">
         <span class="card-chevron">▶</span>
-        <img class="item-type-icon" src="img/icons/${type}.webp" alt="${type}" loading="lazy" onerror="this.onerror=null;this.src='img/icons/sonstiges.webp'">
+        <img class="item-type-icon" src="img/icons/${type}.png" alt="${type}" loading="lazy">
         
 <div class="card-title">
   <div class="item-name ${qualityClass}">
@@ -657,14 +657,14 @@ ${
   item.kind === "offer" && item.tradeType === "rune" && item.wantedRune
     ? `
       <span class="rune-inline-badge">
-        <img src="img/rune.webp" alt="Rune">
+        <img src="img/rune.png" alt="Rune">
         ${item.wantedRune}
       </span>
     `
     : item.kind === "offer" && item.tradeType === "free"
     ? `
 <span class="free-inline-badge">
-  <img src="img/free.webp" alt="Free">
+  <img src="img/free.png" alt="Free">
   Free
 </span>
     `

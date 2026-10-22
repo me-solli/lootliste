@@ -28,7 +28,7 @@ body{
 
 /* ===== HERO ===== */
 .hero{
-  background:url("img/banner_diablo.webp") center top / cover no-repeat;
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
   min-height:180px;
@@ -209,7 +209,6 @@ tr.feed-highlight{
 }
   
 </style>
-  <link rel="stylesheet" href="assets/css/lootliste-redesign.css">
 </head>
 <body>
 
@@ -219,7 +218,7 @@ tr.feed-highlight{
   <div class="hero-inner">
 
     <div class="auth-box">
-      <img src="img/avatars/default.webp" alt="Avatar">
+      <img src="img/avatars/default.png" alt="Avatar">
       <span id="playerName">–</span>
 <span id="playerStars"></span>
 <span id="playerLevel"></span>
@@ -378,7 +377,7 @@ tr.innerHTML=`
 <td>
   <div class="item-cell">
     <div class="item-icon" onclick="showShot('${i.screenshot||""}')">
-      <img src="img/icons/${i.type||"sonstiges"}.webp" onerror="this.onerror=null;this.src='img/icons/sonstiges.webp'">
+      <img src="img/icons/${i.type||"sonstiges"}.png">
     </div>
     <div class="item-meta">
       <strong>
@@ -673,6 +672,5 @@ filterSeason.onchange = load;
 })();
 </script>
 
-  <script src="assets/js/lootliste-enhancements.js" defer></script>
 </body>
 </html>

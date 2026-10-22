@@ -150,7 +150,6 @@ h3{margin-top:0}
   opacity:1;
 }
 </style>
-  <link rel="stylesheet" href="assets/css/lootliste-redesign.css">
 </head>
 
 <body>
@@ -227,13 +226,13 @@ if(data?.about){
 classes.forEach(c=>{
   const div = document.createElement("div");
   div.className = "class" + (data?.favClass === c ? " active" : "");
-  div.innerHTML = `<img src="img/classes/${c.toLowerCase()}.webp"><div>${c}</div>`;
+  div.innerHTML = `<img src="img/classes/${c.toLowerCase()}.png"><div>${c}</div>`;
   classGrid.appendChild(div);
 });
 
 /* AVATAR */
 if(data?.favClass){
-  avatarBox.innerHTML = `<img src="img/classes/${data.favClass.toLowerCase()}.webp">`;
+  avatarBox.innerHTML = `<img src="img/classes/${data.favClass.toLowerCase()}.png">`;
 }
 
 /* TAGS */
@@ -249,6 +248,5 @@ if(data?.tags?.length){
 }
 </script>
 
-  <script src="assets/js/lootliste-enhancements.js" defer></script>
 </body>
 </html>

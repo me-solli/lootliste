@@ -26,7 +26,7 @@ body{
 .wrapper{max-width:1600px;margin:0 auto}
 
 .hero{
-  background:url("img/banner_diablo.webp") center top / cover no-repeat;
+  background:url("img/banner_diablo.png") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
   min-height:180px;
@@ -130,7 +130,6 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 }
 </style>
 
-  <link rel="stylesheet" href="assets/css/lootliste-redesign.css">
 </head>
 <body>
 
@@ -141,7 +140,7 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 
 ```
 <div class="auth-box">
-  <img src="img/avatars/default.webp" alt="Avatar">
+  <img src="img/avatars/default.png" alt="Avatar">
   <span id="playerName">–</span>
   <a href="index.html" class="auth-link">Lootliste</a>
   <a href="my-items.html" class="auth-link">Meine Items</a>
@@ -267,7 +266,7 @@ async function load() {
       <td>
         <div class="item-cell">
           <div class="item-icon">
-            <img src="img/icons/${i.type || "sonstiges"}.webp" onerror="this.onerror=null;this.src='img/icons/sonstiges.webp'">
+            <img src="img/icons/${i.type || "sonstiges"}.png">
           </div>
           <div class="item-meta">
             <strong>${i.name}</strong>
@@ -331,6 +330,5 @@ async function confirmReceive(id) {
 })();
 </script>
 
-  <script src="assets/js/lootliste-enhancements.js" defer></script>
 </body>
 </html>
