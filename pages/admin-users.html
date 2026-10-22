@@ -97,6 +97,7 @@ button.ok{
   color:#aaa;
 }
 </style>
+  <link rel="stylesheet" href="../assets/css/lootliste-redesign.css">
 </head>
 
 <body>
@@ -148,9 +149,10 @@ function setRestricted(data){
 /* ===== LOAD ===== */
 async function load(){
   const [users, items] = await Promise.all([
-    fetch(API + "/accounts",{
-      headers:{ "X-Account-Id": accountId }
-    }).then(r=>r.json()),
+    fetch(API + "/admin/accounts", { credentials: "include" }).then(r=>{
+      if (!r.ok) throw new Error("Admin-Zugriff erforderlich");
+      return r.json();
+    }),
     fetch(API + "/items").then(r=>r.json())
   ]);
 
@@ -206,5 +208,6 @@ function unrestrict(username){
 load();
 </script>
 
+  <script src="../assets/js/lootliste-enhancements.js" defer></script>
 </body>
 </html>
