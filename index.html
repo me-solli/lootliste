@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <!--
-  ================================
-  LOOTLISTE – BLANCO V2 (CLEAN BASE)
-  Basis: alte index.html (OPTIK)
-  Ziel: saubere Struktur + FAKE-Blöcke
-  Keine aktive Logik
-  ================================
+  D2R LOOTLISTE – STARTSEITE
+  Bereinigte Arbeitsfassung: bestehende Gestaltung und vorhandene Abläufe
+  bleiben bewusst erhalten. Referenzierte Assets und Backend-Funktionen
+  liegen außerhalb dieses HTML-only Pakets.
 -->
 <html lang="de">
 <head>
@@ -361,7 +359,7 @@ url("img/background.png") center top / cover fixed no-repeat;
   z-index:9999;
   box-shadow:0 0 18px rgba(245,196,81,.35);
 }
-  
+
 /* ================================
    PROJECT TIMELINE (OPTIK)
 ================================ */
@@ -1060,7 +1058,7 @@ url("img/background.png") center top / cover fixed no-repeat;
   align-items:center;
   gap:18px;
 }
-  
+
 /* ================================
    RECENT FEED – MINIMAL STRIP
 ================================ */
@@ -2254,7 +2252,6 @@ body.mode-ladder .trade-btn.active{
   filter:drop-shadow(0 0 4px rgba(245,196,81,.45));
 }
 
-
 /* ================================
    SLOGAN IMAGE
 ================================ */
@@ -2271,7 +2268,6 @@ body.mode-ladder .trade-btn.active{
   display:block;
   margin:0 auto;
 }
-
 
 /* ================================
    TRADE BADGE (CARD CORNER)
@@ -2294,7 +2290,6 @@ body.mode-ladder .trade-btn.active{
   background:rgba(0,0,0,.35);
 }
 
-
 /* Non-Ladder */
 
 .badge-offer{
@@ -2305,7 +2300,6 @@ body.mode-ladder .trade-btn.active{
 .badge-search{
   color:#cfcfcf;
 }
-
 
 /* Ladder Override */
 
@@ -2362,7 +2356,7 @@ body.mode-ladder .badge-offer{
 .hero-news-text{
   opacity:.85;
 }
-  
+
 </style>
 </head>
 
@@ -2456,14 +2450,14 @@ body.mode-ladder .badge-offer{
 
 <div class="hero-headline">
 </div>
-    
+
 <div class="mode-banner">
   Aktueller Modus:
   <strong id="activeModeLabel">RotWL</strong>
 </div>
 
 <div class="hero-stats">
-   
+
   <div class="hero-stat">
     📦 <strong id="heroItemCount">28</strong> Items
   </div>
@@ -2481,7 +2475,7 @@ body.mode-ladder .badge-offer{
 
 </div>
 </header>
-  
+
 <!-- ================================
      HOW IT WORKS / CTA
 ================================ -->
@@ -2643,7 +2637,7 @@ body.mode-ladder .badge-offer{
   </div>
 
 </div>
-  
+
 <!-- ================================
      CONTENT
 ================================ -->
@@ -2705,7 +2699,7 @@ body.mode-ladder .badge-offer{
 </section>
 
 </div>
-  
+
 <!-- ================================
      FOOTER
 ================================ -->
@@ -3070,7 +3064,6 @@ if (list.length === 0) {
   }
 }
 
-
 // ===============================
 // FEED TOGGLE (GLOBAL!)
 // ===============================
@@ -3261,7 +3254,7 @@ else if (state.trade === "search") {
     i.kind === "search"
   );
 }
-  
+
   // Search
   if (state.search) {
     const q = state.search.toLowerCase();
@@ -3493,6 +3486,6 @@ function toggleHelp(){
   el.classList.toggle("active");
 }
 </script>
-  
+
 </body>
 </html>

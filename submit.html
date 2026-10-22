@@ -427,7 +427,6 @@ body.submit-ladder .submit-mode-visual.active{
 
 </div>
 
-
 <div id="ladderNotice" class="ladder-notice" style="display:none;">
   ⚔ Ladder-Items sind saisongebunden und werden nach Season-Ende
   nicht automatisch in Non-Ladder übernommen.
@@ -476,7 +475,7 @@ body.submit-ladder .submit-mode-visual.active{
 </select>
 
 <label>Item-Details (optional)</label>
-<textarea 
+<textarea
   id="details"
   maxlength="160"
   rows="3"
@@ -531,12 +530,12 @@ body.submit-ladder .submit-mode-visual.active{
   </div>
 
 </div>
-      
+
 <label>Interne Notiz (optional)</label>
-<textarea 
-  id="note" 
-  maxlength="50" 
-  rows="2" 
+<textarea
+  id="note"
+  maxlength="50"
+  rows="2"
   placeholder="z. B. für Javazon, evtl. dupe?"
 ></textarea>
 <small class="hint">Nur für dich sichtbar</small>
@@ -584,7 +583,6 @@ const API_ITEMS=API_BASE+"/items";
 const CLOUD_NAME="dcczi93p6";
 const UPLOAD_PRESET="lootliste_unsigned";
 let selectedSeason = null;
-
 
 // ===============================
 // TRADE TYPE TOGGLE
@@ -793,8 +791,8 @@ const selectedRune = document.getElementById("wantedRune").value;
 if (selectedTrade === "rune" && !selectedRune) {
   alert("Bitte eine Rune auswählen.");
   submitBtn.disabled = false;
-  submitBtn.textContent = selectedKind === "search" 
-    ? "Suche einreichen" 
+  submitBtn.textContent = selectedKind === "search"
+    ? "Suche einreichen"
     : "Item einreichen";
   return;
 }

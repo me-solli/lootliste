@@ -207,7 +207,7 @@ tr.needs-action{background:rgba(255,179,71,.06)}
 tr.feed-highlight{
   animation: feedPulse 0.8s ease-in-out 3;
 }
-  
+
 </style>
 </head>
 <body>
@@ -423,13 +423,13 @@ tr.innerHTML=`
                       (!i.helpOffers || i.helpOffers.length === 0);
 
                     if(!canEdit){
-                      return `${i.wantedRune}-Rune 
+                      return `${i.wantedRune}-Rune
                         <span style="margin-left:6px;opacity:.5;cursor:help;"
                         title="Rune kann nicht geändert werden, solange Trade-Anfragen existieren">🔒</span>`;
                     }
 
                     if(!enabled){
-                      return `${i.wantedRune}-Rune 
+                      return `${i.wantedRune}-Rune
                         <button class="action-btn"
                         style="margin-left:6px;font-size:11px;padding:3px 8px;"
                         onclick="enableRuneEdit(${i.id})">Rune ändern</button>`;
@@ -463,7 +463,7 @@ tr.innerHTML=`
         </div>
       `
       : (
- (i.kind === "search" || i.tradeType === "rune") 
+ (i.kind === "search" || i.tradeType === "rune")
 && helpers.length > 0
         )
 ? helpers.map(h => `
@@ -569,7 +569,6 @@ async function editNote(id, el){
   load();
 }
 
-
 /* ===== Rune bearbeiten ===== */
 async function editRune(id, current){
 
@@ -615,7 +614,6 @@ function showShot(src){
   overlay.style.display = "flex";
 }
 
-
 /* ===== Rune ändern ===== */
 async function changeRune(id, current, direction){
 
@@ -653,7 +651,6 @@ const enabled = sessionStorage.getItem("rune_edit_enabled_" + id);
 
   load();
 }
-
 
 /* ===== Rune Edit aktivieren ===== */
 function enableRuneEdit(id){
