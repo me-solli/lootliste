@@ -34,7 +34,7 @@ body{
 
 /* HERO */
 .hero{
-  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  background:url("img/banner_diablo.webp") center top / cover no-repeat;
   border-radius:0 0 28px 28px;
   overflow:hidden;
 }
@@ -309,7 +309,7 @@ function render(){
       card.className="card";
       card.innerHTML=`
         <div class="card-icon" onclick="showShot('${i.screenshot||""}')">
-          <img src="img/icons/${i.type||"sonstiges"}.png">
+          <img src="img/icons/${i.type||"sonstiges"}.webp" onerror="this.onerror=null;this.src='img/icons/sonstiges.webp'">
         </div>
         <div class="card-body">
           <div class="card-name ${q}">${i.name}</div>

@@ -1,47 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://d2r-lootliste.de/</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/runen-upgrade.html</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/cow-level.html</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/cube-codex.html</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/terror-zonen.html</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/guides.html</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/sorc-orb-fireball.html</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/artwork.html</loc>
-  </url>
-
-</urlset><?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://d2r-lootliste.de/</loc>
-  </url>
-
-  <url>
-    <loc>https://d2r-lootliste.de/pages/runen-upgrade.html</loc>
-  </url>
-
+  <url><loc>https://d2r-lootliste.de/</loc></url>
+  <url><loc>https://d2r-lootliste.de/submit.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/archive.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/auth.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/my-items.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/my-claims.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/my-profile.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/feedback.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/impressum.html</loc></url>
+  <url><loc>https://d2r-lootliste.de/datenschutz.html</loc></url>
 </urlset>

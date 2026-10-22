@@ -498,7 +498,7 @@ function render(items){
         <td>
           <div class="item-cell">
             <div class="item-icon" onclick="showShot('${i.screenshot || ""}')">
-              <img src="img/icons/${i.type || "sonstiges"}.png">
+              <img src="img/icons/${i.type || "sonstiges"}.webp" onerror="this.onerror=null;this.src='img/icons/sonstiges.webp'">
             </div>
             <strong>${i.name}</strong>
           </div>

@@ -3,14 +3,11 @@
   'use strict';
   const path = window.location.pathname;
   const file = path.split('/').pop() || 'index.html';
-  const inPages = /\/pages\//.test(path);
-  const root = inPages ? '../' : '';
-  const excluded = new Set(['index.html', 'admin.html', 'obs.html', 'admin-users.html']);
+  const root = '';
+  const excluded = new Set(['index.html', 'admin.html']);
   if (!excluded.has(file) && !document.querySelector('.ll-global-nav')) {
     const links = [
       ['index.html', 'Lootliste'],
-      ['pages/guides.html', 'Guides'],
-      ['pages/artwork.html', 'Visuals'],
       ['submit.html', 'Item anbieten'],
       ['my-items.html', 'Meine Items'],
       ['my-claims.html', 'Meine Claims']
@@ -22,7 +19,7 @@
     brand.className = 'll-global-brand';
     brand.href = root + 'index.html';
     const logo = document.createElement('img');
-    logo.src = root + 'img/logo-rune.png';
+    logo.src = root + 'img/logo_d2r.webp';
     logo.alt = '';
     logo.width = 30;
     logo.height = 30;
@@ -35,7 +32,7 @@
       const a = document.createElement('a');
       a.href = root + href;
       a.textContent = label;
-      if (href === file || (inPages && href === 'pages/' + file)) a.setAttribute('aria-current', 'page');
+      if (href === file) a.setAttribute('aria-current', 'page');
       if (href === 'submit.html') a.className = 'll-nav-cta';
       list.appendChild(a);
     });

@@ -23,7 +23,7 @@ body{
 
 /* ================= HERO ================= */
 .hero{
-  background:url("img/banner_diablo.png") center top / cover no-repeat;
+  background:url("img/banner_diablo.webp") center top / cover no-repeat;
   border-radius:0 0 26px 26px;
   overflow:hidden;
   min-height:200px;
@@ -281,7 +281,7 @@ textarea{
 
     <aside class="character-card">
       <div class="character-visual">
-        <img id="heroImg" src="img/classes/assassin.png">
+        <img id="heroImg" src="img/classes/assassin.webp">
         <div class="character-glow"></div>
       </div>
       <div class="character-name" id="heroName">Spieler</div>
@@ -301,14 +301,14 @@ textarea{
       <div class="section">
         <h3>Lieblingsklasse</h3>
         <div class="classes">
-          <div class="class" data-class="Paladin"><img src="img/classes/paladin.png"><div>Paladin</div></div>
-          <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.png"><div>Sorceress</div></div>
-          <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.png"><div>Barbarian</div></div>
-          <div class="class" data-class="Assassin"><img src="img/classes/assassin.png"><div>Assassin</div></div>
-          <div class="class" data-class="Druid"><img src="img/classes/druid.png"><div>Druid</div></div>
-          <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.png"><div>Necromancer</div></div>
-          <div class="class" data-class="Amazon"><img src="img/classes/amazon.png"><div>Amazon</div></div>
-          <div class="class" data-class="Hexenmeister"><img src="img/classes/hexenmeister.png"><div>Hexenmeister</div></div>
+          <div class="class" data-class="Paladin"><img src="img/classes/paladin.webp"><div>Paladin</div></div>
+          <div class="class" data-class="Sorceress"><img src="img/classes/sorceress.webp"><div>Sorceress</div></div>
+          <div class="class" data-class="Barbarian"><img src="img/classes/barbarian.webp"><div>Barbarian</div></div>
+          <div class="class" data-class="Assassin"><img src="img/classes/assassin.webp"><div>Assassin</div></div>
+          <div class="class" data-class="Druid"><img src="img/classes/druid.webp"><div>Druid</div></div>
+          <div class="class" data-class="Necromancer"><img src="img/classes/necromancer.webp"><div>Necromancer</div></div>
+          <div class="class" data-class="Amazon"><img src="img/classes/amazon.webp"><div>Amazon</div></div>
+          <div class="class" data-class="Hexenmeister"><img src="img/classes/hexenmeister.webp"><div>Hexenmeister</div></div>
         </div>
       </div>
 
@@ -353,7 +353,7 @@ const saveBtn=document.getElementById("saveBtn");
 about.value=state.about;
 
 function renderHero(){
- if(state.favClass){heroImg.src=`img/classes/${state.favClass.toLowerCase()}.png`;}
+ if(state.favClass){heroImg.src=`img/classes/${state.favClass.toLowerCase()}.webp`;}
 }
 renderHero();
 
