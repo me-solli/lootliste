@@ -152,3 +152,287 @@ body:not(:has(.hero)) a { text-underline-offset: 3px; }
 }
 @media (max-width: 390px) { .cards { grid-template-columns:1fr; } .auth-box { max-width:48%; } }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; } }
+
+/* ============================================================
+   REFORGED V2 — polished core Lootliste experience
+   Keeps the original Diablo atmosphere: charcoal, ember gold,
+   item-quality colors and the existing static/API architecture.
+============================================================ */
+:root {
+  --ll-bg: #090a0d;
+  --ll-surface: #11141a;
+  --ll-surface-raised: #191d25;
+  --ll-border: rgba(221, 185, 103, .19);
+  --ll-border-strong: rgba(221, 185, 103, .48);
+  --ll-gold: #d7b36a;
+  --ll-gold-bright: #f1d99a;
+  --ll-text: #ece8df;
+  --ll-muted: #a29e96;
+  --ll-green: #8bc89a;
+  --ll-radius: 15px;
+  --ll-shadow: 0 18px 48px rgba(0,0,0,.28);
+}
+
+html { scroll-padding-top: 20px; }
+body:has(.hero) {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(116, 78, 32, .15), transparent 37rem),
+    linear-gradient(180deg, #0b0c10 0%, #090a0d 54%, #0d1015 100%);
+}
+body:has(.hero) .hero {
+  border-bottom: 1px solid rgba(221,185,103,.28);
+  box-shadow: 0 24px 70px rgba(0,0,0,.35);
+  background-position: center 34%;
+}
+body:has(.hero) .hero::after {
+  background: linear-gradient(90deg, rgba(5,6,9,.84), rgba(5,6,9,.34) 52%, rgba(5,6,9,.68));
+}
+body:has(.hero) .hero-inner {
+  padding: 72px clamp(18px, 4vw, 54px) 27px;
+}
+body:has(.hero) .hero-title {
+  max-width: 760px;
+  margin: 10px auto 7px;
+  font-size: clamp(30px, 4.2vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+  text-shadow: 0 4px 24px rgba(0,0,0,.65);
+}
+body:has(.hero) .hero-h2 {
+  max-width: 660px;
+  margin: 0 auto 22px;
+  color: #d0c9ba;
+  font-size: clamp(13px, 1.5vw, 17px);
+  line-height: 1.5;
+}
+body:has(.hero) .hero-logo img { max-width: 300px; max-height: 110px; object-fit: contain; }
+body:has(.hero) .hero-stats {
+  justify-content: center;
+  gap: 9px;
+  margin-top: 22px;
+}
+body:has(.hero) .hero-stat,
+body:has(.hero) .hero-stats > div {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  background: rgba(8,9,12,.68);
+  border: 1px solid rgba(221,185,103,.24);
+  border-radius: 999px;
+  color: #d6d0c4;
+  font-size: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+}
+body:has(.hero) .hero-stat strong,
+body:has(.hero) .hero-stats strong { color: #f3e3bd; font-variant-numeric: tabular-nums; }
+body:has(.hero) .mode-banner {
+  width: fit-content;
+  margin: 16px auto 0;
+  padding: 6px 12px;
+  border: 1px solid rgba(221,185,103,.25);
+  border-radius: 7px;
+  background: rgba(12,13,16,.6);
+  color: #c7bdab;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+body:has(.hero) .mode-banner strong { color: var(--ll-gold-bright); }
+body:has(.hero) .hero-nav { top: 16px; left: 22px; border-radius: 12px; }
+body:has(.hero) .hero-link { font-size: 12px; font-weight: 650; }
+body:has(.hero) .auth-box { border-color: rgba(221,185,103,.25); background: rgba(8,9,12,.82); }
+body:has(.hero) .auth-submit { color: var(--ll-gold-bright); }
+
+/* Community status and activity should support, not overpower, the loot. */
+body:has(.hero) .project-status,
+body:has(.hero) .recent-feed,
+body:has(.hero) .filter-slogan-wrap,
+body:has(.hero) .icon-bar,
+body:has(.hero) .filter-panel {
+  border: 1px solid var(--ll-border) !important;
+  background: linear-gradient(145deg, rgba(20,23,30,.96), rgba(13,15,20,.96)) !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,.15);
+}
+body:has(.hero) .project-status { margin-top: 22px; }
+body:has(.hero) .status-line { min-height: 34px; }
+body:has(.hero) .status-text strong { color: #d7e6d8; font-size: 13px; }
+body:has(.hero) .status-dot { width: 7px; height: 7px; }
+body:has(.hero) .status-help { margin-top: 12px; color: #c9c4ba; line-height: 1.8; }
+body:has(.hero) .recent-feed { padding: 15px 19px; }
+body:has(.hero) .recent-feed-title { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+body:has(.hero) .recent-feed-list { margin-top: 10px; }
+body:has(.hero) .recent-feed-item { border-color: rgba(255,255,255,.07); }
+body:has(.hero) .feed-toggle { color: var(--ll-gold-bright); cursor: pointer; }
+
+/* Category bar: clear tap targets and a consistent active state. */
+body:has(.hero) .icon-bar { gap: 7px; padding: 10px; }
+body:has(.hero) .icon-btn {
+  flex: 1 1 78px;
+  max-width: 106px;
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 11px !important;
+  background: rgba(255,255,255,.018);
+  transition: background .16s ease, border-color .16s ease, transform .16s ease;
+}
+body:has(.hero) .icon-btn img { width: 31px; height: 31px; object-fit: contain; }
+body:has(.hero) .icon-btn span { font-size: 11px; line-height: 1.2; color: #bdb8ae; }
+body:has(.hero) .icon-btn:hover { transform: translateY(-2px); }
+body:has(.hero) .icon-btn.active { background: rgba(215,179,106,.12) !important; box-shadow: inset 0 0 0 1px rgba(215,179,106,.12); }
+body:has(.hero) .icon-btn.active span { color: #f2dfb5; }
+
+/* Season selection and trade filters. */
+body:has(.hero) .filter-slogan-wrap { padding: 15px 18px; }
+body:has(.hero) .loot-slogan img { max-height: 36px; }
+body:has(.hero) .mode-date { color: #8e918f; font-size: 11px; }
+body:has(.hero) .mode-bar { margin-top: 10px; }
+body:has(.hero) .mode-switch-visual { gap: 10px; }
+body:has(.hero) .mode-visual {
+  min-width: 140px;
+  background: #0b0d11;
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+body:has(.hero) .mode-visual:hover { transform: translateY(-1px); }
+body:has(.hero) .mode-visual img { display: block; width: 100%; max-height: 66px; object-fit: contain; }
+body:has(.hero) .filter-panel { padding: 15px; }
+body:has(.hero) .trade-toggle { gap: 8px; }
+body:has(.hero) .trade-btn {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 10px !important;
+  font-size: 13px;
+  font-weight: 650;
+}
+body:has(.hero) .trade-btn.active { box-shadow: inset 0 0 0 1px rgba(215,179,106,.12); }
+body:has(.hero) .trade-icon { width: 18px; height: 18px; object-fit: contain; }
+body:has(.hero) .filter-row { margin-top: 12px; }
+body:has(.hero) #filterSearch {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 15px 11px 43px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 11px;
+  background-color: #0c0f14;
+  background-image: none;
+  font-size: 14px;
+}
+body:has(.hero) #filterSearch:focus { border-color: rgba(241,217,154,.58); box-shadow: 0 0 0 3px rgba(215,179,106,.09); }
+
+/* Results heading added above the item grid. */
+.results-toolbar {
+  width: min(1280px, calc(100% - 36px));
+  margin: 27px auto 13px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 2px;
+}
+.results-toolbar-title { margin: 0; color: #f0e8d8; font-size: clamp(19px, 2vw, 25px); line-height: 1.2; letter-spacing: -.035em; }
+.results-toolbar-copy { margin: 5px 0 0; color: #8e918f; font-size: 12px; }
+.results-count-pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border: 1px solid var(--ll-border); border-radius: 999px; color: #e3d2a9; background: rgba(215,179,106,.06); font-size: 11px; white-space: nowrap; }
+.results-count-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--ll-gold); box-shadow: 0 0 10px rgba(215,179,106,.5); }
+
+/* Item grid: calm surfaces, legible hierarchy, no giant empty cards. */
+body:has(.hero) .cards {
+  width: min(1280px, calc(100% - 36px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  justify-content: stretch;
+  gap: 14px;
+}
+body:has(.hero) .card {
+  min-width: 0;
+  border: 1px solid rgba(215,179,106,.18) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(155deg, rgba(27,31,40,.98), rgba(15,18,24,.99)) !important;
+  box-shadow: 0 7px 20px rgba(0,0,0,.17);
+  overflow: clip;
+  transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+body:has(.hero) .card:hover {
+  border-color: rgba(215,179,106,.4) !important;
+  box-shadow: 0 13px 28px rgba(0,0,0,.25), inset 0 1px rgba(255,255,255,.025);
+}
+body:has(.hero) .card-header { min-height: 84px; gap: 12px; padding: 14px; }
+body:has(.hero) .card-header:focus-visible { outline: 2px solid var(--ll-gold-bright); outline-offset: -3px; }
+body:has(.hero) .item-type-icon { width: 43px; height: 43px; flex: 0 0 43px; object-fit: contain; }
+body:has(.hero) .card-title { min-width: 0; gap: 4px; }
+body:has(.hero) .item-name { display: block; font-size: 14px; line-height: 1.35; font-weight: 750; overflow-wrap: anywhere; }
+body:has(.hero) .item-category { font-size: 10px; letter-spacing: .09em; color: #9a9a95; }
+body:has(.hero) .card-chevron { margin-left: auto; font-size: 12px; }
+body:has(.hero) .card[data-open="true"] { border-color: rgba(215,179,106,.42) !important; }
+body:has(.hero) .card-details { padding-inline: 14px; }
+body:has(.hero) .card[data-open="true"] .card-details { padding: 14px; border-top: 1px solid rgba(255,255,255,.055); }
+body:has(.hero) .card-details .card-image { width: 100%; min-height: 130px; max-height: 230px; padding: 10px; border-radius: 10px; background: radial-gradient(ellipse at center, rgba(215,179,106,.07), transparent 70%), #0a0c10 !important; }
+body:has(.hero) .card-details .card-image img { max-height: 205px; max-width: 100%; border: 0; border-radius: 5px; object-fit: contain; filter: brightness(1.1) contrast(1.08); }
+body:has(.hero) .card-details .card-body { width: 100%; padding-top: 10px; }
+body:has(.hero) .card-search { border-color: rgba(167,174,189,.24) !important; }
+body:has(.hero) .card-search::before { top: 8px; right: 9px; padding: 3px 7px; background: #222731; border-color: rgba(255,255,255,.09); font-size: 9px; }
+body:has(.hero) .item-roll { color: #d2cfc7; line-height: 1.6; }
+body:has(.hero) .player { color: #a7a49d; }
+body:has(.hero) .season-badge { padding: 3px 7px; font-size: 9px; }
+body:has(.hero) .claim-row button,
+body:has(.hero) .card-details button { min-height: 38px; border-radius: 9px; }
+body:has(.hero) .empty-state { grid-column: 1 / -1; padding: 34px 20px; text-align: center; color: #c6c0b5; }
+body:has(.hero) #skeletons { display: contents; }
+body:has(.hero) .skeleton-card { min-height: 84px; border: 1px solid rgba(255,255,255,.055); border-radius: 14px; background: linear-gradient(100deg,#13161d 20%,#1b1f28 38%,#13161d 56%); background-size: 220% 100%; animation: ll-shimmer 1.6s ease infinite; }
+@keyframes ll-shimmer { to { background-position-x: -220%; } }
+
+body:has(.hero) .footer { width: min(1280px, calc(100% - 36px)); margin-inline: auto; padding: 25px 0 34px; }
+body:has(.hero) .footer-links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+body:has(.hero) .footer-meta { margin-top: 12px; font-size: 11px; color: #777b83; }
+body:has(.hero) .footer-visitor { margin-top: 12px; }
+
+@media (min-width: 1450px) {
+  body:has(.hero) .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 1050px) {
+  body:has(.hero) .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body:has(.hero) .hero-inner { padding-inline: 24px; }
+}
+@media (max-width: 760px) {
+  body:has(.hero) .hero-inner { padding: 86px 15px 22px; }
+  body:has(.hero) .hero-nav { top: 10px; left: 10px; right: 10px; width: max-content; max-width: calc(100% - 20px); overflow-x: auto; }
+  body:has(.hero) .hero-link { padding: 7px 9px; white-space: nowrap; }
+  body:has(.hero) .hero-title { font-size: clamp(28px, 8vw, 38px); }
+  body:has(.hero) .hero-logo img { max-width: 220px; }
+  body:has(.hero) .hero-stats { gap: 6px; margin-top: 16px; }
+  body:has(.hero) .hero-stat, body:has(.hero) .hero-stats > div { padding: 7px 10px; font-size: 11px; }
+  body:has(.hero) .auth-box { top: 10px; right: 10px; }
+  body:has(.hero) .icon-bar { justify-content: flex-start; }
+  body:has(.hero) .icon-btn { flex: 1 1 66px; min-width: 58px; min-height: 70px; }
+  body:has(.hero) .icon-btn img { width: 27px; height: 27px; }
+  body:has(.hero) .filter-slogan-wrap { padding: 12px; }
+  body:has(.hero) .mode-switch-visual { gap: 7px; }
+  body:has(.hero) .mode-visual { min-width: 0; flex: 1; }
+  body:has(.hero) .mode-visual img { max-height: 52px; }
+  body:has(.hero) .filter-panel { padding: 11px; }
+  body:has(.hero) .trade-toggle { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body:has(.hero) .trade-btn { width: 100%; padding-inline: 8px !important; }
+  .results-toolbar, body:has(.hero) .cards { width: calc(100% - 22px); }
+  .results-toolbar { margin-top: 22px; align-items: center; }
+  body:has(.hero) .cards { grid-template-columns: 1fr; gap: 10px; }
+  body:has(.hero) .card-header { min-height: 76px; padding: 12px; }
+  body:has(.hero) .card-details { padding-inline: 12px; }
+  body:has(.hero) .card[data-open="true"] .card-details { padding: 12px; }
+  body:has(.hero) .footer { width: calc(100% - 22px); }
+}
+@media (max-width: 430px) {
+  body:has(.hero) .hero-stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+  body:has(.hero) .hero-stat, body:has(.hero) .hero-stats > div { justify-content: center; }
+  body:has(.hero) .hero-stat:last-child { grid-column: 1 / -1; }
+  .results-toolbar-copy { max-width: 230px; }
+  .results-count-pill { padding: 5px 8px; }
+}
