@@ -4,8 +4,8 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "railway": "node server.js"
+    "start": "node backend/server.js",
+    "railway": "node backend/server.js"
   },
   "dependencies": {
     "express": "^5.2.1",
