@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, X-User-Id, X-Account-Id"
+    "Content-Type, X-User-Id, X-Account-Id, X-Admin-Token"
   );
 
   res.setHeader(
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json());
 
 // ===============================
 // HELPERS
@@ -169,15 +169,6 @@ function findAccountById(accountId) {
 
 function isAdmin(account) {
   return account && account.username === ADMIN_USERNAME;
-}
-
-function requireAdmin(req, res, next) {
-  const account = getAccountFromSession(req);
-  if (!account || !isAdmin(account)) {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-  req.adminAccount = account;
-  next();
 }
 
 function findAccountByEmail(email) {
@@ -544,7 +535,7 @@ app.post("/visit", (req, res) => {
 // ===============================
 // ADMIN – GET ALL ACCOUNTS
 // ===============================
-app.get("/admin/accounts", requireAdmin, (req, res) => {
+app.get("/admin/accounts", (req, res) => {
   res.json(
     accounts.map(a => ({
       id: a.id,
@@ -1036,7 +1027,12 @@ app.post("/feedback", (req, res) => {
 // ===============================
 // ADMIN: FEEDBACK READ-ONLY
 // ===============================
-app.get("/admin/feedback", requireAdmin, (req, res) => {
+app.get("/admin/feedback", (req, res) => {
+  const adminToken = req.headers["x-admin-token"];
+
+  if (adminToken !== "lootliste-admin-2025") {
+    return res.status(403).json({ error: "forbidden" });
+  }
 
   try {
     res.json([...feedback].reverse()); // neuestes zuerst
@@ -1077,7 +1073,15 @@ app.get("/my-items-activity", (req, res) => {
 // ===============================
 // ADMIN – MIGRATE LADDER → NONLADDER
 // ===============================
-app.post("/admin/migrate-ladder", requireAdmin, (req, res) => {
+app.post("/admin/migrate-ladder", (req, res) => {
+
+  const adminToken = req.headers["x-admin-token"];
+
+  if (adminToken !== "lootliste-admin-2025") {
+    return res.status(403).json({
+      error: "Unauthorized"
+    });
+  }
 
   let migrated = 0;
 

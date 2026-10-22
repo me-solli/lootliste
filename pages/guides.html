@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>D2R Referenz & Builds – Diablo II: Resurrected</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Strukturierte Referenz- und Build-Seiten für Diablo II: Resurrected (D2R). Systemisch aufgebaut, praxisnah erklärt und klar gegliedert.">
+
+<style>
+:root{ --gold:#f5c451; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
+}
+
+.wrapper{max-width:1100px;margin:0 auto;}
+
+/* ================= HERO ================= */
+.hero{
+  position:relative;
+  border-radius:0 0 28px 28px;
+  overflow:hidden;
+  min-height:220px;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.6),
+    rgba(0,0,0,.85)
+  );
+}
+
+.hero-inner{
+  position:relative;
+  padding:90px 40px 50px;
+}
+
+.hero-nav{
+  position:absolute;
+  top:22px;
+  left:28px;
+  display:flex;
+  gap:18px;
+  padding:8px 18px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  font-size:13px;
+  backdrop-filter:blur(6px);
+}
+
+.hero-link{
+  color:#d6d6d6;
+  text-decoration:none;
+  opacity:.85;
+  transition:.15s;
+}
+
+.hero-link:hover{color:var(--gold);opacity:1}
+.hero-link.active{color:var(--gold)}
+
+.hero-link:not(:last-child)::after{
+  content:"";
+  display:inline-block;
+  width:1px;
+  height:12px;
+  background:rgba(255,255,255,.25);
+  margin:0 14px;
+  vertical-align:middle;
+}
+
+h1{
+  font-size:26px;
+  margin:0 0 14px;
+  font-weight:600;
+}
+
+.hero p{
+  max-width:640px;
+  line-height:1.6;
+  opacity:.78;
+  font-size:15px;
+  margin:0;
+}
+
+/* ================= GRID ================= */
+.container{padding:40px 28px 100px}
+
+.guides-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
+}
+
+.guide-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.35));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  text-decoration:none;
+  color:#e6e6e6;
+  position:relative;
+  overflow:hidden;
+  transition:all .2s ease;
+  display:flex;
+  flex-direction:column;
+}
+
+.guide-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(245,196,81,.35);
+}
+
+.guide-thumb{
+  height:130px;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+  transition:.3s ease;
+}
+
+.guide-thumb::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.2),
+    rgba(0,0,0,.7)
+  );
+}
+
+.guide-card:hover .guide-thumb{
+  transform:scale(1.04);
+}
+
+.guide-content{
+  padding:22px 22px 26px;
+}
+
+.guide-content h3{
+  margin:0 0 12px;
+  color:var(--gold);
+  font-size:18px;
+}
+
+.guide-content p{
+  margin:0 0 12px;
+  line-height:1.6;
+  font-size:14px;
+  opacity:.9;
+}
+
+.guide-meta{
+  font-size:12px;
+  opacity:.6;
+}
+
+.footer-nav{
+  margin-top:80px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav a{color:var(--gold);text-decoration:none}
+.footer-nav a:hover{text-decoration:underline}
+
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<header class="hero">
+  <div class="hero-inner">
+
+    <nav class="hero-nav">
+      <a href="../index.html" class="hero-link">Lootliste</a>
+      <a href="runen-upgrade.html" class="hero-link">Runen</a>
+      <a href="cow-level.html" class="hero-link">Cow</a>
+      <a href="terror-zonen.html" class="hero-link">Terror</a>
+      <a href="#" class="hero-link active">Guides</a>
+    </nav>
+
+    <h1>D2R Guides</h1>
+    <p>
+      Strukturierte Referenz-Seiten für Runen, Cow Level und Terror Zonen.
+      Systemisch aufgebaut – kein Blog, kein Wiki, sondern Tools.
+    </p>
+
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="guides-grid">
+
+    <a href="runen-upgrade.html" class="guide-card">
+      <div class="guide-thumb" style="background-image:url('../img/runen-upgrade-banner.png')"></div>
+      <div class="guide-content">
+        <h3>Runen Upgrade</h3>
+        <p>Komplette Horadrim-Würfel-Rezepte von El bis Zod inklusive Edelstein-Anforderungen.</p>
+        <span class="guide-meta">Referenz-Tool</span>
+      </div>
+    </a>
+
+    <a href="cow-level.html" class="guide-card">
+      <div class="guide-thumb" style="background-image:url('../img/cow-level-banner.png')"></div>
+      <div class="guide-content">
+        <h3>Cow Level Guide</h3>
+        <p>Öffnungsmechanik, König-Regeln, Farming-Effizienz und strategische Nutzung.</p>
+        <span class="guide-meta">Mechanik & Farming</span>
+      </div>
+    </a>
+
+    <a href="terror-zonen.html" class="guide-card">
+      <div class="guide-thumb" style="background-image:url('../img/terror-zonen-banner.png')"></div>
+      <div class="guide-content">
+        <h3>Terror Zonen Analyse</h3>
+        <p>Monster-Level-Skalierung, Loot-Vorteile und XP-Optimierung im Endgame.</p>
+        <span class="guide-meta">Endgame-System</span>
+      </div>
+    </a>
+
+    <a href="cube-codex.html" class="guide-card">
+  <div class="guide-thumb" style="background-image:url('../img/cube-codex-banner.png')"></div>
+  <div class="guide-content">
+    <h3>Horadrim-Würfel</h3>
+    <p>Sockel-Logik, Upgrades, Crafting, Reroll-Mechaniken und typische Profi-Fehler im Detail erklärt.</p>
+    <span class="guide-meta">System-Mechanik</span>
+  </div>
+</a>
+
+    <a href="sorc-orb-fireball.html" class="guide-card">
+  <div class="guide-thumb" style="background-image:url('../img/sorc-guide-hero.jpg')"></div>
+  <div class="guide-content">
+    <h3>Orb / Fireball Sorceress</h3>
+    <p>
+      Hybrid-Build mit Dual-Element-Fokus.
+      105% FCR Breakpoint, Insight vs Infinity,
+      stabile Terror-Zonen Performance.
+    </p>
+    <span class="guide-meta">Build & Endgame</span>
+  </div>
+</a>
+
+  </div>
+
+  <div class="footer-nav">
+    <a href="../index.html">← Zurück zur Lootliste</a>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>

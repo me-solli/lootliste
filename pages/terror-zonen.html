@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>D2R Terror Zonen Guide – Level, Loot & XP Optimierung (RotWL)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="D2R Terror Zonen Guide für Diablo II: Resurrected. Monster-Level Skalierung, Loot-Verbesserungen, XP-Optimierung und Endgame-Farming Strategien für RotWL & Non-Ladder.">
+
+<style>
+:root{ --gold:#f5c451; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#181818 0%,#090909 65%);
+  color:#e6e6e6;
+}
+
+.wrapper{max-width:1100px;margin:0 auto;}
+
+/* ================= HERO ================= */
+.hero{
+  position:relative;
+  background:url("/img/terror-zonen-banner.png") 55% 45% / cover no-repeat !important;
+  border-radius:0 0 28px 28px;
+  overflow:hidden;
+  min-height:270px;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.45) 0%,
+    rgba(0,0,0,.55) 60%,
+    rgba(0,0,0,.75) 100%
+  );
+}
+
+.hero-inner{
+  position:relative;
+  z-index:1;
+  padding:90px 40px 50px;
+}
+
+.hero-nav{
+  position:absolute;
+  top:22px;
+  left:28px;
+  display:flex;
+  gap:18px;
+  padding:6px 14px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  font-size:13px;
+}
+
+.hero-link{color:#d6d6d6;text-decoration:none;opacity:.85}
+.hero-link:hover{color:var(--gold);opacity:1}
+.hero-link.active{color:var(--gold)}
+
+h1{font-size:26px;margin:0 0 14px;font-weight:600}
+
+.hero p{
+  max-width:680px;
+  line-height:1.6;
+  opacity:.78;
+  font-size:15px;
+  margin:0;
+}
+
+/* ================= NAV ================= */
+.section-nav{
+  margin:35px auto 10px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.section-nav a{
+  padding:7px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
+  font-size:13px;
+  text-decoration:none;
+  color:#ddd;
+  transition:.15s;
+}
+
+.section-nav a:hover{
+  border-color:rgba(245,196,81,.4);
+  color:var(--gold);
+}
+
+/* ================= CONTENT ================= */
+.container{padding:30px 28px 100px}
+.section{max-width:950px;margin-bottom:95px}
+.section h2{color:var(--gold);margin-bottom:18px;font-size:21px}
+.section p, .section ul{line-height:1.7;opacity:.92;font-size:15px}
+.section ul{margin-left:18px}
+
+.card{
+  background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.35));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:24px 26px;
+  margin-top:20px;
+}
+
+.footer-nav{
+  margin-top:90px;
+  padding-top:22px;
+  border-top:1px solid #222;
+  font-size:13px;
+  opacity:.8;
+}
+
+.footer-nav a{color:var(--gold);text-decoration:none}
+.footer-nav a:hover{text-decoration:underline}
+
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<header class="hero">
+  <div class="hero-inner">
+
+    <nav class="hero-nav">
+      <a href="../index.html" class="hero-link">Lootliste</a>
+      <a href="guides.html" class="hero-link">Guides</a>
+      <a href="#" class="hero-link active">Terror Zonen</a>
+    </nav>
+
+    <h1>D2R Terror Zonen – Level, Loot & XP Guide</h1>
+    <p>
+      Terror Zonen in Diablo II: Resurrected (D2R) skalieren Monster-Level dynamisch
+      und machen nahezu jedes Gebiet endgame-relevant. Dieser Guide erklärt
+      Level-Mechanik, Drop-Vorteile, XP-Optimierung und effiziente Farming-Strategien
+      für RotWL & Non-Ladder.
+    </p>
+
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="section-nav">
+    <a href="#mechanik">Mechanik</a>
+    <a href="#level">Level-Skalierung</a>
+    <a href="#loot">Loot-Vorteile</a>
+    <a href="#xp">XP-Optimierung</a>
+    <a href="#strategie">Strategie</a>
+    <a href="#meta">Meta (RotWL)</a>
+  </div>
+
+  <section class="section" id="mechanik">
+    <h2>Grundmechanik der Terror Zonen</h2>
+    <div class="card">
+      <p>
+        Terror Zonen rotieren stündlich und markieren ein bestimmtes Gebiet als
+        "terrorisiert". In dieser Zone erhalten Monster ein höheres Level als
+        normalerweise vorgesehen.
+      </p>
+      <ul>
+        <li>Rotation erfolgt serverseitig</li>
+        <li>Ein Gebiet pro Stunde aktiv</li>
+        <li>Gilt für Normal, Nightmare & Hell</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="level">
+    <h2>Level-Skalierung im Detail</h2>
+    <div class="card">
+      <p>
+        Monster-Level passt sich dem Spieler-Level an – bis zu einem
+        festgelegten Maximum je Schwierigkeitsgrad. Dadurch können
+        selbst frühe Akte Item-Level erreichen, die normalerweise nur
+        in Endgame-Gebieten möglich wären.
+      </p>
+      <ul>
+        <li>Hell: Skalierung bis nahe Spieler-Level</li>
+        <li>Champions & Bossgruppen entsprechend höher</li>
+        <li>Item-Level steigt mit Monster-Level</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="loot">
+    <h2>Loot-Vorteile</h2>
+    <div class="card">
+      <p>
+        Durch das erhöhte Monster-Level können Items droppen,
+        die sonst nur in hochstufigen Gebieten erscheinen.
+      </p>
+      <ul>
+        <li>Höhere Unique- & Set-Drop-Potentiale</li>
+        <li>Relevante Bases für Endgame-Runenwörter</li>
+        <li>Runen-Drops profitieren indirekt von Monster-Dichte</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="xp">
+    <h2>XP-Optimierung</h2>
+    <div class="card">
+      <p>
+        Terror Zonen sind besonders effizient für Level 90+ Progression,
+        da das XP-Penalty-System durch höhere Monster-Level abgemildert wird.
+      </p>
+      <ul>
+        <li>Effektiv für Solo & Gruppenplay</li>
+        <li>Stetige XP-Quelle ohne feste Boss-Runs</li>
+        <li>Abwechslung im Endgame-Grind</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="strategie">
+    <h2>Strategische Nutzung</h2>
+    <div class="card">
+      <p>
+        Wähle Terror Zonen mit hoher Monster-Dichte und
+        kurzen Laufwegen. Clear-Speed ist entscheidend.
+      </p>
+      <ul>
+        <li>AoE-Builds profitieren am meisten</li>
+        <li>Teleport/Movement-Speed stark vorteilhaft</li>
+        <li>Map-Layout berücksichtigen</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="meta">
+    <h2>Meta-Einschätzung (RotWL)</h2>
+    <div class="card">
+      <p>
+        Terror Zonen gehören im RotWL-Endgame zu den
+        konstantesten XP-Quellen und bieten flexible
+        Loot-Möglichkeiten ohne monotone Boss-Wiederholungen.
+      </p>
+      <ul>
+        <li>XP-Fokus: ★★★★★</li>
+        <li>Item-Jagd: ★★★★☆</li>
+        <li>Rune-Farming: ★★★★☆</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="footer-nav">
+    <a href="guides.html">← Zurück zu den Guides</a>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
