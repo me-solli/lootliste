@@ -83,63 +83,11 @@ url("img/background.png") center top / cover fixed no-repeat;
   position:relative;
 }
 
-/* ================= HERO NAV – CLEAN VERSION ================= */
-.hero-nav{
-  position:absolute;
-  top:18px;
-  left:34px;
-
-  display:flex;
-  align-items:center;
-  gap:0; /* wichtig */
-
-  padding:6px 14px;
-
-  background:rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:999px;
-
-  backdrop-filter: blur(4px);
-
-  font-size:13px;
-  z-index:6;
-}
-
-.hero-link{
-  color:#d6d6d6;
-  text-decoration:none;
-  opacity:.85;
-  font-weight:500;
-  letter-spacing:.2px;
-  padding:0 14px; /* Abstand hier reinziehen */
-  position:relative;
-}
-
-.hero-link:hover{
-  color:var(--gold);
-  opacity:1;
-}
-
-.hero-link.active{
-  color:var(--gold);
-}
-
-.hero-link:not(:last-child)::after{
-  content:"";
-  position:absolute;
-  right:0;
-  top:50%;
-  transform:translateY(-50%);
-  width:1px;
-  height:12px;
-  background:rgba(255,255,255,.25);
-}
-
 /* ================================
    LOGO
 ================================ */
 .hero-logo{
-  margin-top:20px;   /* leicht näher an Nav */
+  margin-top:20px;
 }
 
 .hero-logo img{
@@ -2368,11 +2316,6 @@ body.mode-ladder .badge-offer{
 ================================ -->
 <header class="hero">
   <div class="hero-inner">
-
-<nav class="hero-nav">
-  <a href="index.html" class="hero-link active">Lootliste</a>
-  <a href="pages/artwork.html" class="hero-link">Visuals</a>
-</nav>
 
     <div class="auth-box auth-box--stacked">
       <img
