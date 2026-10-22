@@ -1331,16 +1331,16 @@ box-shadow:0 4px 18px rgba(0,0,0,.4);
 
 /* feste Loot-Typen */
 .loot-weapon{
-  background-image:url("img/icons/waffe.png");
+  background-image:url("img/icons/waffe.webp");
 }
 .loot-armor{
-  background-image:url("img/icons/ruestung.png");
+  background-image:url("img/icons/ruestung.webp");
 }
 .loot-jewelry{
-  background-image:url("img/icons/ring.png");
+  background-image:url("img/icons/ring.webp");
 }
 .loot-special{
-  background-image:url("img/icons/charm.png");
+  background-image:url("img/icons/charm.webp");
 }
 
 /* ================================
@@ -2380,7 +2380,7 @@ body.mode-ladder .badge-offer{
     </div>
 
 <div class="hero-logo">
-  <img src="img/logo_d2r.png" alt="D2R Lootliste Logo">
+  <img src="img/logo-d2r.webp" alt="D2R Lootliste Logo">
 </div>
 
 <h1 class="hero-title">
@@ -2489,62 +2489,62 @@ body.mode-ladder .badge-offer{
 <nav class="icon-bar">
 
   <div class="icon-btn" data-type="waffe">
-    <img src="img/icons/waffe.png" alt="Waffe">
+    <img src="img/icons/waffe.webp" alt="Waffe">
     <span>Waffe</span>
   </div>
 
   <div class="icon-btn" data-type="helm">
-    <img src="img/icons/helm.png" alt="Helm">
+    <img src="img/icons/helm.webp" alt="Helm">
     <span>Helm</span>
   </div>
 
   <div class="icon-btn" data-type="ruestung">
-    <img src="img/icons/ruestung.png" alt="Rüstung">
+    <img src="img/icons/ruestung.webp" alt="Rüstung">
     <span>Rüstung</span>
   </div>
 
   <div class="icon-btn" data-type="schild">
-    <img src="img/icons/schild.png" alt="Schild">
+    <img src="img/icons/schild.webp" alt="Schild">
     <span>Schild</span>
   </div>
 
   <div class="icon-btn" data-type="guertel">
-    <img src="img/icons/guertel.png" alt="Gürtel">
+    <img src="img/icons/guertel.webp" alt="Gürtel">
     <span>Gürtel</span>
   </div>
 
   <div class="icon-btn" data-type="handschuhe">
-    <img src="img/icons/handschuhe.png" alt="Handschuhe">
+    <img src="img/icons/handschuhe.webp" alt="Handschuhe">
     <span>Handschuhe</span>
   </div>
 
   <div class="icon-btn" data-type="schuhe">
-    <img src="img/icons/schuhe.png" alt="Schuhe">
+    <img src="img/icons/schuhe.webp" alt="Schuhe">
     <span>Schuhe</span>
   </div>
 
   <div class="icon-btn" data-type="amulett">
-    <img src="img/icons/amulett.png" alt="Amulett">
+    <img src="img/icons/amulett.webp" alt="Amulett">
     <span>Amulett</span>
   </div>
 
   <div class="icon-btn" data-type="ring">
-    <img src="img/icons/ring.png" alt="Ring">
+    <img src="img/icons/ring.webp" alt="Ring">
     <span>Ring</span>
   </div>
 
   <div class="icon-btn" data-type="charm">
-    <img src="img/icons/charm.png" alt="Charm">
+    <img src="img/icons/charm.webp" alt="Charm">
     <span>Charm</span>
   </div>
 
   <div class="icon-btn" data-type="rune">
-    <img src="img/icons/rune.png" alt="Rune">
+    <img src="img/icons/rune.webp" alt="Rune">
     <span>Rune</span>
   </div>
 
   <div class="icon-btn" data-type="sonstiges">
-    <img src="img/icons/sonstiges.png" alt="Sonstiges">
+    <img src="img/icons/sonstiges.webp" alt="Sonstiges">
     <span>Sonstiges</span>
   </div>
 
@@ -2568,11 +2568,11 @@ body.mode-ladder .badge-offer{
 <div class="mode-switch mode-switch-visual">
 
   <div class="mode-visual active" data-season="non-ladder">
-    <img src="img/modes/non-ladder.png" alt="Non-Ladder">
+    <img src="img/modes/non-ladder.webp" alt="Non-Ladder">
   </div>
 
   <div class="mode-visual" data-season="ladder">
-    <img src="img/modes/ladder.png" alt="Ladder">
+    <img src="img/modes/ladder.webp" alt="Ladder">
   </div>
 
 </div>
@@ -2987,7 +2987,7 @@ if (list.length === 0) {
     }
 
     const type = (item.type || item.category || "sonstiges").toLowerCase();
-    const iconUrl = `img/icons/${type}.png`;
+    const iconUrl = `img/icons/${type}.webp`;
 
     li.innerHTML = `
       <span class="recent-feed-icon" style="background-image:url('${iconUrl}')"></span>
@@ -3428,6 +3428,53 @@ function toggleHelp(){
   const el = document.getElementById("statusHelp");
   el.classList.toggle("active");
 }
+</script>
+
+
+<script>
+/* Asset-Pfad-Normalisierung für vorhandene WebP-Icons und Saisonbanner. */
+(function () {
+  const normalizeAssetPath = (value) => {
+    if (typeof value !== "string") return value;
+    value = value.replace(/^img\/modes\/non[-_]ladder\.(?:png|jpg|jpeg|webp)$/i, "img/modes/non-ladder.webp");
+    value = value.replace(/^img\/modes\/ladder\.(?:png|jpg|jpeg|webp)$/i, "img/modes/ladder.webp");
+    value = value.replace(/^img\/icons\/([a-z0-9_-]+)\.(?:png|jpg|jpeg)$/i, "img/icons/$1.webp");
+    return value;
+  };
+
+  document.querySelectorAll('img[src]').forEach((img) => {
+    const src = img.getAttribute("src");
+    const normalized = normalizeAssetPath(src);
+    if (normalized !== src) img.setAttribute("src", normalized);
+  });
+
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === "attributes" && mutation.target instanceof HTMLImageElement) {
+        const img = mutation.target;
+        const src = img.getAttribute("src");
+        const normalized = normalizeAssetPath(src);
+        if (normalized !== src) img.setAttribute("src", normalized);
+      }
+      for (const node of mutation.addedNodes || []) {
+        if (!(node instanceof Element)) continue;
+        if (node.matches && node.matches("img[src]")) {
+          const src = node.getAttribute("src");
+          const normalized = normalizeAssetPath(src);
+          if (normalized !== src) node.setAttribute("src", normalized);
+        }
+        node.querySelectorAll?.("img[src]").forEach((img) => {
+          const src = img.getAttribute("src");
+          const normalized = normalizeAssetPath(src);
+          if (normalized !== src) img.setAttribute("src", normalized);
+        });
+      }
+    }
+  });
+  observer.observe(document.documentElement, {
+    subtree: true, childList: true, attributes: true, attributeFilter: ["src"]
+  });
+})();
 </script>
 
 </body>
